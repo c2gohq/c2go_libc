@@ -138,6 +138,8 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/ctype/wctrans.c
     ${MUSL_DIR}/src/ctype/wcwidth.c
     ${MUSL_DIR}/src/ctype/wcswidth.c
+    # search (intrusive linked-list; hsearch/tsearch deferred: need malloc glue)
+    ${MUSL_DIR}/src/search/insque.c
 )
 
 # --- our independent C (no musl basis) ----------------------------------------
