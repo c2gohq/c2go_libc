@@ -44,6 +44,22 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/ctype/tolower.c
     ${MUSL_DIR}/src/ctype/toupper.c
     ${MUSL_DIR}/src/ctype/toascii.c
+    # stdlib (integer arithmetic + ascii-to-number + bsearch)
+    ${MUSL_DIR}/src/stdlib/abs.c
+    ${MUSL_DIR}/src/stdlib/labs.c
+    ${MUSL_DIR}/src/stdlib/llabs.c
+    ${MUSL_DIR}/src/stdlib/imaxabs.c
+    ${MUSL_DIR}/src/stdlib/div.c
+    ${MUSL_DIR}/src/stdlib/ldiv.c
+    ${MUSL_DIR}/src/stdlib/lldiv.c
+    ${MUSL_DIR}/src/stdlib/imaxdiv.c
+    ${MUSL_DIR}/src/stdlib/bsearch.c
+    ${MUSL_DIR}/src/stdlib/atoi.c
+    ${MUSL_DIR}/src/stdlib/atol.c
+    ${MUSL_DIR}/src/stdlib/atoll.c
+    # prng
+    ${MUSL_DIR}/src/prng/rand.c
+    ${MUSL_DIR}/src/prng/rand_r.c
 )
 
 # --- our independent C (no musl basis) ----------------------------------------
