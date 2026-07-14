@@ -4,6 +4,7 @@
 *.tmp
 /build/
 /cmake-build-*/
+/_tmp/
 
 # musl is a LOCAL symlink (-> ../musl) for now; becomes a git submodule at push time.
 /musl

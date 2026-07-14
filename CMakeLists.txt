@@ -25,7 +25,8 @@ set(GOMOD_ROOT ${CMAKE_SOURCE_DIR})   # generated *.go/*.s land here (= the modu
 
 # --- musl translation units we build (populated during migration) -------------
 set(C2GO_MUSL_SOURCES
-    # e.g. ${MUSL_DIR}/src/math/exp.c
+    # string
+    ${MUSL_DIR}/src/string/strlen.c
 )
 
 # --- our independent C (no musl basis) ----------------------------------------
