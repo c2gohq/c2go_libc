@@ -3,21 +3,25 @@ project(c2go_libc2 C)
 
 # c2go-libc2 build manifest.
 #
-# Layout:
-#   musl/    upstream musl 1.2.6 as a git submodule; our c2go changes live on its
-#            `c2go` branch (edited in place on musl's own file layout). Headers stay
-#            under musl/include (+ musl/arch/<a>). Unused musl files are NOT deleted.
-#   csrc/    our OWN C with no musl basis (Go-bridge shims, runtime glue, per-OS).
-#   golib/   the Go module (go.mod + hand + GENERATED .go/.s). Kept in its own subtree
-#            so a `go get` only pulls the Go files, not musl/csrc (small proxy zip).
+# Layout — the Go module lives at the REPO ROOT so the module path stays
+# github.com/c2gohq/c2go_libc (underscore) and linknames keep the form
+# "github.com/c2gohq/c2go_libc.Fopen" with NO subdir suffix (see MIGRATION_PLAN D2b):
 #
-# This file lists ONLY the translation units we actually build (the musl files we
-# modified/need + all of csrc). The c2go toolchain (clang -fc2go -> c2go-lto ->
-# c2go-bind) consumes this list and emits the Go-linkable objects into golib/.
+#   <root>/        go.mod + the shipped Go module: hand-written + GENERATED *.go/*.s.
+#   musl/          our musl fork. LOCAL SYMLINK (-> ../musl) for now; becomes a git
+#                  submodule at push time. c2go changes edited IN PLACE on musl's own
+#                  file layout (minimal diff). Excluded from the module zip (submodule
+#                  contents never ship).
+#   csrc/          our OWN C (no musl basis). Gets its own go.mod (nested module) so it is
+#                  excluded from the module zip — the .c are build inputs; the shipped
+#                  artifact is the generated *.go/*.s at the root.
+#
+# This file lists ONLY the TUs we actually build. The c2go toolchain (clang -fc2go ->
+# c2go-lto -> c2go-bind) consumes this list and emits Go-linkable *.go/*.s into the root.
 
 set(MUSL_DIR ${CMAKE_SOURCE_DIR}/musl)
 set(CSRC_DIR ${CMAKE_SOURCE_DIR}/csrc)
-set(GOLIB_DIR ${CMAKE_SOURCE_DIR}/golib)
+set(GOMOD_ROOT ${CMAKE_SOURCE_DIR})   # generated *.go/*.s land here (= the module root)
 
 # --- musl translation units we build (populated during migration) -------------
 set(C2GO_MUSL_SOURCES
@@ -36,5 +40,5 @@ set(C2GO_INCLUDE_DIRS
     ${CSRC_DIR}
 )
 
-# NOTE: the custom command that drives clang -fc2go / c2go-lto / c2go-bind into
-# golib/ is added once the first TU migrates and the pipeline is wired to CMake.
+# NOTE: the custom command that drives clang -fc2go / c2go-lto / c2go-bind into the
+# module root is added once the first TU migrates and the pipeline is wired to CMake.

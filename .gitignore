@@ -5,7 +5,12 @@
 /build/
 /cmake-build-*/
 
-# NOTE: generated golib/*.go and golib/*.s ARE committed (shipped in the module).
+# musl is a LOCAL symlink (-> ../musl) for now; becomes a git submodule at push time.
+/musl
+
+# NOTE: the shipped module = generated *.go/*.s + hand-written *.go at the REPO ROOT;
+# these ARE committed. csrc/ gets its own go.mod (nested module) so its *.c stay out of
+# the module zip (they are build inputs, not shipped artifacts).
 
 # local / editor / tooling
 .codex-gpt-session-id
