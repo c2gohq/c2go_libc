@@ -27,6 +27,23 @@ set(GOMOD_ROOT ${CMAKE_SOURCE_DIR})   # generated *.go/*.s land here (= the modu
 set(C2GO_MUSL_SOURCES
     # string
     ${MUSL_DIR}/src/string/strlen.c
+    # ctype
+    ${MUSL_DIR}/src/ctype/isalpha.c
+    ${MUSL_DIR}/src/ctype/isdigit.c
+    ${MUSL_DIR}/src/ctype/isalnum.c
+    ${MUSL_DIR}/src/ctype/isblank.c
+    ${MUSL_DIR}/src/ctype/iscntrl.c
+    ${MUSL_DIR}/src/ctype/isgraph.c
+    ${MUSL_DIR}/src/ctype/islower.c
+    ${MUSL_DIR}/src/ctype/isprint.c
+    ${MUSL_DIR}/src/ctype/ispunct.c
+    ${MUSL_DIR}/src/ctype/isspace.c
+    ${MUSL_DIR}/src/ctype/isupper.c
+    ${MUSL_DIR}/src/ctype/isxdigit.c
+    ${MUSL_DIR}/src/ctype/isascii.c
+    ${MUSL_DIR}/src/ctype/tolower.c
+    ${MUSL_DIR}/src/ctype/toupper.c
+    ${MUSL_DIR}/src/ctype/toascii.c
 )
 
 # --- our independent C (no musl basis) ----------------------------------------
