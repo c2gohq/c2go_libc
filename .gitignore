@@ -1,0 +1,15 @@
+# build intermediates (the c2go pipeline)
+*.bc
+*.o
+*.tmp
+/build/
+/cmake-build-*/
+
+# NOTE: generated golib/*.go and golib/*.s ARE committed (shipped in the module).
+
+# local / editor / tooling
+.codex-gpt-session-id
+.DS_Store
+
+# never track local portability notes (see LICENSING_PLAN_A)
+PORTABILITY.md
