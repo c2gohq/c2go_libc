@@ -154,6 +154,13 @@ set(C2GO_OWN_SOURCES
     # (mutexattr/condattr/rwlockattr init/destroy/settype, pthread_atfork). The Go side
     # of pthreads (mutex/cond/rwlock/sem/key/thread state) is the glue in *.go at root.
     ${CSRC_DIR}/pthread.c
+    # raw fd layer: thin C wrappers (read/write/open/close/lseek/fcntl/dup2/dup3/unlink/
+    # rmdir/rename) that marshal into one Go syscall shim each (io.go + io_{darwin,linux,
+    # windows}.go). posix and windows split; the windows TU delegates std fds 0/1/2 to
+    # the Go std-descriptor layer (stdio_std*.go) and the rest to the msvcrt CRT.
+    # Unblocks the stdio (FILE*) layer next.
+    ${CSRC_DIR}/io_posix.c
+    ${CSRC_DIR}/io_windows.c
 )
 
 # Include dirs handed to clang -fc2go for every TU above.

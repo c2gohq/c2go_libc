@@ -2,7 +2,7 @@ package libc
 
 import "testing"
 
-func cstr(s string) *byte {
+func cbytes(s string) *byte {
 	b := append([]byte(s), 0)
 	return &b[0]
 }
@@ -23,13 +23,13 @@ func TestStdlibArith(t *testing.T) {
 }
 
 func TestStdlibAtox(t *testing.T) {
-	if Atoi(cstr("42")) != 42 || Atoi(cstr("-7")) != -7 || Atoi(cstr("  13x")) != 13 {
+	if Atoi(cbytes("42")) != 42 || Atoi(cbytes("-7")) != -7 || Atoi(cbytes("  13x")) != 13 {
 		t.Fatal("atoi")
 	}
-	if Atol(cstr("123456")) != 123456 {
+	if Atol(cbytes("123456")) != 123456 {
 		t.Fatal("atol")
 	}
-	if Atoll(cstr("9999999999")) != 9999999999 {
+	if Atoll(cbytes("9999999999")) != 9999999999 {
 		t.Fatal("atoll")
 	}
 }
