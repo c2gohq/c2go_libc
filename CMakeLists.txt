@@ -138,6 +138,32 @@ set(C2GO_MUSL_SOURCES
     # ${CSRC_DIR}/wctype.c (C/Go hybrid) + wctype.go, listed under C2GO_OWN_SOURCES below.
     # search (intrusive linked-list; hsearch/tsearch deferred: need malloc glue)
     ${MUSL_DIR}/src/search/insque.c
+    # time: the pure calendar/format code kept in place with a minimal annotation-only
+    # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
+    # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only
+    # c2go_extern + the __tm_gmtoff/__tm_zone -> tm_gmtoff/tm_zone rename; the
+    # strftime/strptime/wcsftime engines stay verbatim and route langinfo through the
+    # C-locale __c2go_langinfo.h shim (locale cluster not yet built). The Go-bridge /
+    # zoneinfo-replacing functions (clock family, tzset, localtime_r, mktime) are NOT
+    # here -- they are wholesale rewrites and live in ${CSRC_DIR}/time.c.
+    ${MUSL_DIR}/src/time/__secs_to_tm.c
+    ${MUSL_DIR}/src/time/__year_to_secs.c
+    ${MUSL_DIR}/src/time/__month_to_secs.c
+    ${MUSL_DIR}/src/time/__tm_to_secs.c
+    ${MUSL_DIR}/src/time/difftime.c
+    ${MUSL_DIR}/src/time/gmtime_r.c
+    ${MUSL_DIR}/src/time/gmtime.c
+    ${MUSL_DIR}/src/time/localtime.c
+    ${MUSL_DIR}/src/time/timegm.c
+    ${MUSL_DIR}/src/time/asctime.c
+    ${MUSL_DIR}/src/time/ctime_r.c
+    ${MUSL_DIR}/src/time/ctime.c
+    ${MUSL_DIR}/src/time/strftime.c
+    ${MUSL_DIR}/src/time/wcsftime.c
+    ${MUSL_DIR}/src/time/strptime.c
+    # sleep/usleep live under src/unistd but are pure nanosleep wrappers (this domain).
+    ${MUSL_DIR}/src/unistd/sleep.c
+    ${MUSL_DIR}/src/unistd/usleep.c
 )
 
 # --- our independent C (no musl basis) ----------------------------------------
@@ -191,10 +217,11 @@ set(C2GO_OWN_SOURCES
     # X-macro blob directly). Defines strerror + strerror_l; strerror_r stays musl's
     # (calls this). Unblocks printf %m / perror / the musl strerror_r caller.
     ${CSRC_DIR}/strerror.c
-    # time (adapted blob): calendar conversions (musl UTC math verbatim), strftime
-    # (C locale), strptime, and the tzset/tzname/timezone/daylight POSIX globals.
-    # No C-side timezone DB -- the LOCAL zone offset/name comes from the Go bridge
-    # (time.go -> time.Local); clock/nanosleep ride __c2go_clock_gettime/nanosleep.
+    # time (our-own subset): the parts of <time.h> that replace musl's algorithm
+    # wholesale rather than patch it -- the clock/sleep family (Go time bridge, not a
+    # syscall), the timezone state (time.Local snapshot, not a zoneinfo-DB parser), and
+    # localtime_r/mktime (per-instant offset from the Go bridge, not __secs_to_zone).
+    # The pure calendar/format code stays in musl src/time (see C2GO_MUSL_SOURCES).
     ${CSRC_DIR}/time.c
     # env (adapted): the C `char **environ` global + putenv/clearenv/__environ_sync.
     # getenv/setenv/unsetenv are Go bridges (process.go) over the os package; the
