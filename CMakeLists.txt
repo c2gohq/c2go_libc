@@ -168,6 +168,11 @@ set(C2GO_OWN_SOURCES
     # lock + FILE handle bridge to Go is stdio.go (root). bits/stdio_impl.h supplies the
     # FILE struct with the c2go lockid field.
     ${CSRC_DIR}/stdio.c
+    # multibyte core (adapted blob): mbrtowc/wcrtomb/mbtowc/wctomb/mbstowcs/wcstombs/
+    # mbsrtowcs/wcsrtombs/btowc/wctob/mblen/mbrlen/mbsinit + __ctype_get_mb_cur_max +
+    # __surrogate_to_utf8. Pure C (no Go glue). Provides the wide-conversion core stdio.c's
+    # wide paths + __ctype_get_mb_cur_max depend on. Standard headers only (no internal.h).
+    ${CSRC_DIR}/multibyte.c
 )
 
 # Include dirs handed to clang -fc2go for every TU above.
