@@ -191,6 +191,11 @@ set(C2GO_OWN_SOURCES
     # X-macro blob directly). Defines strerror + strerror_l; strerror_r stays musl's
     # (calls this). Unblocks printf %m / perror / the musl strerror_r caller.
     ${CSRC_DIR}/strerror.c
+    # time (adapted blob): calendar conversions (musl UTC math verbatim), strftime
+    # (C locale), strptime, and the tzset/tzname/timezone/daylight POSIX globals.
+    # No C-side timezone DB -- the LOCAL zone offset/name comes from the Go bridge
+    # (time.go -> time.Local); clock/nanosleep ride __c2go_clock_gettime/nanosleep.
+    ${CSRC_DIR}/time.c
 )
 
 # Include dirs handed to clang -fc2go for every TU above.
