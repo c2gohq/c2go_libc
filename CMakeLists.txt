@@ -148,6 +148,12 @@ set(C2GO_OWN_SOURCES
     # musl's ~39KB tables. Vendors only the small ~5KB width tables (nonspacing.h/wide.h,
     # in csrc/) since Go has no East-Asian-Width data. See MIGRATION_PLAN.
     ${CSRC_DIR}/wctype.c
+    # pthread C glue: the three fp-call trampolines (__c2go_pthread_run{,_void,_dtor} —
+    # a pthread start routine / once-init / TSD destructor is a c2go fp, so it must be
+    # CALLED in C, the qsort.c pattern) plus the #664 attr-object lifecycle bodies
+    # (mutexattr/condattr/rwlockattr init/destroy/settype, pthread_atfork). The Go side
+    # of pthreads (mutex/cond/rwlock/sem/key/thread state) is the glue in *.go at root.
+    ${CSRC_DIR}/pthread.c
 )
 
 # Include dirs handed to clang -fc2go for every TU above.
