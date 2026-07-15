@@ -186,6 +186,11 @@ set(C2GO_OWN_SOURCES
     ${CSRC_DIR}/stat_posix.c
     ${CSRC_DIR}/stat_windows.c
     ${CSRC_DIR}/stat2.c
+    # strerror: the locale-free message-table lookup (adapted — musl routes through
+    # __strerror_l/LC_MESSAGES; we ship no catalogs so it indexes the __strerror.h
+    # X-macro blob directly). Defines strerror + strerror_l; strerror_r stays musl's
+    # (calls this). Unblocks printf %m / perror / the musl strerror_r caller.
+    ${CSRC_DIR}/strerror.c
 )
 
 # Include dirs handed to clang -fc2go for every TU above.
