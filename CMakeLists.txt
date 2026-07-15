@@ -161,6 +161,13 @@ set(C2GO_OWN_SOURCES
     # Unblocks the stdio (FILE*) layer next.
     ${CSRC_DIR}/io_posix.c
     ${CSRC_DIR}/io_windows.c
+    # stdio (FILE*) layer: one adapted blob (musl-derived, c2go-modified — the FILE*
+    # buffering + printf/scanf engines vfprintf/vfscanf/__floatscan/__intscan/fmt_fp are
+    # self-contained file-local statics). Owns the number-conversion family (strtol/strtod/
+    # wcsto*) too, so never also add musl strtol.c/strtod.c (would duplicate). Per-FILE
+    # lock + FILE handle bridge to Go is stdio.go (root). bits/stdio_impl.h supplies the
+    # FILE struct with the c2go lockid field.
+    ${CSRC_DIR}/stdio.c
 )
 
 # Include dirs handed to clang -fc2go for every TU above.
