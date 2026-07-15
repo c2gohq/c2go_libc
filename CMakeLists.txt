@@ -173,6 +173,19 @@ set(C2GO_OWN_SOURCES
     # __surrogate_to_utf8. Pure C (no Go glue). Provides the wide-conversion core stdio.c's
     # wide paths + __ctype_get_mb_cur_max depend on. Standard headers only (no internal.h).
     ${CSRC_DIR}/multibyte.c
+    # stat/fsops filesystem layer: thin C wrappers marshalling into Go syscall shims.
+    # posix/windows split (mutually exclusive via _WIN32 -> empty TU on the other OS).
+    # Symbol sets are disjoint from io_posix.c (bare dup vs dup2/dup3 etc). The Go shims
+    # split: added fsops.go/stat.go (unix) + stat_windows.go (windows); the per-GOOS
+    # helpers (fsops_darwin/linux.go, stat_darwin/linux.go, stat_types.go) already arrived
+    # with the fd/io cluster as dormant exports and are activated here. No x/sys (the
+    # x/sys-pulling siblings fallocate/futimens/pipe2/ioctl stay deferred). stat2.c's
+    # utimensat/futimens/mkfifo/fallocate shims are undefined until that deferred cluster.
+    ${CSRC_DIR}/fsops_posix.c
+    ${CSRC_DIR}/fsops_windows.c
+    ${CSRC_DIR}/stat_posix.c
+    ${CSRC_DIR}/stat_windows.c
+    ${CSRC_DIR}/stat2.c
 )
 
 # Include dirs handed to clang -fc2go for every TU above.
