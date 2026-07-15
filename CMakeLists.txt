@@ -25,7 +25,19 @@ set(GOMOD_ROOT ${CMAKE_SOURCE_DIR})   # generated *.go/*.s land here (= the modu
 
 # --- musl translation units we build (populated during migration) -------------
 set(C2GO_MUSL_SOURCES
-    # string (mem/str/wcs; memcpy/memmove/memset/bzero + wmem* are compiler-intercepted)
+    # string (mem/str/wcs). memcpy/memmove/memset/bzero + wmem* ARE built here (musl
+    # verbatim): they are the routing targets of the c2go-memcpy-typing pass (@llvm.mem*
+    # -> the lowercase C symbol for an unmanaged dst; runtime.typedmemmove for a managed
+    # one). musl's bodies are scalar (no aggregate copy / struct init), so they never
+    # self-route. Only memmove carries a defensive no_builtin -- it is NOT in LoopIdiom's
+    # name-guard list (unlike memset/memcpy/strlen); a no-op in this pipeline.
+    ${MUSL_DIR}/src/string/memcpy.c
+    ${MUSL_DIR}/src/string/memmove.c
+    ${MUSL_DIR}/src/string/memset.c
+    ${MUSL_DIR}/src/string/bzero.c
+    ${MUSL_DIR}/src/string/wmemcpy.c
+    ${MUSL_DIR}/src/string/wmemmove.c
+    ${MUSL_DIR}/src/string/wmemset.c
     ${MUSL_DIR}/src/string/strlen.c
     ${MUSL_DIR}/src/string/memchr.c
     ${MUSL_DIR}/src/string/memcmp.c
