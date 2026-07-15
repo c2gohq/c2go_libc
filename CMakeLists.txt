@@ -196,6 +196,11 @@ set(C2GO_OWN_SOURCES
     # No C-side timezone DB -- the LOCAL zone offset/name comes from the Go bridge
     # (time.go -> time.Local); clock/nanosleep ride __c2go_clock_gettime/nanosleep.
     ${CSRC_DIR}/time.c
+    # env (adapted): the C `char **environ` global + putenv/clearenv/__environ_sync.
+    # getenv/setenv/unsetenv are Go bridges (process.go) over the os package; the
+    # snapshot bridge rebuilds environ (libc-malloc'd, freed on the next sync) so
+    # readers of environ see a current view. Also unblocks time_tz_test's Setenv.
+    ${CSRC_DIR}/env.c
 )
 
 # Include dirs handed to clang -fc2go for every TU above.
