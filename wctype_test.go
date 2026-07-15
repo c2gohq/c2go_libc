@@ -16,7 +16,7 @@ func TestWctype(t *testing.T) {
 		t.Fatal("wcwidth")
 	}
 	// wctype("alpha") -> class id; iswctype dispatches on it
-	al := Wctype(cbytes("alpha"))
+	al := Wctype(csb("alpha"))
 	if al == 0 || Iswctype('a', al) == 0 || Iswctype('1', al) != 0 {
 		t.Fatal("wctype/iswctype")
 	}
@@ -25,7 +25,7 @@ func TestWctype(t *testing.T) {
 		t.Fatal("wcswidth")
 	}
 	// wctrans("tolower") -> transform id; towctrans applies it
-	if tr := Wctrans(cbytes("tolower")); Towctrans('A', tr) != 'a' {
+	if tr := Wctrans(csb("tolower")); Towctrans('A', tr) != 'a' {
 		t.Fatal("wctrans/towctrans")
 	}
 }
