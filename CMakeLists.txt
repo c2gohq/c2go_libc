@@ -120,31 +120,22 @@ set(C2GO_MUSL_SOURCES
     # prng
     ${MUSL_DIR}/src/prng/rand.c
     ${MUSL_DIR}/src/prng/rand_r.c
-    # wide-char classification / conversion (self-contained; multibyte DFA core deferred)
-    ${MUSL_DIR}/src/ctype/iswalnum.c
-    ${MUSL_DIR}/src/ctype/iswalpha.c
-    ${MUSL_DIR}/src/ctype/iswblank.c
-    ${MUSL_DIR}/src/ctype/iswcntrl.c
-    ${MUSL_DIR}/src/ctype/iswdigit.c
-    ${MUSL_DIR}/src/ctype/iswgraph.c
-    ${MUSL_DIR}/src/ctype/iswlower.c
-    ${MUSL_DIR}/src/ctype/iswprint.c
-    ${MUSL_DIR}/src/ctype/iswpunct.c
-    ${MUSL_DIR}/src/ctype/iswspace.c
-    ${MUSL_DIR}/src/ctype/iswupper.c
-    ${MUSL_DIR}/src/ctype/iswxdigit.c
-    ${MUSL_DIR}/src/ctype/iswctype.c
-    ${MUSL_DIR}/src/ctype/towctrans.c
-    ${MUSL_DIR}/src/ctype/wctrans.c
-    ${MUSL_DIR}/src/ctype/wcwidth.c
-    ${MUSL_DIR}/src/ctype/wcswidth.c
+    # NOTE: wide-char ctype (iswalpha/towlower/wctype/wcwidth/... + _l) is NOT built
+    # verbatim from musl. Its big Unicode tables (alpha.h/casemap.h ~39KB) are delegated
+    # to Go's unicode package — the agreed design (mirrors iconv). It lives in
+    # ${CSRC_DIR}/wctype.c (C/Go hybrid) + wctype.go, listed under C2GO_OWN_SOURCES below.
     # search (intrusive linked-list; hsearch/tsearch deferred: need malloc glue)
     ${MUSL_DIR}/src/search/insque.c
 )
 
 # --- our independent C (no musl basis) ----------------------------------------
 set(C2GO_OWN_SOURCES
-    # e.g. ${CSRC_DIR}/io.c
+    # wide-char ctype: C/Go hybrid. ASCII in C; the big Unicode tables (alpha/casemap)
+    # are delegated to Go's unicode package via wctype.go (agreed design — a large
+    # lookup table is Go's to own, mirrors iconv). NOT verbatim musl: that would vendor
+    # musl's ~39KB tables. Vendors only the small ~5KB width tables (nonspacing.h/wide.h,
+    # in csrc/) since Go has no East-Asian-Width data. See MIGRATION_PLAN.
+    ${CSRC_DIR}/wctype.c
 )
 
 # Include dirs handed to clang -fc2go for every TU above.
