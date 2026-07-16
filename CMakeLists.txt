@@ -122,6 +122,12 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/ctype/tolower.c
     ${MUSL_DIR}/src/ctype/toupper.c
     ${MUSL_DIR}/src/ctype/toascii.c
+    # wcwidth/wcswidth: musl's bitmap-table column-width algorithm VERBATIM (nonspacing.h
+    # + wide.h are musl's own ~5KB tables). Unlike iswalpha/tow* there is no canonical Go
+    # equivalent (stdlib unicode has no East-Asian-Width data), so this is NOT delegated
+    # to Go -- it is byte-exact musl, hence a minimal in-place patch, not a csrc vendoring.
+    ${MUSL_DIR}/src/ctype/wcwidth.c
+    ${MUSL_DIR}/src/ctype/wcswidth.c
     # stdlib (integer arithmetic + ascii-to-number + bsearch)
     ${MUSL_DIR}/src/stdlib/abs.c
     ${MUSL_DIR}/src/stdlib/labs.c
@@ -138,10 +144,11 @@ set(C2GO_MUSL_SOURCES
     # prng
     ${MUSL_DIR}/src/prng/rand.c
     ${MUSL_DIR}/src/prng/rand_r.c
-    # NOTE: wide-char ctype (iswalpha/towlower/wctype/wcwidth/... + _l) is NOT built
-    # verbatim from musl. Its big Unicode tables (alpha.h/casemap.h ~39KB) are delegated
-    # to Go's unicode package — the agreed design (mirrors iconv). It lives in
-    # ${CSRC_DIR}/wctype.c (C/Go hybrid) + wctype.go, listed under C2GO_OWN_SOURCES below.
+    # NOTE: wide-char ctype CASE/ALPHA (iswalpha/towlower/towupper + _l) is NOT built
+    # verbatim from musl -- its big Unicode tables (alpha.h/casemap.h ~39KB) ARE delegated
+    # to Go's unicode package (the agreed design, mirrors iconv), because Go's unicode is
+    # the canonical equivalent. That hybrid lives in ${CSRC_DIR}/wctype.c + wctype.go under
+    # C2GO_OWN_SOURCES. (wcwidth, which has no Go equivalent, stays byte-exact musl above.)
     # search (intrusive linked-list; hsearch/tsearch deferred: need malloc glue)
     ${MUSL_DIR}/src/search/insque.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
