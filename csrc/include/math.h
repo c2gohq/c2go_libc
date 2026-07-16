@@ -8,6 +8,11 @@
 
 #include <c2go.h>
 
+/* FLT_EVAL_METHOD == 0 on every c2go target (SSE2 / NEON), so the C99
+ * evaluation types are the nominal types. */
+typedef double double_t;
+typedef float  float_t;
+
 #define HUGE_VAL  (__builtin_huge_val())
 #define HUGE_VALF (__builtin_huge_valf())
 #define HUGE_VALL (__builtin_huge_vall())
@@ -56,8 +61,9 @@ extern int signgam;  /* XSI: sign of gamma(x) set by lgamma (math_gamma.c) */
 #define MATH_ERREXCEPT 2
 /* musl's value (#657): the ported musl implementations report via FP
  * exception flags, never via errno — advertising MATH_ERRNO would send
- * callers to a stale errno. (c2go has no fenv, so the flags themselves are
- * not queryable either; this mirrors musl's contract, not a new one.) */
+ * callers to a stale errno. (the flags themselves are
+ * not queryable either — c2go's fenv is SOFT, fetestexcept is always 0;
+ * this mirrors musl's contract, not a new one.) */
 #define math_errhandling MATH_ERREXCEPT
 
 /* ---- double ---- */

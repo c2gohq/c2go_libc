@@ -306,6 +306,73 @@ set(C2GO_MUSL_SOURCES
     # documented). The *l surface is <math.h> #define aliases (long double ==
     # double on every c2go target). floor.c is the phase's validation probe.
     ${MUSL_DIR}/src/math/floor.c
+    # fenv: c2go's fenv is SOFT (csrc/include/fenv.h — FE_ALL_EXCEPT == 0,
+    # FE_TONEAREST == 0; the Go runtime owns the FPU control state). musl's dummy
+    # soft-arch src/fenv/fenv.c serves every call verbatim; fesetround.c is the
+    # arch-independent argument-check wrapper over __fesetround.
+    ${MUSL_DIR}/src/fenv/fenv.c
+    ${MUSL_DIR}/src/fenv/fesetround.c
+    # math wave 1: round + manipulation families (OLD math_round.c + math_manip.c
+    # surface, 57 TUs + floor above = the same 58 symbols). All verbatim +
+    # c2go_extern; remainder(f).c drop the drem/dremf weak_alias (BSD-legacy,
+    # c2go has no weak_alias — OLD precedent).
+    ${MUSL_DIR}/src/math/ceil.c
+    ${MUSL_DIR}/src/math/ceilf.c
+    ${MUSL_DIR}/src/math/copysign.c
+    ${MUSL_DIR}/src/math/copysignf.c
+    ${MUSL_DIR}/src/math/fabs.c
+    ${MUSL_DIR}/src/math/fabsf.c
+    ${MUSL_DIR}/src/math/fdim.c
+    ${MUSL_DIR}/src/math/fdimf.c
+    ${MUSL_DIR}/src/math/floorf.c
+    ${MUSL_DIR}/src/math/fma.c
+    ${MUSL_DIR}/src/math/fmaf.c
+    ${MUSL_DIR}/src/math/fmax.c
+    ${MUSL_DIR}/src/math/fmaxf.c
+    ${MUSL_DIR}/src/math/fmin.c
+    ${MUSL_DIR}/src/math/fminf.c
+    ${MUSL_DIR}/src/math/fmod.c
+    ${MUSL_DIR}/src/math/fmodf.c
+    ${MUSL_DIR}/src/math/frexp.c
+    ${MUSL_DIR}/src/math/frexpf.c
+    ${MUSL_DIR}/src/math/ilogb.c
+    ${MUSL_DIR}/src/math/ilogbf.c
+    ${MUSL_DIR}/src/math/ldexp.c
+    ${MUSL_DIR}/src/math/ldexpf.c
+    ${MUSL_DIR}/src/math/llrint.c
+    ${MUSL_DIR}/src/math/llrintf.c
+    ${MUSL_DIR}/src/math/llround.c
+    ${MUSL_DIR}/src/math/llroundf.c
+    ${MUSL_DIR}/src/math/logb.c
+    ${MUSL_DIR}/src/math/logbf.c
+    ${MUSL_DIR}/src/math/lrint.c
+    ${MUSL_DIR}/src/math/lrintf.c
+    ${MUSL_DIR}/src/math/lround.c
+    ${MUSL_DIR}/src/math/lroundf.c
+    ${MUSL_DIR}/src/math/modf.c
+    ${MUSL_DIR}/src/math/modff.c
+    ${MUSL_DIR}/src/math/nan.c
+    ${MUSL_DIR}/src/math/nanf.c
+    ${MUSL_DIR}/src/math/nearbyint.c
+    ${MUSL_DIR}/src/math/nearbyintf.c
+    ${MUSL_DIR}/src/math/nextafter.c
+    ${MUSL_DIR}/src/math/nextafterf.c
+    ${MUSL_DIR}/src/math/nexttoward.c
+    ${MUSL_DIR}/src/math/nexttowardf.c
+    ${MUSL_DIR}/src/math/remainder.c
+    ${MUSL_DIR}/src/math/remainderf.c
+    ${MUSL_DIR}/src/math/remquo.c
+    ${MUSL_DIR}/src/math/remquof.c
+    ${MUSL_DIR}/src/math/rint.c
+    ${MUSL_DIR}/src/math/rintf.c
+    ${MUSL_DIR}/src/math/round.c
+    ${MUSL_DIR}/src/math/roundf.c
+    ${MUSL_DIR}/src/math/scalbln.c
+    ${MUSL_DIR}/src/math/scalblnf.c
+    ${MUSL_DIR}/src/math/scalbn.c
+    ${MUSL_DIR}/src/math/scalbnf.c
+    ${MUSL_DIR}/src/math/trunc.c
+    ${MUSL_DIR}/src/math/truncf.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only

@@ -20,9 +20,7 @@
 #include <endian.h>
 #include <c2go.h>
 
-/* FLT_EVAL_METHOD == 0 on the SSE2 / NEON targets c2go builds for. */
-typedef double double_t;
-typedef float  float_t;
+/* double_t/float_t come from <math.h> (FLT_EVAL_METHOD == 0 everywhere). */
 
 /* type-punning accessors (no aliasing UB — compound-literal unions) */
 #define asuint(f)   ((union{float _f; uint32_t _i;}){f})._i
