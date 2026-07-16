@@ -373,6 +373,41 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/math/scalbnf.c
     ${MUSL_DIR}/src/math/trunc.c
     ${MUSL_DIR}/src/math/truncf.c
+    # math wave 2: trig (OLD math_trig.c surface, 16 symbols) + sqrt/sqrtf pulled
+    # forward from the pow bucket (asin/acos/asinf/acosf call sqrt — link
+    # closure). First cross-TU internal surface: __sin/__cos/__tan/__sindf/
+    # __cosdf/__tandf/__rem_pio2(f)/__rem_pio2_large are hidden in musl's
+    # src/internal/libm.h — here linkname decls in the shim + C2GO_KEEPCASE
+    # definitions. __rsqrt_tab is const cross-TU DATA (plain extern, the
+    # __fsmu8 mechanism; sqrt_data.h drops <features.h>/hidden).
+    ${MUSL_DIR}/src/math/sin.c
+    ${MUSL_DIR}/src/math/cos.c
+    ${MUSL_DIR}/src/math/tan.c
+    ${MUSL_DIR}/src/math/sincos.c
+    ${MUSL_DIR}/src/math/sinf.c
+    ${MUSL_DIR}/src/math/cosf.c
+    ${MUSL_DIR}/src/math/tanf.c
+    ${MUSL_DIR}/src/math/sincosf.c
+    ${MUSL_DIR}/src/math/asin.c
+    ${MUSL_DIR}/src/math/asinf.c
+    ${MUSL_DIR}/src/math/acos.c
+    ${MUSL_DIR}/src/math/acosf.c
+    ${MUSL_DIR}/src/math/atan.c
+    ${MUSL_DIR}/src/math/atanf.c
+    ${MUSL_DIR}/src/math/atan2.c
+    ${MUSL_DIR}/src/math/atan2f.c
+    ${MUSL_DIR}/src/math/sqrt.c
+    ${MUSL_DIR}/src/math/sqrtf.c
+    ${MUSL_DIR}/src/math/sqrt_data.c
+    ${MUSL_DIR}/src/math/__sin.c
+    ${MUSL_DIR}/src/math/__cos.c
+    ${MUSL_DIR}/src/math/__tan.c
+    ${MUSL_DIR}/src/math/__sindf.c
+    ${MUSL_DIR}/src/math/__cosdf.c
+    ${MUSL_DIR}/src/math/__tandf.c
+    ${MUSL_DIR}/src/math/__rem_pio2.c
+    ${MUSL_DIR}/src/math/__rem_pio2f.c
+    ${MUSL_DIR}/src/math/__rem_pio2_large.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only

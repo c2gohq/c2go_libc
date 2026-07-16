@@ -77,4 +77,27 @@ static inline float  __math_uflowf(uint32_t sign){ return __math_xflowf(sign, 0x
 static inline double __math_oflow(uint32_t sign) { return __math_xflow(sign, 0x1p769); }
 static inline float  __math_oflowf(uint32_t sign){ return __math_xflowf(sign, 0x1p97f); }
 
+/* ---- cross-TU internal surface (trig wave) ----------------------------------
+ * musl declares these `hidden` in src/internal/libm.h; in the c2go model each
+ * is a linkname declaration here + a C2GO_KEEPCASE definition in its own TU
+ * (the __fesetround / __rand48_step pattern). */
+int __rem_pio2_large(double *x, double *y, int e0, int nx, int prec)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__rem_pio2_large", C2GO_GOABI0);
+int __rem_pio2(double x, double *y)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__rem_pio2", C2GO_GOABI0);
+double __sin(double x, double y, int iy)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__sin", C2GO_GOABI0);
+double __cos(double x, double y)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__cos", C2GO_GOABI0);
+double __tan(double x, double y, int odd)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__tan", C2GO_GOABI0);
+int __rem_pio2f(float x, double *y)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__rem_pio2f", C2GO_GOABI0);
+float __sindf(double x)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__sindf", C2GO_GOABI0);
+float __cosdf(double x)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__cosdf", C2GO_GOABI0);
+float __tandf(double x, int odd)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__tandf", C2GO_GOABI0);
+
 #endif /* _C2GO_LIBM_H */
