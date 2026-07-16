@@ -106,4 +106,13 @@ double __expo2(double x, double sign)
 float __expo2f(float x, float sign)
     c2go_linkname("github.com/c2gohq/c2go_libc.__expo2f", C2GO_GOABI0);
 
+/* gamma wave. __signgam is mutable cross-TU DATA (defined in signgam.c,
+ * written through &__signgam by lgamma/lgammaf) -- plain extern, the
+ * __seed48 mechanism. */
+extern int __signgam;
+double __lgamma_r(double x, int *signgamp)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__lgamma_r", C2GO_GOABI0);
+float __lgammaf_r(float x, int *signgamp)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__lgammaf_r", C2GO_GOABI0);
+
 #endif /* _C2GO_LIBM_H */

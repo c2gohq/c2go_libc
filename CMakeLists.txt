@@ -465,6 +465,21 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/math/atanhf.c
     ${MUSL_DIR}/src/math/__expo2.c
     ${MUSL_DIR}/src/math/__expo2f.c
+    # math wave 6: gamma + erf (OLD math_gamma.c surface, 10 symbols + signgam).
+    # __lgamma_r/__lgammaf_r: KEEPCASE + shim linkname; lgamma_r/lgammaf_r are
+    # explicit exported wrappers over them (musl weak_alias). __signgam is
+    # mutable cross-TU DATA (plain extern); the public signgam name is a
+    # <math.h> macro alias (optreset precedent). tgamma's sinpi rides the
+    # wave-2 __sin/__cos internals.
+    ${MUSL_DIR}/src/math/signgam.c
+    ${MUSL_DIR}/src/math/lgamma.c
+    ${MUSL_DIR}/src/math/lgammaf.c
+    ${MUSL_DIR}/src/math/lgamma_r.c
+    ${MUSL_DIR}/src/math/lgammaf_r.c
+    ${MUSL_DIR}/src/math/tgamma.c
+    ${MUSL_DIR}/src/math/tgammaf.c
+    ${MUSL_DIR}/src/math/erf.c
+    ${MUSL_DIR}/src/math/erff.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only

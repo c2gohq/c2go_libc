@@ -55,7 +55,11 @@ typedef float  float_t;
 #define FP_ILOGB0   (-1-0x7fffffff)  /* musl: ilogb(0) sentinel (#661) */
 #define FP_ILOGBNAN (-1-0x7fffffff)  /* musl: ilogb(NaN) sentinel */
 
-extern int signgam;  /* XSI: sign of gamma(x) set by lgamma (math_gamma.c) */
+/* XSI signgam: set by lgamma/lgammaf. musl defines __signgam and weak-
+ * aliases the public name; c2go has no weak_alias, so the public name is
+ * a macro alias (the optreset precedent). */
+extern int __signgam;
+#define signgam __signgam
 
 #define MATH_ERRNO     1
 #define MATH_ERREXCEPT 2
