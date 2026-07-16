@@ -292,6 +292,13 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/misc/getsubopt.c
     ${MUSL_DIR}/src/malloc/reallocarray.c
     ${MUSL_DIR}/src/legacy/err.c
+    # final odds, verbatim: ffs/ffsl/ffsll (over the atomic.h shim's ctz) and
+    # posix_memalign (validate + wrap aligned_alloc; the power-of-two check lives
+    # in aligned_alloc itself, musl's division of labor).
+    ${MUSL_DIR}/src/misc/ffs.c
+    ${MUSL_DIR}/src/misc/ffsl.c
+    ${MUSL_DIR}/src/misc/ffsll.c
+    ${MUSL_DIR}/src/malloc/posix_memalign.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only
@@ -424,6 +431,12 @@ set(C2GO_OWN_SOURCES
     # resource: getrusage/getrlimit over per-OS x/sys bridges (musl one-liner
     # shapes). Unix-only (empty TU on windows).
     ${CSRC_DIR}/resource.c
+    # strsignal: per-OS ADAPTED (musl's compile-time linux-numbering chain is
+    # reshaped around our per-OS <signal.h> exports; _NSIG pinned locally;
+    # LCTRANS identity). Unix-only. strtoimax/strtoumax: plain forwarders onto
+    # strtoll/strtoull (the strtol family lives inside the stdio blob).
+    ${CSRC_DIR}/strsignal.c
+    ${CSRC_DIR}/inttypes.c
     # dirent: directory streams over the Go handle table (DIR = handle + entry
     # buffer; enumeration is os.File.ReadDir via dirent.go, cross-platform).
     # dirfd/fdopendir are unix-only (windows os.File.Fd() is a HANDLE, not a CRT
