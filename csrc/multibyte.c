@@ -170,11 +170,12 @@ c2go_extern size_t mbrtowc(wchar_t *restrict wc, const char *restrict src, size_
  * so on the 16-bit UTF-16 (windows) target it can never be a supplementary
  * scalar: musl's body is correct as-is, no 32-bit encode core needed. The
  * string encoders below reach the byte path via wcrtomb + __surrogate_to_utf8
- * (windows surrogate pairs), never a scalar core. Only the char32_t uchar entry
- * c32rtomb would need a 32-bit encoder on windows -- deferred to when uchar.h is
- * wired, branching on WCHAR_MAX (unix: reuse wcrtomb; windows: BMP->wcrtomb,
- * else inline 4-byte). (Decode is NOT symmetric: a decoded scalar can exceed 16
- * bits even on windows, so mbrtowc/__mbrtoc32 above keep the 32-bit decode core.) */
+ * (windows surrogate pairs), never a scalar core. The char32_t uchar entry
+ * c32rtomb (fork, src/multibyte/c32rtomb.c) is the one 32-bit encoder: unix
+ * delegates to wcrtomb (musl verbatim), windows adds a folding supplementary
+ * block; c16rtomb funnels through it. (Decode is NOT symmetric: a decoded
+ * scalar can exceed 16 bits even on windows, so mbrtowc/__mbrtoc32 above keep
+ * the 32-bit decode core.) */
 
 /* ── whole string: bytes -> wide (musl mbstowcs.c / mbsrtowcs.c) ──────────────
  * mbsrtowcs is the restartable engine; mbstowcs is the non-restartable façade.
@@ -232,17 +233,23 @@ c2go_extern size_t mbsrtowcs(wchar_t *restrict ws, const char **restrict src, si
 		if (*s-SA > SB-SA) break;
 		c = bittab[*s++-SA];
 resume0:
+		/* Accumulate the scalar exactly like the writing branch below. musl's
+		 * counting walk checks only the STATE SHAPE (bit25/bit19 of c), which
+		 * misclassifies a RESUMED supplementary char — the shifted state has
+		 * lost the 4-byte marker bit — so it would count 1 UTF-16 unit where
+		 * the writing pass emits 2 (caller-sized buffer overflows by 1). The
+		 * VALUE is needed to count pairs; folds back to 1-per-char on unix. */
 		if (OOB(c,*s)) { s--; break; }
-		s++;
-		if (c&(1U<<25)) {
+		c = (c<<6) | *s++-0x80;
+		if (c&(1U<<31)) {
 			if (*s-0x80u >= 0x40) { s-=2; break; }
-			s++;
-			if (c&(1U<<19)) {
+			c = (c<<6) | *s++-0x80;
+			if (c&(1U<<31)) {
 				if (*s-0x80u >= 0x40) { s-=3; break; }
-				s++;
-				if (WCHAR_UTF16) wn--;   /* 4-byte char = supplementary = 2 UTF-16 units */
+				c = (c<<6) | *s++-0x80;
 			}
 		}
+		if (WCHAR_UTF16 && c >= 0x10000) wn--;   /* supplementary = 2 UTF-16 units */
 		wn--;
 		c = 0;
 	} else for (;;) {
@@ -392,47 +399,29 @@ c2go_extern size_t wcsrtombs(char *restrict s, const wchar_t **restrict ws, size
 	return N;
 }
 
-/* ── state helper (musl mbsinit.c) ─────────────────────────────────────────
- * mbsinit tests the initial (zero-accumulator) state. (mbrlen/mblen/wctomb/
- * mbstowcs/wcstombs — thin verbatim-musl wrappers over the engines here — are
- * built from the musl fork.) */
-
-c2go_extern int mbsinit(const mbstate_t *st) {
-	/* Initial iff both the UTF-8 accumulator (word 0) and the parked-low-
-	 * surrogate slot (word 1, UTF-16 only) are clear. */
-	return !st || (!((unsigned *)st)[0] && !((unsigned *)st)[1]);
-}
+/* (mbsinit — musl's 1-word initial-state test verbatim — is built from the musl
+ * fork, src/multibyte/mbsinit.c. The whole decode layer keeps its state in
+ * mbstate_t word 0 only: the wchar_t engines never split a supplementary pair
+ * across calls — see the pair-stall note in mbsnrtowcs below; the uchar
+ * mbrtoc16/c16rtomb pending protocols are word-0 too, musl's own.) */
 
 /* ── bounded restartable string conversions (musl mbsnrtowcs.c / wcsnrtombs.c)
  * The n-bounded twins of mbsrtowcs/wcsrtombs — they cap the INPUT bytes/wide
  * chars consumed as well as the output count. mbsnrtowcs uses mbsrtowcs while
- * a whole batch is guaranteed to fit, then falls back to per-char mbrtowc. */
+ * a whole batch is guaranteed to fit, then falls back to a per-char scalar
+ * decode (__mbrtoc32). */
 
 c2go_extern size_t mbsnrtowcs(wchar_t *restrict wcs, const char **restrict src, size_t n, size_t wn, mbstate_t *restrict st) {
-	static mbstate_t internal_state;   /* 2 words: word1 UTF-8 partial, word2 UTF-16 parked-low */
+	static unsigned internal_state;
 	size_t l, cnt=0, n2;
-	unsigned cp;
+	unsigned cp, save;
 	wchar_t *ws, wbuf[256];
 	const char *s = *src;
 	const char *tmp_s;
 
-	if (!st) st = &internal_state;
+	if (!st) st = (void *)&internal_state;
 	if (!wcs) ws = wbuf, wn = sizeof wbuf / sizeof *wbuf;
 	else ws = wcs;
-
-	/* UTF-16 (Windows): a low surrogate parked by a prior call (whose output had
-	 * room for only the high half of a supplementary pair) is emitted/counted
-	 * first. For a counting call (!wcs) just tally and clear it — writing into
-	 * wbuf would break the `ws != wbuf` sentinel below. */
-	if (WCHAR_UTF16 && ((unsigned *)st)[1]) {
-		if (wcs) {
-			if (!wn) { *src = s; return 0; }   /* no room yet; stays parked */
-			*ws++ = ((unsigned *)st)[1];
-			wn--;
-		}
-		((unsigned *)st)[1] = 0;
-		cnt++;
-	}
 
 	/* making sure output buffer size is at most n/4 will ensure
 	 * that mbsrtowcs never reads more than n input bytes. thus
@@ -464,6 +453,7 @@ c2go_extern size_t mbsnrtowcs(wchar_t *restrict wcs, const char **restrict src, 
 		if (WCHAR_UTF16 && wn < 2 && IS_4BYTE_LEAD(*s)) break;
 		/* Decode to the 32-bit scalar (not mbrtowc, which reports EILSEQ for a
 		 * supplementary scalar on UTF-16 — here we split it into a pair). */
+		save = *(unsigned *)st;   /* pre-char DFA state (pair-stall anchor) */
 		l = __mbrtoc32(&cp, s, n, st);
 		if (l+2<=2) {
 			if (!(l+1)) {
@@ -479,22 +469,25 @@ c2go_extern size_t mbsnrtowcs(wchar_t *restrict wcs, const char **restrict src, 
 			n -= n;
 			break;
 		}
+		/* UTF-16: a RESUMED char (fresh 4-byte leads are peeked above) that
+		 * decodes to a supplementary scalar needs 2 output units; with only 1
+		 * slot left, restore the pre-char DFA state and stop BEFORE the char —
+		 * the next call (with room) re-decodes it whole. A pair is atomic in
+		 * the wchar_t engines: never split across calls, so mbstate_t stays
+		 * word-0-only and a DFA state is portable across them (mbsinit stays
+		 * musl's 1-word test; the uchar mbrtoc16/c16rtomb pending protocols
+		 * are word-0 too but private to that pair, as in upstream musl). */
+		if (WCHAR_UTF16 && cp >= 0x10000 && wn < 2) {
+			*(unsigned *)st = save;
+			break;
+		}
 		s += l; n -= l;
 		/* safe - this loop runs fewer than sizeof(wbuf)/8 times */
 		if (WCHAR_UTF16 && cp >= 0x10000) {
 			*ws++ = SURR_HIGH(cp);
-			if (wn >= 2) {
-				*ws++ = SURR_LOW(cp);
-				wn -= 2;
-				cnt += 2;
-			} else {
-				/* one slot (a resumed pair): park the low half; the next call
-				 * drains it at the top. */
-				((unsigned *)st)[1] = SURR_LOW(cp);
-				wn--;
-				cnt++;
-				break;
-			}
+			*ws++ = SURR_LOW(cp);
+			wn -= 2;
+			cnt += 2;
 		} else {
 			*ws++ = cp;
 			wn--;

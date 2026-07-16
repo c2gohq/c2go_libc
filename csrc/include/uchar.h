@@ -1,5 +1,7 @@
 /* uchar.h — C11 Unicode character utilities (musl include/uchar.h).
- * Impl source/uchar.c (#673). */
+ * Impl: musl fork src/multibyte/{mbrtoc16,mbrtoc32,c16rtomb,c32rtomb}.c
+ * (#673/#691 — musl verbatim with the decode core swapped to __mbrtoc32 and
+ * the one 32-bit encoder in c32rtomb; see CMakeLists.txt). */
 #ifndef _UCHAR_H
 #define _UCHAR_H
 

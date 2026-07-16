@@ -164,6 +164,21 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/multibyte/mbrlen.c
     ${MUSL_DIR}/src/multibyte/btowc.c
     ${MUSL_DIR}/src/multibyte/wctob.c
+    # mbsinit: musl's 1-word initial-state test verbatim. Correct as-is because the
+    # decode layer keeps ALL its state in mbstate_t word 0 -- the wchar_t engines
+    # never split a surrogate pair across calls (pair-stall, see csrc/multibyte.c
+    # mbsnrtowcs), and the uchar pending protocols below are word-0 (and correctly
+    # non-initial) too.
+    ${MUSL_DIR}/src/multibyte/mbsinit.c
+    # uchar.h (C11 char16_t/char32_t, #673/#691): musl verbatim except the width
+    # policy -- the decoders swap mbrtowc for the __mbrtoc32 scalar core (a 16-bit
+    # wchar_t can't carry a supplementary scalar, but char16_t/char32_t must);
+    # c32rtomb adds one folding windows block (the ONE 32-bit encoder) and c16rtomb
+    # funnels its combined pair through it.
+    ${MUSL_DIR}/src/multibyte/mbrtoc16.c
+    ${MUSL_DIR}/src/multibyte/mbrtoc32.c
+    ${MUSL_DIR}/src/multibyte/c16rtomb.c
+    ${MUSL_DIR}/src/multibyte/c32rtomb.c
     # the shared UTF-8 DFA transition table (__fsmu8), musl's own src/multibyte/internal.c.
     # Indexed by mbtowc (above) and the restartable engines in csrc/multibyte.c -- one copy
     # for the whole package, so the musl table data lives in the fork, not vendored into csrc.
@@ -250,13 +265,15 @@ set(C2GO_OWN_SOURCES
     # multibyte ADAPTED core: only the functions whose body WEAVES our windows UTF-16
     # surrogate logic stay here -- the RESTARTABLE engines (the mbrtowc wrapper +
     # mbsrtowcs/wcsrtombs/mbsnrtowcs/wcsnrtombs, each with surrogate branches woven at
-    # several points + the __mbrtoc32 scalar DECODE core + __surrogate_to_utf8), mbsinit
-    # (checks the UTF-16 parked-low slot) and __ctype_get_mb_cur_max (constant 4, not musl's
-    # locale read). The verbatim-musl encoder/decoder + wrappers (wcrtomb/mbtowc/mblen/wctomb/
-    # mbstowcs/wcstombs/mbrlen/btowc/wctob) are built from the musl fork (src/multibyte/*.c) --
-    # they call the engines here across the dir split. (wcrtomb/mbtowc are self-contained: a
-    # single wchar_t can't hold/produce a supplementary scalar on a 16-bit target; only the
-    # restartable engines split/combine surrogate pairs, so only they need our helpers.)
+    # several points + the __mbrtoc32 scalar DECODE core + __surrogate_to_utf8) and
+    # __ctype_get_mb_cur_max (constant 4, not musl's locale read). Everything verbatim-musl
+    # (wcrtomb/mbtowc/mbsinit/mblen/wctomb/mbstowcs/wcstombs/mbrlen/btowc/wctob + the uchar
+    # four) is built from the musl fork (src/multibyte/*.c) -- they call the engines here
+    # across the dir split. State protocol: mbstate_t word 0 ONLY. The wchar_t engines
+    # never split a supplementary pair across calls (pair-stall), so musl's 1-word mbsinit
+    # is correct and one engine's DFA state resumes in any other; the uchar
+    # mbrtoc16/c16rtomb pending protocols (musl's own, C11-mandated -3 / parked-high) also
+    # live in word 0 but are private to their function pair, exactly as upstream.
     ${CSRC_DIR}/multibyte.c
     # stat/fsops filesystem layer: thin C wrappers marshalling into Go syscall shims.
     # posix/windows split (mutually exclusive via _WIN32 -> empty TU on the other OS).
