@@ -72,6 +72,12 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/string/strcasecmp.c
     ${MUSL_DIR}/src/string/strncasecmp.c
     ${MUSL_DIR}/src/string/strerror_r.c
+    # strerror lives in musl src/errno/; it is musl's struct+offsetof message-table
+    # lookup VERBATIM (the __strerror_l body), with only the LC_MESSAGES translation
+    # layer neutralised (we ship no catalogs) -- a minimal in-place patch, not a csrc
+    # rewrite. __strerror.h carries musl's table + per-name #ifdef guards (targets'
+    # errno name sets differ). strerror_r.c above stays musl's (it calls strerror).
+    ${MUSL_DIR}/src/errno/strerror.c
     ${MUSL_DIR}/src/string/strverscmp.c
     ${MUSL_DIR}/src/string/swab.c
     ${MUSL_DIR}/src/string/wcslen.c
@@ -212,11 +218,6 @@ set(C2GO_OWN_SOURCES
     ${CSRC_DIR}/stat_posix.c
     ${CSRC_DIR}/stat_windows.c
     ${CSRC_DIR}/stat2.c
-    # strerror: the locale-free message-table lookup (adapted — musl routes through
-    # __strerror_l/LC_MESSAGES; we ship no catalogs so it indexes the __strerror.h
-    # X-macro blob directly). Defines strerror + strerror_l; strerror_r stays musl's
-    # (calls this). Unblocks printf %m / perror / the musl strerror_r caller.
-    ${CSRC_DIR}/strerror.c
     # time (our-own subset): the parts of <time.h> that replace musl's algorithm
     # wholesale rather than patch it -- the clock/sleep family (Go time bridge, not a
     # syscall), the timezone state (time.Local snapshot, not a zoneinfo-DB parser), and
