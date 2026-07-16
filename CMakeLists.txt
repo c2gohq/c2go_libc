@@ -391,6 +391,20 @@ set(C2GO_OWN_SOURCES
     # the whitelisted ioctl. tcgetpgrp/tcsetpgrp live here per-OS too (darwin
     # needs a POSIX-conformance gate musl doesn't). Empty TU on windows.
     ${CSRC_DIR}/termios.c
+    # process control: the atexit/at_quick_exit registry stays in C (registered
+    # c2go fps run natively; only the final stop crosses to Go's os.Exit).
+    # __c2go_finalize = the shared LIFO-drain+fflush(NULL) shutdown core, also a
+    # Go-callable export for hand-written hosts. abort runs a caught SIGABRT
+    # handler synchronously (signal.c's KEEPCASE dispatch) then always dies.
+    # _Exit is a direct <stdlib.h> linkname onto __c2go_exit (dodges the
+    # c2go-bind clash where _Exit and exit both fold to Go "Exit").
+    ${CSRC_DIR}/exit.c
+    # signal: the C side owns the sig->handler table and dispatch; Go bridges
+    # delivery (os/signal Notify pump -> C2goSignalRun, portable incl. windows
+    # console-ctrl). Hardware-fault signals the Go runtime owns are refused
+    # SIG_ERR honestly; raise = kernel self-signal on unix, sync C dispatch on
+    # windows.
+    ${CSRC_DIR}/signal.c
     # dirent: directory streams over the Go handle table (DIR = handle + entry
     # buffer; enumeration is os.File.ReadDir via dirent.go, cross-platform).
     # dirfd/fdopendir are unix-only (windows os.File.Fd() is a HANDLE, not a CRT
