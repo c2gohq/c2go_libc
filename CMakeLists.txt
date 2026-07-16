@@ -204,8 +204,27 @@ set(C2GO_MUSL_SOURCES
     # to Go's unicode package (the agreed design, mirrors iconv), because Go's unicode is
     # the canonical equivalent. That hybrid lives in ${CSRC_DIR}/wctype.c + wctype.go under
     # C2GO_OWN_SOURCES. (wcwidth, which has no Go equivalent, stays byte-exact musl above.)
-    # search (intrusive linked-list; hsearch/tsearch deferred: need malloc glue)
+    # sort: musl's smoothsort, verbatim. qsort.c = the 3-arg __qsort_r kernel
+    # (KEEPCASE cross-TU export; weak_alias qsort_r collapsed to a wrapper) + one
+    # <c2go.h> include; its `#include "atomic.h"` resolves to the csrc/include shim
+    # (pure bit helpers only). qsort_nr.c = the plain qsort facade, reaching the
+    # kernel via the <stdlib.h> __qsort_r linkname decl. CONTRACT (#650, documented
+    # at the <stdlib.h> decl): elements must not hold managed Go pointers.
+    ${MUSL_DIR}/src/stdlib/qsort.c
+    ${MUSL_DIR}/src/stdlib/qsort_nr.c
+    # search: musl verbatim (unblocked by the malloc glue; CONTRACT at <search.h>:
+    # stored pointers must reference stable unmanaged storage). tsearch.h carries
+    # the cross-TU __tsearch_balance linkname (tsearch.c defines KEEPCASE,
+    # tdelete.c calls); hsearch.c was patched earlier (weak _r aliases collapsed)
+    # and is wired here; insque is the long-wired intrusive linked list.
     ${MUSL_DIR}/src/search/insque.c
+    ${MUSL_DIR}/src/search/tsearch.c
+    ${MUSL_DIR}/src/search/tfind.c
+    ${MUSL_DIR}/src/search/tdelete.c
+    ${MUSL_DIR}/src/search/twalk.c
+    ${MUSL_DIR}/src/search/tdestroy.c
+    ${MUSL_DIR}/src/search/lsearch.c
+    ${MUSL_DIR}/src/search/hsearch.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only

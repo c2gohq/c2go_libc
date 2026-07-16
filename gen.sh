@@ -66,4 +66,37 @@ for t in "${LIBC_TARGETS[@]}"; do
 	cp "$out/libc_${goos}_${arch}.go" "$ROOT/libc_${goos}_${arch}.go"
 	echo "  -> libc_${goos}_${arch}.{go,s}"
 done
+
+# selftest: in-C exercises of libc functions whose comparator/callback is
+# invoked FROM C (qsort/bsearch/tsearch/...), so a Go closure cannot drive them.
+# One package (selftest/) built from selftest/source/*.c; the Go tests there
+# force-link the root libc package for the cross-package linkname symbols.
+# HOST targets only (windows has no selftest port; its e2e runs under wine gates).
+SELFTEST_TARGETS=(
+	"darwin:arm64:aarch64-apple-darwin"
+	"darwin:amd64:x86_64-apple-darwin"
+	"linux:arm64:aarch64-unknown-linux-goabi"
+	"linux:amd64:x86_64-unknown-linux-goabi"
+)
+echo "== selftest ($MOD/selftest) : $(ls "$ROOT"/selftest/source/*.c | wc -l | tr -d ' ') sources =="
+for t in "${SELFTEST_TARGETS[@]}"; do
+	IFS=: read -r goos arch triple lib <<<"$t"
+	bcs=()
+	for src in "$ROOT"/selftest/source/*.c; do
+		b="$(printf '%s' "$src" | sed 's#[/.]#_#g')"
+		"$CLANG" --target="$triple" -fc2go -fc2go-package="$MOD/selftest" -fno-math-errno \
+			-emit-llvm -I "$RES" -I "$INC" \
+			-c -o "$tmp/${b}.${goos}_${arch}.bc" "$src"
+		bcs+=("$tmp/${b}.${goos}_${arch}.bc")
+	done
+	asm="$tmp/selftest_${goos}_${arch}.s"; json="$tmp/selftest_${goos}_${arch}.json"
+	"$C2GOLTO" --c2go-lto-inline --c2go-escape-nonfatal \
+		--c2go-emit-asm="$asm" --c2go-emit-manifest="$json" "${bcs[@]}"
+	cp "$asm" "$ROOT/selftest/selftest_${goos}_${arch}.s"
+	out="$tmp/out_selftest_${goos}_${arch}"; mkdir -p "$out"
+	"$C2GOBIND" -pkg="$MOD/selftest" -pkgname=selftest -goname="selftest_${goos}_${arch}" \
+		-sidecar="$json" -out="$out" "$asm"
+	cp "$out/selftest_${goos}_${arch}.go" "$ROOT/selftest/selftest_${goos}_${arch}.go"
+	echo "  -> selftest/selftest_${goos}_${arch}.{go,s}"
+done
 echo "gen.sh: done."

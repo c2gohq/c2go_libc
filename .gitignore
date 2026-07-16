@@ -13,6 +13,8 @@
 # regen). Regenerate with ./gen.sh; add + commit them all at once at the END.
 /libc_*_*.go
 /libc_*_*.s
+/selftest/selftest_*_*.go
+/selftest/selftest_*_*.s
 
 # working migration notes — kept local, not tracked.
 /MIGRATION_PLAN.md

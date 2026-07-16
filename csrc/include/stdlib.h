@@ -172,6 +172,11 @@ void qsort(void *, size_t, size_t, int (*)(const void *, const void *))
     c2go_linkname("github.com/c2gohq/c2go_libc.qsort", C2GO_GOABI0);
 void qsort_r(void *, size_t, size_t, int (*)(const void *, const void *, void *), void *)
     c2go_linkname("github.com/c2gohq/c2go_libc.qsort_r", C2GO_GOABI0);
+/* internal: musl's 3-arg smoothsort kernel (fork src/stdlib/qsort.c); the
+ * plain qsort (qsort_nr.c) reaches it cross-TU through this declaration.
+ * KEEPCASE definition — a CamelCase Go alias would collide with qsort_r's. */
+void __qsort_r(void *, size_t, size_t, int (*)(const void *, const void *, void *), void *)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__qsort_r", C2GO_GOABI0);
 
 /* integer arithmetic */
 int abs(int)
