@@ -196,9 +196,21 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/stdlib/atoi.c
     ${MUSL_DIR}/src/stdlib/atol.c
     ${MUSL_DIR}/src/stdlib/atoll.c
-    # prng
+    # prng: rand/rand_r + the whole rand48 family, musl verbatim (lock-free pure
+    # computation). rand48.h carries the __rand48_step cross-TU linkname; the
+    # mutable __seed48[7] DATA definition (__seed48.c, PRISTINE 0-diff) is shared
+    # across TUs by plain extern — the __fsmu8 precedent extended to writable
+    # data. (The BSD random family is csrc/random.c: its lock weave is a rewrite.)
     ${MUSL_DIR}/src/prng/rand.c
     ${MUSL_DIR}/src/prng/rand_r.c
+    ${MUSL_DIR}/src/prng/__rand48_step.c
+    ${MUSL_DIR}/src/prng/__seed48.c
+    ${MUSL_DIR}/src/prng/drand48.c
+    ${MUSL_DIR}/src/prng/lrand48.c
+    ${MUSL_DIR}/src/prng/mrand48.c
+    ${MUSL_DIR}/src/prng/srand48.c
+    ${MUSL_DIR}/src/prng/seed48.c
+    ${MUSL_DIR}/src/prng/lcong48.c
     # NOTE: wide-char ctype CASE/ALPHA (iswalpha/towlower/towupper + _l) is NOT built
     # verbatim from musl -- its big Unicode tables (alpha.h/casemap.h ~39KB) ARE delegated
     # to Go's unicode package (the agreed design, mirrors iconv), because Go's unicode is
@@ -327,6 +339,10 @@ set(C2GO_OWN_SOURCES
     # with the fd/io cluster as dormant exports and are activated here. No x/sys (the
     # x/sys-pulling siblings fallocate/futimens/pipe2/ioctl stay deferred). stat2.c's
     # utimensat/futimens/mkfifo/fallocate shims are undefined until that deferred cluster.
+    # BSD random family: REWRITTEN from musl src/prng/random.c — the internal
+    # spinlock (lock.h) is replaced by a pthread_mutex woven through all four
+    # entry points, so it is csrc (the lock-free rand48 family is fork-verbatim).
+    ${CSRC_DIR}/random.c
     # dirent: directory streams over the Go handle table (DIR = handle + entry
     # buffer; enumeration is os.File.ReadDir via dirent.go, cross-platform).
     # dirfd/fdopendir are unix-only (windows os.File.Fd() is a HANDLE, not a CRT
