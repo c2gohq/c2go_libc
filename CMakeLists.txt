@@ -374,6 +374,13 @@ set(C2GO_OWN_SOURCES
     # (uname_unix.go marshals per-OS x/sys field widths into the uniform
     # musl-shaped struct). Empty TU on windows.
     ${CSRC_DIR}/uname.c
+    # unix fd/path syscall surface: musl one-liner shapes (call the shim, apply
+    # __syscall_ret) over unistd_shim_unix.go / pipe2_{linux,darwin}.go —
+    # readv/writev, the *at family, fchdir/f/l/chown, pipe2, sync. Unix-only.
+    ${CSRC_DIR}/unistd2.c
+    # conf bridges (cross-platform Go primitives, incl. windows):
+    # gethostname/getentropy/getpagesize/sysconf over conf_bridge.go.
+    ${CSRC_DIR}/conf.c
     # dirent: directory streams over the Go handle table (DIR = handle + entry
     # buffer; enumeration is os.File.ReadDir via dirent.go, cross-platform).
     # dirfd/fdopendir are unix-only (windows os.File.Fd() is a HANDLE, not a CRT
