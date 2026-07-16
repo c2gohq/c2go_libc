@@ -231,6 +231,15 @@ set(C2GO_MUSL_SOURCES
     # glob's dir walk uses the csrc dirent layer, sort uses qsort.
     ${MUSL_DIR}/src/regex/fnmatch.c
     ${MUSL_DIR}/src/regex/glob.c
+    # POSIX regex (TRE): regcomp/regfree/regexec verbatim (b306b16 base carries
+    # upstream's backref_ok validation, newer than the OLD port); regerror drops
+    # locale_impl via an identity LCTRANS_CUR shim (strerror precedent); tre-mem's
+    # three cross-TU entry points export KEEPCASE, declared via linkname in tre.h
+    # (the __-names come from tre.h's own namespacing #defines).
+    ${MUSL_DIR}/src/regex/regcomp.c
+    ${MUSL_DIR}/src/regex/regexec.c
+    ${MUSL_DIR}/src/regex/regerror.c
+    ${MUSL_DIR}/src/regex/tre-mem.c
     # scandir + comparators: musl verbatim. The sel/cmp arguments are CALLBACKS
     # invoked from C (cmp through qsort) -- C-only surface, exercised by the
     # selftest driver. alphasort needs strcoll (below); versionsort's strverscmp
