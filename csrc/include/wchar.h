@@ -38,12 +38,9 @@ size_t mbrtowc(wchar_t *__restrict, const char *__restrict, size_t, mbstate_t *_
  * scalars into surrogate pairs on UTF-16). */
 size_t __mbrtoc32(unsigned *__restrict, const char *__restrict, size_t, mbstate_t *__restrict)
     c2go_linkname("github.com/c2gohq/c2go_libc.__mbrtoc32", C2GO_GOABI0);
-/* internal: 32-bit scalar -> UTF-8 encode (the C11 c32rtomb core; encode
- * mirror of __mbrtoc32, #673). wcrtomb is its wchar_t-width policy wrapper;
- * uchar.c reaches the scalar encoder directly (a UTF-16 target's wchar_t
- * cannot carry a supplementary scalar). */
-size_t __c32rtomb(char *__restrict, unsigned, mbstate_t *__restrict)
-    c2go_linkname("github.com/c2gohq/c2go_libc.__c32rtomb", C2GO_GOABI0);
+/* wcrtomb is musl VERBATIM in the musl fork (src/multibyte/wcrtomb.c); no 32-bit
+ * encode core -- a wchar_t-width value can't be supplementary. (decode differs:
+ * __mbrtoc32 above is the shared 32-bit decode core.) */
 size_t wcrtomb(char *__restrict, wchar_t, mbstate_t *__restrict)
     c2go_linkname("github.com/c2gohq/c2go_libc.wcrtomb", C2GO_GOABI0);
 size_t mbrlen(const char *__restrict, size_t, mbstate_t *__restrict)

@@ -232,56 +232,17 @@ ilseq:
 	return -1;
 }
 
-/* ── single character: wide -> byte(s) (musl wcrtomb.c / wctomb.c) ───────────
- * Return contract: byte count on success, (size_t)-1 + errno=EILSEQ for a wide
- * value with no UTF-8 encoding (a surrogate or > U+10FFFF).
- *
- * __c32rtomb is the musl wcrtomb body verbatim with a 32-bit SCALAR param —
- * the encode mirror of __mbrtoc32 (#673): on the UTF-16 windows target a
- * wchar_t cannot carry >0xFFFF, so uchar.c's c16rtomb/c32rtomb must reach the
- * scalar encoder directly. The public wcrtomb below is its wchar_t-width
- * policy wrapper ((unsigned)wc: zero-extend on the 16-bit target, the body's
- * own cast on the 32-bit ones — byte behaviour identical to the old direct
- * body). Exported (c2go_extern + a <wchar.h> decl) like __mbrtoc32. */
-
-/* internal core: KEEPCASE — a CamelCase Go alias would collide with the public
- * c32rtomb's C32rtomb (#673); c2go_extern_as carries the casing arg cleanly. */
-c2go_extern_as(C2GO_KEEPCASE)
-size_t __c32rtomb(char *restrict s, unsigned wc, mbstate_t *restrict st) {
-	if (!s) return 1;
-	if ((unsigned)wc < 0x80) {
-		*s = wc;
-		return 1;
-	} else if (MB_CUR_MAX == 1) {
-		if (!IS_CODEUNIT(wc)) {
-			errno = EILSEQ;
-			return -1;
-		}
-		*s = wc;
-		return 1;
-	} else if ((unsigned)wc < 0x800) {
-		*s++ = 0xc0 | (wc>>6);
-		*s = 0x80 | (wc&0x3f);
-		return 2;
-	} else if ((unsigned)wc < 0xd800 || (unsigned)wc-0xe000 < 0x2000) {
-		*s++ = 0xe0 | (wc>>12);
-		*s++ = 0x80 | ((wc>>6)&0x3f);
-		*s = 0x80 | (wc&0x3f);
-		return 3;
-	} else if ((unsigned)wc-0x10000 < 0x100000) {
-		*s++ = 0xf0 | (wc>>18);
-		*s++ = 0x80 | ((wc>>12)&0x3f);
-		*s++ = 0x80 | ((wc>>6)&0x3f);
-		*s = 0x80 | (wc&0x3f);
-		return 4;
-	}
-	errno = EILSEQ;
-	return -1;
-}
-
-c2go_extern size_t wcrtomb(char *restrict s, wchar_t wc, mbstate_t *restrict st) {
-	return __c32rtomb(s, (unsigned)wc, st);
-}
+/* ── single character: wide -> byte(s) ──────────────────────────────────────
+ * wcrtomb (+ its wctomb facade) is musl VERBATIM -> lives in the musl fork
+ * (src/multibyte/wcrtomb.c). A wchar_t-width value is inherently <= WCHAR_MAX,
+ * so on the 16-bit UTF-16 (windows) target it can never be a supplementary
+ * scalar: musl's body is correct as-is, no 32-bit encode core needed. The
+ * string encoders below reach the byte path via wcrtomb + __surrogate_to_utf8
+ * (windows surrogate pairs), never a scalar core. Only the char32_t uchar entry
+ * c32rtomb would need a 32-bit encoder on windows -- deferred to when uchar.h is
+ * wired, branching on WCHAR_MAX (unix: reuse wcrtomb; windows: BMP->wcrtomb,
+ * else inline 4-byte). (Decode is NOT symmetric: a decoded scalar can exceed 16
+ * bits even on windows, so mbrtowc/__mbrtoc32 above keep the 32-bit decode core.) */
 
 /* ── whole string: bytes -> wide (musl mbstowcs.c / mbsrtowcs.c) ──────────────
  * mbsrtowcs is the restartable engine; mbstowcs is the non-restartable façade.
