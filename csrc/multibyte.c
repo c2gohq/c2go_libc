@@ -123,12 +123,9 @@ c2go_extern size_t __ctype_get_mb_cur_max(void) {
  * the string engines use it to reach the scalar so they can emit surrogate
  * pairs on UTF-16 targets. (This is exactly C11 mbrtoc32.) Exported (c2go_extern
  * + a <wchar.h> decl) so the wide FILE I/O in stdio.c can reach the scalar too. */
-/* internal core: KEEPCASE — a CamelCase Go alias would collide with the
- * public mbrtoc32's Mbrtoc32 (#673). The object-like c2go_extern macro
- * shadows the attribute spelling, so the arg form needs push_macro (#648). */
-#pragma push_macro("c2go_extern")
-#undef c2go_extern
-__attribute__((c2go_extern(C2GO_KEEPCASE)))
+/* internal core: KEEPCASE — a CamelCase Go alias would collide with the public
+ * mbrtoc32's Mbrtoc32 (#673); c2go_extern_as carries the casing arg cleanly. */
+c2go_extern_as(C2GO_KEEPCASE)
 size_t __mbrtoc32(unsigned *restrict pc, const char *restrict src, size_t n, mbstate_t *restrict st) {
 	static unsigned internal_state;
 	unsigned c;
@@ -174,7 +171,6 @@ ilseq:
 	errno = EILSEQ;
 	return -1;
 }
-#pragma pop_macro("c2go_extern")
 
 c2go_extern size_t mbrtowc(wchar_t *restrict wc, const char *restrict src, size_t n, mbstate_t *restrict st) {
 	unsigned cp;
@@ -248,11 +244,9 @@ ilseq:
  * own cast on the 32-bit ones — byte behaviour identical to the old direct
  * body). Exported (c2go_extern + a <wchar.h> decl) like __mbrtoc32. */
 
-/* internal core: KEEPCASE — a CamelCase Go alias would collide with the
- * public c32rtomb's C32rtomb (#673); push_macro per #648. */
-#pragma push_macro("c2go_extern")
-#undef c2go_extern
-__attribute__((c2go_extern(C2GO_KEEPCASE)))
+/* internal core: KEEPCASE — a CamelCase Go alias would collide with the public
+ * c32rtomb's C32rtomb (#673); c2go_extern_as carries the casing arg cleanly. */
+c2go_extern_as(C2GO_KEEPCASE)
 size_t __c32rtomb(char *restrict s, unsigned wc, mbstate_t *restrict st) {
 	if (!s) return 1;
 	if ((unsigned)wc < 0x80) {
@@ -284,7 +278,6 @@ size_t __c32rtomb(char *restrict s, unsigned wc, mbstate_t *restrict st) {
 	errno = EILSEQ;
 	return -1;
 }
-#pragma pop_macro("c2go_extern")
 
 c2go_extern size_t wcrtomb(char *restrict s, wchar_t wc, mbstate_t *restrict st) {
 	return __c32rtomb(s, (unsigned)wc, st);
