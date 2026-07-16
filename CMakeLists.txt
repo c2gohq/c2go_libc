@@ -480,6 +480,12 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/math/tgammaf.c
     ${MUSL_DIR}/src/math/erf.c
     ${MUSL_DIR}/src/math/erff.c
+    # math wave 7: bessel (OLD math_bessel.c surface: the XSI double-only
+    # j0/y0/j1/y1/jn/yn, no f variants -- OLD parity). Each TU defines its
+    # j/y pair; deps (sin/cos/sqrt/log/fabs) all landed in earlier waves.
+    ${MUSL_DIR}/src/math/j0.c
+    ${MUSL_DIR}/src/math/j1.c
+    ${MUSL_DIR}/src/math/jn.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only
