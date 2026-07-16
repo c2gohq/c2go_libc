@@ -225,6 +225,22 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/search/tdestroy.c
     ${MUSL_DIR}/src/search/lsearch.c
     ${MUSL_DIR}/src/search/hsearch.c
+    # path matching: fnmatch (delta: locale_impl.h dropped, MB_CUR_MAX is the
+    # <stdlib.h> constant) and glob (deltas: no passwd layer -- ~user/HOME-less ~
+    # take musl's own GLOB_NOMATCH failure path; __strchrnul -> public strchrnul).
+    # glob's dir walk uses the csrc dirent layer, sort uses qsort.
+    ${MUSL_DIR}/src/regex/fnmatch.c
+    ${MUSL_DIR}/src/regex/glob.c
+    # scandir + comparators: musl verbatim. The sel/cmp arguments are CALLBACKS
+    # invoked from C (cmp through qsort) -- C-only surface, exercised by the
+    # selftest driver. alphasort needs strcoll (below); versionsort's strverscmp
+    # arrived with the misc batch.
+    ${MUSL_DIR}/src/dirent/scandir.c
+    ${MUSL_DIR}/src/dirent/alphasort.c
+    ${MUSL_DIR}/src/dirent/versionsort.c
+    # strcoll: C.UTF-8-only libc collates by code point, so musl's C-locale body
+    # (strcmp) is verbatim-correct; __strcoll_l KEEPCASE + weak_alias collapsed.
+    ${MUSL_DIR}/src/locale/strcoll.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only
@@ -302,6 +318,11 @@ set(C2GO_OWN_SOURCES
     # with the fd/io cluster as dormant exports and are activated here. No x/sys (the
     # x/sys-pulling siblings fallocate/futimens/pipe2/ioctl stay deferred). stat2.c's
     # utimensat/futimens/mkfifo/fallocate shims are undefined until that deferred cluster.
+    # dirent: directory streams over the Go handle table (DIR = handle + entry
+    # buffer; enumeration is os.File.ReadDir via dirent.go, cross-platform).
+    # dirfd/fdopendir are unix-only (windows os.File.Fd() is a HANDLE, not a CRT
+    # fd). Consumed by the fork's scandir/glob across the dir split.
+    ${CSRC_DIR}/dirent.c
     ${CSRC_DIR}/fsops_posix.c
     ${CSRC_DIR}/fsops_windows.c
     ${CSRC_DIR}/stat_posix.c
