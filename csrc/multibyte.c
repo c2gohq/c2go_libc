@@ -236,10 +236,6 @@ ilseq:
 	return -1;
 }
 
-c2go_extern int mblen(const char *s, size_t n) {
-	return mbtowc(0, s, n);
-}
-
 /* ── single character: wide -> byte(s) (musl wcrtomb.c / wctomb.c) ───────────
  * Return contract: byte count on success, (size_t)-1 + errno=EILSEQ for a wide
  * value with no UTF-8 encoding (a surrogate or > U+10FFFF).
@@ -292,11 +288,6 @@ size_t __c32rtomb(char *restrict s, unsigned wc, mbstate_t *restrict st) {
 
 c2go_extern size_t wcrtomb(char *restrict s, wchar_t wc, mbstate_t *restrict st) {
 	return __c32rtomb(s, (unsigned)wc, st);
-}
-
-c2go_extern int wctomb(char *s, wchar_t wc) {
-	if (!s) return 0;
-	return wcrtomb(s, wc, 0);
 }
 
 /* ── whole string: bytes -> wide (musl mbstowcs.c / mbsrtowcs.c) ──────────────
@@ -440,10 +431,6 @@ resume:
 	return -1;
 }
 
-c2go_extern size_t mbstowcs(wchar_t *restrict ws, const char *restrict s, size_t wn) {
-	return mbsrtowcs(ws, (void*)&s, wn, 0);
-}
-
 /* ── whole string: wide -> bytes (musl wcstombs.c / wcsrtombs.c) ─────────────
  * wcsrtombs is the restartable engine (it never leaves partial state — a wide
  * char always fits its 1-4 output bytes atomically); wcstombs is the façade. */
@@ -519,38 +506,15 @@ c2go_extern size_t wcsrtombs(char *restrict s, const wchar_t **restrict ws, size
 	return N;
 }
 
-c2go_extern size_t wcstombs(char *restrict s, const wchar_t *restrict ws, size_t n) {
-	return wcsrtombs(s, &(const wchar_t *){ws}, n, 0);
-}
-
-/* ── state helpers (musl mbrlen.c / mbsinit.c) ──────────────────────────────
- * mbrlen == mbrtowc discarding the wide result; mbsinit tests the initial
- * (zero-accumulator) state. */
-
-c2go_extern size_t mbrlen(const char *restrict s, size_t n, mbstate_t *restrict st) {
-	static unsigned internal;
-	return mbrtowc(0, s, n, st ? st : (mbstate_t *)&internal);
-}
+/* ── state helper (musl mbsinit.c) ─────────────────────────────────────────
+ * mbsinit tests the initial (zero-accumulator) state. (mbrlen/mblen/wctomb/
+ * mbstowcs/wcstombs — thin verbatim-musl wrappers over the engines here — are
+ * built from the musl fork.) */
 
 c2go_extern int mbsinit(const mbstate_t *st) {
 	/* Initial iff both the UTF-8 accumulator (word 0) and the parked-low-
 	 * surrogate slot (word 1, UTF-16 only) are clear. */
 	return !st || (!((unsigned *)st)[0] && !((unsigned *)st)[1]);
-}
-
-/* ── single byte <-> wide (musl btowc.c / wctob.c) ──────────────────────────
- * btowc widens a single byte (WEOF if it is not a standalone character); wctob
- * narrows a wide value back to one byte (EOF if it needs more than one). */
-
-c2go_extern wint_t btowc(int c) {
-	int b = (unsigned char)c;
-	return b<128U ? b : (MB_CUR_MAX==1 && c!=EOF) ? CODEUNIT(c) : WEOF;
-}
-
-c2go_extern int wctob(wint_t c) {
-	if (c < 128U) return c;
-	if (MB_CUR_MAX==1 && IS_CODEUNIT(c)) return (unsigned char)c;
-	return EOF;
 }
 
 /* ── bounded restartable string conversions (musl mbsnrtowcs.c / wcsnrtombs.c)

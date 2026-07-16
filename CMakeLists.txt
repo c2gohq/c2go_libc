@@ -147,6 +147,17 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/ctype/iswupper.c
     ${MUSL_DIR}/src/ctype/iswctype.c
     ${MUSL_DIR}/src/ctype/wctrans.c
+    # multibyte thin wrappers: musl's algorithm VERBATIM -- each is a 1-3 line facade over
+    # an engine kept in csrc/multibyte.c (mblen->mbtowc, wctomb->wcrtomb, mbstowcs->mbsrtowcs,
+    # wcstombs->wcsrtombs, mbrlen->mbrtowc; btowc/wctob use the DFA macros via a c2go-adapted
+    # src/multibyte/internal.h). The UTF-16-adapted engines they call stay in csrc.
+    ${MUSL_DIR}/src/multibyte/mblen.c
+    ${MUSL_DIR}/src/multibyte/wctomb.c
+    ${MUSL_DIR}/src/multibyte/mbstowcs.c
+    ${MUSL_DIR}/src/multibyte/wcstombs.c
+    ${MUSL_DIR}/src/multibyte/mbrlen.c
+    ${MUSL_DIR}/src/multibyte/btowc.c
+    ${MUSL_DIR}/src/multibyte/wctob.c
     # stdlib (integer arithmetic + ascii-to-number + bsearch)
     ${MUSL_DIR}/src/stdlib/abs.c
     ${MUSL_DIR}/src/stdlib/labs.c
@@ -226,10 +237,13 @@ set(C2GO_OWN_SOURCES
     # lock + FILE handle bridge to Go is stdio.go (root). bits/stdio_impl.h supplies the
     # FILE struct with the c2go lockid field.
     ${CSRC_DIR}/stdio.c
-    # multibyte core (adapted blob): mbrtowc/wcrtomb/mbtowc/wctomb/mbstowcs/wcstombs/
-    # mbsrtowcs/wcsrtombs/btowc/wctob/mblen/mbrlen/mbsinit + __ctype_get_mb_cur_max +
-    # __surrogate_to_utf8. Pure C (no Go glue). Provides the wide-conversion core stdio.c's
-    # wide paths + __ctype_get_mb_cur_max depend on. Standard headers only (no internal.h).
+    # multibyte ADAPTED core: only the functions whose body is our adaptation stay here --
+    # the UTF-8 DFA engines carrying the Windows UTF-16 surrogate-pair logic (mbrtowc/mbtowc/
+    # wcrtomb/mbsrtowcs/wcsrtombs/mbsnrtowcs/wcsnrtombs + the __mbrtoc32/__c32rtomb scalar
+    # cores + __surrogate_to_utf8), mbsinit (checks the UTF-16 parked-low slot) and
+    # __ctype_get_mb_cur_max (constant 4, not musl's locale read). The verbatim-musl thin
+    # wrappers (mblen/wctomb/mbstowcs/wcstombs/mbrlen/btowc/wctob) are built from the musl
+    # fork instead (src/multibyte/*.c) -- they call the engines here across the dir split.
     ${CSRC_DIR}/multibyte.c
     # stat/fsops filesystem layer: thin C wrappers marshalling into Go syscall shims.
     # posix/windows split (mutually exclusive via _WIN32 -> empty TU on the other OS).
