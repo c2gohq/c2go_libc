@@ -381,6 +381,16 @@ set(C2GO_OWN_SOURCES
     # conf bridges (cross-platform Go primitives, incl. windows):
     # gethostname/getentropy/getpagesize/sysconf over conf_bridge.go.
     ${CSRC_DIR}/conf.c
+    # ioctl: the WHITELISTED entry (ioctl is variadic and the c2go vararg pack is
+    # TYPED -- each supported command's argument kind is known here; unknown
+    # commands are refused ENOTTY before reaching the kernel). Raw pass-through to
+    # the SYS_ioctl shim (ioctl_unix.go, x/sys). Unix-only.
+    ${CSRC_DIR}/ioctl.c
+    # termios: per-OS ADAPTED (linux = musl src/termios shapes; darwin = Apple
+    # Libc shapes over the xnu TIOCGETA command set -- no TCGETS there), all over
+    # the whitelisted ioctl. tcgetpgrp/tcsetpgrp live here per-OS too (darwin
+    # needs a POSIX-conformance gate musl doesn't). Empty TU on windows.
+    ${CSRC_DIR}/termios.c
     # dirent: directory streams over the Go handle table (DIR = handle + entry
     # buffer; enumeration is os.File.ReadDir via dirent.go, cross-platform).
     # dirfd/fdopendir are unix-only (windows os.File.Fd() is a HANDLE, not a CRT
