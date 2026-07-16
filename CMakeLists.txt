@@ -271,6 +271,12 @@ set(C2GO_MUSL_SOURCES
     # the __seed48 mechanics).
     ${MUSL_DIR}/src/misc/getopt.c
     ${MUSL_DIR}/src/misc/getopt_long.c
+    # nftw/ftw: file tree walk, unix-only (both TUs compile to empty on the
+    # windows target; <ftw.h> #errors there). Deltas: the pthread cancel-state
+    # bracket and musl's dead local dirfd override are dropped. The fn callback
+    # is C-invoked (qsort shape) -- exercised by the nftw selftest driver.
+    ${MUSL_DIR}/src/misc/nftw.c
+    ${MUSL_DIR}/src/legacy/ftw.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only
