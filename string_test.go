@@ -67,3 +67,14 @@ func TestStringCore(t *testing.T) {
 		t.Fatal("wcslen/wcscmp")
 	}
 }
+
+// OLD longtail_test.go, verbatim (wave-8 tail: explicit_bzero).
+func TestExplicitBzero(t *testing.T) {
+	buf := []byte{0xff, 0xff, 0xff, 0xff}
+	ExplicitBzero(unsafe.Pointer(&buf[0]), 4)
+	for i, b := range buf {
+		if b != 0 {
+			t.Fatalf("byte %d not zeroed: %#x", i, b)
+		}
+	}
+}

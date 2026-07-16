@@ -486,6 +486,10 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/math/j0.c
     ${MUSL_DIR}/src/math/j1.c
     ${MUSL_DIR}/src/math/jn.c
+    # wave-8 tail: the last old-vs-new symbol-parity gap. musl's inline-asm
+    # dead-store barrier becomes the __c2go_opaque_use Go no-op bridge
+    # (conf_bridge.go), OLD delta preserved.
+    ${MUSL_DIR}/src/string/explicit_bzero.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only
