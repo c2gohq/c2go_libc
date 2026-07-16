@@ -408,6 +408,36 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/math/__rem_pio2.c
     ${MUSL_DIR}/src/math/__rem_pio2f.c
     ${MUSL_DIR}/src/math/__rem_pio2_large.c
+    # math wave 3: explog (OLD math_explog.c surface, 16 symbols incl.
+    # exp10/pow10) + pow pulled forward from the pow bucket (exp10's tail
+    # calls pow — link closure, the sqrt precedent). The ARM-optimized
+    # implementations carry big const DATA tables: plain-extern cross-TU
+    # (data headers drop <features.h>/hidden, sqrt_data.h precedent); the
+    # data TUs themselves are pristine. pow10 is an explicit exported
+    # wrapper over exp10 (musl weak_alias, OLD precedent).
+    ${MUSL_DIR}/src/math/exp.c
+    ${MUSL_DIR}/src/math/expf.c
+    ${MUSL_DIR}/src/math/exp2.c
+    ${MUSL_DIR}/src/math/exp2f.c
+    ${MUSL_DIR}/src/math/exp10.c
+    ${MUSL_DIR}/src/math/expm1.c
+    ${MUSL_DIR}/src/math/expm1f.c
+    ${MUSL_DIR}/src/math/log.c
+    ${MUSL_DIR}/src/math/logf.c
+    ${MUSL_DIR}/src/math/log2.c
+    ${MUSL_DIR}/src/math/log2f.c
+    ${MUSL_DIR}/src/math/log10.c
+    ${MUSL_DIR}/src/math/log10f.c
+    ${MUSL_DIR}/src/math/log1p.c
+    ${MUSL_DIR}/src/math/log1pf.c
+    ${MUSL_DIR}/src/math/pow.c
+    ${MUSL_DIR}/src/math/exp_data.c
+    ${MUSL_DIR}/src/math/exp2f_data.c
+    ${MUSL_DIR}/src/math/log_data.c
+    ${MUSL_DIR}/src/math/logf_data.c
+    ${MUSL_DIR}/src/math/log2_data.c
+    ${MUSL_DIR}/src/math/log2f_data.c
+    ${MUSL_DIR}/src/math/pow_data.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only
