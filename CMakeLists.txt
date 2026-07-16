@@ -259,9 +259,13 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/dirent/scandir.c
     ${MUSL_DIR}/src/dirent/alphasort.c
     ${MUSL_DIR}/src/dirent/versionsort.c
-    # strcoll: C.UTF-8-only libc collates by code point, so musl's C-locale body
-    # (strcmp) is verbatim-correct; __strcoll_l KEEPCASE + weak_alias collapsed.
+    # collation/transform: C.UTF-8-only libc collates by code point, so musl's
+    # C-locale bodies are verbatim-correct; each __X_l is KEEPCASE + weak_alias
+    # collapsed (the strcoll pattern).
     ${MUSL_DIR}/src/locale/strcoll.c
+    ${MUSL_DIR}/src/locale/strxfrm.c
+    ${MUSL_DIR}/src/locale/wcscoll.c
+    ${MUSL_DIR}/src/locale/wcsxfrm.c
     # getopt + GNU getopt_long: verbatim bodies; getopt.c drops locale_impl/
     # stdio_impl behind identity/no-op shims (__lctrans_cur, FLOCK) and exports
     # __getopt_msg KEEPCASE for getopt_long.c (linkname in <getopt.h>, which also
@@ -405,6 +409,18 @@ set(C2GO_OWN_SOURCES
     # SIG_ERR honestly; raise = kernel self-signal on unix, sync C dispatch on
     # windows.
     ${CSRC_DIR}/signal.c
+    # locale: the single-C.UTF-8-locale policy layer -- setlocale honestly
+    # refuses other names, localeconv serves the static posix lconv, nl_langinfo
+    # the C-locale strings, newlocale/uselocale the trivial one-locale model,
+    # strfmon the monetary engine, strto*_l the forwarding variants. (The
+    # verbatim collation four live in the fork, src/locale/.)
+    ${CSRC_DIR}/locale.c
+    # intl: the gettext compatibility layer (identity translations -- no
+    # catalogs; textdomain/bindtextdomain bookkeeping is honest no-op state).
+    ${CSRC_DIR}/intl.c
+    # iconv: thin C surface over the Go x/text delegation (iconv.go) -- the
+    # agreed big-table direction (same line as the wctype unicode bridge).
+    ${CSRC_DIR}/iconv.c
     # dirent: directory streams over the Go handle table (DIR = handle + entry
     # buffer; enumeration is os.File.ReadDir via dirent.go, cross-platform).
     # dirfd/fdopendir are unix-only (windows os.File.Fd() is a HANDLE, not a CRT
