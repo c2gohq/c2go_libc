@@ -277,6 +277,17 @@ set(C2GO_MUSL_SOURCES
     # is C-invoked (qsort shape) -- exercised by the nftw selftest driver.
     ${MUSL_DIR}/src/misc/nftw.c
     ${MUSL_DIR}/src/legacy/ftw.c
+    # misc long tail, verbatim: libgen basename/dirname (the __xpg_basename
+    # weak_alias is omitted), a64l/l64a, getsubopt, reallocarray. err.c keeps its
+    # 8 bodies verbatim behind a lazy __progname bridge (#define onto a getter
+    # filled from Go's os.Args[0] basename -- musl fills it in __libc_start_main,
+    # which c2go's Go-main entry never runs).
+    ${MUSL_DIR}/src/misc/basename.c
+    ${MUSL_DIR}/src/misc/dirname.c
+    ${MUSL_DIR}/src/misc/a64l.c
+    ${MUSL_DIR}/src/misc/getsubopt.c
+    ${MUSL_DIR}/src/malloc/reallocarray.c
+    ${MUSL_DIR}/src/legacy/err.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only
@@ -358,6 +369,11 @@ set(C2GO_OWN_SOURCES
     # spinlock (lock.h) is replaced by a pthread_mutex woven through all four
     # entry points, so it is csrc (the lock-free rand48 family is fork-verbatim).
     ${CSRC_DIR}/random.c
+    # uname: musl's is a raw SYS_uname one-liner; this libc cannot issue raw
+    # syscalls, so the same shape runs over the __c2go_syscall_uname Go bridge
+    # (uname_unix.go marshals per-OS x/sys field widths into the uniform
+    # musl-shaped struct). Empty TU on windows.
+    ${CSRC_DIR}/uname.c
     # dirent: directory streams over the Go handle table (DIR = handle + entry
     # buffer; enumeration is os.File.ReadDir via dirent.go, cross-platform).
     # dirfd/fdopendir are unix-only (windows os.File.Fd() is a HANDLE, not a CRT
