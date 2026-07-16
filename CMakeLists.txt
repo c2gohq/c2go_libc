@@ -448,6 +448,23 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/math/cbrtf.c
     ${MUSL_DIR}/src/math/hypot.c
     ${MUSL_DIR}/src/math/hypotf.c
+    # math wave 5: hyper (OLD math_hyper.c surface, 12 symbols). sinh/cosh ride
+    # the __expo2/__expo2f internal pair (KEEPCASE + shim linkname); the
+    # inverse family calls log/log1p/sqrt from earlier waves.
+    ${MUSL_DIR}/src/math/sinh.c
+    ${MUSL_DIR}/src/math/sinhf.c
+    ${MUSL_DIR}/src/math/cosh.c
+    ${MUSL_DIR}/src/math/coshf.c
+    ${MUSL_DIR}/src/math/tanh.c
+    ${MUSL_DIR}/src/math/tanhf.c
+    ${MUSL_DIR}/src/math/asinh.c
+    ${MUSL_DIR}/src/math/asinhf.c
+    ${MUSL_DIR}/src/math/acosh.c
+    ${MUSL_DIR}/src/math/acoshf.c
+    ${MUSL_DIR}/src/math/atanh.c
+    ${MUSL_DIR}/src/math/atanhf.c
+    ${MUSL_DIR}/src/math/__expo2.c
+    ${MUSL_DIR}/src/math/__expo2f.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only

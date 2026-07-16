@@ -100,4 +100,10 @@ float __cosdf(double x)
 float __tandf(double x, int odd)
     c2go_linkname("github.com/c2gohq/c2go_libc.__tandf", C2GO_GOABI0);
 
+/* hyper wave */
+double __expo2(double x, double sign)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__expo2", C2GO_GOABI0);
+float __expo2f(float x, float sign)
+    c2go_linkname("github.com/c2gohq/c2go_libc.__expo2f", C2GO_GOABI0);
+
 #endif /* _C2GO_LIBM_H */
