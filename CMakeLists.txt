@@ -299,6 +299,13 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/misc/ffsl.c
     ${MUSL_DIR}/src/misc/ffsll.c
     ${MUSL_DIR}/src/malloc/posix_memalign.c
+    # ── math (dedicated phase; growing in waves) ──────────────────────────────
+    # musl src/math verbatim over the csrc/include/libm.h SHIM (distilled from
+    # musl's src/internal/libm.h: 64-bit-double world, no ldshape, the __math_*
+    # error paths inlined, the @llvm.floor->libcall self-recursion trap
+    # documented). The *l surface is <math.h> #define aliases (long double ==
+    # double on every c2go target). floor.c is the phase's validation probe.
+    ${MUSL_DIR}/src/math/floor.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only
