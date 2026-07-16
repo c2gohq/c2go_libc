@@ -262,6 +262,15 @@ set(C2GO_MUSL_SOURCES
     # strcoll: C.UTF-8-only libc collates by code point, so musl's C-locale body
     # (strcmp) is verbatim-correct; __strcoll_l KEEPCASE + weak_alias collapsed.
     ${MUSL_DIR}/src/locale/strcoll.c
+    # getopt + GNU getopt_long: verbatim bodies; getopt.c drops locale_impl/
+    # stdio_impl behind identity/no-op shims (__lctrans_cur, FLOCK) and exports
+    # __getopt_msg KEEPCASE for getopt_long.c (linkname in <getopt.h>, which also
+    # #define-aliases BSD optreset onto musl's __optreset storage — c2go doesn't
+    # lower weak_alias; __posix_getopt omitted). The state globals optarg/optind/
+    # opterr/optopt/__optpos/__optreset are shared DATA (writable cross-TU extern,
+    # the __seed48 mechanics).
+    ${MUSL_DIR}/src/misc/getopt.c
+    ${MUSL_DIR}/src/misc/getopt_long.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only
