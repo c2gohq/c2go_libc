@@ -438,6 +438,16 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/math/log2_data.c
     ${MUSL_DIR}/src/math/log2f_data.c
     ${MUSL_DIR}/src/math/pow_data.c
+    # math wave 4: the rest of the OLD math_pow.c bucket (sqrt/sqrtf landed in
+    # wave 2, pow in wave 3). powf rides exp2f_data (wave 2) + its own
+    # powf_data table (hidden neutralized, no <features.h> in this one);
+    # cbrt/hypot are fdlibm-style, dependency-free.
+    ${MUSL_DIR}/src/math/powf.c
+    ${MUSL_DIR}/src/math/powf_data.c
+    ${MUSL_DIR}/src/math/cbrt.c
+    ${MUSL_DIR}/src/math/cbrtf.c
+    ${MUSL_DIR}/src/math/hypot.c
+    ${MUSL_DIR}/src/math/hypotf.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
     # musl verbatim; gmtime/timegm/difftime/ctime*/asctime*/localtime carry only
