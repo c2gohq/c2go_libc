@@ -128,6 +128,25 @@ set(C2GO_MUSL_SOURCES
     # to Go -- it is byte-exact musl, hence a minimal in-place patch, not a csrc vendoring.
     ${MUSL_DIR}/src/ctype/wcwidth.c
     ${MUSL_DIR}/src/ctype/wcswidth.c
+    # wide-ctype classifiers: musl's algorithm VERBATIM (arithmetic ranges + the
+    # White_Space list + the composites/dispatch). They call the ADAPTED lookups
+    # (iswalpha/tow* Go-delegated, iswpunct derived) in csrc/wctype.c across the
+    # musl/csrc directory split -- same package, same layer. Only iswalpha/towlower/
+    # towupper/iswpunct stay in csrc (their bodies are our adaptation); everything
+    # else is byte-exact musl, hence in-place patches here. musl's iswalpha.c/
+    # iswpunct.c/towctrans.c (the alpha.h/punct.h/casemap.h table impls) are NOT built.
+    ${MUSL_DIR}/src/ctype/iswdigit.c
+    ${MUSL_DIR}/src/ctype/iswxdigit.c
+    ${MUSL_DIR}/src/ctype/iswcntrl.c
+    ${MUSL_DIR}/src/ctype/iswprint.c
+    ${MUSL_DIR}/src/ctype/iswspace.c
+    ${MUSL_DIR}/src/ctype/iswblank.c
+    ${MUSL_DIR}/src/ctype/iswalnum.c
+    ${MUSL_DIR}/src/ctype/iswgraph.c
+    ${MUSL_DIR}/src/ctype/iswlower.c
+    ${MUSL_DIR}/src/ctype/iswupper.c
+    ${MUSL_DIR}/src/ctype/iswctype.c
+    ${MUSL_DIR}/src/ctype/wctrans.c
     # stdlib (integer arithmetic + ascii-to-number + bsearch)
     ${MUSL_DIR}/src/stdlib/abs.c
     ${MUSL_DIR}/src/stdlib/labs.c
