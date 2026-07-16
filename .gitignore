@@ -13,8 +13,13 @@
 # regen). Regenerate with ./gen.sh; add + commit them all at once at the END.
 /libc_*_*.go
 /libc_*_*.s
-/selftest/selftest_*_*.go
-/selftest/selftest_*_*.s
+# selftest/ holds ONLY generated bindings + hand-written *_test.go (+ source/*.c),
+# so ignore structurally rather than by generated basename (which gen.sh could
+# rename): every .s is generated (hand-written asm lives at the root), and every
+# non-test .go is a generated binding.
+/selftest/*.s
+/selftest/*.go
+!/selftest/*_test.go
 
 # working migration notes — kept local, not tracked.
 /MIGRATION_PLAN.md
