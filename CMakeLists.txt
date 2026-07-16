@@ -421,6 +421,9 @@ set(C2GO_OWN_SOURCES
     # iconv: thin C surface over the Go x/text delegation (iconv.go) -- the
     # agreed big-table direction (same line as the wctype unicode bridge).
     ${CSRC_DIR}/iconv.c
+    # resource: getrusage/getrlimit over per-OS x/sys bridges (musl one-liner
+    # shapes). Unix-only (empty TU on windows).
+    ${CSRC_DIR}/resource.c
     # dirent: directory streams over the Go handle table (DIR = handle + entry
     # buffer; enumeration is os.File.ReadDir via dirent.go, cross-platform).
     # dirfd/fdopendir are unix-only (windows os.File.Fd() is a HANDLE, not a CRT
