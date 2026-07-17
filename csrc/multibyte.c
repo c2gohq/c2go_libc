@@ -1,5 +1,9 @@
-/* multibyte.c — UTF-8 <-> wchar_t conversions, ported VERBATIM from musl's
- * src/multibyte. This is a faithful C port (NOT a Go bridge): mbstate_t
+/* multibyte.c — UTF-8 <-> wchar_t conversions: the ADAPTED multibyte core,
+ * derived from musl src/multibyte (the byte-verbatim members of that
+ * directory live in the musl fork; what remains here is the woven windows
+ * UTF-16 logic musl has no equivalent of, over musl's algorithms).
+ * Portions copyright (c) 2005-2020 Rich Felker et al., MIT — see
+ * LICENSES/musl-COPYRIGHT.txt. This is a C port (NOT a Go bridge): mbstate_t
  * streaming and the incomplete(-2)/illegal(-1,EILSEQ) distinction cannot be
  * expressed by Go's unicode/utf8, and it is a per-char hot path the C-world
  * printf/scanf call directly. UNIX-FIRST: wchar_t is int32 (UTF-32); this libc
@@ -17,7 +21,6 @@
 #include <wchar.h>
 #include <bits/wchar_impl.h>   /* WCHAR_UTF16 / SURR_* surrogate predicates */
 #include <errno.h>
-#include <stdio.h>   /* EOF (btowc/wctob) */
 #include <stdint.h>  /* uint32_t/int32_t/uintptr_t for the state table + fast path */
 #include <string.h>  /* strlen (mbsrtowcs C-locale branch), memcpy (wcsnrtombs) */
 #include <limits.h>  /* MB_LEN_MAX (4: UTF-8). No #ifndef re-pin — a local
@@ -34,7 +37,7 @@
 #define MB_CUR_MAX 4
 
 /* ── internal state machine (musl src/multibyte/internal.{h,c}) ──────────────
- * The OOB/R/SA/SB DFA macros are copied from musl's internal.h (kept local so this
+ * The OOB/SA/SB DFA macros are copied from musl's internal.h (kept local so this
  * TU needn't pull in that header's locale_impl dependency); the transition TABLE is
  * musl's shared __fsmu8 (internal.c, built from the fork), referenced below. A DFA
  * state is a uint32: the low bits accumulate the code point, the upper 6 bits are a
@@ -77,7 +80,7 @@ c2go_extern size_t __surrogate_to_utf8(char *s, unsigned hi, unsigned lo) {
 	return 4;
 }
 
-/* ── MB_CUR_MAX (musl src/locale/__ctype_get_mb_cur_max.c) ──────────────────
+/* ── MB_CUR_MAX (musl src/ctype/__ctype_get_mb_cur_max.c) ──────────────────
  * musl returns the locale's value; this libc is always C.UTF-8, so it is the
  * constant 4. Returns a literal (NOT the MB_CUR_MAX macro, which expands to a
  * call to this very function). */

@@ -99,8 +99,11 @@ typedef __WCHAR_TYPE__   wchar_t;
 #endif
 
 /* ── wint_t / mbstate_t (multibyte). mbstate_t is a 2-word POD — no pointers,
- * so GC-noscan; the multibyte code only ever uses the first word (a partial-
- * sequence accumulator), the 2nd just keeps the C ABI size right. */
+ * so GC-noscan. Every converter keeps its whole protocol in word 0 (the UTF-8
+ * DFA accumulator; the uchar mbrtoc16/c16rtomb pair-pending protocols — #690:
+ * the wchar_t engines stall rather than park, so no second word is ever
+ * needed); word 1 only keeps the C ABI size right, and musl's 1-word mbsinit
+ * test stays correct. */
 #if defined(__NEED_wint_t) && !defined(__DEFINED_wint_t)
 typedef unsigned         wint_t;
 #define __DEFINED_wint_t

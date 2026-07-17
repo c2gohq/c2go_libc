@@ -1,0 +1,30 @@
+c2go-libc2 — NOTICE
+===================
+
+This repository contains code under two distinct licenses. The split is
+structural (see the layout below), not per-hunk: original code is kept in
+clearly-owned files rather than scattered as diffs inside MIT files.
+
+1. Original c2go code — GNU AGPL-3.0 (see LICENSE), with a commercial
+   license available as an alternative (dual licensing). This covers:
+     - csrc/           (the c2go-authored C sources, including adapted
+                        cores derived from musl — see note 2 for the musl
+                        portions they embed)
+     - *.go            (the Go runtime bridges and generated bindings)
+     - CMakeLists.txt, gen.sh and the build/test harness
+
+2. Code derived from musl libc — MIT. musl is
+   Copyright (c) 2005-2020 Rich Felker, et al., licensed under the
+   standard MIT license. The complete license text and per-author
+   attribution list is reproduced verbatim in LICENSES/musl-COPYRIGHT.txt.
+   This covers:
+     - the musl fork this build compiles from (../musl, branch c2go —
+       byte-verbatim musl sources carrying annotation-level c2go markers;
+       the fork checkout carries musl's own COPYRIGHT file)
+     - the musl-derived portions of adapted files under csrc/ (each such
+       file states its musl derivation in its header comment)
+
+Binary artifacts produced from this repository (libc_<os>_<arch>.s and the
+generated Go bindings) embed both parts; redistribution must preserve the
+musl copyright notice per the MIT license, and the AGPL-3.0 (or a
+commercial license) governs the original c2go portions.
