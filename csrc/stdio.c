@@ -3907,10 +3907,11 @@ static int __ungetc_unlocked(int c, FILE *f)
 	return (unsigned char)c;
 }
 
-static wint_t __fputwc_unlocked(wchar_t c, FILE *f)
+static wint_t __fputwc_unlocked(wchar_t wc, FILE *f)
 {
 	char mbc[MB_LEN_MAX];
 	int l;
+	wint_t c = wc; /* WEOF must not truncate through 16-bit wchar_t on Windows. */
 
 	__fwide_wide(f);
 
@@ -3962,10 +3963,11 @@ static wint_t __fputwc_unlocked(wchar_t c, FILE *f)
 c2go_extern
 wint_t fputwc(wchar_t c, FILE *f)
 {
+	wint_t r;
 	FLOCK(f);
-	c = __fputwc_unlocked(c, f);
+	r = __fputwc_unlocked(c, f);
 	FUNLOCK(f);
-	return c;
+	return r;
 }
 
 c2go_extern

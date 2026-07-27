@@ -22,6 +22,7 @@
  * the failing step number. */
 #include <wchar.h>
 #include <wctype.h>
+#include <errno.h>    /* errno / EILSEQ for pending-pair error paths */
 #include <stdlib.h>   /* mbtowc / wctomb / mbstowcs / wcstombs */
 #include <stdio.h>    /* tmpfile / fputwc / fgetwc for the wide stdio steps */
 #include <time.h>     /* struct tm for the wcsftime step (#652) */
@@ -523,6 +524,135 @@ c2go_extern int WcharSelftest(void)
 			if (r42 != 3 || wb42[0] != 0xD83D || wb42[1] != 0xDE00 || wb42[2] != 0x41)
 				return 42;                           /* cross-engine full pair */
 		}
+	}
+
+	/* 43: ungetwc WEOF + UTF-16 pending-slot edges (#685). A failed WEOF
+	 * pushback must leave EOF set; a later successful pushback clears it. On
+	 * Windows, fgetwc parks the low half of a supplementary in the FILE's one
+	 * pending slot. Failed pushbacks while that slot is occupied must neither
+	 * replace nor discard the parked low half, and the slot must be reusable
+	 * after it is drained. */
+	{
+		FILE *u43 = tmpfile();
+		if (!u43) return 43;
+		if (fputwc(0x41, u43) != 0x41 || fflush(u43) != 0) { fclose(u43); return 43; }
+		rewind(u43);
+		if (fgetwc(u43) != 0x41 || fgetwc(u43) != WEOF || !feof(u43)) {
+			fclose(u43); return 43;
+		}
+		if (ungetwc(WEOF, u43) != WEOF || !feof(u43)) { fclose(u43); return 43; }
+		if (ungetwc(0x5A, u43) != 0x5A || feof(u43)) { fclose(u43); return 43; }
+		if (fgetwc(u43) != 0x5A || fgetwc(u43) != WEOF) { fclose(u43); return 43; }
+		fclose(u43);
+
+		if (sizeof(wchar_t) < 4) {
+			FILE *p43 = tmpfile();
+			if (!p43) return 43;
+			if (fputwc(0xD83D, p43) != 0xD83D ||
+			    fputwc(0xDE00, p43) != 0xDE00 ||
+			    fputwc(0x51, p43) != 0x51 || fflush(p43) != 0) {
+				fclose(p43); return 43;
+			}
+
+			/* WEOF must not consume the low half parked by the first fgetwc. */
+			rewind(p43);
+			if (fgetwc(p43) != 0xD83D || ungetwc(WEOF, p43) != WEOF ||
+			    fgetwc(p43) != 0xDE00 || fgetwc(p43) != 0x51) {
+				fclose(p43); return 43;
+			}
+
+			/* A second surrogate push cannot overwrite the occupied slot. Once
+			 * the original low is drained, the slot accepts and replays a push. */
+			rewind(p43);
+			if (fgetwc(p43) != 0xD83D || ungetwc(0xD83D, p43) != WEOF ||
+			    fgetwc(p43) != 0xDE00 || ungetwc(0xDE00, p43) != 0xDE00 ||
+			    fgetwc(p43) != 0xDE00 || fgetwc(p43) != 0x51) {
+				fclose(p43); return 43;
+			}
+			fclose(p43);
+		}
+	}
+
+	/* 44: fgetws length truncation (#685). Read A + U+1F600 + B + newline + C
+	 * through deliberately tiny buffers. On UTF-16 the n-1 wchar_t limit may
+	 * split the surrogate pair between calls; the parked low half must be the
+	 * first unit returned by the next call. Newline remains included and stops
+	 * its call, and the following character remains available. */
+	{
+		FILE *g44 = tmpfile();
+		if (!g44) return 44;
+		if (fputwc(0x41, g44) != 0x41) { fclose(g44); return 44; }
+		if (sizeof(wchar_t) >= 4) {
+			if (fputwc(0x1F600, g44) != 0x1F600) { fclose(g44); return 44; }
+		} else {
+			if (fputwc(0xD83D, g44) != 0xD83D || fputwc(0xDE00, g44) != 0xDE00) {
+				fclose(g44); return 44;
+			}
+		}
+		if (fputwc(0x42, g44) != 0x42 || fputwc('\n', g44) != '\n' ||
+		    fputwc(0x43, g44) != 0x43 || fflush(g44) != 0) {
+			fclose(g44); return 44;
+		}
+		rewind(g44);
+
+		wchar_t a44[3] = { 0x7F, 0x7F, 0x7F };
+		wchar_t b44[3] = { 0x7F, 0x7F, 0x7F };
+		wchar_t c44[3] = { 0x7F, 0x7F, 0x7F };
+		wchar_t d44[3] = { 0x7F, 0x7F, 0x7F };
+		if (fgetws(a44, 3, g44) != a44) { fclose(g44); return 44; }
+		if (sizeof(wchar_t) >= 4) {
+			if (a44[0] != 0x41 || a44[1] != 0x1F600 || a44[2] != 0 ||
+			    fgetws(b44, 3, g44) != b44 || b44[0] != 0x42 ||
+			    b44[1] != '\n' || b44[2] != 0 ||
+			    fgetws(c44, 3, g44) != c44 || c44[0] != 0x43 || c44[1] != 0)
+			{
+				fclose(g44); return 44;
+			}
+		} else {
+			if (a44[0] != 0x41 || a44[1] != 0xD83D || a44[2] != 0 ||
+			    fgetws(b44, 3, g44) != b44 || b44[0] != 0xDE00 ||
+			    b44[1] != 0x42 || b44[2] != 0 ||
+			    fgetws(c44, 3, g44) != c44 || c44[0] != '\n' || c44[1] != 0 ||
+			    fgetws(d44, 3, g44) != d44 || d44[0] != 0x43 || d44[1] != 0)
+			{
+				fclose(g44); return 44;
+			}
+		}
+		if (fgetws(d44, 3, g44) != NULL) { fclose(g44); return 44; }
+		fclose(g44);
+	}
+
+	/* 45: UTF-16 fputwc pending-pair error recovery (#685). A buffered high
+	 * surrogate followed by a non-low, and a lone low surrogate, both report
+	 * EILSEQ/WEOF. The failed sequence must clear the pending half so that after
+	 * clearerr a normal wide character can be written and read back. */
+	if (sizeof(wchar_t) < 4) {
+		FILE *w45 = tmpfile();
+		if (!w45) return 45;
+		errno = 0;
+		if (fputwc(0xD83D, w45) != 0xD83D) { fclose(w45); return 45; }
+		wint_t bad45 = fputwc(0x58, w45);
+		if (bad45 != WEOF || errno != EILSEQ || !ferror(w45)) {
+			fclose(w45); return 45;
+		}
+		clearerr(w45);
+		if (fputwc(0x59, w45) != 0x59 || fflush(w45) != 0) { fclose(w45); return 45; }
+		rewind(w45);
+		if (fgetwc(w45) != 0x59 || fgetwc(w45) != WEOF) { fclose(w45); return 45; }
+		fclose(w45);
+
+		/* 46: the other malformed-input arm — a low surrogate with no high. */
+		FILE *l45 = tmpfile();
+		if (!l45) return 46;
+		errno = 0;
+		if (fputwc(0xDE00, l45) != WEOF || errno != EILSEQ || !ferror(l45)) {
+			fclose(l45); return 46;
+		}
+		clearerr(l45);
+		if (fputwc(0x5A, l45) != 0x5A || fflush(l45) != 0) { fclose(l45); return 46; }
+		rewind(l45);
+		if (fgetwc(l45) != 0x5A || fgetwc(l45) != WEOF) { fclose(l45); return 46; }
+		fclose(l45);
 	}
 
 	return 0;
