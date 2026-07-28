@@ -18,9 +18,9 @@ clearly-owned files rather than scattered as diffs inside MIT files.
    standard MIT license. The complete license text and per-author
    attribution list is reproduced verbatim in LICENSES/musl-COPYRIGHT.txt.
    This covers:
-     - the musl fork this build compiles from (../musl, branch c2go —
-       byte-verbatim musl sources carrying annotation-level c2go markers;
-       the fork checkout carries musl's own COPYRIGHT file)
+     - the musl fork tracked by the `musl/` Git submodule
+       (`https://github.com/c2gohq/musl.git`, branch `c2go`; the fork
+       checkout carries musl's own COPYRIGHT file)
      - the musl-derived portions of adapted files under csrc/ (each such
        file states its musl derivation in its header comment)
 

@@ -8,10 +8,9 @@ project(c2go_libc2 C)
 # "github.com/c2gohq/c2go_libc.Fopen" with NO subdir suffix (see MIGRATION_PLAN D2b):
 #
 #   <root>/        go.mod + the shipped Go module: hand-written + GENERATED *.go/*.s.
-#   musl/          our musl fork. LOCAL SYMLINK (-> ../musl) for now; becomes a git
-#                  submodule at push time. c2go changes edited IN PLACE on musl's own
-#                  file layout (minimal diff). Excluded from the module zip (submodule
-#                  contents never ship).
+#   musl/          pinned submodule of the c2go musl fork. c2go changes live in
+#                  musl's own file layout (minimal diff). Excluded from the module
+#                  zip because submodule contents are distributed separately.
 #   csrc/          our OWN C (no musl basis). Gets its own go.mod (nested module) so it is
 #                  excluded from the module zip — the .c are build inputs; the shipped
 #                  artifact is the generated *.go/*.s at the root.

@@ -1,0 +1,4 @@
+[submodule "musl"]
+	path = musl
+	url = https://github.com/c2gohq/musl.git
+	branch = c2go
