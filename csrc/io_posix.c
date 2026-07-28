@@ -2,8 +2,8 @@
  *
  * musl-shaped C wrappers: a POSIX return value plus errno on failure. Each
  * composes exactly one Go syscall shim (__c2go_syscall_*, io.go / io_darwin.go /
- * io_linux.go) — c2go-compiled C cannot issue a raw syscall (no inline asm), so
- * the trap comes from Go's syscall package (which also does the scheduler's
+ * io_linux.go) — issuing a raw trap from C would bypass Go's syscall scheduler
+ * protocol, so the trap comes from Go's syscall package (which also does the
  * park/unpark around the blocking call). The shim returns the syscall result on
  * success or -errno on failure (raw Linux convention); these wrappers apply
  * musl's __syscall_ret conversion: `if (r < 0) { errno = -r; return -1; }`. This

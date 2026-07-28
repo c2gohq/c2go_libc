@@ -4,9 +4,9 @@
 // path ops unlink/rmdir/rename — is C (io_posix.c, musl-shaped: a POSIX return
 // value plus errno on failure). Each of those C wrappers composes exactly one
 // __c2go_syscall_* shim here through a GoABI0 c2go_linkname. Only the syscall
-// itself is Go: c2go-compiled C cannot issue a raw syscall (no inline asm), so
-// the trap must come from Go's syscall package — which also integrates with the
-// scheduler (the goroutine parks in the syscall and others run). Everything
+// itself is Go: issuing a raw trap from C would bypass Go's syscall scheduler
+// protocol, so the trap comes from Go's syscall package (the goroutine parks in
+// the syscall and others run). Everything
 // else — the POSIX shape, the errno convention, the variadic open/fcntl mode
 // extraction — is C in io_posix.c, mirroring musl. This is the symmetric
 // counterpart of the Windows fd layer, where source/io_windows.c instead calls

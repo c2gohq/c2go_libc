@@ -486,9 +486,8 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/math/j0.c
     ${MUSL_DIR}/src/math/j1.c
     ${MUSL_DIR}/src/math/jn.c
-    # wave-8 tail: the last old-vs-new symbol-parity gap. musl's inline-asm
-    # dead-store barrier becomes the __c2go_opaque_use Go no-op bridge
-    # (conf_bridge.go), OLD delta preserved.
+    # wave-8 tail: the last old-vs-new symbol-parity gap. Keep musl's original
+    # empty inline-asm memory barrier so LTO cannot delete the zeroing store.
     ${MUSL_DIR}/src/string/explicit_bzero.c
     # time: the pure calendar/format code kept in place with a minimal annotation-only
     # diff. The UTC math (__secs_to_tm/__tm_to_secs/__year_to_secs/__month_to_secs) is
@@ -571,8 +570,9 @@ set(C2GO_OWN_SOURCES
     # spinlock (lock.h) is replaced by a pthread_mutex woven through all four
     # entry points, so it is csrc (the lock-free rand48 family is fork-verbatim).
     ${CSRC_DIR}/random.c
-    # uname: musl's is a raw SYS_uname one-liner; this libc cannot issue raw
-    # syscalls, so the same shape runs over the __c2go_syscall_uname Go bridge
+    # uname: musl's is a raw SYS_uname one-liner; issuing the trap directly
+    # would bypass Go's syscall scheduler protocol, so the same shape runs over
+    # the __c2go_syscall_uname Go bridge
     # (uname_unix.go marshals per-OS x/sys field widths into the uniform
     # musl-shaped struct). Empty TU on windows.
     ${CSRC_DIR}/uname.c

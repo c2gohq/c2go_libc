@@ -60,12 +60,3 @@ func __c2go_sysconf(name int32) int64 {
 	}
 	return -int64(syscall.EINVAL)
 }
-
-// __c2go_opaque_use is explicit_bzero's dead-store barrier (string.c): an
-// opaque cross-boundary call the optimizer cannot see through, standing in
-// for musl's empty inline-asm memory clobber (c2go has no inline asm).
-//
-//go:linkname __c2go_opaque_use
-func __c2go_opaque_use(p unsafe.Pointer) {
-	_ = p
-}

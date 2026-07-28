@@ -121,8 +121,8 @@ char *strsignal(int)
 #endif
 int strverscmp(const char *, const char *)
     c2go_linkname("github.com/c2gohq/c2go_libc.strverscmp", C2GO_GOABI0);
-/* dead-store-elimination-proof zeroing: the musl asm barrier is an opaque
- * cross-boundary Go call here (c2go has no inline asm). */
+/* Dead-store-elimination-proof zeroing; the implementation retains musl's
+ * empty inline-asm memory clobber. */
 void explicit_bzero(void *, size_t)
     c2go_linkname("github.com/c2gohq/c2go_libc.explicit_bzero", C2GO_GOABI0);
 
