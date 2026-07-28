@@ -16,8 +16,11 @@ project(c2go_libc2 C)
 #                  excluded from the module zip — the .c are build inputs; the shipped
 #                  artifact is the generated *.go/*.s at the root.
 #
-# This file lists ONLY the TUs we actually build. The c2go toolchain (clang -fc2go ->
-# c2go-lto -> c2go-bind) consumes this list and emits Go-linkable *.go/*.s into the root.
+# This file lists ONLY the logical TUs we build. For a musl source with a
+# same-named src/<domain>/<arch>/ implementation, gen.sh applies musl's normal
+# architecture replacement rule and builds that physical TU instead. The c2go
+# toolchain (clang -fc2go -> c2go-lto -> c2go-bind) consumes the resulting list
+# and emits Go-linkable *.go/*.s into the root.
 
 set(MUSL_DIR ${CMAKE_SOURCE_DIR}/musl)
 set(CSRC_DIR ${CMAKE_SOURCE_DIR}/csrc)
@@ -300,11 +303,13 @@ set(C2GO_MUSL_SOURCES
     ${MUSL_DIR}/src/misc/ffsll.c
     ${MUSL_DIR}/src/malloc/posix_memalign.c
     # ── math (dedicated phase; growing in waves) ──────────────────────────────
-    # musl src/math verbatim over the csrc/include/libm.h SHIM (distilled from
-    # musl's src/internal/libm.h: 64-bit-double world, no ldshape, the __math_*
-    # error paths inlined, the @llvm.floor->libcall self-recursion trap
-    # documented). The *l surface is <math.h> #define aliases (long double ==
-    # double on every c2go target). floor.c is the phase's validation probe.
+    # musl src/math over the csrc/include/libm.h SHIM (distilled from musl's
+    # src/internal/libm.h: 64-bit-double world, no ldshape, the __math_* error
+    # paths inlined, the @llvm.floor->libcall self-recursion trap documented).
+    # gen.sh uses musl's same-named per-arch .c replacements, so AArch64 and
+    # x86_64 get their canonical inline-asm implementations where supplied.
+    # The *l surface is <math.h> #define aliases (long double == double on every
+    # c2go target). floor.c is the phase's validation probe.
     ${MUSL_DIR}/src/math/floor.c
     # fenv: c2go's fenv is SOFT (csrc/include/fenv.h — FE_ALL_EXCEPT == 0,
     # FE_TONEAREST == 0; the Go runtime owns the FPU control state). musl's dummy

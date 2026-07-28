@@ -2,7 +2,9 @@
 # gen.sh — regenerate c2go-libc2's Go bindings + Plan 9 .s via the c2go toolchain.
 #
 # Source list is read from CMakeLists.txt (the C2GO_MUSL_SOURCES + C2GO_OWN_SOURCES
-# set() blocks). Public headers = csrc/include (our annotated, musl-derived headers).
+# set() blocks). For musl sources, a same-named src/<domain>/<arch>/*.c replaces
+# the baseline source exactly as it does in musl's own build. Public headers =
+# csrc/include (our annotated, musl-derived headers).
 # Every migrated musl TU is musl's original .c patched in place with `#include <c2go.h>`
 # + a `c2go_extern` on each exported definition; the c2go_linkname lives in the header.
 #
@@ -44,8 +46,28 @@ tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT
 echo "== libc ($MOD) : ${#SOURCES[@]} sources =="
 for t in "${LIBC_TARGETS[@]}"; do
 	IFS=: read -r goos arch triple lib <<<"$t"
-	bcs=()
+	case "$arch" in
+		arm64) musl_arch=aarch64 ;;
+		amd64) musl_arch=x86_64 ;;
+		*) echo "gen.sh: no musl architecture mapping for $arch" >&2; exit 1 ;;
+	esac
+	target_sources=()
+	arch_overrides=0
 	for src in "${SOURCES[@]}"; do
+		case "$src" in
+			"$MUSL_DIR"/*)
+				rel="${src#"$MUSL_DIR"/}"
+				arch_src="$MUSL_DIR/${rel%/*}/$musl_arch/${rel##*/}"
+				if [ -f "$arch_src" ]; then
+					src="$arch_src"
+					arch_overrides=$((arch_overrides + 1))
+				fi
+				;;
+		esac
+		target_sources+=("$src")
+	done
+	bcs=()
+	for src in "${target_sources[@]}"; do
 		b="$(printf '%s' "$src" | sed 's#[/.]#_#g')"
 		# -fno-math-errno: we DEFINE the math functions, so __builtin_sqrt & friends
 		# lower to the hardware op, never a self-recursive call. See old gen.sh.
@@ -64,7 +86,7 @@ for t in "${LIBC_TARGETS[@]}"; do
 	"$C2GOBIND" -pkg="$MOD" -pkgname=libc -goname="libc_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" ${lib:+-l "$lib"} "$asm"
 	cp "$out/libc_${goos}_${arch}.go" "$ROOT/libc_${goos}_${arch}.go"
-	echo "  -> libc_${goos}_${arch}.{go,s}"
+	echo "  -> libc_${goos}_${arch}.{go,s} ($arch_overrides musl arch overrides)"
 done
 
 # selftest: in-C exercises of libc functions whose comparator/callback is

@@ -53,11 +53,38 @@
 static inline float  eval_as_float(float x)   { float  y = x; return y; }
 static inline double eval_as_double(double x)  { double y = x; return y; }
 
+/* Match musl's arch/aarch64/fp_arch.h.  The empty asm constrains floating-point
+ * transformations without the stack traffic of the generic volatile fallback.
+ * Other c2go architectures retain musl's generic implementation. */
+#if defined(__aarch64__)
+static inline float fp_barrierf(float x)
+{
+	__asm__ __volatile__ ("" : "+w"(x));
+	return x;
+}
+
+static inline double fp_barrier(double x)
+{
+	__asm__ __volatile__ ("" : "+w"(x));
+	return x;
+}
+
+static inline void fp_force_evalf(float x)
+{
+	__asm__ __volatile__ ("" : "+w"(x));
+}
+
+static inline void fp_force_eval(double x)
+{
+	__asm__ __volatile__ ("" : "+w"(x));
+}
+#else
 static inline float  fp_barrierf(float x)  { volatile float  y = x; return y; }
 static inline double fp_barrier(double x)  { volatile double y = x; return y; }
 
 static inline void fp_force_evalf(float x) { volatile float  y; y = x; (void)y; }
 static inline void fp_force_eval(double x) { volatile double y; y = x; (void)y; }
+#endif
 #define FORCE_EVAL(x) do { \
 	if (sizeof(x) == sizeof(float))       fp_force_evalf(x); \
 	else                                  fp_force_eval(x);  \
