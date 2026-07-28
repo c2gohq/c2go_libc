@@ -100,9 +100,9 @@ Important details:
 - Generated runtime artifacts for all five listed targets and selftest
   artifacts for the four Darwin/Linux targets are tracked. Their deterministic
   regeneration and mixed-source notices still require release verification.
-- The current `c2go-bind` can emit imports of
-  `github.com/c2gohq/c2go_libc/dl`, but this repository does not yet contain
-  that subpackage.
+- `dl/` provides the external native-call boundary required by current
+  `c2go-bind` output. Unix dispatch uses a version-pinned PureGo trampoline;
+  Windows uses Win32 loader and syscall APIs.
 
 See [PROVENANCE.md](PROVENANCE.md) for the evidence-backed source map.
 
@@ -147,7 +147,10 @@ At the 2026-07-28 verification snapshot:
   the archive test proves use of tracked artifacts, not reproducible
   regeneration or complete corresponding source.
 - No repository CI workflow currently proves all five generated targets.
-- The missing `dl` package is not exercised by the libc-only unit tests.
+- `dl` unit tests pass natively on Darwin arm64 with `CGO_ENABLED=0`; its
+  Darwin amd64 and Linux amd64/arm64 packages cross-compile, and its
+  Windows/amd64 loader plus integer/float dispatch tests pass under Wine 7.7.
+  Generated consumers still need a clean-checkout end-to-end release gate.
 
 Release claims must be based on a clean checkout and end-to-end generated
 consumer tests, not the prepared working tree alone.
@@ -180,8 +183,8 @@ least the following items are complete:
 2. Make a clean recursive checkout build and pass the complete test matrix.
 3. Remove machine-specific generator assumptions and document a reproducible
    toolchain bootstrap.
-4. Migrate or eliminate the missing `c2go_libc/dl` package and verify
-   unmanaged-extern consumers end to end.
+4. Verify `c2go_libc/dl` unmanaged-extern and callback consumers end to end
+   from a clean matched toolchain checkout, including the pinned PureGo ABI.
 5. Restore and verify the notice required by the Apple Libc/FreeBSD-derived
    Darwin code in `csrc/termios.c`.
 6. Resolve the provenance and license treatment of XNU-derived Darwin ABI

@@ -5,7 +5,7 @@ STATUS: PRE-RELEASE. NOT RELEASE-READY.
 
 This notice records the repository's current, incomplete provenance and
 licensing model. It is not a final release notice. In particular, the clean
-source checkout, generated-artifact reproducibility, dl package, and several
+source checkout, generated-artifact reproducibility, and several
 third-party provenance questions listed in PROVENANCE.md remain unresolved.
 
 This repository is a multi-license work. Licenses do not map cleanly to whole
@@ -36,6 +36,11 @@ contains adapted material derived from musl. musl and its bundled third-party
 components remain under their original permissive licenses. The complete musl
 COPYRIGHT file currently used by the project is reproduced in
 LICENSES/musl-COPYRIGHT.txt.
+
+The `dl` external-call bridge depends on Ebitengine PureGo v0.11.0-alpha.8,
+licensed under Apache-2.0. Its license text is reproduced in
+LICENSES/Apache-2.0.txt, and the exact module, commit, checksum, and private ABI
+boundary are recorded in THIRD_PARTY_NOTICES.md.
 
 Some files under csrc/ and csrc/include/ contain both third-party-derived and
 original c2go material. Original c2go modifications do not revoke, replace, or

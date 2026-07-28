@@ -98,6 +98,7 @@ The current [go.mod](go.mod) declares:
 
 | Module | Version | Locally observed license family | Release action |
 | --- | --- | --- | --- |
+| `github.com/ebitengine/purego` | `v0.11.0-alpha.8` | Apache-2.0 | Exact version and license carrier recorded; verify the resolved private ABI in every release build |
 | `github.com/timandy/routine` | `v1.1.6` | Apache-2.0 | Verify exact module and include notices required by the release form |
 | `golang.org/x/sys` | `v0.47.0` | BSD-3-Clause-style Go license | Verify and include binary notices where applicable |
 | `golang.org/x/text` | `v0.40.0` | BSD-3-Clause-style Go license | Verify and include binary notices where applicable |
@@ -106,17 +107,31 @@ These dependencies are not vendored in this repository. A final source or
 binary distribution must apply the obligations appropriate to what it
 actually includes.
 
-## purego and the missing `dl` package
+## PureGo and `dl`
 
-The current `c2go-bind` implementation can emit imports of
-`github.com/c2gohq/c2go_libc/dl`, but this repository does not contain that
-subpackage. The older local implementation depended on and mirrored internal
-interfaces from `github.com/ebitengine/purego`, which uses Apache-2.0.
+The `dl` package implements the external native-call boundary emitted by
+`c2go-bind`. It depends on:
 
-If `dl` is migrated, its copied, adapted, linked, and independently authored
-portions must be audited and the exact purego version must replace any local
-filesystem substitution. If the feature is redesigned away, the release must
-prove that no generated package imports `dl`.
+- project: Ebitengine PureGo;
+- module: `github.com/ebitengine/purego`;
+- version: `v0.11.0-alpha.8`;
+- tag commit: `d476432ce7e3d8bb64b7cd257d332ee221ed6e7b`;
+- module checksum:
+  `h1:DOQFVGS3bt17GhdIhqvUN2ySBObOsPn0zk9AgzGRSDc=`; and
+- license: Apache License 2.0, reproduced in
+  [LICENSES/Apache-2.0.txt](LICENSES/Apache-2.0.txt).
+
+PureGo source is not vendored here. On Unix, `dl/dispatch_unix.go` deliberately
+matches PureGo's private `syscallArgs` layout and reaches
+`purego.syscall_SyscallN` and `purego.syscallXABI0` with `//go:linkname`.
+Changing the resolved PureGo version without re-running the complete ABI and
+generated-consumer gates is unsupported. Windows does not use that private
+trampoline; it uses Go and `x/sys/windows` loader/syscall facilities.
+
+The exact dependency, copied or structurally mirrored expression, project
+modifications, and independently authored portions remain part of the
+file-level ownership audit. Nothing in the c2go license changes PureGo's
+Apache-2.0 rights.
 
 ## Finalization rule
 

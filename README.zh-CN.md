@@ -93,8 +93,8 @@ github.com/c2gohq/c2go_libc
 - `csrc/` **不是**许可证边界，其中同时包含原创代码和第三方派生适配。
 - 五个目标的运行时生成产物和四个 Darwin/Linux 目标的 selftest 生成产物均已
   跟踪；其确定性再生成和混合来源声明仍需在发布前验证。
-- 当前 `c2go-bind` 会生成对 `github.com/c2gohq/c2go_libc/dl`
-  的导入，但本仓库尚未包含该子包。
+- `dl/` 提供当前 `c2go-bind` 生成代码所需的外部原生调用边界。Unix 调用使用
+  固定版本的 PureGo trampoline；Windows 使用 Win32 loader 和 syscall API。
 
 基于证据的源码映射见 [PROVENANCE.md](PROVENANCE.md)。
 
@@ -134,7 +134,10 @@ go test ./...
   只含 gitlink 目录而不含 submodule 内容，因此 archive 测试只能证明已跟踪
   产物可用，不能证明可复现再生成或对应源码完整。
 - 当前没有仓库 CI 工作流证明全部五个生成目标。
-- libc 自身单元测试没有覆盖缺失的 `dl` 子包。
+- `dl` 单元测试已在 Darwin arm64、`CGO_ENABLED=0` 下通过；Darwin amd64
+  和 Linux amd64/arm64 包可交叉编译，Windows/amd64 loader 及整数/浮点调用
+  测试已在 Wine 7.7 下通过。发布前仍需对生成消费者执行 clean-checkout
+  端到端门禁。
 
 发布声明必须依据 clean checkout 和转换后消费者的端到端测试，不能只依据
 准备过的工作树。
@@ -160,8 +163,8 @@ go test ./...
 1. 验证确定性再生成，并为每个已跟踪生成产物添加准确的混合来源声明。
 2. 让完整递归 clean checkout 构建并通过完整测试矩阵。
 3. 删除生成器对本机路径的假设，并记录可复现的工具链引导过程。
-4. 迁移或消除缺失的 `c2go_libc/dl` 子包，端到端验证
-   unmanaged-extern 消费者。
+4. 从匹配工具链的 clean checkout 端到端验证 `c2go_libc/dl` 的
+   unmanaged-extern 和 callback 消费者，包括固定的 PureGo ABI。
 5. 恢复并核实 `csrc/termios.c` 中 Apple Libc/FreeBSD 派生 Darwin
    代码所需的声明。
 6. 解决 XNU 派生 Darwin ABI 材料和其他第三方定义的来源及许可处理。

@@ -57,7 +57,7 @@ Licenses do **not** map one-to-one to directories.
 | `csrc/include/` | Annotated interface headers with musl, Darwin/XNU, MinGW, and original material | Preserve applicable upstream rights; license original additions separately | Incomplete provenance audit |
 | Hand-written root `*.go`/`*.s` | Primarily c2go runtime bridges; ownership headers largely absent | AGPL-3.0-only or commercial, subject to audit | Copyright owner and headers unresolved |
 | Generated `libc_*.go/.s` | Tracked artifacts generated from mixed source inputs | Carry a mixed-source notice and refer to all applicable notices | Tracked; notice and reproducibility work incomplete |
-| `dl/` | Required by current `c2go-bind`, but absent here | Must be migrated or eliminated; purego-derived/dependent portions require Apache review | Release blocker |
+| `dl/` | External-call bridge required by current `c2go-bind`; depends on PureGo v0.11.0-alpha.8 and matches a private Unix dispatcher ABI | Preserve PureGo's Apache-2.0 rights and notice; license only independently owned c2go portions under the c2go model | Migrated and pinned; ownership and end-to-end release audit remain |
 | Tests/build documents | Mostly project material, with some tests/data derived from prior or third-party work | Audit before assigning a single license | Incomplete |
 
 Directory placement, a `Code generated` marker, or a c2go copyright notice does
@@ -122,7 +122,8 @@ The licensing work is not complete until all of the following are resolved:
   tracked generated target artifacts;
 - make clean recursive checkouts pass the complete supported matrix without
   local-only inputs;
-- migrate or eliminate the missing `github.com/c2gohq/c2go_libc/dl` package;
+- verify the migrated `github.com/c2gohq/c2go_libc/dl` package against its
+  pinned PureGo ABI and clean-checkout generated consumers;
 - restore and verify the required notice for the Apple Libc/FreeBSD-derived
   `csrc/termios.c` code;
 - determine the provenance and applicable treatment of XNU-derived Darwin ABI

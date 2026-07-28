@@ -76,7 +76,7 @@ There is no checked-in CI matrix proving them from a clean source checkout.
 | Root hand-written Go | c2go runtime bridges; migrated from the prior local tree | Only one tracked non-test Go file currently has a copyright marker | Ownership headers and historical audit incomplete |
 | Generated `libc_*.go/.s` | Five target pairs produced from all selected C inputs and tracked in Git | Mixed-source artifacts | Tracked; complete generated notice and reproducibility proof absent |
 | `selftest` generated files | Four target pairs produced by the same pipeline and tracked in Git | Mixed-source artifacts and project tests | Tracked; complete generated notice and reproducibility proof absent |
-| `dl/` | Required by current `c2go-bind`, absent from this repository | Prior local implementation involved purego | Release blocker |
+| `dl/` | Migrated external-call bridge; Unix uses PureGo v0.11.0-alpha.8 private dispatcher/trampoline symbols, while Windows uses `x/sys/windows` loader APIs and `syscall.SyscallN` | c2go-specific code remains subject to ownership audit; PureGo remains Apache-2.0 | Exact dependency and license carrier recorded; clean-consumer gate remains |
 
 The `csrc` directory is not a reliable license boundary. The old description
 "our independent C (no musl basis)" is contradicted by current file contents
@@ -138,7 +138,8 @@ A release candidate is not ready until it provides all of the following:
 3. Tracked or release-packaged generated artifacts for every claimed target.
 4. A clean-checkout generation and test log.
 5. End-to-end consumer tests with the matching `c2go-clang` and `c2go-bind`.
-6. Resolution of the missing `dl` package path.
+6. Clean-consumer verification of the migrated `dl` package and its pinned
+   PureGo private-ABI boundary.
 7. A complete file-level provenance table and third-party notice bundle.
 8. Correct generated-file notices.
 9. A documented, passing or explicitly reviewed vet/static-analysis gate.

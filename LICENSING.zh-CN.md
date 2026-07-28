@@ -51,7 +51,7 @@ c2go 原创材料。
 | `csrc/include/` | 含 musl、Darwin/XNU、MinGW 和原创内容的带标注接口头文件 | 保留适用的上游权利，单独许可原创新增内容 | 来源审计未完成 |
 | 根目录手写 `*.go`/`*.s` | 主要是 c2go 运行时桥接；大多缺少所有权声明 | 经审计后采用 AGPL-3.0-only 或商业许可 | 版权所有者和文件头尚未确定 |
 | 生成的 `libc_*.go/.s` | 由混合来源输入生成的已跟踪产物 | 携带混合来源声明并引用所有适用声明 | 已跟踪；声明和可复现性工作未完成 |
-| `dl/` | 当前 `c2go-bind` 需要，但本仓库缺失 | 必须迁移或消除；purego 派生/依赖部分需要 Apache 审计 | 发布阻断项 |
+| `dl/` | 当前 `c2go-bind` 所需的外部调用桥；依赖 PureGo v0.11.0-alpha.8，并匹配其 Unix 私有 dispatcher ABI | 保留 PureGo 的 Apache-2.0 权利和声明；只有独立拥有的 c2go 部分适用 c2go 许可模式 | 已迁移并固定版本；所有权和端到端发布审计仍未完成 |
 | 测试/构建文档 | 主要是项目材料，但部分测试/数据来自以前的实现或第三方 | 不能在审计前统一指定单一许可证 | 未完成 |
 
 目录位置、`Code generated` 标记或 c2go 版权声明都不能消除第三方权利。
@@ -108,7 +108,8 @@ CLA、版权所有者法律身份或授权接受贡献的工作流。
 - 添加准确的逐文件版权和许可声明；
 - 验证所有已跟踪目标产物的确定性再生成和准确混合来源声明；
 - 使 clean recursive checkout 在不依赖本地专用输入的情况下通过完整支持矩阵；
-- 迁移或消除缺失的 `github.com/c2gohq/c2go_libc/dl` 子包；
+- 针对固定的 PureGo ABI 和 clean-checkout 生成消费者验证已迁移的
+  `github.com/c2gohq/c2go_libc/dl` 子包；
 - 恢复并验证 `csrc/termios.c` 中 Apple Libc/FreeBSD 派生代码所需的声明；
 - 确定 XNU 派生 Darwin ABI 材料和其他 MinGW/Darwin 定义的来源及适用
   处理方式；
