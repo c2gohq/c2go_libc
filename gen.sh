@@ -21,8 +21,21 @@ MOD=github.com/c2gohq/c2go_libc
 CLANG="${CLANG:-/Users/dexter/Downloads/llvm-project/build/bin/clang}"
 C2GOLTO="${C2GOLTO:-/Users/dexter/Downloads/llvm-project/build/bin/c2go-lto}"
 C2GOBIND="${C2GOBIND:-/Users/dexter/Downloads/c2go/c2go-bind/c2go-bind}"
+GOFMT="${GOFMT:-gofmt}"
 RES="$("$CLANG" -print-resource-dir)/include"
 MUSL_DIR="$ROOT/musl"; CSRC_DIR="$ROOT/csrc"; INC="$CSRC_DIR/include"
+
+normalize_asm_eof() {
+	awk '
+		NF {
+			while (blank > 0) { print ""; blank-- }
+			print
+			next
+		}
+		{ blank++ }
+	' "$1" > "$1.tmp"
+	mv "$1.tmp" "$1"
+}
 
 # Pull the .c paths out of CMakeLists.txt, expanding ${MUSL_DIR}/${CSRC_DIR}.
 SOURCES=()
@@ -82,10 +95,12 @@ for t in "${LIBC_TARGETS[@]}"; do
 	"$C2GOLTO" --c2go-lto-inline --c2go-escape-nonfatal \
 		--c2go-emit-asm="$asm" --c2go-emit-manifest="$json" "${bcs[@]}"
 	cp "$asm" "$ROOT/libc_${goos}_${arch}.s"
+	normalize_asm_eof "$ROOT/libc_${goos}_${arch}.s"
 	out="$tmp/out_${goos}_${arch}"; mkdir -p "$out"
 	"$C2GOBIND" -pkg="$MOD" -pkgname=libc -goname="libc_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" ${lib:+-l "$lib"} "$asm"
 	cp "$out/libc_${goos}_${arch}.go" "$ROOT/libc_${goos}_${arch}.go"
+	"$GOFMT" -w "$ROOT/libc_${goos}_${arch}.go"
 	echo "  -> libc_${goos}_${arch}.{go,s} ($arch_overrides musl arch overrides)"
 done
 
@@ -115,10 +130,12 @@ for t in "${SELFTEST_TARGETS[@]}"; do
 	"$C2GOLTO" --c2go-lto-inline --c2go-escape-nonfatal \
 		--c2go-emit-asm="$asm" --c2go-emit-manifest="$json" "${bcs[@]}"
 	cp "$asm" "$ROOT/selftest/selftest_${goos}_${arch}.s"
+	normalize_asm_eof "$ROOT/selftest/selftest_${goos}_${arch}.s"
 	out="$tmp/out_selftest_${goos}_${arch}"; mkdir -p "$out"
 	"$C2GOBIND" -pkg="$MOD/selftest" -pkgname=selftest -goname="selftest_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" "$asm"
 	cp "$out/selftest_${goos}_${arch}.go" "$ROOT/selftest/selftest_${goos}_${arch}.go"
+	"$GOFMT" -w "$ROOT/selftest/selftest_${goos}_${arch}.go"
 	echo "  -> selftest/selftest_${goos}_${arch}.{go,s}"
 done
 echo "gen.sh: done."
