@@ -1,30 +1,77 @@
-c2go-libc2 — NOTICE
-===================
+c2go-libc — pre-release notice
+================================
 
-This repository contains code under two distinct licenses. The split is
-structural (see the layout below), not per-hunk: original code is kept in
-clearly-owned files rather than scattered as diffs inside MIT files.
+STATUS: PRE-RELEASE. NOT RELEASE-READY.
 
-1. Original c2go code — GNU AGPL-3.0 (see LICENSE), with a commercial
-   license available as an alternative (dual licensing). This covers:
-     - csrc/           (the c2go-authored C sources, including adapted
-                        cores derived from musl — see note 2 for the musl
-                        portions they embed)
-     - *.go            (the Go runtime bridges and generated bindings)
-     - CMakeLists.txt, gen.sh and the build/test harness
+This notice records the repository's current, incomplete provenance and
+licensing model. It is not a final release notice. In particular, the clean
+source checkout, generated-artifact reproducibility, dl package, and several
+third-party provenance questions listed in PROVENANCE.md remain unresolved.
 
-2. Code derived from musl libc — MIT. musl is
-   Copyright (c) 2005-2020 Rich Felker, et al., licensed under the
-   standard MIT license. The complete license text and per-author
-   attribution list is reproduced verbatim in LICENSES/musl-COPYRIGHT.txt.
-   This covers:
-     - the musl fork tracked by the `musl/` Git submodule
-       (`https://github.com/c2gohq/musl.git`, branch `c2go`; the fork
-       checkout carries musl's own COPYRIGHT file)
-     - the musl-derived portions of adapted files under csrc/ (each such
-       file states its musl derivation in its header comment)
+This repository is a multi-license work. Licenses do not map cleanly to whole
+directories, and no directory name should be treated as proof of ownership or
+license.
 
-Binary artifacts produced from this repository (libc_<os>_<arch>.s and the
-generated Go bindings) embed both parts; redistribution must preserve the
-musl copyright notice per the MIT license, and the AGPL-3.0 (or a
-commercial license) governs the original c2go portions.
+1. Original c2go material
+-------------------------
+
+Material for which the c2go copyright owner holds all necessary rights is
+intended to be offered under GNU AGPL-3.0-only, with a separately executed
+commercial agreement as an alternative. The public AGPL license text is in
+LICENSE.
+
+The selected commercial structure uses an individual licensor, but that
+person's full legal identity, ownership record, file-level copyright notices,
+commercial terms, and contribution/CLA process have not yet been finalized.
+No commercial rights are granted by this notice. GitHub Sponsors may be used
+only as a payment channel under a separately executed agreement; sponsorship
+payment alone is not a license grant. See LICENSING.md,
+COMMERCIAL-LICENSING.md, and CONTRIBUTING.md.
+
+2. musl-derived and other third-party material
+-----------------------------------------------
+
+The repository builds selected sources from a modified musl libc fork and
+contains adapted material derived from musl. musl and its bundled third-party
+components remain under their original permissive licenses. The complete musl
+COPYRIGHT file currently used by the project is reproduced in
+LICENSES/musl-COPYRIGHT.txt.
+
+Some files under csrc/ and csrc/include/ contain both third-party-derived and
+original c2go material. Original c2go modifications do not revoke, replace, or
+restrict rights already granted for the underlying third-party material.
+
+Additional provenance remains under review. In particular, the Darwin branch
+of csrc/termios.c identifies Apple Libc/FreeBSD as its source, and several
+Darwin ABI declarations identify XNU sources. Their required notices and the
+license treatment of the resulting mixed files have not yet been finalized.
+The project will not designate a release until that review is complete. Anyone
+independently redistributing this snapshot must satisfy all applicable license
+and notice obligations and cannot rely on this incomplete inventory as a final
+notice bundle. See THIRD_PARTY_NOTICES.md and PROVENANCE.md.
+
+3. Generated artifacts
+----------------------
+
+Files named libc_<os>_<arch>.go and libc_<os>_<arch>.s are generated from a
+mixture of musl-derived, other third-party, and original c2go sources. A
+generated-file marker does not replace the applicable source notices, and the
+generated artifacts must not be described as wholly AGPL or wholly owned by
+c2go.
+
+Any future redistribution must preserve all applicable third-party notices and
+must include, or provide in a license-compliant manner, the complete
+corresponding source and build information for the original AGPL-covered
+portions. The current repository does not yet provide a verified release
+bundle satisfying those requirements.
+
+4. No change to third-party rights
+----------------------------------
+
+Nothing in this notice limits the permissions granted by musl, BSD, Apache,
+or any other applicable third-party license. A future c2go commercial license
+can cover only material for which its licensor has authority to grant rights.
+
+This document is an engineering provenance notice, not legal advice. The
+release package and licensing texts require review by qualified counsel before
+publication.
