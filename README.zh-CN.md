@@ -1,5 +1,7 @@
 # c2go-libc
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/c2gohq/c2go_libc.svg)](https://pkg.go.dev/github.com/c2gohq/c2go_libc)
+
 [English](README.md)
 
 > **预发布状态——尚未达到正式发布条件**

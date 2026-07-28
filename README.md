@@ -1,5 +1,7 @@
 # c2go-libc
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/c2gohq/c2go_libc.svg)](https://pkg.go.dev/github.com/c2gohq/c2go_libc)
+
 [简体中文](README.zh-CN.md)
 
 > **PRE-RELEASE — NOT RELEASE-READY**
