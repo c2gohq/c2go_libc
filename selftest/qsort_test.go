@@ -1,3 +1,5 @@
+//go:build unix
+
 // Package selftest holds in-C exercises of c2go-libc functions whose comparator
 // or callback is invoked FROM C (qsort/bsearch), so they cannot be driven by a
 // Go closure directly. Keeping them in a separate package keeps the C driver

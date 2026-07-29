@@ -1,6 +1,6 @@
 //go:build unix
 
-// (unix-only, #649: unix wchar_t == int32; the Windows wide path (uint16) is covered by the wchar wine gate.)
+// Unix wchar_t is UTF-32; testWchar follows its target-specific signedness.
 package libc
 
 // wstdio_fileio_test exercises the wide-character FILE I/O ported from musl
@@ -32,12 +32,12 @@ func wopen(t *testing.T, path, mode string) *FILE {
 	return f
 }
 
-// wslice builds a NUL-terminated wchar_t (int32) slice from s.
-func wslice(s string) []int32 {
+// wslice builds a NUL-terminated wchar_t slice from s.
+func wslice(s string) []testWchar {
 	rs := []rune(s)
-	w := make([]int32, len(rs)+1)
+	w := make([]testWchar, len(rs)+1)
 	for i, r := range rs {
-		w[i] = int32(r)
+		w[i] = testWchar(r)
 	}
 	return w
 }
@@ -68,7 +68,7 @@ func TestFputwcReadback(t *testing.T) {
 	text := "Aé你\n"
 	f := wopen(t, path, "w")
 	for _, r := range text {
-		if c := Fputwc(int32(r), f); c != uint32(r) {
+		if c := Fputwc(testWchar(r), f); c != uint32(r) {
 			t.Fatalf("Fputwc(%q) = %#x, want %#x", r, c, uint32(r))
 		}
 	}
@@ -177,7 +177,7 @@ func TestFputwsFgetws(t *testing.T) {
 
 	g := wopen(t, path, "r")
 	defer Fclose(g)
-	buf := make([]int32, 64)
+	buf := make([]testWchar, 64)
 	rp := Fgetws(&buf[0], int32(len(buf)), g)
 	runtime.KeepAlive(buf)
 	if rp == nil {
@@ -185,7 +185,7 @@ func TestFputwsFgetws(t *testing.T) {
 	}
 	want := []rune(text) // includes the trailing '\n'
 	for i, r := range want {
-		if buf[i] != int32(r) {
+		if buf[i] != testWchar(r) {
 			t.Errorf("buf[%d] = %#x, want %#x (%q)", i, buf[i], r, r)
 		}
 	}

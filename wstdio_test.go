@@ -1,13 +1,12 @@
 //go:build unix
 
-// (unix-only, #649: unix wchar_t == int32; the Windows wide path (uint16)
-// is covered by the wchar wine gate.)
+// Unix wchar_t is UTF-32; testWchar follows its target-specific signedness.
 package libc
 
 // wstdio_test exercises the wide-character %ls/%lc/%S/%C directives now wired
 // into the C printf core (source/stdio.c printf_core, via musl's wctomb) and the
 // scanf core (vfscanf, via musl's mbrtowc). On the darwin/linux test targets
-// wchar_t is int32 (UTF-32); every result is cross-checked against Go's own
+// wchar_t is UTF-32; every result is cross-checked against Go's own
 // UTF-8 <-> rune conversion. These are the end-to-end checks that the batch-2
 // multibyte port actually drives real printf/scanf output, not just its unit
 // tests. (Windows wchar_t is uint16/UTF-16 with surrogates — deferred.)
@@ -18,14 +17,14 @@ import (
 	"unsafe"
 )
 
-// wpush builds a NUL-terminated wchar_t (int32) array from s, roots it on a
+// wpush builds a NUL-terminated wchar_t array from s, roots it on a
 // (same escape discipline as pargs.s), and pushes the void* to its first element
 // as the %ls pointer argument.
 func wpush(a *pargs, s string) {
 	rs := []rune(s)
-	w := make([]int32, len(rs)+1)
+	w := make([]testWchar, len(rs)+1)
 	for i, r := range rs {
-		w[i] = int32(r)
+		w[i] = testWchar(r)
 	}
 	a.keep = append(a.keep, w)
 	a.cells = append(a.cells, uint64(uintptr(unsafe.Pointer(&w[0]))))
@@ -97,7 +96,7 @@ func TestSnprintfWidePrecision(t *testing.T) {
 // terminates it, stopping at whitespace like %s.
 func TestSscanfWideString(t *testing.T) {
 	for _, text := range []string{"你好世界", "café", "abc"} {
-		wbuf := make([]int32, 32)
+		wbuf := make([]testWchar, 32)
 		n := ssf(t, text, "%ls", unsafe.Pointer(&wbuf[0]))
 		runtime.KeepAlive(wbuf)
 		if n != 1 {
@@ -105,7 +104,7 @@ func TestSscanfWideString(t *testing.T) {
 		}
 		rs := []rune(text)
 		for i, r := range rs {
-			if wbuf[i] != int32(r) {
+			if wbuf[i] != testWchar(r) {
 				t.Errorf("[%q] wbuf[%d] = %#x, want %#x (%q)", text, i, wbuf[i], r, r)
 			}
 		}
@@ -117,7 +116,7 @@ func TestSscanfWideString(t *testing.T) {
 
 // TestSscanfWideStops: %ls stops at the first whitespace (scanset excludes it).
 func TestSscanfWideStops(t *testing.T) {
-	wbuf := make([]int32, 32)
+	wbuf := make([]testWchar, 32)
 	n := ssf(t, "café latte", "%ls", unsafe.Pointer(&wbuf[0]))
 	runtime.KeepAlive(wbuf)
 	if n != 1 {
@@ -125,7 +124,7 @@ func TestSscanfWideStops(t *testing.T) {
 	}
 	want := []rune("café")
 	for i, r := range want {
-		if wbuf[i] != int32(r) {
+		if wbuf[i] != testWchar(r) {
 			t.Errorf("wbuf[%d] = %#x, want %#x", i, wbuf[i], r)
 		}
 	}
@@ -136,7 +135,7 @@ func TestSscanfWideStops(t *testing.T) {
 
 // TestSscanfWideCharASCII: %lc reads one (single-byte) wide char, no NUL term.
 func TestSscanfWideCharASCII(t *testing.T) {
-	var wc int32 = -1
+	wc := ^testWchar(0)
 	n := ssf(t, "Z", "%lc", unsafe.Pointer(&wc))
 	if n != 1 {
 		t.Fatalf("Sscanf(%%lc) = %d, want 1", n)
@@ -156,14 +155,14 @@ func TestWideRoundTrip(t *testing.T) {
 	if got != text {
 		t.Fatalf("printf %%ls = %q, want %q", got, text)
 	}
-	wbuf := make([]int32, 32)
+	wbuf := make([]testWchar, 32)
 	n := ssf(t, got, "%ls", unsafe.Pointer(&wbuf[0]))
 	runtime.KeepAlive(wbuf)
 	if n != 1 {
 		t.Fatalf("scanf %%ls = %d, want 1", n)
 	}
 	for i, r := range []rune(text) {
-		if wbuf[i] != int32(r) {
+		if wbuf[i] != testWchar(r) {
 			t.Errorf("roundtrip wbuf[%d] = %#x, want %#x", i, wbuf[i], r)
 		}
 	}

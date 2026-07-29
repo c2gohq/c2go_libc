@@ -28,7 +28,7 @@ import (
 func swf(t *testing.T, cfmt string, a *pargs) string {
 	t.Helper()
 	wf := wslice(cfmt)
-	buf := make([]int32, 256)
+	buf := make([]testWchar, 256)
 	ap, ptrs := a.packPtr()
 	n := Swprintf(&buf[0], uint64(len(buf)), &wf[0], ap)
 	runtime.KeepAlive(a)
@@ -100,7 +100,7 @@ func TestSwprintfReturnCount(t *testing.T) {
 	a := &pargs{}
 	wpush(a, "你好") // 2 wchars, 6 UTF-8 bytes
 	wf := wslice("[%ls]")
-	buf := make([]int32, 256)
+	buf := make([]testWchar, 256)
 	ap, ptrs := a.packPtr()
 	n := Swprintf(&buf[0], uint64(len(buf)), &wf[0], ap)
 	runtime.KeepAlive(a)
@@ -120,7 +120,7 @@ func TestSwprintfTruncation(t *testing.T) {
 	a := &pargs{}
 	a.i(123456)
 	wf := wslice("%d")
-	buf := make([]int32, 4) // room for "12" + NUL (n-1 = 3 wchars fit, output is 6)
+	buf := make([]testWchar, 4) // room for "12" + NUL (n-1 = 3 wchars fit, output is 6)
 	ap, ptrs := a.packPtr()
 	n := Swprintf(&buf[0], uint64(len(buf)), &wf[0], ap)
 	runtime.KeepAlive(a)

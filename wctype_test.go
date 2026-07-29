@@ -20,7 +20,7 @@ func TestWctype(t *testing.T) {
 	if al == 0 || Iswctype('a', al) == 0 || Iswctype('1', al) != 0 {
 		t.Fatal("wctype/iswctype")
 	}
-	ws := []int32{'A', 'B', 'C', 0}
+	ws := []testWchar{'A', 'B', 'C', 0}
 	if Wcswidth(&ws[0], 3) != 3 {
 		t.Fatal("wcswidth")
 	}

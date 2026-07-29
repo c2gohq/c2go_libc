@@ -37,6 +37,19 @@ normalize_asm_eof() {
 	mv "$1.tmp" "$1"
 }
 
+# Go's amd64 stack is only 8-byte aligned. The Plan 9 printer rewrites aligned
+# 128-bit stack moves to their unaligned equivalents; keep generation
+# fail-closed if a new opcode family ever bypasses that rewrite.
+verify_amd64_stack_moves() {
+	local asm_path="$1"
+	local unsafe_pattern='^[[:space:]]*(V?MOVAPS|V?MOVAPD|MOVO|VMOVDQA(32|64)?)[[:space:]].*\((BP|SP)\)'
+	if grep -Eq "$unsafe_pattern" "$asm_path"; then
+		echo "gen.sh: unsafe aligned amd64 stack move in $asm_path" >&2
+		grep -nE "$unsafe_pattern" "$asm_path" >&2
+		exit 1
+	fi
+}
+
 # Pull the .c paths out of CMakeLists.txt, expanding ${MUSL_DIR}/${CSRC_DIR}.
 SOURCES=()
 while IFS= read -r line; do
@@ -104,6 +117,7 @@ for t in "${LIBC_TARGETS[@]}"; do
 		--c2go-emit-asm="$asm" --c2go-emit-manifest="$json" "${bcs[@]}"
 	cp "$asm" "$ROOT/libc_${goos}_${arch}.s"
 	normalize_asm_eof "$ROOT/libc_${goos}_${arch}.s"
+	[ "$arch" != amd64 ] || verify_amd64_stack_moves "$ROOT/libc_${goos}_${arch}.s"
 	out="$tmp/out_${goos}_${arch}"; mkdir -p "$out"
 	"$C2GOBIND" -pkg="$MOD" -pkgname=libc -goname="libc_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" ${lib:+-l "$lib"} "$asm"
@@ -145,6 +159,7 @@ for t in "${SELFTEST_TARGETS[@]}"; do
 		--c2go-emit-asm="$asm" --c2go-emit-manifest="$json" "${bcs[@]}"
 	cp "$asm" "$ROOT/selftest/selftest_${goos}_${arch}.s"
 	normalize_asm_eof "$ROOT/selftest/selftest_${goos}_${arch}.s"
+	[ "$arch" != amd64 ] || verify_amd64_stack_moves "$ROOT/selftest/selftest_${goos}_${arch}.s"
 	out="$tmp/out_selftest_${goos}_${arch}"; mkdir -p "$out"
 	"$C2GOBIND" -pkg="$MOD/selftest" -pkgname=selftest -goname="selftest_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" "$asm"

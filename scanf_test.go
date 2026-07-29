@@ -7,9 +7,10 @@ import (
 	"math"
 	"os"
 	"runtime"
-	"syscall"
 	"testing"
 	"unsafe"
+
+	"golang.org/x/sys/unix"
 )
 
 // escapeSink / escape force a destination's referent onto the heap. The scanf
@@ -20,8 +21,6 @@ import (
 // mid-call (first deep call on a fresh goroutine), and the callee then stores
 // through the abandoned old stack — the result silently "disappears" (#603:
 // TestSscanf* failed exactly this way whenever the growth phase lined up).
-
-
 
 func TestSscanfSmoke(t *testing.T) {
 	n := new(int32)
@@ -305,11 +304,11 @@ func TestScanfFromFd(t *testing.T) {
 	}
 	defer rf.Close()
 
-	saved, err := syscall.Dup(0)
+	saved, err := unix.Dup(0)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := syscall.Dup2(int(rf.Fd()), 0); err != nil {
+	if err := unix.Dup2(int(rf.Fd()), 0); err != nil {
 		t.Fatal(err)
 	}
 
@@ -331,8 +330,8 @@ func TestScanfFromFd(t *testing.T) {
 	runtime.KeepAlive(ptrs)
 
 	// restore fd 0
-	syscall.Dup2(saved, 0)
-	syscall.Close(saved)
+	unix.Dup2(saved, 0)
+	unix.Close(saved)
 
 	if n != 3 || *a != 314 || cstr(&bs[0]) != "hello" || *c != 2718 {
 		t.Fatalf("Scanf-from-fd = (%d,%q,%d) n=%d, want (314,hello,2718) n=3",

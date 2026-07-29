@@ -62,7 +62,7 @@ func TestStringCore(t *testing.T) {
 	}
 
 	// wide
-	w, w2 := []int32{'h', 'i', 0}, []int32{'h', 'i', 0}
+	w, w2 := []testWchar{'h', 'i', 0}, []testWchar{'h', 'i', 0}
 	if Wcslen(&w[0]) != 2 || Wcscmp(&w[0], &w2[0]) != 0 {
 		t.Fatal("wcslen/wcscmp")
 	}

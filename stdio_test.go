@@ -16,13 +16,11 @@ import (
 	"math"
 	"os"
 	"runtime"
-	"syscall"
 	"testing"
 	"unsafe"
+
+	"golang.org/x/sys/unix"
 )
-
-
-
 
 func TestSnprintfIntString(t *testing.T) {
 	cases := []struct {
@@ -101,8 +99,8 @@ func TestSnprintfFloat(t *testing.T) {
 	}{
 		{"%f", 2.5, "2.500000"},
 		{"%f", math.Copysign(0, -1), "-0.000000"}, // Go's -0.0 literal folds to +0
-		{"%.0f", 0.5, "0"},   // tie -> even
-		{"%.0f", 1.5, "2"},   // tie -> even
+		{"%.0f", 0.5, "0"},                        // tie -> even
+		{"%.0f", 1.5, "2"},                        // tie -> even
 		{"%.3f", 1.0 / 3.0, "0.333"},
 		{"%e", 12345.678, "1.234568e+04"},
 		{"%.0e", 9.9999999, "1e+01"},
@@ -224,11 +222,11 @@ func TestPrintfToFd(t *testing.T) {
 	}
 	defer os.Remove(tmp.Name())
 
-	saved, err := syscall.Dup(1)
+	saved, err := unix.Dup(1)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := syscall.Dup2(int(tmp.Fd()), 1); err != nil {
+	if err := unix.Dup2(int(tmp.Fd()), 1); err != nil {
 		t.Fatal(err)
 	}
 
@@ -244,8 +242,8 @@ func TestPrintfToFd(t *testing.T) {
 	runtime.KeepAlive(fb)
 
 	// restore fd 1
-	syscall.Dup2(saved, 1)
-	syscall.Close(saved)
+	unix.Dup2(saved, 1)
+	unix.Close(saved)
 
 	want := "hello 42 world\n"
 	if int(ret) != len(want) {
@@ -274,16 +272,16 @@ func TestFwriteStdout(t *testing.T) {
 	}
 	defer os.Remove(tmp.Name())
 
-	saved, _ := syscall.Dup(1)
-	syscall.Dup2(int(tmp.Fd()), 1)
+	saved, _ := unix.Dup(1)
+	unix.Dup2(int(tmp.Fd()), 1)
 
 	msg := []byte("abcde")
 	n := Fwrite(unsafe.Pointer(&msg[0]), 1, uint64(len(msg)), cStdout)
 	Fflush(cStdout)
 	runtime.KeepAlive(msg)
 
-	syscall.Dup2(saved, 1)
-	syscall.Close(saved)
+	unix.Dup2(saved, 1)
+	unix.Close(saved)
 
 	if n != uint64(len(msg)) {
 		t.Errorf("Fwrite returned %d, want %d", n, len(msg))

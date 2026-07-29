@@ -195,7 +195,7 @@ func TestMbsrtowcsCountingResumed(t *testing.T) {
 	nC := Mbsrtowcs(nil, &srcC, 0, stC)
 	stW, _ := newState()
 	srcW := &s[0]
-	var w [8]int32
+	var w [8]testWchar
 	nW := Mbsrtowcs(&w[0], &srcW, 8, stW)
 	if nC != nW || nC != 3 {
 		t.Fatalf("count %d vs write %d, want 3 == 3", nC, nW)
@@ -207,7 +207,7 @@ func TestMbsrtowcsCountingResumed(t *testing.T) {
 	// Resumed: prime the state with 2 of the supplementary's 4 bytes, then hand
 	// the remainder to the counting pass (drives the resume0 accumulate path).
 	stR, _ := newState()
-	var wc int32
+	var wc testWchar
 	if got := Mbrtowc(&wc, &s[1], 2, stR); got != errNeg2 {
 		t.Fatalf("prime Mbrtowc = %#x, want -2", got)
 	}
@@ -222,7 +222,7 @@ func TestMbsrtowcsCountingResumed(t *testing.T) {
 		t.Fatalf("prime Mbrtowc = %#x, want -2", got)
 	}
 	rest2 := &s[3]
-	var w2 [4]int32
+	var w2 [4]testWchar
 	if got := Mbsrtowcs(&w2[0], &rest2, 4, stR2); got != 2 || w2[0] != 0x1F48A || w2[1] != 0xE9 {
 		t.Errorf("resumed write = %d (%#x %#x), want 2 (0x1F48A 0xE9)", got, w2[0], w2[1])
 	}

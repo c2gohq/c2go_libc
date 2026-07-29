@@ -1,7 +1,6 @@
 //go:build unix
 
-// (unix-only, #649: unix wchar_t == int32; the Windows wide path (uint16)
-// is covered by the wchar wine gate.)
+// Unix wchar_t is UTF-32; testWchar follows its target-specific signedness.
 package libc
 
 import (
@@ -11,31 +10,30 @@ import (
 
 // wstring_test exercises the wide string / wide memory port (source/wstring.c,
 // ported verbatim from musl) through its c2go-bind bindings. On the LP64 unix
-// test target wchar_t binds as int32 (UTF-32), so wchar_t* params bind as
-// *int32 and wchar_t-by-value params as int32. Slices are held in locals so
-// they stay alive across the calls.
+// test target wchar_t binds as a 32-bit target-specific Go type. Slices are
+// held in locals so they stay alive across the calls.
 
-// ws turns a Go string into a NUL-terminated []int32 (one int32 per rune).
-func ws(s string) []int32 {
+// ws turns a Go string into a NUL-terminated wchar_t slice.
+func ws(s string) []testWchar {
 	r := []rune(s)
-	out := make([]int32, len(r)+1) // out[len(r)] == 0 (NUL terminator)
+	out := make([]testWchar, len(r)+1) // out[len(r)] == 0 (NUL terminator)
 	for i, c := range r {
-		out[i] = int32(c)
+		out[i] = testWchar(c)
 	}
 	return out
 }
 
-// pw returns the base pointer of a []int32 (a wchar_t*).
-func pw(a []int32) *int32 { return &a[0] }
+// pw returns the base pointer of a wchar_t slice.
+func pw(a []testWchar) *testWchar { return &a[0] }
 
 // wstr reads a NUL-terminated wide string back into a Go string.
-func wstr(p *int32) string {
+func wstr(p *testWchar) string {
 	if p == nil {
 		return "<nil>"
 	}
 	var rs []rune
 	for i := 0; ; i++ {
-		c := *(*int32)(unsafe.Add(unsafe.Pointer(p), i*4))
+		c := *(*testWchar)(unsafe.Add(unsafe.Pointer(p), i*4))
 		if c == 0 {
 			break
 		}
@@ -116,7 +114,7 @@ func TestWcsChr(t *testing.T) {
 // and the NUL padding of the bounded forms).
 func TestWcsCpy(t *testing.T) {
 	src := ws("hi\U00010348")
-	dst := make([]int32, 8)
+	dst := make([]testWchar, 8)
 	if r := Wcscpy(pw(dst), pw(src)); unsafe.Pointer(r) != unsafe.Pointer(pw(dst)) {
 		t.Fatal("Wcscpy did not return dest")
 	}
@@ -125,16 +123,16 @@ func TestWcsCpy(t *testing.T) {
 	}
 
 	// wcpcpy returns the terminating-NUL position.
-	dst2 := make([]int32, 8)
+	dst2 := make([]testWchar, 8)
 	end := Wcpcpy(pw(dst2), pw(src))
 	if uintptr(unsafe.Pointer(end)) != uintptr(unsafe.Pointer(pw(dst2)))+3*4 || *end != 0 {
 		t.Fatalf("Wcpcpy end wrong")
 	}
 
 	// wcsncpy pads the tail with NULs up to n.
-	dst3 := []int32{9, 9, 9, 9, 9, 9}
+	dst3 := []testWchar{9, 9, 9, 9, 9, 9}
 	Wcsncpy(pw(dst3), pw(ws("ab")), 5)
-	want := []int32{'a', 'b', 0, 0, 0, 9} // only 5 written, index 5 untouched
+	want := []testWchar{'a', 'b', 0, 0, 0, 9} // only 5 written, index 5 untouched
 	for i := range want {
 		if dst3[i] != want[i] {
 			t.Fatalf("Wcsncpy dst3 = %v, want %v", dst3, want)
@@ -142,7 +140,7 @@ func TestWcsCpy(t *testing.T) {
 	}
 
 	// wcpncpy returns dest + wcsnlen(src,n).
-	dst4 := make([]int32, 6)
+	dst4 := make([]testWchar, 6)
 	e4 := Wcpncpy(pw(dst4), pw(ws("ab")), 5)
 	if uintptr(unsafe.Pointer(e4)) != uintptr(unsafe.Pointer(pw(dst4)))+2*4 {
 		t.Fatal("Wcpncpy end wrong")
@@ -151,14 +149,14 @@ func TestWcsCpy(t *testing.T) {
 
 // TestWcsCat covers wcscat / wcsncat.
 func TestWcsCat(t *testing.T) {
-	buf := make([]int32, 16)
+	buf := make([]testWchar, 16)
 	copy(buf, ws("foo"))
 	Wcscat(pw(buf), pw(ws("bar")))
 	if wstr(pw(buf)) != "foobar" {
 		t.Fatalf("Wcscat = %q, want foobar", wstr(pw(buf)))
 	}
 
-	buf2 := make([]int32, 16)
+	buf2 := make([]testWchar, 16)
 	copy(buf2, ws("foo"))
 	Wcsncat(pw(buf2), pw(ws("barbaz")), 3)
 	if wstr(pw(buf2)) != "foobar" {
@@ -219,7 +217,7 @@ func TestWcsSpn(t *testing.T) {
 func TestWcsTok(t *testing.T) {
 	buf := ws("  hello world  foo ")
 	sep := ws(" ")
-	var save *int32
+	var save *testWchar
 	var got []string
 	tok := Wcstok(pw(buf), pw(sep), &save)
 	for tok != nil {
@@ -258,8 +256,8 @@ func TestWcsDup(t *testing.T) {
 // wmemset / wmemchr / wmemcmp.
 func TestWmem(t *testing.T) {
 	// wmemcpy
-	src := []int32{1, 2, 3, 4}
-	dst := make([]int32, 4)
+	src := []testWchar{1, 2, 3, 4}
+	dst := make([]testWchar, 4)
 	if r := Wmemcpy(pw(dst), pw(src), 4); unsafe.Pointer(r) != unsafe.Pointer(pw(dst)) {
 		t.Fatal("Wmemcpy did not return dest")
 	}
@@ -271,9 +269,9 @@ func TestWmem(t *testing.T) {
 
 	// wmemmove, dst>src overlap: move a[0:4] -> a[2:6]. (uintptr)d-(uintptr)s < n*4,
 	// so it takes the backward-copy branch `while(n--) d[n]=s[n]`.
-	a := []int32{1, 2, 3, 4, 5, 6, 7, 8}
+	a := []testWchar{1, 2, 3, 4, 5, 6, 7, 8}
 	Wmemmove(&a[2], &a[0], 4)
-	want := []int32{1, 2, 1, 2, 3, 4, 7, 8}
+	want := []testWchar{1, 2, 1, 2, 3, 4, 7, 8}
 	for i := range want {
 		if a[i] != want[i] {
 			t.Fatalf("Wmemmove(dst>src overlap) = %v, want %v", a, want)
@@ -283,9 +281,9 @@ func TestWmem(t *testing.T) {
 	// wmemmove, dst<src overlap: move a2[2:6] -> a2[0:4]. d<s so d-s wraps huge,
 	// >= n*4, taking the OTHER branch `while(n--) *d++=*s++` (forward copy) — the
 	// one a dst<src overlapping move needs to stay correct.
-	a2 := []int32{1, 2, 3, 4, 5, 6}
+	a2 := []testWchar{1, 2, 3, 4, 5, 6}
 	Wmemmove(&a2[0], &a2[2], 4)
-	want2 := []int32{3, 4, 5, 6, 5, 6}
+	want2 := []testWchar{3, 4, 5, 6, 5, 6}
 	for i := range want2 {
 		if a2[i] != want2[i] {
 			t.Fatalf("Wmemmove(dst<src overlap) = %v, want %v", a2, want2)
@@ -293,7 +291,7 @@ func TestWmem(t *testing.T) {
 	}
 
 	// wmemset fills n elements with the wchar value (element-wise, not byte).
-	b := make([]int32, 5)
+	b := make([]testWchar, 5)
 	Wmemset(pw(b), 0x10348, 3)
 	for i := 0; i < 3; i++ {
 		if b[i] != 0x10348 {
@@ -305,7 +303,7 @@ func TestWmem(t *testing.T) {
 	}
 
 	// wmemchr finds an element within the first n; nil past it.
-	c := []int32{'a', 'b', 'c', 'd'}
+	c := []testWchar{'a', 'b', 'c', 'd'}
 	base := uintptr(unsafe.Pointer(pw(c)))
 	if q := Wmemchr(pw(c), 'c', 4); q == nil ||
 		uintptr(unsafe.Pointer(q)) != base+2*4 {
@@ -316,9 +314,9 @@ func TestWmem(t *testing.T) {
 	}
 
 	// wmemcmp: equal, less, greater over n elements.
-	x := []int32{1, 2, 3}
-	y := []int32{1, 2, 3}
-	z := []int32{1, 2, 4}
+	x := []testWchar{1, 2, 3}
+	y := []testWchar{1, 2, 3}
+	z := []testWchar{1, 2, 4}
 	if Wmemcmp(pw(x), pw(y), 3) != 0 {
 		t.Fatal("Wmemcmp(equal) != 0")
 	}

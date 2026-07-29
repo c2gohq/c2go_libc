@@ -53,8 +53,8 @@ func wssf(t *testing.T, input, format string, dests ...unsafe.Pointer) int32 {
 	return r
 }
 
-// wbufStr decodes a NUL-terminated wchar_t (int32) buffer to a Go string.
-func wbufStr(b []int32) string {
+// wbufStr decodes a NUL-terminated wchar_t buffer to a Go string.
+func wbufStr(b []testWchar) string {
 	rs := make([]rune, 0, len(b))
 	for _, w := range b {
 		if w == 0 {
@@ -83,7 +83,7 @@ func TestSwscanfInt(t *testing.T) {
 // stopping at whitespace, cross-checked against Go's []rune.
 func TestSwscanfWideString(t *testing.T) {
 	for _, text := range []string{"héllo你好", "ascii", "café"} {
-		buf := make([]int32, 64)
+		buf := make([]testWchar, 64)
 		n := wssf(t, text+" tail", "%ls", unsafe.Pointer(&buf[0]))
 		if n != 1 {
 			t.Fatalf("Swscanf(%%ls, %q) = %d, want 1", text, n)
@@ -97,10 +97,10 @@ func TestSwscanfWideString(t *testing.T) {
 // TestSwscanfWideChar: %lc reads exactly one wide char (no NUL term).
 func TestSwscanfWideChar(t *testing.T) {
 	for _, text := range []string{"好bar", "Axyz", "é!"} {
-		buf := []int32{0, 0}
+		buf := []testWchar{0, 0}
 		n := wssf(t, text, "%lc", unsafe.Pointer(&buf[0]))
 		want := []rune(text)[0]
-		if n != 1 || buf[0] != int32(want) {
+		if n != 1 || buf[0] != testWchar(want) {
 			t.Fatalf("Swscanf(%%lc, %q) = %d, got=%#x; want n=1 got=%#x", text, n, buf[0], want)
 		}
 	}
@@ -150,7 +150,7 @@ func cLen(b []byte) int {
 // every destination.
 func TestSwscanfMulti(t *testing.T) {
 	var d int32
-	name := make([]int32, 64)
+	name := make([]testWchar, 64)
 	var f float32
 	n := wssf(t, "123 héllo 4.5 trailing", "%d %ls %f",
 		unsafe.Pointer(&d), unsafe.Pointer(&name[0]), unsafe.Pointer(&f))
@@ -202,7 +202,7 @@ func TestFwscanfFile(t *testing.T) {
 
 	fw := wslice("%d %ls")
 	var year int32
-	word := make([]int32, 64)
+	word := make([]testWchar, 64)
 	cells := []uint64{
 		uint64(uintptr(escape(unsafe.Pointer(&year)))),
 		uint64(uintptr(escape(unsafe.Pointer(&word[0])))),

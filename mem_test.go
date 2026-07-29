@@ -35,12 +35,12 @@ func TestMem(t *testing.T) {
 	}
 
 	// wide fill + copy
-	ws := []int32{9, 9, 9, 9}
+	ws := []testWchar{9, 9, 9, 9}
 	Wmemset(&ws[0], 'Z', 3)
 	if ws[0] != 'Z' || ws[1] != 'Z' || ws[2] != 'Z' || ws[3] != 9 {
 		t.Fatalf("wmemset: %v", ws)
 	}
-	wd := make([]int32, 3)
+	wd := make([]testWchar, 3)
 	Wmemcpy(&wd[0], &ws[0], 3)
 	if wd[0] != 'Z' || wd[1] != 'Z' || wd[2] != 'Z' {
 		t.Fatalf("wmemcpy: %v", wd)

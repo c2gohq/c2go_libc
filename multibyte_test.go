@@ -1,6 +1,6 @@
 //go:build unix
 
-// (unix-only, #649: unix wchar_t == int32; the Windows wide path (uint16) is covered by the wchar wine gate.)
+// Unix wchar_t is UTF-32, but its signedness follows the target C ABI.
 package libc
 
 import (
@@ -14,14 +14,14 @@ import (
 // tests cross-check the decode/encode ARITHMETIC against Go's unicode/utf8 and
 // assert directly the boundary semantics utf8 does NOT model: the incomplete
 // (size_t)-2 vs illegal (size_t)-1+EILSEQ distinction, embedded-NUL == 0, and
-// the streaming mbstate_t accumulator. wchar_t binds as int32 on the LP64 test
-// targets (signed on Darwin/x86_64, though AArch64-Linux widens it to uint32).
+// the streaming mbstate_t accumulator. wchar_t is signed on Darwin/x86_64 and
+// unsigned on AArch64 Linux, so buffers use the target-specific testWchar alias.
 //
 // The Go binding renders mbstate_t as the 0-byte opaque `__mbstate_t`, so a
 // live [2]uint32 backs each state and its address is cast to *__mbstate_t (the
 // C side only ever touches the first word). Passing the pointer to the bodyless
 // binding forces the backing to escape to the heap → address stable across any
-// stack growth.
+// stack growth. testWchar aliases that target-specific generated Go type.
 
 const weof = uint32(0xffffffff) // WEOF
 const errNeg1 = ^uint64(0)      // (size_t)-1  (illegal)
@@ -59,8 +59,8 @@ func TestMbrtowc(t *testing.T) {
 		n  uint64
 	}{
 		{"A", 'A', 1},
-		{"£", 0x00a3, 2},     // £  U+00A3
-		{"€", 0x20ac, 3},     // €  U+20AC
+		{"£", 0x00a3, 2},           // £  U+00A3
+		{"€", 0x20ac, 3},           // €  U+20AC
 		{"\U00010348", 0x10348, 4}, // 𐍈 U+10348
 	}
 	for _, c := range cases {
@@ -71,12 +71,12 @@ func TestMbrtowc(t *testing.T) {
 		}
 		st, _ := newState()
 		b := append([]byte(c.s), 0)
-		var wc int32 = -1
+		wc := ^testWchar(0)
 		got := Mbrtowc(&wc, &b[0], uint64(len(c.s)), st)
 		if got != c.n {
 			t.Errorf("Mbrtowc(%q) consumed %d, want %d", c.s, got, c.n)
 		}
-		if wc != c.cp {
+		if int32(wc) != c.cp {
 			t.Errorf("Mbrtowc(%q) wc = %#x, want %#x", c.s, wc, c.cp)
 		}
 	}
@@ -85,7 +85,7 @@ func TestMbrtowc(t *testing.T) {
 	{
 		st, _ := newState()
 		b := []byte{0, 0}
-		var wc int32 = -1
+		wc := ^testWchar(0)
 		if got := Mbrtowc(&wc, &b[0], 1, st); got != 0 {
 			t.Errorf("Mbrtowc(\"\\0\") = %d, want 0", got)
 		}
@@ -98,12 +98,12 @@ func TestMbrtowc(t *testing.T) {
 	// untouched, and drives the state non-initial.
 	{
 		st, raw := newState()
-		var wc int32 = -1
+		wc := ^testWchar(0)
 		got := Mbrtowc(&wc, rawp([]byte{0xE2, 0}), 1, st)
 		if got != errNeg2 {
 			t.Errorf("Mbrtowc(incomplete) = %#x, want -2 (%#x)", got, errNeg2)
 		}
-		if wc != -1 {
+		if wc != ^testWchar(0) {
 			t.Errorf("Mbrtowc(incomplete) wrote wc = %#x, must leave it untouched", wc)
 		}
 		if raw[0] == 0 || Mbsinit(st) != 0 {
@@ -124,7 +124,7 @@ func TestMbrtowc(t *testing.T) {
 	for _, il := range illegal {
 		st, _ := newState()
 		*ErrnoPtr() = 0
-		var wc int32 = -1
+		wc := ^testWchar(0)
 		got := Mbrtowc(&wc, &il.b[0], uint64(len(il.b)-1), st)
 		if got != errNeg1 {
 			t.Errorf("Mbrtowc(%s) = %#x, want -1 (%#x)", il.name, got, errNeg1)
@@ -138,7 +138,7 @@ func TestMbrtowc(t *testing.T) {
 // TestWcrtomb covers the single-character encode: byte round-trip vs utf8, and
 // the surrogate -> -1+EILSEQ rejection.
 func TestWcrtomb(t *testing.T) {
-	for _, cp := range []int32{0x00a3, 0x20ac, 0x10348} {
+	for _, cp := range []testWchar{0x00a3, 0x20ac, 0x10348} {
 		st, _ := newState()
 		var buf [8]byte
 		n := Wcrtomb(&buf[0], cp, st)
@@ -173,11 +173,11 @@ func TestWcrtomb(t *testing.T) {
 func TestMultibyte(t *testing.T) {
 	// Mbtowc (no state) decodes ASCII and a 3-byte char.
 	{
-		var wc int32 = -1
+		wc := ^testWchar(0)
 		if n := Mbtowc(&wc, rawp([]byte{'A', 0}), 1); n != 1 || wc != 'A' {
 			t.Errorf("Mbtowc(\"A\") = (%d, %#x), want (1, 0x41)", n, wc)
 		}
-		wc = -1
+		wc = ^testWchar(0)
 		if n := Mbtowc(&wc, rawp([]byte{0xE2, 0x82, 0xAC, 0}), 3); n != 3 || wc != 0x20ac {
 			t.Errorf("Mbtowc(\"€\") = (%d, %#x), want (3, 0x20ac)", n, wc)
 		}
@@ -188,13 +188,13 @@ func TestMultibyte(t *testing.T) {
 	runes := []rune(s)
 	{
 		sb := append([]byte(s), 0)
-		ws := make([]int32, len(runes)+1)
+		ws := make([]testWchar, len(runes)+1)
 		got := Mbstowcs(&ws[0], &sb[0], uint64(len(runes)+1))
 		if got != uint64(len(runes)) {
 			t.Fatalf("Mbstowcs = %d, want %d", got, len(runes))
 		}
 		for i, r := range runes {
-			if ws[i] != int32(r) {
+			if ws[i] != testWchar(r) {
 				t.Errorf("Mbstowcs[%d] = %#x, want %#x", i, ws[i], r)
 			}
 		}
@@ -203,9 +203,9 @@ func TestMultibyte(t *testing.T) {
 		}
 	}
 	{
-		wsrc := make([]int32, len(runes)+1)
+		wsrc := make([]testWchar, len(runes)+1)
 		for i, r := range runes {
-			wsrc[i] = int32(r)
+			wsrc[i] = testWchar(r)
 		}
 		outb := make([]byte, 64)
 		got := Wcstombs(&outb[0], &wsrc[0], uint64(len(outb)))
