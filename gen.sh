@@ -64,6 +64,11 @@ for t in "${LIBC_TARGETS[@]}"; do
 		amd64) musl_arch=x86_64 ;;
 		*) echo "gen.sh: no musl architecture mapping for $arch" >&2; exit 1 ;;
 	esac
+	# Keep the release build optimized. Go's amd64 stack is only 8-byte aligned;
+	# LLVM's SLP vectorizer may raise ordinary local slots to 16-byte alignment,
+	# which c2go-lto correctly rejects because the Go frame cannot guarantee it.
+	opt_flags=(-O2)
+	[ "$arch" = amd64 ] && opt_flags+=(-fno-slp-vectorize)
 	target_sources=()
 	arch_overrides=0
 	for src in "${SOURCES[@]}"; do
@@ -84,7 +89,10 @@ for t in "${LIBC_TARGETS[@]}"; do
 		b="$(printf '%s' "$src" | sed 's#[/.]#_#g')"
 		# -fno-math-errno: we DEFINE the math functions, so __builtin_sqrt & friends
 		# lower to the hardware op, never a self-recursive call. See old gen.sh.
-		"$CLANG" --target="$triple" -fc2go -fc2go-package="$MOD" -fno-math-errno \
+		# These bitcodes are linked manually below, so request the same pre-link
+		# phase boundary that the clang driver's automatic c2go-lto route uses.
+		"$CLANG" --target="$triple" -fc2go -fc2go-package="$MOD" -Xclang -fc2go-lto-prelink \
+			"${opt_flags[@]}" -fno-math-errno \
 			-emit-llvm -I "$RES" -I "$INC" \
 			-c -o "$tmp/${b}.${goos}_${arch}.bc" "$src"
 		bcs+=("$tmp/${b}.${goos}_${arch}.bc")
@@ -118,10 +126,16 @@ SELFTEST_TARGETS=(
 echo "== selftest ($MOD/selftest) : $(ls "$ROOT"/selftest/source/*.c | wc -l | tr -d ' ') sources =="
 for t in "${SELFTEST_TARGETS[@]}"; do
 	IFS=: read -r goos arch triple lib <<<"$t"
+	opt_flags=(-O2)
+	# The selftest qsort fixture has a large local array; the loop vectorizer
+	# raises that slot to 16-byte alignment on amd64. It is test-only code, so
+	# keep all scalar -O2 optimization while disabling both vectorizers there.
+	[ "$arch" = amd64 ] && opt_flags+=(-fno-vectorize -fno-slp-vectorize)
 	bcs=()
 	for src in "$ROOT"/selftest/source/*.c; do
 		b="$(printf '%s' "$src" | sed 's#[/.]#_#g')"
-		"$CLANG" --target="$triple" -fc2go -fc2go-package="$MOD/selftest" -fno-math-errno \
+		"$CLANG" --target="$triple" -fc2go -fc2go-package="$MOD/selftest" -Xclang -fc2go-lto-prelink \
+			"${opt_flags[@]}" -fno-math-errno \
 			-emit-llvm -I "$RES" -I "$INC" \
 			-c -o "$tmp/${b}.${goos}_${arch}.bc" "$src"
 		bcs+=("$tmp/${b}.${goos}_${arch}.bc")
