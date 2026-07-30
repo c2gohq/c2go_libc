@@ -94,7 +94,7 @@ func TestConfBridges(t *testing.T) {
 	if ps := Getpagesize(); ps < 4096 {
 		t.Fatalf("getpagesize = %d", ps)
 	}
-	if v := Sysconf(30); v != int64(Getpagesize()) { // _SC_PAGESIZE
+	if v := Sysconf(30); int64(v) != int64(Getpagesize()) { // _SC_PAGESIZE
 		t.Fatalf("sysconf(_SC_PAGESIZE) = %d", v)
 	}
 	if v := Sysconf(84); v < 1 { // _SC_NPROCESSORS_ONLN

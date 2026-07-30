@@ -104,7 +104,7 @@ func __wcscoll_l(l *uint16, r *uint16, locale *__locale_struct) int32
 func __wcsxfrm_l(dest *uint16, src *uint16, n uint64, loc *__locale_struct) uint64
 
 //go:linkname A64l github.com/c2gohq/c2go_libc.a64l
-func A64l(s *byte) int64
+func A64l(s *byte) int32
 
 //go:linkname Abort github.com/c2gohq/c2go_libc.abort
 func Abort()
@@ -182,7 +182,7 @@ func Atof(s *byte) float64
 func Atoi(s *byte) int32
 
 //go:linkname Atol github.com/c2gohq/c2go_libc.atol
-func Atol(s *byte) int64
+func Atol(s *byte) int32
 
 //go:linkname Atoll github.com/c2gohq/c2go_libc.atoll
 func Atoll(s *byte) int64
@@ -281,7 +281,7 @@ func CtimeR(t *int64, buf *byte) *byte
 func Dcgettext(domainname *byte, msgid *byte, category int32) *byte
 
 //go:linkname Dcngettext github.com/c2gohq/c2go_libc.dcngettext
-func Dcngettext(domainname *byte, msgid1 *byte, msgid2 *byte, n uint64, category int32) *byte
+func Dcngettext(domainname *byte, msgid1 *byte, msgid2 *byte, n uint32, category int32) *byte
 
 //go:linkname Dgettext github.com/c2gohq/c2go_libc.dgettext
 func Dgettext(domainname *byte, msgid *byte) *byte
@@ -296,7 +296,7 @@ func Dirname(s *byte) *byte
 func Div(num int32, den int32) (int32, int32)
 
 //go:linkname Dngettext github.com/c2gohq/c2go_libc.dngettext
-func Dngettext(domainname *byte, msgid1 *byte, msgid2 *byte, n uint64) *byte
+func Dngettext(domainname *byte, msgid1 *byte, msgid2 *byte, n uint32) *byte
 
 //go:linkname Dprintf github.com/c2gohq/c2go_libc.dprintf
 func Dprintf(fd int32, fmt *byte, argptrs unsafe.Pointer) int32
@@ -416,7 +416,7 @@ func Fflush(f *FILE) int32
 func Ffs(i int32) int32
 
 //go:linkname Ffsl github.com/c2gohq/c2go_libc.ffsl
-func Ffsl(i int64) int32
+func Ffsl(i int32) int32
 
 //go:linkname Ffsll github.com/c2gohq/c2go_libc.ffsll
 func Ffsll(i int64) int32
@@ -518,7 +518,7 @@ func Frexpf(x float32, e *int32) float32
 func Fscanf(f *FILE, fmt *byte, argptrs unsafe.Pointer) int32
 
 //go:linkname Fseek github.com/c2gohq/c2go_libc.fseek
-func Fseek(f *FILE, off int64, whence int32) int32
+func Fseek(f *FILE, off int32, whence int32) int32
 
 //go:linkname Fseeko github.com/c2gohq/c2go_libc.fseeko
 func Fseeko(f *FILE, off int64, whence int32) int32
@@ -533,7 +533,7 @@ func Fstat(fd int32, buf *stat) int32
 func Fsync(fd int32) int32
 
 //go:linkname Ftell github.com/c2gohq/c2go_libc.ftell
-func Ftell(f *FILE) int64
+func Ftell(f *FILE) int32
 
 //go:linkname Ftello github.com/c2gohq/c2go_libc.ftello
 func Ftello(f *FILE) int64
@@ -764,10 +764,10 @@ func Iswcntrl(wc uint32) int32
 func IswcntrlL(c uint32, l *__locale_struct) int32
 
 //go:linkname Iswctype github.com/c2gohq/c2go_libc.iswctype
-func Iswctype(wc uint32, t uint64) int32
+func Iswctype(wc uint32, t uint32) int32
 
 //go:linkname IswctypeL github.com/c2gohq/c2go_libc.iswctype_l
-func IswctypeL(c uint32, t uint64, l *__locale_struct) int32
+func IswctypeL(c uint32, t uint32, l *__locale_struct) int32
 
 //go:linkname Iswdigit github.com/c2gohq/c2go_libc.iswdigit
 func Iswdigit(wc uint32) int32
@@ -833,13 +833,13 @@ func J1(x float64) float64
 func Jn(n int32, x float64) float64
 
 //go:linkname Jrand48 github.com/c2gohq/c2go_libc.jrand48
-func Jrand48(s *uint16) int64
+func Jrand48(s *uint16) int32
 
 //go:linkname L64a github.com/c2gohq/c2go_libc.l64a
-func L64a(x0 int64) *byte
+func L64a(x0 int32) *byte
 
 //go:linkname Labs github.com/c2gohq/c2go_libc.labs
-func Labs(a int64) int64
+func Labs(a int32) int32
 
 //go:linkname Lcong48 github.com/c2gohq/c2go_libc.lcong48
 func Lcong48(p *uint16)
@@ -851,7 +851,7 @@ func Ldexp(x float64, n int32) float64
 func Ldexpf(x float32, n int32) float32
 
 //go:linkname Ldiv github.com/c2gohq/c2go_libc.ldiv
-func Ldiv(num int64, den int64) (int64, int64)
+func Ldiv(num int32, den int32) (int32, int32)
 
 //go:linkname Lfind github.com/c2gohq/c2go_libc.lfind
 func Lfind(key unsafe.Pointer, base unsafe.Pointer, nelp *uint64, width uint64, compar uintptr) unsafe.Pointer
@@ -929,19 +929,19 @@ func Logbf(x float32) float32
 func Logf(x float32) float32
 
 //go:linkname Lrand48 github.com/c2gohq/c2go_libc.lrand48
-func Lrand48() int64
+func Lrand48() int32
 
 //go:linkname Lrint github.com/c2gohq/c2go_libc.lrint
-func Lrint(x float64) int64
+func Lrint(x float64) int32
 
 //go:linkname Lrintf github.com/c2gohq/c2go_libc.lrintf
-func Lrintf(x float32) int64
+func Lrintf(x float32) int32
 
 //go:linkname Lround github.com/c2gohq/c2go_libc.lround
-func Lround(x float64) int64
+func Lround(x float64) int32
 
 //go:linkname Lroundf github.com/c2gohq/c2go_libc.lroundf
-func Lroundf(x float32) int64
+func Lroundf(x float32) int32
 
 //go:linkname Lsearch github.com/c2gohq/c2go_libc.lsearch
 func Lsearch(key unsafe.Pointer, base unsafe.Pointer, nelp *uint64, width uint64, compar uintptr) unsafe.Pointer
@@ -1031,7 +1031,7 @@ func Modf(x float64, iptr *float64) float64
 func Modff(x float32, iptr *float32) float32
 
 //go:linkname Mrand48 github.com/c2gohq/c2go_libc.mrand48
-func Mrand48() int64
+func Mrand48() int32
 
 //go:linkname Nan github.com/c2gohq/c2go_libc.nan
 func Nan(s *byte) float64
@@ -1064,7 +1064,7 @@ func Nexttoward(x float64, y float64) float64
 func Nexttowardf(x float32, y float64) float32
 
 //go:linkname Ngettext github.com/c2gohq/c2go_libc.ngettext
-func Ngettext(msgid1 *byte, msgid2 *byte, n uint64) *byte
+func Ngettext(msgid1 *byte, msgid2 *byte, n uint32) *byte
 
 //go:linkname NlLanginfo github.com/c2gohq/c2go_libc.nl_langinfo
 func NlLanginfo(item int32) *byte
@@ -1073,7 +1073,7 @@ func NlLanginfo(item int32) *byte
 func NlLanginfoL(item int32, loc *__locale_struct) *byte
 
 //go:linkname Nrand48 github.com/c2gohq/c2go_libc.nrand48
-func Nrand48(s *uint16) int64
+func Nrand48(s *uint16) int32
 
 //go:linkname Open github.com/c2gohq/c2go_libc.open
 func Open(path *byte, flags int32, argptrs unsafe.Pointer) int32
@@ -1184,7 +1184,7 @@ func Rand() int32
 func RandR(seed *uint32) int32
 
 //go:linkname Random github.com/c2gohq/c2go_libc.random
-func Random() int64
+func Random() int32
 
 //go:linkname Read github.com/c2gohq/c2go_libc.read
 func Read(fd int32, buf unsafe.Pointer, n uint64) int64
@@ -1259,10 +1259,10 @@ func Round(x float64) float64
 func Roundf(x float32) float32
 
 //go:linkname Scalbln github.com/c2gohq/c2go_libc.scalbln
-func Scalbln(x float64, n int64) float64
+func Scalbln(x float64, n int32) float64
 
 //go:linkname Scalblnf github.com/c2gohq/c2go_libc.scalblnf
-func Scalblnf(x float32, n int64) float32
+func Scalblnf(x float32, n int32) float32
 
 //go:linkname Scalbn github.com/c2gohq/c2go_libc.scalbn
 func Scalbn(x float64, n int32) float64
@@ -1355,7 +1355,7 @@ func Sqrtf(x float32) float32
 func Srand(s uint32)
 
 //go:linkname Srand48 github.com/c2gohq/c2go_libc.srand48
-func Srand48(seed int64)
+func Srand48(seed int32)
 
 //go:linkname Srandom github.com/c2gohq/c2go_libc.srandom
 func Srandom(seed uint32)
@@ -1499,7 +1499,7 @@ func Strtok(s *byte, sep *byte) *byte
 func StrtokR(s *byte, sep *byte, p **byte) *byte
 
 //go:linkname Strtol github.com/c2gohq/c2go_libc.strtol
-func Strtol(s *byte, p **byte, base int32) int64
+func Strtol(s *byte, p **byte, base int32) int32
 
 //go:linkname Strtold github.com/c2gohq/c2go_libc.strtold
 func Strtold(s *byte, p **byte) float64
@@ -1511,7 +1511,7 @@ func StrtoldL(s *byte, p **byte, l *__locale_struct) float64
 func Strtoll(s *byte, p **byte, base int32) int64
 
 //go:linkname Strtoul github.com/c2gohq/c2go_libc.strtoul
-func Strtoul(s *byte, p **byte, base int32) uint64
+func Strtoul(s *byte, p **byte, base int32) uint32
 
 //go:linkname Strtoull github.com/c2gohq/c2go_libc.strtoull
 func Strtoull(s *byte, p **byte, base int32) uint64
@@ -1541,7 +1541,7 @@ func Swscanf(s *uint16, fmt *uint16, argptrs unsafe.Pointer) int32
 func Symlink(target *byte, linkpath *byte) int32
 
 //go:linkname Sysconf github.com/c2gohq/c2go_libc.sysconf
-func Sysconf(name int32) int64
+func Sysconf(name int32) int32
 
 //go:linkname Tan github.com/c2gohq/c2go_libc.tan
 func Tan(x float64) float64
@@ -1817,7 +1817,7 @@ func Wcstoimax(s *uint16, p **uint16, base int32) int64
 func Wcstok(s *uint16, sep *uint16, p **uint16) *uint16
 
 //go:linkname Wcstol github.com/c2gohq/c2go_libc.wcstol
-func Wcstol(s *uint16, p **uint16, base int32) int64
+func Wcstol(s *uint16, p **uint16, base int32) int32
 
 //go:linkname Wcstold github.com/c2gohq/c2go_libc.wcstold
 func Wcstold(s *uint16, p **uint16) float64
@@ -1829,7 +1829,7 @@ func Wcstoll(s *uint16, p **uint16, base int32) int64
 func Wcstombs(s *byte, ws *uint16, n uint64) uint64
 
 //go:linkname Wcstoul github.com/c2gohq/c2go_libc.wcstoul
-func Wcstoul(s *uint16, p **uint16, base int32) uint64
+func Wcstoul(s *uint16, p **uint16, base int32) uint32
 
 //go:linkname Wcstoull github.com/c2gohq/c2go_libc.wcstoull
 func Wcstoull(s *uint16, p **uint16, base int32) uint64
@@ -1862,10 +1862,10 @@ func Wctrans(class *byte) int32
 func WctransL(s *byte, l *__locale_struct) int32
 
 //go:linkname Wctype github.com/c2gohq/c2go_libc.wctype
-func Wctype(s *byte) uint64
+func Wctype(s *byte) uint32
 
 //go:linkname WctypeL github.com/c2gohq/c2go_libc.wctype_l
-func WctypeL(s *byte, l *__locale_struct) uint64
+func WctypeL(s *byte, l *__locale_struct) uint32
 
 //go:linkname Wcwidth github.com/c2gohq/c2go_libc.wcwidth
 func Wcwidth(wc uint16) int32

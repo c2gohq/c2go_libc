@@ -151,18 +151,13 @@ func TestLdexpScalbnManip(t *testing.T) {
 			if got := Scalbn(x, n); !eq64(got, want) {
 				t.Errorf("Scalbn(%v,%d)=%v want %v", x, n, got, want)
 			}
-			if got := Scalbln(x, int64(n)); !eq64(got, want) {
+			if got := Scalbln(x, testLong(n)); !eq64(got, want) {
 				t.Errorf("Scalbln(%v,%d)=%v want %v", x, n, got, want)
 			}
 		}
 	}
-	// long-clamping paths of scalbln
-	if got, want := Scalbln(1, 1<<40), math.Ldexp(1, math.MaxInt32); !eq64(got, want) {
-		t.Errorf("Scalbln(1,1<<40)=%v want %v", got, want)
-	}
-	if got, want := Scalbln(1, -(1 << 40)), math.Ldexp(1, math.MinInt32); !eq64(got, want) {
-		t.Errorf("Scalbln(1,-(1<<40))=%v want %v", got, want)
-	}
+	// The extra clamping branch exists only where C long is wider than int.
+	testScalblnWideLongClamping(t)
 
 	fns := []int32{0, 1, -1, 10, -10, 23, 24, -23, -24, 120, -120, 130, -130, 300, -300, 500, -500}
 	for _, x := range manipFvals {
@@ -174,7 +169,7 @@ func TestLdexpScalbnManip(t *testing.T) {
 			if got := Scalbnf(x, n); !eq32(got, want) {
 				t.Errorf("Scalbnf(%v,%d)=%v want %v", x, n, got, want)
 			}
-			if got := Scalblnf(x, int64(n)); !eq32(got, want) {
+			if got := Scalblnf(x, testLong(n)); !eq32(got, want) {
 				t.Errorf("Scalblnf(%v,%d)=%v want %v", x, n, got, want)
 			}
 		}

@@ -131,16 +131,20 @@ func TestRoundNearbyint(t *testing.T) {
 func TestRoundLrint(t *testing.T) {
 	for _, x := range intSafeVals {
 		want := int64(math.RoundToEven(x))
-		if got := Lrint(x); got != want {
-			t.Errorf("Lrint(%v) = %d, want %d", x, got, want)
+		if testLongCanRepresent(want) {
+			if got := Lrint(x); int64(got) != want {
+				t.Errorf("Lrint(%v) = %d, want %d", x, got, want)
+			}
 		}
 		if got := Llrint(x); got != want {
 			t.Errorf("Llrint(%v) = %d, want %d", x, got, want)
 		}
 		fx := float32(x)
 		wantf := int64(math.RoundToEven(float64(fx)))
-		if got := Lrintf(fx); got != wantf {
-			t.Errorf("Lrintf(%v) = %d, want %d", fx, got, wantf)
+		if testLongCanRepresent(wantf) {
+			if got := Lrintf(fx); int64(got) != wantf {
+				t.Errorf("Lrintf(%v) = %d, want %d", fx, got, wantf)
+			}
 		}
 		if got := Llrintf(fx); got != wantf {
 			t.Errorf("Llrintf(%v) = %d, want %d", fx, got, wantf)
@@ -151,16 +155,20 @@ func TestRoundLrint(t *testing.T) {
 func TestRoundLround(t *testing.T) {
 	for _, x := range intSafeVals {
 		want := int64(math.Round(x))
-		if got := Lround(x); got != want {
-			t.Errorf("Lround(%v) = %d, want %d", x, got, want)
+		if testLongCanRepresent(want) {
+			if got := Lround(x); int64(got) != want {
+				t.Errorf("Lround(%v) = %d, want %d", x, got, want)
+			}
 		}
 		if got := Llround(x); got != want {
 			t.Errorf("Llround(%v) = %d, want %d", x, got, want)
 		}
 		fx := float32(x)
 		wantf := int64(math.Round(float64(fx)))
-		if got := Lroundf(fx); got != wantf {
-			t.Errorf("Lroundf(%v) = %d, want %d", fx, got, wantf)
+		if testLongCanRepresent(wantf) {
+			if got := Lroundf(fx); int64(got) != wantf {
+				t.Errorf("Lroundf(%v) = %d, want %d", fx, got, wantf)
+			}
 		}
 		if got := Llroundf(fx); got != wantf {
 			t.Errorf("Llroundf(%v) = %d, want %d", fx, got, wantf)

@@ -6,7 +6,6 @@ package libc
 // the pargs void** variadic packer from stdio_test.go.
 
 import (
-	"io"
 	"os"
 	"runtime"
 	"testing"
@@ -39,15 +38,30 @@ func TestFileno(t *testing.T) {
 	}
 }
 
-// TestDprintf: dprintf formats straight to a descriptor (unbuffered). Write to a
-// regular temp file (no poller -> the raw write() never EAGAINs) and read back.
+// TestDprintf: dprintf formats straight to a C descriptor (unbuffered). Use
+// fopen/fileno to obtain that descriptor: on Windows os.File.Fd() is a Win32
+// HANDLE, not the CRT fd that the C dprintf API accepts.
 func TestDprintf(t *testing.T) {
 	tmp, err := os.CreateTemp("", "dprintf")
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer os.Remove(tmp.Name())
-	defer tmp.Close()
+	name := tmp.Name()
+	if err := tmp.Close(); err != nil {
+		t.Fatal(err)
+	}
+	defer os.Remove(name)
+
+	f := Fopen(csb(name), csb("wb"))
+	if f == nil {
+		t.Fatal("Fopen returned nil")
+	}
+	closed := false
+	defer func() {
+		if !closed {
+			Fclose(f)
+		}
+	}()
 
 	a := &pargs{}
 	a.i(42)
@@ -55,19 +69,21 @@ func TestDprintf(t *testing.T) {
 	a.f(3.5)
 	fb := append([]byte("%d-%s-%.1f"), 0)
 	ap, ptrs := a.packPtr()
-	n := Dprintf(int32(tmp.Fd()), &fb[0], ap)
+	n := Dprintf(Fileno(f), &fb[0], ap)
 	runtime.KeepAlive(a)
 	runtime.KeepAlive(ptrs)
 	runtime.KeepAlive(fb)
 
 	const want = "42-hi-3.5"
 	if n != int32(len(want)) {
-		t.Fatalf("Dprintf returned %d, want %d", n, len(want))
+		t.Errorf("Dprintf returned %d, want %d", n, len(want))
 	}
-	if _, err := tmp.Seek(0, io.SeekStart); err != nil {
-		t.Fatal(err)
+	rc := Fclose(f)
+	closed = true
+	if rc != 0 {
+		t.Fatalf("Fclose returned %d", rc)
 	}
-	data, err := io.ReadAll(tmp)
+	data, err := os.ReadFile(name)
 	if err != nil {
 		t.Fatal(err)
 	}

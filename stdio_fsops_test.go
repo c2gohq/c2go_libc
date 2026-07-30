@@ -132,7 +132,7 @@ func TestTmpfile(t *testing.T) {
 	if n != uint64(len(data)) {
 		t.Fatalf("Fwrite wrote %d, want %d", n, len(data))
 	}
-	if pos := Ftell(f); pos != int64(len(data)) {
+	if pos := Ftell(f); int64(pos) != int64(len(data)) {
 		t.Errorf("Ftell after write = %d, want %d", pos, len(data))
 	}
 	if r := Fseek(f, 0, seekSet); r != 0 {

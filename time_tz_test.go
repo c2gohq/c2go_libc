@@ -22,7 +22,7 @@ import (
 var goTzname [2]*byte
 
 //go:linkname goTimezone github.com/c2gohq/c2go_libc.timezone
-var goTimezone int64
+var goTimezone testLong
 
 //go:linkname goDaylight github.com/c2gohq/c2go_libc.daylight
 var goDaylight int32

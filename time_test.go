@@ -12,12 +12,13 @@ import (
 type tsMirror struct{ sec, nsec int64 }
 type tvMirror struct{ sec, usec int64 }
 
-// tmMirror mirrors `struct tm`: nine int32 fields, then long tm_gmtoff (Go
-// auto-pads it to offset 40, matching C's 8-alignment) and const char *tm_zone.
+// tmMirror mirrors `struct tm`: nine int32 fields, target-width C long
+// tm_gmtoff, then const char *tm_zone. testLong makes both LP64 and Windows
+// LLP64 use the same offsets as the generated C layout.
 type tmMirror struct {
 	sec, min, hour, mday, mon, year int32
 	wday, yday, isdst               int32
-	gmtoff                          int64
+	gmtoff                          testLong
 	zone                            uintptr
 }
 
