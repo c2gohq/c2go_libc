@@ -16,6 +16,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"testing"
+
+	"golang.org/x/sys/unix"
 )
 
 // wopen opens path with mode and returns the FILE* (fatal on nil).
@@ -74,6 +76,50 @@ func TestFputwcReadback(t *testing.T) {
 	}
 	if r := Fclose(f); r != 0 {
 		t.Fatalf("Fclose = %d", r)
+	}
+	got, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(got) != text {
+		t.Errorf("file bytes = %q, want %q", got, text)
+	}
+}
+
+// TestFputwcReadbackWithClosedStdin reproduces the release runner boundary
+// where fd 0 is unavailable when fopen creates its descriptor. c2go reserves
+// 0/1/2 for the live Go standard streams, so ordinary C-facing descriptors must
+// be moved above that range before stdio starts routing by descriptor number.
+func TestFputwcReadbackWithClosedStdin(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "put-closed-stdin.txt")
+	saved, err := unix.Dup(0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := unix.Close(0); err != nil {
+		_ = unix.Close(saved)
+		t.Fatal(err)
+	}
+	defer func() {
+		if err := unix.Dup2(saved, 0); err != nil {
+			t.Errorf("restore stdin: %v", err)
+		}
+		_ = unix.Close(saved)
+	}()
+
+	f := wopen(t, path, "w")
+	if fd := Fileno(f); fd < 3 {
+		t.Fatalf("fopen reused reserved fd %d", fd)
+	}
+	text := "Aé你\n"
+	for _, r := range text {
+		if c := Fputwc(testWchar(r), f); c != uint32(r) {
+			t.Fatalf("Fputwc(%q) = %#x, want %#x", r, c, uint32(r))
+		}
+	}
+	*ErrnoPtr() = 0
+	if r := Fclose(f); r != 0 {
+		t.Fatalf("Fclose = %d, errno=%d", r, *ErrnoPtr())
 	}
 	got, err := os.ReadFile(path)
 	if err != nil {

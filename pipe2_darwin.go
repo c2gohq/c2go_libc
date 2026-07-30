@@ -15,6 +15,9 @@ func __c2go_syscall_pipe2(fds *[2]int32, flags int32) int64 {
 	if err := syscall.Pipe(p[:]); err != nil {
 		return errnoRet(err)
 	}
+	if err := c2goFDPair(&p); err != nil {
+		return errnoRet(err)
+	}
 	const oCLOEXEC, oNONBLOCK = 0x1000000, 0x4 // darwin O_CLOEXEC / O_NONBLOCK
 	for _, fd := range p {
 		if flags&oCLOEXEC != 0 {

@@ -63,6 +63,7 @@ func __c2go_syscall_writev(fd int32, iov unsafe.Pointer, iovcnt int32) int64 {
 // (identical layout on both unix targets), so the pointer cast hands the
 // x/sys result to the shared statFill marshal (stat.go / stat_<os>.go) that
 // fills the caller's uniform c2go struct stat.
+//
 //go:linkname __c2go_syscall_fstatat
 func __c2go_syscall_fstatat(dirfd int32, path *byte, buf unsafe.Pointer, flags int32) int64 {
 	name := cstr(path)
@@ -84,6 +85,10 @@ func __c2go_syscall_fstatat(dirfd int32, path *byte, buf unsafe.Pointer, flags i
 //go:linkname __c2go_syscall_openat
 func __c2go_syscall_openat(dirfd int32, path *byte, flags int32, mode uint32) int64 {
 	fd, err := unix.Openat(int(dirfd), cstr(path), int(flags), mode)
+	if err != nil {
+		return errnoRet(err)
+	}
+	fd, err = c2goFD(fd)
 	if err != nil {
 		return errnoRet(err)
 	}

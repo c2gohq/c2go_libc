@@ -21,6 +21,10 @@ func cPipeFd(pipe *os.File) (int32, error) {
 	if err != nil {
 		return -1, err
 	}
+	fd, err = c2goFD(fd)
+	if err != nil {
+		return -1, err
+	}
 	return int32(fd), nil
 }
 

@@ -114,14 +114,24 @@ func __c2go_syscall_pwrite(fd int32, buf unsafe.Pointer, n uint64, off int64) in
 
 //go:linkname __c2go_syscall_dup
 func __c2go_syscall_dup(fd int32) int32 {
+	var nfd int32
 	if isStdFd(fd) {
-		return stdDup(fd) // snapshot the live target onto a raw fd (Control access)
+		nfd = stdDup(fd) // snapshot the live target onto a raw fd (Control access)
+		if nfd < 0 {
+			return nfd
+		}
+	} else {
+		raw, err := syscall.Dup(int(fd))
+		if err != nil {
+			return -errnoOf(err)
+		}
+		nfd = int32(raw)
 	}
-	nfd, err := syscall.Dup(int(fd))
+	raw, err := c2goFD(int(nfd))
 	if err != nil {
 		return -errnoOf(err)
 	}
-	return int32(nfd)
+	return int32(raw)
 }
 
 //go:linkname __c2go_syscall_pipe
@@ -136,6 +146,9 @@ func __c2go_syscall_pipe(fds unsafe.Pointer) int32 {
 			return -errnoOf(err)
 		}
 		break
+	}
+	if err := c2goFDPair(&p); err != nil {
+		return -errnoOf(err)
 	}
 	arr := (*[2]int32)(fds)
 	arr[0] = int32(p[0])
@@ -262,6 +275,7 @@ func __c2go_syscall_chdir(path *byte) int32 {
 }
 
 // getcwd fills buf with the NUL-terminated cwd; ERANGE if it does not fit.
+//
 //go:linkname __c2go_syscall_getcwd
 func __c2go_syscall_getcwd(buf unsafe.Pointer, size uint64) int32 {
 	wd, err := os.Getwd() // os.Getwd (not syscall.Getwd) uses Go's own cwd cache

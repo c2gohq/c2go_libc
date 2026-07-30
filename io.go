@@ -85,6 +85,7 @@ func __c2go_syscall_write(fd int32, buf unsafe.Pointer, n uint64) int64 {
 // __c2go_syscall_open takes the mode already extracted from the C vararg by the
 // io_posix.c open() wrapper (0 when O_CREAT is absent); the C-side O_* flags are
 // the host-native ones (bits/fcntl.h), so they pass straight to syscall.Open.
+//
 //go:linkname __c2go_syscall_open
 func __c2go_syscall_open(path *byte, flags int32, mode uint32) int32 {
 	name := cstr(path)
@@ -93,6 +94,10 @@ func __c2go_syscall_open(path *byte, flags int32, mode uint32) int32 {
 		if err == syscall.EINTR {
 			continue
 		}
+		if err != nil {
+			return -errnoOf(err)
+		}
+		fd, err = c2goFD(fd)
 		if err != nil {
 			return -errnoOf(err)
 		}
@@ -133,14 +138,15 @@ func __c2go_syscall_lseek(fd int32, off int64, whence int32) int64 {
 // vararg by the io_posix.c fcntl() wrapper (0 for commands that take none). The
 // command codes and F_SETFL flag bits are host-native (see <fcntl.h>), so they
 // pass straight through to the native fcntl.
+//
 //go:linkname __c2go_syscall_fcntl
 func __c2go_syscall_fcntl(fd, cmd, arg int32) int32 {
 	if isStdFd(fd) {
 		// virtualized: run on the live object's real descriptor (Control access);
 		// F_DUPFD hands back a raw snapshot fd, like dup(std).
-		return stdFcntl(fd, cmd, arg)
+		return c2goFcntlResult(cmd, stdFcntl(fd, cmd, arg))
 	}
-	return rawFcntl(fd, cmd, arg)
+	return c2goFcntlResult(cmd, rawFcntl(fd, cmd, arg))
 }
 
 // rawFcntl is the un-routed fcntl body (also the Control-side worker for a
