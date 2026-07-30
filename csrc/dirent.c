@@ -13,27 +13,29 @@
 #include <stdlib.h>   /* malloc / free */
 
 struct __dirstream {
-	long handle;        /* dirent.go handle-table id (>= 1) */
+	/* Internal Go handle-table ids have a fixed 64-bit ABI.  Do not use C
+	 * long here: it is only 32 bits on Windows LLP64. */
+	long long handle;   /* dirent.go handle-table id (>= 1) */
 	struct dirent de;   /* the entry readdir returns a pointer to */
 };
 
 /* Go bridges (dirent.go). */
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_opendir", C2GO_GOABI0)
-long __c2go_opendir(const char *path);
+long long __c2go_opendir(const char *path);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_readdir", C2GO_GOABI0)
-int __c2go_readdir(long handle, void *de);
+int __c2go_readdir(long long handle, void *de);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_closedir", C2GO_GOABI0)
-int __c2go_closedir(long handle);
+int __c2go_closedir(long long handle);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_rewinddir", C2GO_GOABI0)
-int __c2go_rewinddir(long handle);
+int __c2go_rewinddir(long long handle);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_dirfd", C2GO_GOABI0)
-long __c2go_dirfd(long handle);
+long long __c2go_dirfd(long long handle);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_fdopendir", C2GO_GOABI0)
-long __c2go_fdopendir(int fd);
+long long __c2go_fdopendir(int fd);
 
 c2go_extern DIR *opendir(const char *name)
 {
-	long h = __c2go_opendir(name);
+	long long h = __c2go_opendir(name);
 	if (h < 0) { errno = (int)-h; return (void *)0; }
 	DIR *d = malloc(sizeof *d);
 	if (!d) { __c2go_closedir(h); errno = ENOMEM; return (void *)0; }
@@ -45,14 +47,14 @@ c2go_extern DIR *opendir(const char *name)
 #if !defined(_WIN32)
 c2go_extern int dirfd(DIR *d)
 {
-	long r = __c2go_dirfd(d->handle);
+	long long r = __c2go_dirfd(d->handle);
 	if (r < 0) { errno = (int)-r; return -1; }
 	return (int)r;
 }
 
 c2go_extern DIR *fdopendir(int fd)
 {
-	long h = __c2go_fdopendir(fd);
+	long long h = __c2go_fdopendir(fd);
 	if (h < 0) { errno = (int)-h; return (void *)0; }
 	DIR *d = malloc(sizeof *d);
 	if (!d) { __c2go_closedir(h); errno = ENOMEM; return (void *)0; }

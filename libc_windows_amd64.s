@@ -118894,8 +118894,9 @@ TEXT ·gethostname(SB), $56-24
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_gethostname(SB)
 _Ltmp1753:
 	MOVQ SP, AX
-	MOVL 16(AX), AX
+	MOVQ 16(AX), AX
 	XORL CX, CX
+	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
 	JPL _LBB647_2
@@ -118928,8 +118929,9 @@ TEXT ·getentropy(SB), $56-24
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_getentropy(SB)
 _Ltmp1755:
 	MOVQ SP, AX
-	MOVL 16(AX), AX
+	MOVQ 16(AX), AX
 	XORL CX, CX
+	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
 	JPL _LBB648_2
@@ -118960,7 +118962,7 @@ TEXT ·getpagesize(SB), $24-8
 _Lfunc_end649:
 	FUNCDATA $0, gclocals·5f4910070d449e0f(SB)
 	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
-TEXT ·sysconf(SB), $24-16
+TEXT ·sysconf(SB), $40-16
 	PCDATA $1, $-1
 	MOVL 16(BP), AX
 	MOVQ SP, CX
@@ -118969,7 +118971,8 @@ TEXT ·sysconf(SB), $24-16
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_sysconf(SB)
 _Ltmp1757:
 	MOVQ SP, AX
-	MOVL 8(AX), AX
+	MOVQ 8(AX), AX
+	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
 	JPL _LBB650_2
@@ -118989,7 +118992,7 @@ _LBB650_2:
 	RET
 _Lfunc_end650:
 	FUNCDATA $0, gclocals·6bf7f3318a940872(SB)
-	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
+	FUNCDATA $1, gclocals·2c8d835d1806f483(SB)
 TEXT ·atexit(SB), $24-16
 	PCDATA $1, $-1
 	PCDATA $1, $0
@@ -121572,11 +121575,12 @@ TEXT ·opendir(SB), $40-16
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_opendir(SB)
 _Ltmp1858:
 	MOVQ SP, AX
-	MOVL 8(AX), AX
+	MOVQ 8(AX), AX
+	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
 	JMI _LBB696_1
-	MOVL AX, -4(BP)
+	MOVQ AX, -8(BP)
 	MOVQ SP, AX
 	LONG $0x2000c748
 	BYTE $0x01
@@ -121591,25 +121595,25 @@ _Ltmp1859:
 	BYTE $0x85
 	BYTE $0xc0
 	JEQ _LBB696_4
-	MOVL -4(BP), CX
-	MOVL CX, 0(AX)
+	MOVQ -8(BP), CX
+	MOVQ CX, 0(AX)
 	JMP _LBB696_6
 _LBB696_1:
 	BYTE $0xf7
 	BYTE $0xd8
-	MOVL AX, -4(BP)
+	MOVL AX, -8(BP)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
 _Ltmp1860:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
-	MOVL -4(BP), CX
+	MOVL -8(BP), CX
 	MOVL CX, 0(AX)
 	JMP _LBB696_2
 _LBB696_4:
 	MOVQ SP, AX
-	MOVL -4(BP), CX
-	MOVL CX, 0(AX)
+	MOVQ -8(BP), CX
+	MOVQ CX, 0(AX)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_closedir(SB)
 _Ltmp1861:
@@ -121632,12 +121636,12 @@ _Lfunc_end696:
 TEXT ·readdir(SB), $56-16
 	PCDATA $1, $-1
 	MOVQ 16(BP), AX
-	MOVL 0(AX), CX
+	MOVQ 0(AX), CX
 	MOVQ AX, -16(BP)
 	ADDQ $8, AX
 	MOVQ SP, DX
 	MOVQ AX, 8(DX)
-	MOVL CX, 0(DX)
+	MOVQ CX, 0(DX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_readdir(SB)
 _Ltmp1863:
@@ -121674,12 +121678,12 @@ TEXT ·readdir_r(SB), $56-32
 	MOVQ 24(BP), AX
 	MOVQ 32(BP), CX
 	MOVQ 16(BP), DX
-	MOVL 0(DX), DX
+	MOVQ 0(DX), DX
 	MOVQ CX, -8(BP)
 	MOVQ AX, -16(BP)
 	MOVQ SP, CX
 	MOVQ AX, 8(CX)
-	MOVL DX, 0(CX)
+	MOVQ DX, 0(CX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_readdir(SB)
 _Ltmp1865:
@@ -121708,10 +121712,10 @@ _Lfunc_end698:
 TEXT ·closedir(SB), $40-16
 	PCDATA $1, $-1
 	MOVQ 16(BP), AX
-	MOVL 0(AX), CX
+	MOVQ 0(AX), CX
 	MOVQ AX, -16(BP)
 	MOVQ SP, AX
-	MOVL CX, 0(AX)
+	MOVQ CX, 0(AX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_closedir(SB)
 _Ltmp1866:
@@ -121749,9 +121753,9 @@ _Lfunc_end699:
 TEXT ·rewinddir(SB), $24-8
 	PCDATA $1, $-1
 	MOVQ 16(BP), AX
-	MOVL 0(AX), AX
+	MOVQ 0(AX), AX
 	MOVQ SP, CX
-	MOVL AX, 0(CX)
+	MOVQ AX, 0(CX)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_rewinddir(SB)
 _Ltmp1869:

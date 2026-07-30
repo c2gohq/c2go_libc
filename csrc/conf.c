@@ -9,25 +9,27 @@
 #include <errno.h>
 #include <c2go.h>
 
+/* These bridge results are Go int64 on every target.  Keep the internal ABI
+ * fixed-width instead of using C long, which is 32 bits on Windows LLP64. */
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_gethostname", C2GO_GOABI0)
-long __c2go_gethostname(char *buf, size_t n);
+long long __c2go_gethostname(char *buf, size_t n);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_getentropy", C2GO_GOABI0)
-long __c2go_getentropy(void *buf, size_t n);
+long long __c2go_getentropy(void *buf, size_t n);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_getpagesize", C2GO_GOABI0)
-long __c2go_getpagesize(void);
+long long __c2go_getpagesize(void);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_sysconf", C2GO_GOABI0)
-long __c2go_sysconf(int name);
+long long __c2go_sysconf(int name);
 
 #define SYSCALL_RET(r) do { if ((r) < 0) { errno = (int)-(r); return -1; } } while (0)
 
 c2go_extern int gethostname(char *buf, size_t n) {
-	long r = __c2go_gethostname(buf, n);
+	long long r = __c2go_gethostname(buf, n);
 	SYSCALL_RET(r);
 	return 0;
 }
 
 c2go_extern int getentropy(void *buf, size_t n) {
-	long r = __c2go_getentropy(buf, n);
+	long long r = __c2go_getentropy(buf, n);
 	SYSCALL_RET(r);
 	return 0;
 }
@@ -37,7 +39,7 @@ c2go_extern int getpagesize(void) {
 }
 
 c2go_extern long sysconf(int name) {
-	long r = __c2go_sysconf(name);
+	long long r = __c2go_sysconf(name);
 	SYSCALL_RET(r);
-	return r;
+	return (long)r;
 }
