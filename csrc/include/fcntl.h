@@ -3,6 +3,7 @@
 #define _FCNTL_H
 
 #define __NEED_mode_t
+#define __NEED_off_t
 #include <bits/alltypes.h>
 #include <c2go.h>
 
