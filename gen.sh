@@ -119,7 +119,7 @@ for t in "${LIBC_TARGETS[@]}"; do
 	normalize_asm_eof "$ROOT/libc_${goos}_${arch}.s"
 	[ "$arch" != amd64 ] || verify_amd64_stack_moves "$ROOT/libc_${goos}_${arch}.s"
 	out="$tmp/out_${goos}_${arch}"; mkdir -p "$out"
-	"$C2GOBIND" -pkg="$MOD" -pkgname=libc -goname="libc_${goos}_${arch}" \
+	"$C2GOBIND" -pkgname=libc -goname="libc_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" ${lib:+-l "$lib"} "$asm"
 	cp "$out/libc_${goos}_${arch}.go" "$ROOT/libc_${goos}_${arch}.go"
 	"$GOFMT" -w "$ROOT/libc_${goos}_${arch}.go"
@@ -161,7 +161,7 @@ for t in "${SELFTEST_TARGETS[@]}"; do
 	normalize_asm_eof "$ROOT/selftest/selftest_${goos}_${arch}.s"
 	[ "$arch" != amd64 ] || verify_amd64_stack_moves "$ROOT/selftest/selftest_${goos}_${arch}.s"
 	out="$tmp/out_selftest_${goos}_${arch}"; mkdir -p "$out"
-	"$C2GOBIND" -pkg="$MOD/selftest" -pkgname=selftest -goname="selftest_${goos}_${arch}" \
+	"$C2GOBIND" -goname="selftest_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" "$asm"
 	cp "$out/selftest_${goos}_${arch}.go" "$ROOT/selftest/selftest_${goos}_${arch}.go"
 	"$GOFMT" -w "$ROOT/selftest/selftest_${goos}_${arch}.go"
