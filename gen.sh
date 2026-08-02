@@ -50,6 +50,19 @@ verify_amd64_stack_moves() {
 	fi
 }
 
+# Go's arm64 assembler preserves LR for non-leaf functions because CALL marks
+# them as non-leaf. An LLVM leaf must therefore never allocate R30 as scratch:
+# RET would branch to the scratch value instead of returning to its caller.
+verify_arm64_link_register() {
+	local asm_path="$1"
+	local unsafe_pattern='(^|[^[:alnum:]_])R30([^[:alnum:]_]|$)'
+	if grep -Eq "$unsafe_pattern" "$asm_path"; then
+		echo "gen.sh: allocated arm64 link register in $asm_path" >&2
+		grep -nE "$unsafe_pattern" "$asm_path" >&2
+		exit 1
+	fi
+}
+
 # Pull the .c paths out of CMakeLists.txt, expanding ${MUSL_DIR}/${CSRC_DIR}.
 SOURCES=()
 while IFS= read -r line; do
@@ -117,7 +130,10 @@ for t in "${LIBC_TARGETS[@]}"; do
 		--c2go-emit-asm="$asm" --c2go-emit-manifest="$json" "${bcs[@]}"
 	cp "$asm" "$ROOT/libc_${goos}_${arch}.s"
 	normalize_asm_eof "$ROOT/libc_${goos}_${arch}.s"
-	[ "$arch" != amd64 ] || verify_amd64_stack_moves "$ROOT/libc_${goos}_${arch}.s"
+	case "$arch" in
+		amd64) verify_amd64_stack_moves "$ROOT/libc_${goos}_${arch}.s" ;;
+		arm64) verify_arm64_link_register "$ROOT/libc_${goos}_${arch}.s" ;;
+	esac
 	out="$tmp/out_${goos}_${arch}"; mkdir -p "$out"
 	"$C2GOBIND" -pkgname=libc -goname="libc_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" ${lib:+-l "$lib"} "$asm"
@@ -159,7 +175,10 @@ for t in "${SELFTEST_TARGETS[@]}"; do
 		--c2go-emit-asm="$asm" --c2go-emit-manifest="$json" "${bcs[@]}"
 	cp "$asm" "$ROOT/selftest/selftest_${goos}_${arch}.s"
 	normalize_asm_eof "$ROOT/selftest/selftest_${goos}_${arch}.s"
-	[ "$arch" != amd64 ] || verify_amd64_stack_moves "$ROOT/selftest/selftest_${goos}_${arch}.s"
+	case "$arch" in
+		amd64) verify_amd64_stack_moves "$ROOT/selftest/selftest_${goos}_${arch}.s" ;;
+		arm64) verify_arm64_link_register "$ROOT/selftest/selftest_${goos}_${arch}.s" ;;
+	esac
 	out="$tmp/out_selftest_${goos}_${arch}"; mkdir -p "$out"
 	"$C2GOBIND" -goname="selftest_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" "$asm"
