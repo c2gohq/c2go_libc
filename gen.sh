@@ -138,7 +138,12 @@ for t in "${LIBC_TARGETS[@]}"; do
 	"$C2GOBIND" -pkgname=libc -goname="libc_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" ${lib:+-l "$lib"} "$asm"
 	cp "$out/libc_${goos}_${arch}.go" "$ROOT/libc_${goos}_${arch}.go"
+	# Schema-v2 anchors are OS-neutral and byte-identical across the target
+	# matrix. Copy on every iteration so a missing/changed anchor fails this
+	# release generation instead of silently shipping unguarded assembly.
+	cp "$out/c2go_abi_anchor.go" "$ROOT/c2go_abi_anchor.go"
 	"$GOFMT" -w "$ROOT/libc_${goos}_${arch}.go"
+	"$GOFMT" -w "$ROOT/c2go_abi_anchor.go"
 	echo "  -> libc_${goos}_${arch}.{go,s} ($arch_overrides musl arch overrides)"
 done
 
@@ -183,7 +188,9 @@ for t in "${SELFTEST_TARGETS[@]}"; do
 	"$C2GOBIND" -goname="selftest_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" "$asm"
 	cp "$out/selftest_${goos}_${arch}.go" "$ROOT/selftest/selftest_${goos}_${arch}.go"
+	cp "$out/c2go_abi_anchor.go" "$ROOT/selftest/c2go_abi_anchor.go"
 	"$GOFMT" -w "$ROOT/selftest/selftest_${goos}_${arch}.go"
+	"$GOFMT" -w "$ROOT/selftest/c2go_abi_anchor.go"
 	echo "  -> selftest/selftest_${goos}_${arch}.{go,s}"
 done
 echo "gen.sh: done."

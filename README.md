@@ -71,9 +71,12 @@ This table describes code-generation intent, **not a stable support promise**.
 There is no checked-in clean-clone CI matrix yet. Windows support also has a
 smaller POSIX surface than Darwin and Linux.
 
-The current module declares Go 1.25.0, while generated bindings exclude Go
-1.26 and later. The effective toolchain line is therefore currently **Go
-1.25.x only**. The current c2go ABI epoch range is `1..1`.
+The current module declares Go 1.25.0. Its central `c2goabi` provider admits Go
+1.25.x and Go 1.26.x under toolchain contract epoch 1, and rejects Go 1.27 or
+later by default until that toolchain contract is validated. Schema-v2
+generated packages do not embed that upper bound: if a later Go release keeps
+contract epoch 1, only c2go-libc needs an update and those packages remain
+unchanged. The current C2Go ABI epoch range is `1..1`.
 
 ## Repository layout
 
@@ -153,6 +156,12 @@ At the 2026-07-28 verification snapshot:
   Darwin amd64 and Linux amd64/arm64 packages cross-compile, and its
   Windows/amd64 loader plus integer/float dispatch tests pass under Wine 7.7.
   Generated consumers still need a clean-checkout end-to-end release gate.
+
+At the 2026-08-03 contract-provider update, Go 1.26.0 passed the root, `dl`,
+and `selftest` packages natively on Darwin arm64, including a SQLite consumer
+under `GOGC=1` and `GODEBUG=invalidptr=1`. The coordinated toolchain release
+workflow now requires the same Go 1.26.x runtime tests on native Linux amd64,
+Linux arm64, Windows amd64, and macOS arm64 runners before packaging begins.
 
 Release claims must be based on a clean checkout and end-to-end generated
 consumer tests, not the prepared working tree alone.

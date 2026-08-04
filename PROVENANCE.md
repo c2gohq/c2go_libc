@@ -118,16 +118,20 @@ but they are not evidence that the current Git tree is releasable.
 
 ## Version constraints
 
-Generated bindings currently use build constraints equivalent to:
+Schema-v2 generated bindings now use minimum-only build constraints equivalent
+to:
 
 ```text
-go1.22 && !go1.26
+go1.25
 ```
 
-Combined with `go 1.25.0` in `go.mod`, the effective supported Go line is
-currently Go 1.25.x. A release must generate explicit failure stubs or provide
-clear diagnostics outside the supported range and must test the exact Go patch
-version used to build artifacts.
+The dependency-free `c2goabi` subpackage is the central build-time provider for
+the two independent compatibility axes: the C2Go generated ABI range and the
+Go toolchain contract epoch. It currently admits Go 1.25.x and Go 1.26.x under
+epoch 1, and fails closed on Go 1.27 or later. A compatible future Go minor
+release extends only the provider's build-tag boundary; generated schema-v2
+packages do not need regeneration while both epochs remain unchanged. Legacy
+schema-v1 packages keep their per-artifact hard upper gate.
 
 ## Required release evidence
 

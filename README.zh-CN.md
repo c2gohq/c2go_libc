@@ -67,9 +67,11 @@ github.com/c2gohq/c2go_libc
 开始验证这些目标的 CI 矩阵。Windows 的 POSIX 接口范围也小于 Darwin
 和 Linux。
 
-当前 module 声明 Go 1.25.0，而生成绑定排除了 Go 1.26 及以后版本，
-所以当前实际工具链范围是**仅 Go 1.25.x**。当前 c2go ABI epoch 范围为
-`1..1`。
+当前 module 声明 Go 1.25.0。中央 `c2goabi` provider 以 toolchain contract
+epoch 1 放行 Go 1.25.x 和 Go 1.26.x；在完成契约验证前，Go 1.27 及以后版本
+会被集中拒绝。schema v2 生成包本身不再写死这个上界：如果后续 Go 版本仍
+保持 contract epoch 1，只需升级 c2go-libc，目标库无需变化。当前 C2Go ABI
+epoch 范围为 `1..1`。
 
 ## 仓库结构
 
@@ -140,6 +142,12 @@ go test ./...
   和 Linux amd64/arm64 包可交叉编译，Windows/amd64 loader 及整数/浮点调用
   测试已在 Wine 7.7 下通过。发布前仍需对生成消费者执行 clean-checkout
   端到端门禁。
+
+在 2026-08-03 的 contract provider 更新中，Go 1.26.0 已在 Darwin arm64
+原生通过根包、`dl`、`selftest`，并通过启用 `GOGC=1` 与
+`GODEBUG=invalidptr=1` 的 SQLite 消费者测试。协同 toolchain 的 release
+workflow 现在要求在开始打包前，分别于 Linux amd64、Linux arm64、Windows
+amd64 和 macOS arm64 原生 runner 上运行同一组 Go 1.26.x runtime 测试。
 
 发布声明必须依据 clean checkout 和转换后消费者的端到端测试，不能只依据
 准备过的工作树。
