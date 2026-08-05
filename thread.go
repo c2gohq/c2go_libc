@@ -1,8 +1,9 @@
 // thread.go — pthread lifecycle: create / join / detach / self / equal / yield.
 //
-// A pthread maps to a goroutine; pthread_t is a handle id into threadTab (the
-// same rooting/identity table the mutexes use). The start routine is a c2go C
-// function pointer, so it is invoked IN C by the __c2go_pthread_run trampoline
+// A pthread maps to a goroutine. Root pthread_t is a handle id into threadTab;
+// managed mlib pthread_t is the direct Go state pointer. The start routine is a
+// c2go C function pointer, so it is invoked IN C by the
+// __c2go_pthread_run trampoline
 // (source/pthread.c, reached through the c2go-bind-generated C2goPthreadRun) —
 // the "call the fp in C" pattern of qsort.c — while only the `go` spawn is here.
 //
@@ -20,16 +21,19 @@ import (
 	"github.com/timandy/routine"
 )
 
-// threadState is the Go object behind one pthread_t, held live by threadTab.
-// detached/reaped are atomic because join, detach and the finishing goroutine
-// all race on them; retval is published by the goroutine before it closes done,
-// so a joiner that has observed done sees the final retval.
+// threadState is the Go object behind either pthread carrier. Root libc roots
+// it through threadTab and publishes the table id; mlib publishes the direct
+// pointer in GC-visible C storage. detached/reaped are atomic because join,
+// detach and the finishing goroutine all race on them; retval is published by
+// the goroutine before it closes done, so a joiner that has observed done sees
+// the final retval.
 type threadState struct {
 	done     chan struct{}  // closed when the start routine returns
 	retval   unsafe.Pointer // the void* the start routine returned
 	detached atomic.Bool
 	reaped   atomic.Bool // CAS: exactly one of join / detach / finish frees the slot
-	id       uint64
+	id       atomic.Uint64
+	started  bool // true when pthread_create installed the finish defer
 }
 
 var threadTab handleTable[threadState]
@@ -37,11 +41,31 @@ var threadTab handleTable[threadState]
 // curThread names the running goroutine's own thread record (for pthread_self).
 var curThread = routine.NewThreadLocal[*threadState]()
 
-// reap frees the table slot exactly once, whichever of finish/join/detach wins.
-func reap(st *threadState) {
-	if st.reaped.CompareAndSwap(false, true) {
-		threadTab.free(st.id)
+// installThreadHandle lazily gives a direct-managed thread a root-libc identity
+// if code deliberately crosses into the root pthread_self surface. Ordinary
+// mlib use never calls it and therefore never occupies threadTab.
+func installThreadHandle(st *threadState) uint64 {
+	if id := st.id.Load(); id != 0 {
+		return id
 	}
+	id := threadTab.alloc(st)
+	if st.id.CompareAndSwap(0, id) {
+		return id
+	}
+	threadTab.free(id)
+	return st.id.Load()
+}
+
+// reap retires a state exactly once, whichever of finish/join/detach wins. A
+// root carrier also frees its table slot; a direct mlib carrier has id zero.
+func reap(st *threadState) bool {
+	if st.reaped.CompareAndSwap(false, true) {
+		if id := st.id.Swap(0); id != 0 {
+			threadTab.free(id)
+		}
+		return true
+	}
+	return false
 }
 
 func chanClosed(ch chan struct{}) bool {
@@ -53,14 +77,15 @@ func chanClosed(ch chan struct{}) bool {
 	}
 }
 
-//go:linkname PthreadCreate
-func PthreadCreate(thread, attr, start, arg unsafe.Pointer) int32 {
+func newThreadState(attr unsafe.Pointer) *threadState {
 	// pthread_attr_t._detachstate is the leading int; PTHREAD_CREATE_DETACHED == 1.
 	detached := attr != nil && *(*int32)(attr) == 1
-	st := &threadState{done: make(chan struct{})}
+	st := &threadState{done: make(chan struct{}), started: true}
 	st.detached.Store(detached)
-	st.id = threadTab.alloc(st)
-	*(*uint64)(thread) = st.id
+	return st
+}
+
+func startThread(st *threadState, start, arg unsafe.Pointer) {
 	go func() {
 		curThread.Set(st)
 		// Finalize via defer so BOTH exits reach it: a normal return from the
@@ -77,12 +102,32 @@ func PthreadCreate(thread, attr, start, arg unsafe.Pointer) int32 {
 		// its void* result; pthread_exit sets st.retval instead and never returns.
 		st.retval = C2goPthreadRun(uintptr(start), arg)
 	}()
+}
+
+//go:linkname PthreadCreate
+func PthreadCreate(thread, attr, start, arg unsafe.Pointer) int32 {
+	st := newThreadState(attr)
+	id := installThreadHandle(st)
+	*(*uint64)(thread) = id
+	startThread(st, start, arg)
 	return 0
 }
 
-//go:linkname PthreadJoin
-func PthreadJoin(t uint64, retval unsafe.Pointer) int32 {
-	st := threadTab.get(t)
+// __c2go_pthread_create_managed publishes the direct thread state through a Go
+// pointer store. Its output slot and argument are managed by mlib's header.
+//
+//go:linkname __c2go_pthread_create_managed
+func __c2go_pthread_create_managed(thread, attr, start, arg unsafe.Pointer) int32 {
+	if thread == nil {
+		return errEINVAL
+	}
+	st := newThreadState(attr)
+	*(*unsafe.Pointer)(thread) = unsafe.Pointer(st)
+	startThread(st, start, arg)
+	return 0
+}
+
+func joinThread(st *threadState, retval unsafe.Pointer) int32 {
 	if st == nil {
 		return errESRCH
 	}
@@ -90,11 +135,23 @@ func PthreadJoin(t uint64, retval unsafe.Pointer) int32 {
 		return errEINVAL // a detached thread is not joinable
 	}
 	<-st.done
+	if !reap(st) {
+		return errESRCH
+	}
 	if retval != nil {
 		*(*unsafe.Pointer)(retval) = st.retval
 	}
-	reap(st)
 	return 0
+}
+
+//go:linkname PthreadJoin
+func PthreadJoin(t uint64, retval unsafe.Pointer) int32 {
+	return joinThread(threadTab.get(t), retval)
+}
+
+//go:linkname __c2go_pthread_join_managed
+func __c2go_pthread_join_managed(thread, retval unsafe.Pointer) int32 {
+	return joinThread((*threadState)(thread), retval)
 }
 
 //go:linkname PthreadExit
@@ -111,10 +168,11 @@ func PthreadExit(retval unsafe.Pointer) {
 	runtime.Goexit()
 }
 
-//go:linkname PthreadDetach
-func PthreadDetach(t uint64) int32 {
-	st := threadTab.get(t)
+func detachThread(st *threadState) int32 {
 	if st == nil {
+		return errESRCH
+	}
+	if st.reaped.Load() {
 		return errESRCH
 	}
 	st.detached.Store(true)
@@ -124,36 +182,68 @@ func PthreadDetach(t uint64) int32 {
 	return 0
 }
 
+//go:linkname PthreadDetach
+func PthreadDetach(t uint64) int32 { return detachThread(threadTab.get(t)) }
+
+//go:linkname __c2go_pthread_detach_managed
+func __c2go_pthread_detach_managed(thread unsafe.Pointer) int32 {
+	return detachThread((*threadState)(thread))
+}
+
+func currentThreadState() *threadState {
+	if st := curThread.Get(); st != nil {
+		return st
+	}
+	st := &threadState{done: make(chan struct{})}
+	st.detached.Store(true)
+	curThread.Set(st)
+	return st
+}
+
 //go:linkname PthreadSelf
 func PthreadSelf() uint64 {
-	if st := curThread.Get(); st != nil {
-		return st.id
+	st := currentThreadState()
+	id := installThreadHandle(st)
+	if st.started {
+		return id
 	}
 	// A goroutine not created via pthread_create (the main thread, or a Go-native
 	// one): register a detached self-record so it has a stable, comparable id.
-	st := &threadState{done: make(chan struct{})}
-	st.detached.Store(true)
-	st.id = threadTab.alloc(st)
-	curThread.Set(st)
 	// No pthread finish defer will ever reap this record, so without a death hook
 	// every goroutine that calls pthread_self() would leak its threadTab slot. Arm
 	// a GC-cleanup on a per-goroutine sentinel (held only in g.labels, so it dies
-	// with the goroutine) to free the slot then. Pass the id (not st) so the
-	// sentinel stays unreachable; the slot is detached and only this path frees it.
+	// with the goroutine) to free a lazily installed slot then.
 	ts := glsLookup()
 	if ts.threadDeath == nil {
 		ts.threadDeath = new(byte)
-		runtime.AddCleanup(ts.threadDeath, reapSelfRecord, st.id)
+		runtime.AddCleanup(ts.threadDeath, reapSelfRecord, st)
 	}
-	return st.id
+	return id
 }
 
 // reapSelfRecord frees a pthread_self() self-record's threadTab slot when its
 // goroutine dies (armed by PthreadSelf via runtime.AddCleanup).
-func reapSelfRecord(id uint64) { threadTab.free(id) }
+func reapSelfRecord(st *threadState) {
+	if id := st.id.Swap(0); id != 0 {
+		threadTab.free(id)
+	}
+}
+
+//go:linkname __c2go_pthread_self_managed
+func __c2go_pthread_self_managed() unsafe.Pointer {
+	return unsafe.Pointer(currentThreadState())
+}
 
 //go:linkname PthreadEqual
 func PthreadEqual(a, b uint64) int32 {
+	if a == b {
+		return 1
+	}
+	return 0
+}
+
+//go:linkname __c2go_pthread_equal_managed
+func __c2go_pthread_equal_managed(a, b unsafe.Pointer) int32 {
 	if a == b {
 		return 1
 	}

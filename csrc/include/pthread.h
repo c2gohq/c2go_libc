@@ -19,6 +19,8 @@
 #include <c2go.h>
 #include <time.h>   /* struct timespec (pthread_cond_timedwait) */
 
+#ifndef C2GO_PTHREAD_OMIT_THREAD
+
 typedef size_t pthread_t;          /* handle id into the Go-side thread table */
 
 /* pthread_attr_t: only `detachstate` is honored. A requested stack size is
@@ -33,6 +35,8 @@ typedef struct {
 
 #define PTHREAD_CREATE_JOINABLE 0
 #define PTHREAD_CREATE_DETACHED 1
+
+#endif /* !C2GO_PTHREAD_OMIT_THREAD */
 
 #ifndef C2GO_PTHREAD_OMIT_SYNC
 
@@ -76,10 +80,12 @@ typedef struct {
 
 #endif /* !C2GO_PTHREAD_OMIT_SYNC */
 
+#ifndef C2GO_PTHREAD_OMIT_KEY
 /* pthread_key_t is opaque (POSIX); c2go represents it as a pointer to the key's
  * heap descriptor (destructor + deleted flag), so a key carries its own
  * metadata with no global id->destructor table. */
 typedef void *pthread_key_t;
+#endif
 
 typedef struct {
     int    _done;
@@ -91,6 +97,7 @@ typedef struct {
 #define PTHREAD_ONCE_INIT { 0, 0, 0 }
 
 /* ── thread lifecycle ── */
+#ifndef C2GO_PTHREAD_OMIT_THREAD
 c2go_linkname("github.com/c2gohq/c2go_libc.PthreadCreate", C2GO_GOABI0)
 int pthread_create(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *);
 c2go_linkname("github.com/c2gohq/c2go_libc.PthreadJoin", C2GO_GOABI0)
@@ -115,6 +122,7 @@ c2go_linkname("github.com/c2gohq/c2go_libc.PthreadAttrSetDetachState", C2GO_GOAB
 int pthread_attr_setdetachstate(pthread_attr_t *, int);
 c2go_linkname("github.com/c2gohq/c2go_libc.PthreadAttrSetStackSize", C2GO_GOABI0)
 int pthread_attr_setstacksize(pthread_attr_t *, size_t);
+#endif /* !C2GO_PTHREAD_OMIT_THREAD */
 
 #ifndef C2GO_PTHREAD_OMIT_SYNC
 int pthread_mutex_timedlock(pthread_mutex_t *, const struct timespec *)
@@ -185,6 +193,7 @@ int pthread_rwlock_unlock(pthread_rwlock_t *);
 #endif /* !C2GO_PTHREAD_OMIT_SYNC */
 
 /* ── thread-specific data (GLS-backed) ── */
+#ifndef C2GO_PTHREAD_OMIT_KEY
 c2go_linkname("github.com/c2gohq/c2go_libc.PthreadKeyCreate", C2GO_GOABI0)
 int pthread_key_create(pthread_key_t *, void (*)(void *));
 c2go_linkname("github.com/c2gohq/c2go_libc.PthreadKeyDelete", C2GO_GOABI0)
@@ -193,6 +202,7 @@ c2go_linkname("github.com/c2gohq/c2go_libc.PthreadGetSpecific", C2GO_GOABI0)
 void *pthread_getspecific(pthread_key_t);
 c2go_linkname("github.com/c2gohq/c2go_libc.PthreadSetSpecific", C2GO_GOABI0)
 int pthread_setspecific(pthread_key_t, const void *);
+#endif /* !C2GO_PTHREAD_OMIT_KEY */
 
 /* ── once ── */
 c2go_linkname("github.com/c2gohq/c2go_libc.PthreadOnce", C2GO_GOABI0)

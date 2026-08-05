@@ -37,7 +37,7 @@ RWMutex` implementation in `handle.go`.
 | `mutexTab` | `pthread_mutex_t._id` | mutex init/destroy/lock/try/timed/unlock and mutex attrs | condition waits share the same mutex state | Implemented |
 | `condTab` | `pthread_cond_t._id` | cond init/destroy/wait/timedwait/signal/broadcast and attrs | mutex state during wait/reacquire | Implemented |
 | `rwlockTab` | `pthread_rwlock_t._id` | rwlock init/destroy/read/write/try/unlock and attrs | none outside the rwlock family | Implemented |
-| `threadTab` | scalar `pthread_t` ID | create/join/exit/detach/self/equal/yield | pthread-key destructor lifetime and goroutine-local state | Not replaced; unprefixed mlib pthread intentionally retains the root thread API |
+| `threadTab` | scalar `pthread_t` ID | create/join/exit/detach/self/equal/yield | pthread-key destructor lifetime and goroutine-local state | Implemented: mlib publishes the direct thread-state pointer; a table ID is allocated only if that thread deliberately crosses into root `pthread_self` |
 | `dirTab` | `DIR.handle` | opendir/fdopendir/readdir/readdir_r/rewinddir/closedir/dirfd | `scandir`; directory traversal in `glob`; `nftw`/`ftw` | Complete: lifecycle plus managed `scandir`, `glob`, and Unix `nftw`/`ftw` |
 | `fileLockTab` | `FILE.lockid` | internal file lock/trylock/unlock/drop | effectively every stdio operation using `FILE *` | Implemented: direct lock pointer in the managed FILE carrier |
 | `popenTab` | `FILE.pipe_id` | popen/pclose bridge | FILE close/pipe ownership and process wait | Implemented: direct process pointer in the managed FILE carrier |
@@ -48,9 +48,9 @@ the state-carrier table and must not be migrated mechanically:
 
 - `mallocRegistry` and `mallocFreeIdx` root raw unmanaged allocations. mlib
   deliberately does not wrap this allocator.
-- `keyRoots` roots real `*pthreadKey` values because root `pthread_key_t` lives in
-  unmanaged C memory. It belongs to a future thread/key design, not the sync
-  carrier implemented now.
+- `keyRoots` roots real `*pthreadKey` values only for root libc, whose
+  `pthread_key_t` lives in unmanaged C memory. The mlib key slot is GC-visible
+  and publishes the descriptor directly, so it does not enter `keyRoots`.
 - process-wide caches such as timezone strings and environment strings preserve
   stable C views; they are not per-object mlib carriers.
 
@@ -61,6 +61,10 @@ root sem/pthread sync carrier (_id) ---+
                                         +--> internal/posixsync --> Go state
 mlib carrier (direct managed pointer) --+
 
+root pthread thread/key (ID/root) ------+
+                                        +--> shared lifecycle/TLS core
+mlib thread/key (direct pointers) ------+
+
 root DIR carrier (handle id) -----------+
                                         +--> internal/posixdir --> Go stream
 mlib DIR (direct pointer, typed heap) ---+
@@ -70,13 +74,31 @@ root FILE lock/process (handle ids) -----+
 mlib FILE (direct managed pointers) -----+
 ```
 
-No musl source is dual-compiled for semaphore or pthread synchronization. Their
-behavior already lives in Go; only the carrier resolution differs. In
-unprefixed pthread mode, `<c2go/mlib/pthread.h>` replaces mutex, condition
-variable, and rwlock types/functions while retaining root `pthread_create`,
-thread keys, `pthread_once`, and `pthread_atfork`.
+No musl source is dual-compiled for semaphore or pthread state. Their behavior
+already lives in Go; only the carrier publication/resolution differs. In
+unprefixed pthread mode, `<c2go/mlib/pthread.h>` replaces lifecycle, thread-key,
+mutex, condition-variable, and rwlock types/functions. The plain-data
+`pthread_once` carrier and stateless `pthread_atfork` remain shared from the
+root header.
 
 ## Stateful clusters and selective C instantiation
+
+### pthread lifecycle and key cluster
+
+Managed `pthread_t` is a direct pointer to the shared Go thread state rather
+than an ID in `threadTab`. The start argument and result are explicitly managed:
+the goroutine closure retains the argument until the C callback starts, the
+thread state retains the result until join, and join publishes it through a Go
+write barrier. Join, detach, exit, self/equal, attributes, TLS keys, and TLS
+destructors reuse the root Go behavior beneath a small selectively-instantiated
+C wrapper.
+
+Managed `pthread_key_t` similarly points straight at the shared key descriptor.
+The GC-visible key slot replaces root libc's `keyRoots` entry, while each
+goroutine's TLS map keeps non-null managed values alive and runs the existing
+bounded destructor loop on exit. `pthread_once_t` contains only integer state,
+so it needs no alternate managed carrier and remains shared in unprefixed mode.
+Do not pass root thread/key carriers to mlib or mlib carriers to root libc.
 
 ### DIR cluster
 
@@ -159,15 +181,14 @@ public FILE declaration.
 
 ## Next safe migration order
 
-1. Keep semaphore and pthread sync as the reference pattern and retain their C
-   and GC-stress tests on all release targets.
-2. Design pthread thread/key ownership separately; do not extend the current
-   unprefixed sync switch implicitly.
-3. Keep the completed DIR propagation cluster under GC-stress regression.
-4. Keep the completed managed FILE process-stream phase under native and
+1. Keep semaphore and the complete pthread state family under C, race, and
+   GC-stress regression on all release targets.
+2. Keep the completed DIR propagation cluster under GC-stress regression.
+3. Keep the completed managed FILE process-stream phase under native and
    GC-stress regression.
-5. Treat pthread thread/key and iconv carriers as separate future designs;
-   neither should be pulled into the existing sync or FILE switches implicitly.
+4. Treat iconv as a separate design: its POSIX `(iconv_t)-1` failure sentinel
+   cannot be stored in a precise-GC managed pointer slot, so it must not be
+   migrated mechanically.
 
 At every step the default API remains `mlib_`-prefixed, the unprefixed form is a
 whole-LTO-package choice, and root libc must never import or depend on `mlib`.

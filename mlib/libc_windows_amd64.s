@@ -11495,6 +11495,262 @@ _Ltmp518:
 _LBB98_3:
 	RET
 _Lfunc_end98:
+	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
+	FUNCDATA $1, gclocals·055a193a5dc1daa8(SB)
+TEXT ·mlib_pthread_create(SB), $72-40
+	PCDATA $1, $-1
+	MOVQ 32(BP), AX
+	MOVQ 16(BP), CX
+	MOVQ 40(BP), DX
+	MOVQ 24(BP), SI
+	MOVQ SI, -16(BP)
+	MOVQ DX, -24(BP)
+	MOVQ CX, -8(BP)
+	MOVQ SP, DI
+	MOVQ DX, 24(DI)
+	MOVQ AX, 16(DI)
+	MOVQ SI, 8(DI)
+	MOVQ CX, 0(DI)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_create_managed(SB)
+_Ltmp519:
+	MOVQ SP, AX
+	MOVL 32(AX), AX
+	MOVL AX, 48(BP)
+	RET
+_Lfunc_end99:
+	FUNCDATA $0, gclocals·4c4513d481f27870(SB)
+DATA gclocals·4c4513d481f27870+0(SB)/4, $2
+DATA gclocals·4c4513d481f27870+4(SB)/4, $5
+DATA gclocals·4c4513d481f27870+8(SB)/1, $0x0b
+DATA gclocals·4c4513d481f27870+9(SB)/1, $0x0b
+GLOBL gclocals·4c4513d481f27870(SB), DUPOK|RODATA, $10
+
+	FUNCDATA $1, gclocals·16f0aa5a1e7f1451(SB)
+TEXT ·mlib_pthread_join(SB), $56-24
+	PCDATA $1, $-1
+	MOVQ 24(BP), AX
+	MOVQ 16(BP), CX
+	MOVQ CX, -8(BP)
+	MOVQ AX, -16(BP)
+	MOVQ SP, DX
+	MOVQ AX, 8(DX)
+	MOVQ CX, 0(DX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_join_managed(SB)
+_Ltmp520:
+	MOVQ SP, AX
+	MOVL 16(AX), AX
+	MOVL AX, 32(BP)
+	RET
+_Lfunc_end100:
+	FUNCDATA $0, gclocals·0564503a5dca8ca2(SB)
+	FUNCDATA $1, gclocals·9300ac6ea5fafef0(SB)
+TEXT ·mlib_pthread_exit(SB), $24-8
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadExit(SB)
+_Ltmp521:
+	RET
+_Lfunc_end101:
+	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
+	FUNCDATA $1, gclocals·055a193a5dc1daa8(SB)
+TEXT ·mlib_pthread_self(SB), $24-8
+	PCDATA $1, $-1
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_self_managed(SB)
+_Ltmp522:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	MOVQ AX, 16(BP)
+	RET
+_Lfunc_end102:
+	FUNCDATA $0, gclocals·5f4910070d449e0f(SB)
+	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
+TEXT ·mlib_pthread_detach(SB), $40-16
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_detach_managed(SB)
+_Ltmp523:
+	MOVQ SP, AX
+	MOVL 8(AX), AX
+	MOVL AX, 24(BP)
+	RET
+_Lfunc_end103:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_equal(SB), $56-24
+	PCDATA $1, $-1
+	MOVQ 24(BP), AX
+	MOVQ 16(BP), CX
+	MOVQ CX, -8(BP)
+	MOVQ AX, -16(BP)
+	MOVQ SP, DX
+	MOVQ AX, 8(DX)
+	MOVQ CX, 0(DX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_equal_managed(SB)
+_Ltmp524:
+	MOVQ SP, AX
+	MOVL 16(AX), AX
+	MOVL AX, 32(BP)
+	RET
+_Lfunc_end104:
+	FUNCDATA $0, gclocals·0564503a5dca8ca2(SB)
+	FUNCDATA $1, gclocals·9300ac6ea5fafef0(SB)
+TEXT ·mlib_pthread_yield(SB), $24-8
+	PCDATA $1, $-1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadYield(SB)
+	MOVQ SP, AX
+	MOVL 0(AX), AX
+	MOVL AX, 16(BP)
+	RET
+_Lfunc_end105:
+	FUNCDATA $0, gclocals·5f4910070d449e0f(SB)
+	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
+TEXT ·mlib_pthread_attr_init(SB), $40-16
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadAttrInit(SB)
+_Ltmp525:
+	MOVQ SP, AX
+	MOVL 8(AX), AX
+	MOVL AX, 24(BP)
+	RET
+_Lfunc_end106:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_attr_destroy(SB), $40-16
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadAttrDestroy(SB)
+_Ltmp526:
+	MOVQ SP, AX
+	MOVL 8(AX), AX
+	MOVL AX, 24(BP)
+	RET
+_Lfunc_end107:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_attr_setdetachstate(SB), $40-24
+	PCDATA $1, $-1
+	MOVL 24(BP), AX
+	MOVQ 16(BP), CX
+	MOVQ CX, -8(BP)
+	MOVQ SP, DX
+	MOVL AX, 8(DX)
+	MOVQ CX, 0(DX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadAttrSetDetachState(SB)
+_Ltmp527:
+	MOVQ SP, AX
+	MOVL 16(AX), AX
+	MOVL AX, 32(BP)
+	RET
+_Lfunc_end108:
+	FUNCDATA $0, gclocals·055d823a5dc4c2ea(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_attr_setstacksize(SB), $40-24
+	PCDATA $1, $-1
+	MOVQ 24(BP), AX
+	MOVQ 16(BP), CX
+	MOVQ CX, -8(BP)
+	MOVQ SP, DX
+	MOVQ AX, 8(DX)
+	MOVQ CX, 0(DX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadAttrSetStackSize(SB)
+_Ltmp528:
+	MOVQ SP, AX
+	MOVL 16(AX), AX
+	MOVL AX, 32(BP)
+	RET
+_Lfunc_end109:
+	FUNCDATA $0, gclocals·055d823a5dc4c2ea(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_key_create(SB), $40-24
+	PCDATA $1, $-1
+	MOVQ 24(BP), AX
+	MOVQ 16(BP), CX
+	MOVQ CX, -8(BP)
+	MOVQ SP, DX
+	MOVQ AX, 8(DX)
+	MOVQ CX, 0(DX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_key_create_managed(SB)
+_Ltmp529:
+	MOVQ SP, AX
+	MOVL 16(AX), AX
+	MOVL AX, 32(BP)
+	RET
+_Lfunc_end110:
+	FUNCDATA $0, gclocals·055d823a5dc4c2ea(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_key_delete(SB), $40-16
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadKeyDelete(SB)
+_Ltmp530:
+	MOVQ SP, AX
+	MOVL 8(AX), AX
+	MOVL AX, 24(BP)
+	RET
+_Lfunc_end111:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_getspecific(SB), $40-16
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadGetSpecific(SB)
+_Ltmp531:
+	MOVQ SP, AX
+	MOVQ 8(AX), AX
+	MOVQ AX, 24(BP)
+	RET
+_Lfunc_end112:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_setspecific(SB), $56-24
+	PCDATA $1, $-1
+	MOVQ 24(BP), AX
+	MOVQ 16(BP), CX
+	MOVQ CX, -8(BP)
+	MOVQ AX, -16(BP)
+	MOVQ SP, DX
+	MOVQ AX, 8(DX)
+	MOVQ CX, 0(DX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadSetSpecific(SB)
+_Ltmp532:
+	MOVQ SP, AX
+	MOVL 16(AX), AX
+	MOVL AX, 32(BP)
+	RET
+_Lfunc_end113:
 DATA _L_str<>+0(SB)/1, $0x48
 DATA _L_str<>+1(SB)/1, $0x4f
 DATA _L_str<>+2(SB)/1, $0x4d
@@ -11521,5 +11777,5 @@ DATA _L_str_3<>+2(SB)/1, $0x61
 DATA _L_str_3<>+3(SB)/1, $0x00
 GLOBL _L_str_3<>(SB), RODATA, $4
 
-	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
-	FUNCDATA $1, gclocals·055a193a5dc1daa8(SB)
+	FUNCDATA $0, gclocals·0564503a5dca8ca2(SB)
+	FUNCDATA $1, gclocals·9300ac6ea5fafef0(SB)

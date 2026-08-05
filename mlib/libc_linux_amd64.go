@@ -66,6 +66,15 @@ type mlib_match struct {
 	next *mlib_match
 	name *byte
 }
+type mlib_pthread_cond_t struct {
+	_state unsafe.Pointer
+}
+type mlib_pthread_mutex_t struct {
+	_state unsafe.Pointer
+}
+type mlib_pthread_rwlock_t struct {
+	_state unsafe.Pointer
+}
 
 // ─── Forward-only opaque types ───────────────────
 // Types declared in C as `typedef struct X X;` without a
@@ -74,6 +83,7 @@ type mlib_match struct {
 // handles but contents are inaccessible from Go-side code.
 type __va_list_tag struct{}
 type dirent struct{}
+type mlib_pthread_attr_t struct{}
 
 // ─── Type-descriptor indirection (#218) ──────
 // clang's Plan 9 .s loads each type descriptor from the per-type
@@ -259,6 +269,51 @@ func MlibPopen(command *byte, mode *byte) *_c2go_mlib_FILE
 
 //go:linkname MlibPrintf github.com/c2gohq/c2go_libc/mlib.mlib_printf
 func MlibPrintf(format *byte, argptrs unsafe.Pointer) int32
+
+//go:linkname MlibPthreadAttrDestroy github.com/c2gohq/c2go_libc/mlib.mlib_pthread_attr_destroy
+func MlibPthreadAttrDestroy(attr *mlib_pthread_attr_t) int32
+
+//go:linkname MlibPthreadAttrInit github.com/c2gohq/c2go_libc/mlib.mlib_pthread_attr_init
+func MlibPthreadAttrInit(attr *mlib_pthread_attr_t) int32
+
+//go:linkname MlibPthreadAttrSetdetachstate github.com/c2gohq/c2go_libc/mlib.mlib_pthread_attr_setdetachstate
+func MlibPthreadAttrSetdetachstate(attr *mlib_pthread_attr_t, state int32) int32
+
+//go:linkname MlibPthreadAttrSetstacksize github.com/c2gohq/c2go_libc/mlib.mlib_pthread_attr_setstacksize
+func MlibPthreadAttrSetstacksize(attr *mlib_pthread_attr_t, size uint64) int32
+
+//go:linkname MlibPthreadCreate github.com/c2gohq/c2go_libc/mlib.mlib_pthread_create
+func MlibPthreadCreate(thread *unsafe.Pointer, attr *mlib_pthread_attr_t, start uintptr, arg unsafe.Pointer) int32
+
+//go:linkname MlibPthreadDetach github.com/c2gohq/c2go_libc/mlib.mlib_pthread_detach
+func MlibPthreadDetach(thread unsafe.Pointer) int32
+
+//go:linkname MlibPthreadEqual github.com/c2gohq/c2go_libc/mlib.mlib_pthread_equal
+func MlibPthreadEqual(left unsafe.Pointer, right unsafe.Pointer) int32
+
+//go:linkname MlibPthreadExit github.com/c2gohq/c2go_libc/mlib.mlib_pthread_exit
+func MlibPthreadExit(result unsafe.Pointer)
+
+//go:linkname MlibPthreadGetspecific github.com/c2gohq/c2go_libc/mlib.mlib_pthread_getspecific
+func MlibPthreadGetspecific(key unsafe.Pointer) unsafe.Pointer
+
+//go:linkname MlibPthreadJoin github.com/c2gohq/c2go_libc/mlib.mlib_pthread_join
+func MlibPthreadJoin(thread unsafe.Pointer, result *unsafe.Pointer) int32
+
+//go:linkname MlibPthreadKeyCreate github.com/c2gohq/c2go_libc/mlib.mlib_pthread_key_create
+func MlibPthreadKeyCreate(key *unsafe.Pointer, destructor uintptr) int32
+
+//go:linkname MlibPthreadKeyDelete github.com/c2gohq/c2go_libc/mlib.mlib_pthread_key_delete
+func MlibPthreadKeyDelete(key unsafe.Pointer) int32
+
+//go:linkname MlibPthreadSelf github.com/c2gohq/c2go_libc/mlib.mlib_pthread_self
+func MlibPthreadSelf() unsafe.Pointer
+
+//go:linkname MlibPthreadSetspecific github.com/c2gohq/c2go_libc/mlib.mlib_pthread_setspecific
+func MlibPthreadSetspecific(key unsafe.Pointer, value unsafe.Pointer) int32
+
+//go:linkname MlibPthreadYield github.com/c2gohq/c2go_libc/mlib.mlib_pthread_yield
+func MlibPthreadYield() int32
 
 //go:linkname MlibPutc github.com/c2gohq/c2go_libc/mlib.mlib_putc
 func MlibPutc(character int32, stream *_c2go_mlib_FILE) int32

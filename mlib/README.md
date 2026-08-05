@@ -111,10 +111,10 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 ```
 
 `mlib` does not provide or use `malloc`, `realloc`, or `free`. It currently
-implements unnamed semaphores; pthread mutexes, condition variables, and
-rwlocks; the directory-stream lifecycle; `scandir`; Unix `nftw`/`ftw`; and
-`glob`; and the ownership-closed managed `FILE` surface, including process
-streams.
+implements unnamed semaphores; pthread lifecycle, thread-specific keys,
+mutexes, condition variables, and rwlocks; the directory-stream lifecycle;
+`scandir`; Unix `nftw`/`ftw`; `glob`; and the ownership-closed managed `FILE`
+surface, including process streams.
 Their state algorithms are shared with root libc; only state resolution differs
 (direct managed pointer versus unmanaged handle ID). Managed `opendir` and
 `fdopendir` allocate the carrier internally with typed `gc_malloc`; `closedir`
@@ -172,9 +172,13 @@ using `popenTab`. Always close such a stream with managed `pclose`, which closes
 the pipe before waiting; plain `fclose` does not reap the process. Never pass an
 `mlib_FILE *` to the root-libc process-stream family.
 
-In unprefixed pthread mode only the synchronization records and functions are
-replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
-`pthread_atfork` remain available from the root pthread surface.
+Managed `pthread_t` and `pthread_key_t` are direct GC-visible state pointers.
+Thread arguments, return values, and TLS values are managed pointers too, so
+they remain live across thread start, join, and destructor execution. In
+unprefixed mode lifecycle, keys, and synchronization objects are all replaced;
+the integer-only `pthread_once` carrier and stateless `pthread_atfork` remain
+shared from the root pthread surface. Never mix root and mlib thread/key
+carriers.
 
 The directory propagation and managed FILE clusters are complete for the
 documented surface. Remaining state families retain the boundaries documented
@@ -287,9 +291,10 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 ```
 
 `mlib` 不提供、也不使用 `malloc`、`realloc` 或 `free`。当前已经实现无名
-信号量、pthread 的 mutex/condition variable/rwlock、目录流生命周期、
-`scandir`、Unix `nftw`/`ftw`、`glob`，以及包含进程流的 ownership-closed
-managed `FILE` 接口。它们的行为核心与根 libc 共用，只有状态解析
+信号量、pthread 的线程生命周期、线程私有 key、mutex/condition variable/
+rwlock、目录流生命周期、`scandir`、Unix `nftw`/`ftw`、`glob`，以及包含
+进程流的 ownership-closed managed `FILE` 接口。它们的行为核心与根 libc
+共用，只有状态解析
 方式不同：`mlib` 直接读取 managed pointer，根 libc 仍通过 unmanaged handle ID 查表。managed `opendir`
 和 `fdopendir` 在内部使用 typed `gc_malloc` 分配 carrier；`closedir` 清空状态
 指针，由 GC 回收 carrier。managed `scandir` 的结果数组及每个 `dirent` 都位于
@@ -335,8 +340,11 @@ managed `popen` 会把 Go 进程对象直接保存在 carrier 的专用 managed 
 进程流必须用 managed `pclose` 关闭：它先关闭管道，再等待并回收子进程；普通
 `fclose` 不负责回收子进程。不能把 `mlib_FILE *` 传给根 libc 的进程流接口。
 
-pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、
-`pthread_once` 和 `pthread_atfork` 仍由根 pthread 接口提供。
+managed `pthread_t` 和 `pthread_key_t` 都是 GC 可见的直接状态指针；线程参数、
+返回值和 TLS value 也显式声明为 managed pointer，因此能跨线程启动、join 和
+析构过程保活。无前缀模式会同时替换生命周期、key 与同步对象；只包含整数状态的
+`pthread_once` carrier 和无状态的 `pthread_atfork` 继续复用根 pthread 接口。
+不能在 root 与 mlib 之间混用 thread/key carrier。
 
 目录传播簇和文档所列的 managed FILE 簇现已完整；其余状态簇仍遵循
 DESIGN.md 中记录的边界。

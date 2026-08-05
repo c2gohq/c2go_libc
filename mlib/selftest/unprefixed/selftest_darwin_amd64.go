@@ -123,6 +123,7 @@ func MlibStdioUnprefixedStdoutSelftest() int32
 // suppresses the matching GLOBL trailer for each name below.
 var unprefixed_global_mutex unsafe.Pointer
 var unprefixed_global_sem unsafe.Pointer
+var unprefixed_thread_key unsafe.Pointer
 
 // ─── Embedded runtime-support helpers ───────────────────────
 

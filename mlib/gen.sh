@@ -150,6 +150,7 @@ LIB_SOURCES=(
 	"$ROOT/csrc/mlib/glob.c"
 	"$ROOT/csrc/mlib/scandir.c"
 	"$ROOT/csrc/mlib/stdio.c"
+	"$ROOT/csrc/mlib/thread.c"
 )
 
 # Build the selectively-instantiated C part of package mlib once per target.

@@ -1,12 +1,10 @@
 // pthread_key.go — thread-specific data: pthread_key_create / delete /
 // getspecific / setspecific, with POSIX destructor-on-thread-exit.
 //
-// A pthread_key_t (void* in <pthread.h>) is the address of a heap pthreadKey
-// descriptor carrying the key's destructor and a deleted flag. The descriptor is
-// rooted in keyRoots (below): the pthread_key_t itself lives in UNMANAGED C
-// memory, which the GC does not scan, so without a Go-side root the descriptor
-// would be collectible between key_create and the first setspecific (or after
-// every holder clears), leaving C with a dangling key.
+// A pthread_key_t is the address of a heap pthreadKey descriptor carrying the
+// key's destructor and a deleted flag. Root libc publishes it into UNMANAGED C
+// memory and therefore retains it in keyRoots. Managed mlib publishes it into a
+// GC-visible key slot instead and needs no extra global root.
 //
 // A stored value is a POSIX void* held as an unsafe.Pointer, so a value that is
 // a real managed pointer is kept alive while set. Like every other pthread void*
@@ -33,9 +31,9 @@ type pthreadKey struct {
 	deleted    atomic.Bool
 }
 
-// keyRoots keeps every live pthreadKey descriptor reachable from the Go heap
-// (the C-side pthread_key_t is unmanaged and does not root it). Entries are
-// removed on pthread_key_delete.
+// keyRoots keeps every live root-libc pthreadKey descriptor reachable from the
+// Go heap (the root C-side pthread_key_t is unmanaged and does not root it).
+// Managed mlib keys never enter this map. Entries are removed on delete.
 var keyRoots = struct {
 	mu sync.Mutex
 	m  map[*pthreadKey]struct{}
@@ -46,6 +44,10 @@ type keyID = unsafe.Pointer
 
 func keyDesc(key keyID) *pthreadKey { return (*pthreadKey)(key) }
 
+func newPthreadKey(destructor unsafe.Pointer) *pthreadKey {
+	return &pthreadKey{destructor: destructor}
+}
+
 // PTHREAD_DESTRUCTOR_ITERATIONS: POSIX bound on destructor rounds when a
 // destructor itself sets new TLS values.
 const pthreadDestructorIterations = 4
@@ -55,11 +57,24 @@ func PthreadKeyCreate(key *keyID, destructor unsafe.Pointer) int32 {
 	if key == nil {
 		return errEINVAL
 	}
-	k := &pthreadKey{destructor: destructor}
+	k := newPthreadKey(destructor)
 	keyRoots.mu.Lock()
 	keyRoots.m[k] = struct{}{} // root before publishing to C
 	keyRoots.mu.Unlock()
 	*key = unsafe.Pointer(k)
+	return 0
+}
+
+// __c2go_pthread_key_create_managed publishes a direct key descriptor without
+// adding it to keyRoots. The mlib pthread_key_t slot is itself GC-visible and
+// is the root until deletion or overwrite.
+//
+//go:linkname __c2go_pthread_key_create_managed
+func __c2go_pthread_key_create_managed(key *keyID, destructor unsafe.Pointer) int32 {
+	if key == nil {
+		return errEINVAL
+	}
+	*key = unsafe.Pointer(newPthreadKey(destructor))
 	return 0
 }
 

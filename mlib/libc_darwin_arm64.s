@@ -9769,6 +9769,262 @@ _Ltmp541:
 _LBB103_3:
 	RET
 _Lfunc_end103:
+	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_create(SB), $80-40
+	PCDATA $1, $-1
+	LDP 120(RSP), (R8, R9)
+	LDP 104(RSP), (R10, R11)
+	STP (R11, R9), 72(RSP)
+	MOVD R10, 64(RSP)
+	MOVD RSP, R12
+	STP (R8, R9), 24(R12)
+	STP (R10, R11), 8(R12)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_create_managed(SB)
+_Ltmp542:
+	MOVD RSP, R8
+	MOVWU 40(R8), R8
+	MOVW R8, 136(RSP)
+	RET
+_Lfunc_end104:
+	FUNCDATA $0, gclocals·4c4513d481f27870(SB)
+DATA gclocals·4c4513d481f27870+0(SB)/4, $2
+DATA gclocals·4c4513d481f27870+4(SB)/4, $5
+DATA gclocals·4c4513d481f27870+8(SB)/1, $0x0b
+DATA gclocals·4c4513d481f27870+9(SB)/1, $0x0b
+GLOBL gclocals·4c4513d481f27870(SB), DUPOK|RODATA, $10
+
+	FUNCDATA $1, gclocals·d9d49a48095946e9(SB)
+DATA gclocals·d9d49a48095946e9+0(SB)/4, $2
+DATA gclocals·d9d49a48095946e9+4(SB)/4, $11
+DATA gclocals·d9d49a48095946e9+8(SB)/1, $0x00
+DATA gclocals·d9d49a48095946e9+9(SB)/1, $0x00
+DATA gclocals·d9d49a48095946e9+10(SB)/1, $0x00
+DATA gclocals·d9d49a48095946e9+11(SB)/1, $0x07
+GLOBL gclocals·d9d49a48095946e9(SB), DUPOK|RODATA, $12
+
+TEXT ·mlib_pthread_join(SB), $48-24
+	PCDATA $1, $-1
+	LDP 72(RSP), (R9, R8)
+	STP (R9, R8), 40(RSP)
+	MOVD RSP, R10
+	STP (R9, R8), 8(R10)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_join_managed(SB)
+_Ltmp543:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	MOVW R8, 88(RSP)
+	RET
+_Lfunc_end105:
+	FUNCDATA $0, gclocals·0564503a5dca8ca2(SB)
+	FUNCDATA $1, gclocals·9300ac6ea5fafef0(SB)
+TEXT ·mlib_pthread_exit(SB), $32-8
+	PCDATA $1, $-1
+	MOVD 56(RSP), R8
+	MOVD R8, 32(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadExit(SB)
+_Ltmp544:
+	RET
+_Lfunc_end106:
+	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_self(SB), $16-8
+	PCDATA $1, $-1
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_self_managed(SB)
+_Ltmp545:
+	MOVD RSP, R8
+	MOVD 8(R8), R8
+	MOVD R8, 40(RSP)
+	RET
+_Lfunc_end107:
+	FUNCDATA $0, gclocals·5f4910070d449e0f(SB)
+DATA gclocals·5f4910070d449e0f+0(SB)/4, $1
+DATA gclocals·5f4910070d449e0f+4(SB)/4, $1
+DATA gclocals·5f4910070d449e0f+8(SB)/1, $0x00
+GLOBL gclocals·5f4910070d449e0f(SB), DUPOK|RODATA, $9
+
+	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
+DATA gclocals·78a6d65c07e372d5+0(SB)/4, $1
+DATA gclocals·78a6d65c07e372d5+4(SB)/4, $3
+DATA gclocals·78a6d65c07e372d5+8(SB)/1, $0x00
+GLOBL gclocals·78a6d65c07e372d5(SB), DUPOK|RODATA, $9
+
+TEXT ·mlib_pthread_detach(SB), $32-16
+	PCDATA $1, $-1
+	MOVD 56(RSP), R8
+	MOVD R8, 32(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_detach_managed(SB)
+_Ltmp546:
+	MOVD RSP, R8
+	MOVWU 16(R8), R8
+	MOVW R8, 64(RSP)
+	RET
+_Lfunc_end108:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_equal(SB), $48-24
+	PCDATA $1, $-1
+	LDP 72(RSP), (R9, R8)
+	STP (R9, R8), 40(RSP)
+	MOVD RSP, R10
+	STP (R9, R8), 8(R10)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_equal_managed(SB)
+_Ltmp547:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	MOVW R8, 88(RSP)
+	RET
+_Lfunc_end109:
+	FUNCDATA $0, gclocals·0564503a5dca8ca2(SB)
+	FUNCDATA $1, gclocals·9300ac6ea5fafef0(SB)
+TEXT ·mlib_pthread_yield(SB), $16-8
+	PCDATA $1, $-1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadYield(SB)
+	MOVD RSP, R8
+	MOVWU 8(R8), R8
+	MOVW R8, 40(RSP)
+	RET
+_Lfunc_end110:
+	FUNCDATA $0, gclocals·5f4910070d449e0f(SB)
+	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
+TEXT ·mlib_pthread_attr_init(SB), $32-16
+	PCDATA $1, $-1
+	MOVD 56(RSP), R8
+	MOVD R8, 32(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadAttrInit(SB)
+_Ltmp548:
+	MOVD RSP, R8
+	MOVWU 16(R8), R8
+	MOVW R8, 64(RSP)
+	RET
+_Lfunc_end111:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_attr_destroy(SB), $32-16
+	PCDATA $1, $-1
+	MOVD 56(RSP), R8
+	MOVD R8, 32(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadAttrDestroy(SB)
+_Ltmp549:
+	MOVD RSP, R8
+	MOVWU 16(R8), R8
+	MOVW R8, 64(RSP)
+	RET
+_Lfunc_end112:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_attr_setdetachstate(SB), $48-24
+	PCDATA $1, $-1
+	MOVWU 80(RSP), R8
+	MOVD 72(RSP), R9
+	MOVD R9, 48(RSP)
+	MOVD RSP, R10
+	MOVW R8, 16(R10)
+	MOVD R9, 8(R10)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadAttrSetDetachState(SB)
+_Ltmp550:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	MOVW R8, 88(RSP)
+	RET
+_Lfunc_end113:
+	FUNCDATA $0, gclocals·055d823a5dc4c2ea(SB)
+	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
+TEXT ·mlib_pthread_attr_setstacksize(SB), $48-24
+	PCDATA $1, $-1
+	LDP 72(RSP), (R9, R8)
+	MOVD R9, 48(RSP)
+	MOVD RSP, R10
+	STP (R9, R8), 8(R10)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadAttrSetStackSize(SB)
+_Ltmp551:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	MOVW R8, 88(RSP)
+	RET
+_Lfunc_end114:
+	FUNCDATA $0, gclocals·055d823a5dc4c2ea(SB)
+	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
+TEXT ·mlib_pthread_key_create(SB), $48-24
+	PCDATA $1, $-1
+	LDP 72(RSP), (R9, R8)
+	MOVD R9, 48(RSP)
+	MOVD RSP, R10
+	STP (R9, R8), 8(R10)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_pthread_key_create_managed(SB)
+_Ltmp552:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	MOVW R8, 88(RSP)
+	RET
+_Lfunc_end115:
+	FUNCDATA $0, gclocals·055d823a5dc4c2ea(SB)
+	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
+TEXT ·mlib_pthread_key_delete(SB), $32-16
+	PCDATA $1, $-1
+	MOVD 56(RSP), R8
+	MOVD R8, 32(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadKeyDelete(SB)
+_Ltmp553:
+	MOVD RSP, R8
+	MOVWU 16(R8), R8
+	MOVW R8, 64(RSP)
+	RET
+_Lfunc_end116:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_getspecific(SB), $32-16
+	PCDATA $1, $-1
+	MOVD 56(RSP), R8
+	MOVD R8, 32(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadGetSpecific(SB)
+_Ltmp554:
+	MOVD RSP, R8
+	MOVD 16(R8), R8
+	MOVD R8, 64(RSP)
+	RET
+_Lfunc_end117:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_pthread_setspecific(SB), $48-24
+	PCDATA $1, $-1
+	LDP 72(RSP), (R9, R8)
+	STP (R9, R8), 40(RSP)
+	MOVD RSP, R10
+	STP (R9, R8), 8(R10)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·PthreadSetSpecific(SB)
+_Ltmp555:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	MOVW R8, 88(RSP)
+	RET
+_Lfunc_end118:
 DATA _L_str<>+0(SB)/1, $0x48
 DATA _L_str<>+1(SB)/1, $0x4f
 DATA _L_str<>+2(SB)/1, $0x4d
@@ -9795,5 +10051,5 @@ DATA _L_str_3<>+2(SB)/1, $0x61
 DATA _L_str_3<>+3(SB)/1, $0x00
 GLOBL _L_str_3<>(SB), RODATA, $4
 
-	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+	FUNCDATA $0, gclocals·0564503a5dca8ca2(SB)
+	FUNCDATA $1, gclocals·9300ac6ea5fafef0(SB)

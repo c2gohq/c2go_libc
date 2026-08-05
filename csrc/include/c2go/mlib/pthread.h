@@ -7,22 +7,40 @@
 #include <time.h>
 #include <c2go/mlib/names.h>
 
-/* Replacement mode keeps pthread_create, pthread_key_*, pthread_once and the
- * rest of the ordinary thread API. Only the state-bearing synchronization
- * records and their functions are omitted from <pthread.h> and supplied below
- * with the managed ABI. Namespaced mode keeps both synchronization ABIs. */
+/* Replacement mode keeps pthread_once/atfork but replaces thread lifecycle,
+ * thread keys, and synchronization carriers. Namespaced mode keeps both ABIs. */
 #ifdef C2GO_MLIB_UNPREFIXED
 #ifdef _PTHREAD_H
 #error "c2go mlib pthread replacement must be included before <pthread.h>"
 #endif
 #define C2GO_PTHREAD_OMIT_SYNC 1
+#define C2GO_PTHREAD_OMIT_THREAD 1
+#define C2GO_PTHREAD_OMIT_KEY 1
 #include <pthread.h>
 #undef C2GO_PTHREAD_OMIT_SYNC
+#undef C2GO_PTHREAD_OMIT_THREAD
+#undef C2GO_PTHREAD_OMIT_KEY
 #else
 #include <pthread.h>
 #endif
 
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
+
+/* Thread and key descriptors are direct Go pointers. The thread argument and
+ * result values below are managed too because they may live in Go state while
+ * the new goroutine runs or until pthread_join publishes the result. */
+typedef void *managed C2GO_MLIB_NAME(pthread_t);
+
+typedef struct {
+    int detachstate;
+    int _reserved;
+    unsigned long _pad[6];
+} C2GO_MLIB_NAME(pthread_attr_t);
+
+typedef void *managed (*C2GO_MLIB_NAME(pthread_start_routine_t))(void *managed);
+
+typedef void *managed C2GO_MLIB_NAME(pthread_key_t);
+typedef void (*C2GO_MLIB_NAME(pthread_key_destructor_t))(void *managed);
 
 /* A managed synchronization object is one GC-visible pointer. Explicit
  * managed pointer types retain AS1 provenance; the pointed-to Go state is
@@ -56,6 +74,8 @@ typedef struct {
 } C2GO_MLIB_NAME(pthread_rwlockattr_t);
 
 #ifdef C2GO_MLIB_UNPREFIXED
+#define PTHREAD_CREATE_JOINABLE 0
+#define PTHREAD_CREATE_DETACHED 1
 #define PTHREAD_MUTEX_INITIALIZER  { 0 }
 #define PTHREAD_COND_INITIALIZER   { 0 }
 #define PTHREAD_RWLOCK_INITIALIZER { 0 }
@@ -64,6 +84,8 @@ typedef struct {
 #define PTHREAD_MUTEX_ERRORCHECK   2
 #define PTHREAD_MUTEX_DEFAULT      PTHREAD_MUTEX_NORMAL
 #else
+#define MLIB_PTHREAD_CREATE_JOINABLE 0
+#define MLIB_PTHREAD_CREATE_DETACHED 1
 #define MLIB_PTHREAD_MUTEX_INITIALIZER  { 0 }
 #define MLIB_PTHREAD_COND_INITIALIZER   { 0 }
 #define MLIB_PTHREAD_RWLOCK_INITIALIZER { 0 }
@@ -72,6 +94,47 @@ typedef struct {
 #define MLIB_PTHREAD_MUTEX_ERRORCHECK   2
 #define MLIB_PTHREAD_MUTEX_DEFAULT      MLIB_PTHREAD_MUTEX_NORMAL
 #endif
+
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_create", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_create)(C2GO_MLIB_NAME(pthread_t) *,
+    const C2GO_MLIB_NAME(pthread_attr_t) *,
+    C2GO_MLIB_NAME(pthread_start_routine_t), void *managed);
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_join", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_join)(C2GO_MLIB_NAME(pthread_t), void *managed *);
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_exit", C2GO_GOABI0)
+void C2GO_MLIB_NAME(pthread_exit)(void *managed);
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_self", C2GO_GOABI0)
+C2GO_MLIB_NAME(pthread_t) C2GO_MLIB_NAME(pthread_self)(void);
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_detach", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_detach)(C2GO_MLIB_NAME(pthread_t));
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_equal", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_equal)(C2GO_MLIB_NAME(pthread_t),
+    C2GO_MLIB_NAME(pthread_t));
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_yield", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_yield)(void);
+
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_attr_init", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_attr_init)(C2GO_MLIB_NAME(pthread_attr_t) *);
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_attr_destroy", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_attr_destroy)(C2GO_MLIB_NAME(pthread_attr_t) *);
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_attr_setdetachstate", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_attr_setdetachstate)(
+    C2GO_MLIB_NAME(pthread_attr_t) *, int);
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_attr_setstacksize", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_attr_setstacksize)(
+    C2GO_MLIB_NAME(pthread_attr_t) *, size_t);
+
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_key_create", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_key_create)(C2GO_MLIB_NAME(pthread_key_t) *,
+    C2GO_MLIB_NAME(pthread_key_destructor_t));
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_key_delete", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_key_delete)(C2GO_MLIB_NAME(pthread_key_t));
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_getspecific", C2GO_GOABI0)
+void *managed C2GO_MLIB_NAME(pthread_getspecific)(
+    C2GO_MLIB_NAME(pthread_key_t));
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pthread_setspecific", C2GO_GOABI0)
+int C2GO_MLIB_NAME(pthread_setspecific)(C2GO_MLIB_NAME(pthread_key_t),
+    const void *managed);
 
 c2go_linkname("github.com/c2gohq/c2go_libc/mlib.PthreadMutexInit", C2GO_GOABI0)
 int C2GO_MLIB_NAME(pthread_mutex_init)(C2GO_MLIB_NAME(pthread_mutex_t) *,
