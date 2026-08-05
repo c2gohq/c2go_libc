@@ -1374,6 +1374,2628 @@ _LBB9_5:
 _Lfunc_end9:
 	FUNCDATA $0, gclocals·28c054076fcd39c5(SB)
 	FUNCDATA $1, gclocals·c00865b9d9e68705(SB)
+TEXT ·mlib_glob(SB), $4320-40
+	PCDATA $1, $-1
+	MOVD 4360(RSP), R10
+	MOVWU 4352(RSP), R13
+	ADD $4096, RSP, R11
+	MOVD $·mlib_ignore_glob_error(SB), R12
+	MOVD 4368(RSP), R8
+	CMP $0, R10
+	ADD $200, R11, R11
+	CSEL EQ, R12, R10, R10
+	MOVD R11, 4288(RSP)
+	MOVWU R13, R11
+	MOVD R10, 112(RSP)
+	MOVD ZR, R10
+	MOVD ZR, 4304(RSP)
+	MOVD ZR, 4296(RSP)
+	MOVD R8, 4312(RSP)
+	MOVD ZR, 4280(RSP)
+	MOVW R13, 120(RSP)
+	TBZ $3, R13, _LBB10_2
+	MOVD 16(R8), R10
+_LBB10_2:
+	MOVD 4344(RSP), R9
+	MOVW R11, 148(RSP)
+	MOVD R10, 128(RSP)
+	TBZ $5, R11, _LBB10_4
+	LDP 0(R8), (R10, R8)
+	MOVD R9, R0
+	MOVD R8, 4280(RSP)
+	MOVD R10, R8
+	JMP _LBB10_5
+_LBB10_4:
+	MOVD R10, 16(R8)
+	MOVD ZR, 0(R8)
+	STP (R9, R8), 168(RSP)
+	MOVD RSP, R9
+	MOVD ZR, 136(RSP)
+	MOVD ZR, 4280(RSP)
+	STP (R8, ZR), 8(R9)
+	PCDATA $1, $1
+	CALL ·mlib_glob_store_paths(SB)
+_Ltmp57:
+	MOVD 168(RSP), R0
+	MOVD 136(RSP), R8
+_LBB10_5:
+	MOVBU 0(R0), R9
+	MOVD R8, 136(RSP)
+	CBZW R9, _LBB10_14
+	MOVD RSP, R8
+	MOVD R0, 176(RSP)
+	MOVD R0, 8(R8)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·strlen(SB)
+_Ltmp58:
+	MOVD RSP, R8
+	MOVD 16(R8), R8
+	CMN $1, R8
+	BEQ _LBB10_50
+	ADD $1, R8, R10
+	MOVD RSP, R8
+	MOVD R10, 104(RSP)
+	STP (ZR, R10), 8(R8)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp59:
+	MOVD RSP, R8
+	MOVD 24(R8), R8
+	CBZ R8, _LBB10_50
+	MOVD 176(RSP), R9
+	MOVD 104(RSP), R10
+	MOVD RSP, R11
+	MOVD R8, 168(RSP)
+	STP (R9, R10), 16(R11)
+	MOVD R8, 8(R11)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
+_Ltmp60:
+	MOVD 168(RSP), R8
+	MOVWU 120(RSP), R11
+	MOVW $20480, R9
+	MOVB ZR, 184(RSP)
+	TSTW R9, R11
+	MOVD R8, R9
+	BEQ _LBB10_38
+	MOVBU 0(R9), R10
+	CMPW $126, R10
+	BNE _LBB10_38
+	ADD $1, R8, R8
+	MOVD RSP, R9
+	MOVW $47, R10
+	MOVW R10, 16(R9)
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·strchrnul(SB)
+_Ltmp61:
+	MOVD RSP, R8
+	MOVD 24(R8), R9
+	LDP 168(RSP), (R10, R8)
+	MOVBU 0(R9), R13
+	MOVD R9, R11
+	CBZW R13, _LBB10_12
+	MOVD R9, R12
+	WORD $0x3800159f
+	MOVD R12, R11
+_LBB10_12:
+	MOVBU 1(R10), R10
+	CBZW R10, _LBB10_53
+	MOVW $3, R9
+	MOVD R8, R0
+	MOVWU R9, R8
+	JMP _LBB10_15
+_LBB10_14:
+	MOVWU ZR, R8
+_LBB10_15:
+	MOVD 4296(RSP), R9
+	MOVWU R8, R12
+	CBZ R9, _LBB10_20
+	MOVD R9, R10
+	MOVD ZR, R9
+_LBB10_17:
+	SUBS $1, R9, R8
+	BEQ _LBB10_50
+	MOVD 0(R10), R11
+	MOVD R8, R9
+	MOVD R11, R10
+	CBNZ R11, _LBB10_17
+	SUB R8, ZR, R8
+	JMP _LBB10_23
+_LBB10_20:
+	MOVWU 148(RSP), R8
+	TBNZ $4, R8, _LBB10_45
+	CBZW R12, _LBB10_52
+	MOVD ZR, R8
+_LBB10_23:
+	LDP 128(RSP), (R10, R9)
+	CMN R10, R9
+	BHS _LBB10_50
+	ADD R10, R9, R13
+	MOVD R8, R11
+	MOVW $1, R8
+	CMN $1, R13
+	BEQ _LBB10_51
+	MOVD $-2, R9
+	SUB R13, R9, R9
+	CMP R9, R11
+	BHI _LBB10_51
+	ADD R11, R13, R8
+	ADD $1, R8, R8
+	WORD $0xd37dfd09
+	CBNZ R9, _LBB10_50
+	WORD $0xd37df108
+	MOVD RSP, R9
+	MOVD ·_typeinfo_mlib_glob_slot(SB), R10
+	STP (R13, R11), 88(RSP)
+	MOVW R12, 104(RSP)
+	STP (R10, R8), 8(R9)
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp62:
+	MOVD RSP, R8
+	MOVD 24(R8), R8
+	MOVD R8, 80(RSP)
+	CBZ R8, _LBB10_50
+	MOVWU 148(RSP), R8
+	TBZ $5, R8, _LBB10_36
+	MOVD 4280(RSP), R8
+	CBZ R8, _LBB10_36
+	MOVD 88(RSP), R9
+	CBZ R9, _LBB10_36
+	MOVD 88(RSP), R9
+	MOVD ZR, R10
+	CMP $4, R9
+	BLO _LBB10_66
+	MOVD 80(RSP), R9
+	SUB R8, R9, R9
+	CMP $32, R9
+	BLO _LBB10_66
+	LDP 80(RSP), (R10, R14)
+	ADD $16, R8, R12
+	AND $18446744073709551612, R14, R9
+	ADD $16, R10, R11
+	MOVD R9, R10
+	MOVD R9, R13
+_LBB10_34:
+	WORD $0xad7f8580
+	SUBS $4, R13, R13
+	ADD $32, R12, R12
+	WORD $0xad3f8560
+	ADD $32, R11, R11
+	BNE _LBB10_34
+	CMP R9, R14
+	BNE _LBB10_66
+_LBB10_36:
+	LDP 80(RSP), (R9, R8)
+	WORD $0x8b080d28
+	MOVD R8, 72(RSP)
+	MOVD 96(RSP), R8
+	CBZ R8, _LBB10_59
+	MOVD 4296(RSP), R10
+	MOVD 72(RSP), R8
+	MOVD 96(RSP), R9
+	JMP _LBB10_43
+_LBB10_38:
+	MOVD R9, R8
+	MOVD ZR, R10
+_LBB10_39:
+	ADD $4096, RSP, R12
+	MOVD R8, 160(RSP)
+	MOVD RSP, R8
+	ADD $192, R12, R12
+	MOVWU 148(RSP), R13
+	MOVD R9, 32(R8)
+	MOVD R12, 56(R8)
+	MOVD 112(RSP), R12
+	ADD $184, RSP, R9
+	MOVW R13, 40(R8)
+	MOVD R12, 48(R8)
+	MOVW ZR, 24(R8)
+	STP (R9, R10), 8(R8)
+	PCDATA $1, $4
+	CALL ·mlib_do_glob(SB)
+_Ltmp63:
+	CMPW $1, R0
+	BEQ _LBB10_50
+	MOVD 176(RSP), R8
+	MOVWU R0, R1
+	MOVD R8, R0
+	MOVWU R1, R8
+	JMP _LBB10_15
+_LBB10_41:
+	MOVD R10, 0(R13)
+_LBB10_42:
+	MOVD 0(R12), R0
+	SUBS $1, R9, R9
+	ADD $8, R13, R8
+	MOVD R0, R10
+	BEQ _LBB10_59
+_LBB10_43:
+	MOVD R10, R12
+	MOVD $runtime·writeBarrier(SB), R10
+	MOVD R8, R13
+	MOVD runtime·writeBarrier(SB), R10
+	MOVWU 0(R10), R11
+	MOVD 8(R12), R10
+	CBZW R11, _LBB10_41
+	MOVD RSP, R8
+	STP (R13, R12), 120(RSP)
+	STP (R13, R10), 8(R8)
+	MOVD R9, 112(RSP)
+	CALL ·_c2go_writePtr(SB)
+	LDP 112(RSP), (R9, R13)
+	MOVD 128(RSP), R12
+	JMP _LBB10_42
+_LBB10_45:
+	MOVD RSP, R8
+	MOVW R12, 104(RSP)
+	MOVD R0, 176(RSP)
+	MOVD R0, 8(R8)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·strlen(SB)
+_Ltmp64:
+	MOVD RSP, R8
+	MOVD 16(R8), R8
+	CMN $3, R8
+	BHI _LBB10_50
+	MOVD R8, 120(RSP)
+	ADD $2, R8, R8
+	MOVD RSP, R9
+	STP (ZR, R8), 8(R9)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp65:
+	MOVD RSP, R8
+	MOVD 24(R8), R8
+	CBZ R8, _LBB10_50
+	MOVD R8, 168(RSP)
+	MOVD RSP, R8
+	MOVW $16, R9
+	MOVD ·_typeinfo_mlib_match(SB), R10
+	STP (R10, R9), 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp66:
+	MOVD RSP, R8
+	MOVD 24(R8), R8
+	CBZ R8, _LBB10_50
+	LDP 168(RSP), (R9, R10)
+	MOVD RSP, R11
+	STP (R8, R9), 152(RSP)
+	MOVD 120(RSP), R8
+	MOVD R9, 8(R11)
+	ADD $1, R8, R8
+	STP (R10, R8), 16(R11)
+	PCDATA $1, $5
+	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
+_Ltmp67:
+	MOVD $runtime·writeBarrier(SB), R12
+	LDP 152(RSP), (R11, R8)
+	MOVWU 0(R12), R10
+	ADD $8, R11, R9
+	CBZW R10, _LBB10_62
+	MOVD RSP, R10
+	MOVD R11, 120(RSP)
+	STP (R9, R8), 8(R10)
+	CALL ·_c2go_writePtr(SB)
+	MOVD $runtime·writeBarrier(SB), R12
+	MOVD 120(RSP), R11
+	JMP _LBB10_63
+_LBB10_50:
+	MOVW $1, R8
+_LBB10_51:
+	MOVW R8, 4376(RSP)
+	RET
+_LBB10_52:
+	MOVW $3, R8
+	JMP _LBB10_51
+_LBB10_53:
+	STP (R9, R11), 160(RSP)
+	MOVD RSP, R8
+	MOVD $_L_str<>(SB), R9
+	MOVW R13, 120(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc·Getenv(SB)
+_Ltmp68:
+	MOVD RSP, R8
+	MOVD 176(RSP), R0
+	MOVD 16(R8), R8
+	CBZ R8, _LBB10_58
+	MOVWU 120(RSP), R11
+	MOVD ZR, R9
+_LBB10_55:
+	WORD $0x3869690a
+	CBZW R10, _LBB10_61
+	ADD $1, R9, R9
+	CMP $4094, R9
+	BNE _LBB10_55
+	MOVBU 4094(R8), R9
+	CBZW R9, _LBB10_75
+_LBB10_58:
+	MOVW $3, R8
+	JMP _LBB10_15
+_LBB10_59:
+	LDP 72(RSP), (R9, R10)
+	MOVD 96(RSP), R8
+	WORD $0x8b080d28
+	MOVD $runtime·writeBarrier(SB), R9
+	MOVWU 0(R9), R9
+	CBZW R9, _LBB10_71
+	MOVD RSP, R9
+	MOVD R10, 128(RSP)
+	STP (R8, ZR), 8(R9)
+	CALL ·_c2go_writePtr(SB)
+	MOVD 128(RSP), R10
+	JMP _LBB10_72
+_LBB10_61:
+	MOVW R11, 120(RSP)
+	JMP _LBB10_76
+_LBB10_62:
+	MOVD R8, 0(R9)
+_LBB10_63:
+	MOVD 4288(RSP), R9
+	MOVWU 0(R12), R10
+	MOVD R11, R8
+	CBZW R10, _LBB10_65
+	MOVD RSP, R10
+	STP (R9, R8), 8(R10)
+	CALL ·_c2go_writePtr(SB)
+	MOVW $1, R8
+	MOVWU 104(RSP), R12
+	JMP _LBB10_23
+_LBB10_65:
+	MOVW $1, R10
+	MOVWU 104(RSP), R12
+	MOVD R8, 0(R9)
+	MOVWU R10, R8
+	JMP _LBB10_23
+_LBB10_66:
+	LDP 128(RSP), (R12, R11)
+	WORD $0xd37df149
+	ADD R9, R8, R8
+	ADD R12, R11, R11
+	SUB R10, R11, R10
+	MOVD 80(RSP), R11
+	ADD R9, R11, R11
+	MOVD R10, R9
+	MOVD R8, R10
+	MOVD R11, R8
+	JMP _LBB10_69
+_LBB10_67:
+	MOVD R10, 0(R9)
+_LBB10_68:
+	SUBS $1, R13, R0
+	ADD $8, R9, R8
+	MOVD R12, R10
+	MOVD R0, R9
+	BEQ _LBB10_36
+_LBB10_69:
+	MOVD R10, R12
+	MOVD $runtime·writeBarrier(SB), R10
+	MOVD R9, R13
+	MOVD runtime·writeBarrier(SB), R10
+	MOVD R8, R9
+	MOVWU 0(R10), R11
+	WORD $0xf840858a
+	CBZW R11, _LBB10_67
+	MOVD RSP, R8
+	STP (R9, R12), 120(RSP)
+	STP (R9, R10), 8(R8)
+	MOVD R13, 112(RSP)
+	CALL ·_c2go_writePtr(SB)
+	LDP 112(RSP), (R13, R9)
+	MOVD 128(RSP), R12
+	JMP _LBB10_68
+_LBB10_71:
+	MOVD ZR, 0(R8)
+_LBB10_72:
+	MOVD 4312(RSP), R8
+	MOVD RSP, R9
+	STP (R10, R8), 168(RSP)
+	STP (R8, R10), 8(R9)
+	PCDATA $1, $6
+	CALL ·mlib_glob_store_paths(SB)
+_Ltmp69:
+	LDP 168(RSP), (R8, R9)
+	MOVD 136(RSP), R10
+	MOVD 96(RSP), R11
+	ADD R10, R11, R10
+	MOVD R10, 0(R9)
+	MOVWU 148(RSP), R9
+	TBNZ $2, R9, _LBB10_74
+	MOVD 88(RSP), R9
+	WORD $0x8b090d08
+	MOVD RSP, R9
+	STP (R8, R11), 8(R9)
+	PCDATA $1, $7
+	CALL ·mlib_glob_sort(SB)
+_Ltmp70:
+_LBB10_74:
+	MOVWU 104(RSP), R8
+	JMP _LBB10_51
+_LBB10_75:
+	MOVW $4094, R9
+	MOVW R11, 120(RSP)
+_LBB10_76:
+	MOVD R9, R11
+	MOVD R9, 104(RSP)
+	MOVD RSP, R9
+	ADD $184, RSP, R10
+	MOVD R8, 152(RSP)
+	STP (R8, R11), 16(R9)
+	MOVD R10, 8(R9)
+	PCDATA $1, $5
+	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
+_Ltmp71:
+	LDP 160(RSP), (R8, R9)
+	ADD $184, RSP, R10
+	MOVD 104(RSP), R12
+	MOVWU 120(RSP), R11
+	WORD $0x382c694b
+	CBZW R11, _LBB10_78
+	ADD $1, R12, R10
+	ADD $184, RSP, R12
+	WORD $0x382a699f
+	JMP _LBB10_39
+_LBB10_78:
+	MOVD R12, R10
+	JMP _LBB10_39
+_Lfunc_end10:
+	FUNCDATA $0, gclocals·ef2b3a7139979790(SB)
+DATA gclocals·ef2b3a7139979790+0(SB)/4, $8
+DATA gclocals·ef2b3a7139979790+4(SB)/4, $5
+DATA gclocals·ef2b3a7139979790+8(SB)/1, $0x09
+DATA gclocals·ef2b3a7139979790+9(SB)/1, $0x09
+DATA gclocals·ef2b3a7139979790+10(SB)/1, $0x09
+DATA gclocals·ef2b3a7139979790+11(SB)/1, $0x09
+DATA gclocals·ef2b3a7139979790+12(SB)/1, $0x09
+DATA gclocals·ef2b3a7139979790+13(SB)/1, $0x09
+DATA gclocals·ef2b3a7139979790+14(SB)/1, $0x09
+DATA gclocals·ef2b3a7139979790+15(SB)/1, $0x09
+GLOBL gclocals·ef2b3a7139979790(SB), DUPOK|RODATA, $16
+
+	FUNCDATA $1, gclocals·cbf8da4a327a88ec(SB)
+DATA gclocals·cbf8da4a327a88ec+0(SB)/4, $8
+DATA gclocals·cbf8da4a327a88ec+4(SB)/4, $541
+DATA gclocals·cbf8da4a327a88ec+8(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+9(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+10(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+11(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+12(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+13(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+14(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+15(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+16(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+17(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+18(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+19(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+20(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+21(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+22(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+23(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+24(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+25(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+26(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+27(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+28(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+29(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+30(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+31(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+32(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+33(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+34(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+35(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+36(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+37(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+38(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+39(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+40(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+41(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+42(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+43(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+44(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+45(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+46(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+47(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+48(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+49(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+50(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+51(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+52(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+53(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+54(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+55(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+56(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+57(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+58(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+59(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+60(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+61(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+62(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+63(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+64(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+65(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+66(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+67(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+68(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+69(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+70(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+71(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+72(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+73(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+74(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+75(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+76(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+77(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+78(SB)/1, $0x60
+DATA gclocals·cbf8da4a327a88ec+79(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+80(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+81(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+82(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+83(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+84(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+85(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+86(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+87(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+88(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+89(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+90(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+91(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+92(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+93(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+94(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+95(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+96(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+97(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+98(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+99(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+100(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+101(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+102(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+103(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+104(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+105(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+106(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+107(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+108(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+109(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+110(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+111(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+112(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+113(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+114(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+115(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+116(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+117(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+118(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+119(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+120(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+121(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+122(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+123(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+124(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+125(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+126(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+127(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+128(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+129(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+130(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+131(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+132(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+133(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+134(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+135(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+136(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+137(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+138(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+139(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+140(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+141(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+142(SB)/1, $0x80
+DATA gclocals·cbf8da4a327a88ec+143(SB)/1, $0x0f
+DATA gclocals·cbf8da4a327a88ec+144(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+145(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+146(SB)/1, $0x40
+DATA gclocals·cbf8da4a327a88ec+147(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+148(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+149(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+150(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+151(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+152(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+153(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+154(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+155(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+156(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+157(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+158(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+159(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+160(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+161(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+162(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+163(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+164(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+165(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+166(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+167(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+168(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+169(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+170(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+171(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+172(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+173(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+174(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+175(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+176(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+177(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+178(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+179(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+180(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+181(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+182(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+183(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+184(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+185(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+186(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+187(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+188(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+189(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+190(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+191(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+192(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+193(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+194(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+195(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+196(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+197(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+198(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+199(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+200(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+201(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+202(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+203(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+204(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+205(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+206(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+207(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+208(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+209(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+210(SB)/1, $0x80
+DATA gclocals·cbf8da4a327a88ec+211(SB)/1, $0x0f
+DATA gclocals·cbf8da4a327a88ec+212(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+213(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+214(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+215(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+216(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+217(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+218(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+219(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+220(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+221(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+222(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+223(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+224(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+225(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+226(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+227(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+228(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+229(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+230(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+231(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+232(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+233(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+234(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+235(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+236(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+237(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+238(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+239(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+240(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+241(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+242(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+243(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+244(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+245(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+246(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+247(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+248(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+249(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+250(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+251(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+252(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+253(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+254(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+255(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+256(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+257(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+258(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+259(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+260(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+261(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+262(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+263(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+264(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+265(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+266(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+267(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+268(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+269(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+270(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+271(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+272(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+273(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+274(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+275(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+276(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+277(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+278(SB)/1, $0x80
+DATA gclocals·cbf8da4a327a88ec+279(SB)/1, $0x0e
+DATA gclocals·cbf8da4a327a88ec+280(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+281(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+282(SB)/1, $0x70
+DATA gclocals·cbf8da4a327a88ec+283(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+284(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+285(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+286(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+287(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+288(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+289(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+290(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+291(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+292(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+293(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+294(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+295(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+296(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+297(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+298(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+299(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+300(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+301(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+302(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+303(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+304(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+305(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+306(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+307(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+308(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+309(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+310(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+311(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+312(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+313(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+314(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+315(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+316(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+317(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+318(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+319(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+320(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+321(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+322(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+323(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+324(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+325(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+326(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+327(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+328(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+329(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+330(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+331(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+332(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+333(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+334(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+335(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+336(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+337(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+338(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+339(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+340(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+341(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+342(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+343(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+344(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+345(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+346(SB)/1, $0x80
+DATA gclocals·cbf8da4a327a88ec+347(SB)/1, $0x0f
+DATA gclocals·cbf8da4a327a88ec+348(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+349(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+350(SB)/1, $0x78
+DATA gclocals·cbf8da4a327a88ec+351(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+352(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+353(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+354(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+355(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+356(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+357(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+358(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+359(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+360(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+361(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+362(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+363(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+364(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+365(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+366(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+367(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+368(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+369(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+370(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+371(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+372(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+373(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+374(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+375(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+376(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+377(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+378(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+379(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+380(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+381(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+382(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+383(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+384(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+385(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+386(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+387(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+388(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+389(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+390(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+391(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+392(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+393(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+394(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+395(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+396(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+397(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+398(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+399(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+400(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+401(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+402(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+403(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+404(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+405(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+406(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+407(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+408(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+409(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+410(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+411(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+412(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+413(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+414(SB)/1, $0x80
+DATA gclocals·cbf8da4a327a88ec+415(SB)/1, $0x0f
+DATA gclocals·cbf8da4a327a88ec+416(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+417(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+418(SB)/1, $0x60
+DATA gclocals·cbf8da4a327a88ec+419(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+420(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+421(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+422(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+423(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+424(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+425(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+426(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+427(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+428(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+429(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+430(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+431(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+432(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+433(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+434(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+435(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+436(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+437(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+438(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+439(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+440(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+441(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+442(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+443(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+444(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+445(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+446(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+447(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+448(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+449(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+450(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+451(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+452(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+453(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+454(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+455(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+456(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+457(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+458(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+459(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+460(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+461(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+462(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+463(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+464(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+465(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+466(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+467(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+468(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+469(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+470(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+471(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+472(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+473(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+474(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+475(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+476(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+477(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+478(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+479(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+480(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+481(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+482(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+483(SB)/1, $0x06
+DATA gclocals·cbf8da4a327a88ec+484(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+485(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+486(SB)/1, $0x20
+DATA gclocals·cbf8da4a327a88ec+487(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+488(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+489(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+490(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+491(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+492(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+493(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+494(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+495(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+496(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+497(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+498(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+499(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+500(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+501(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+502(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+503(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+504(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+505(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+506(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+507(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+508(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+509(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+510(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+511(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+512(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+513(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+514(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+515(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+516(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+517(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+518(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+519(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+520(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+521(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+522(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+523(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+524(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+525(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+526(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+527(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+528(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+529(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+530(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+531(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+532(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+533(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+534(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+535(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+536(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+537(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+538(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+539(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+540(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+541(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+542(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+543(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+544(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+545(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+546(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+547(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+548(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+549(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+550(SB)/1, $0x00
+DATA gclocals·cbf8da4a327a88ec+551(SB)/1, $0x06
+GLOBL gclocals·cbf8da4a327a88ec(SB), DUPOK|RODATA, $552
+
+TEXT ·mlib_ignore_glob_error(SB), NOSPLIT|NOFRAME, $0-16
+	MOVWU ZR, R0
+	RET
+_Lfunc_end11:
+TEXT ·mlib_glob_store_paths(SB), $32-16
+	PCDATA $1, $-1
+	MOVD $runtime·writeBarrier(SB), R8
+	MOVWU 0(R8), R10
+	LDP 56(RSP), (R9, R8)
+	ADD $8, R9, R9
+	CBZW R10, _LBB12_2
+	MOVD RSP, R10
+	STP (R9, R8), 8(R10)
+	CALL ·_c2go_writePtr(SB)
+	JMP _LBB12_3
+_LBB12_2:
+	MOVD R8, 0(R9)
+_LBB12_3:
+	RET
+_Lfunc_end12:
+	FUNCDATA $0, gclocals·6bf7f2318a9406bf(SB)
+DATA gclocals·6bf7f2318a9406bf+0(SB)/4, $1
+DATA gclocals·6bf7f2318a9406bf+4(SB)/4, $2
+DATA gclocals·6bf7f2318a9406bf+8(SB)/1, $0x03
+GLOBL gclocals·6bf7f2318a9406bf(SB), DUPOK|RODATA, $9
+
+	FUNCDATA $1, gclocals·2c8d835d1806f483(SB)
+DATA gclocals·2c8d835d1806f483+0(SB)/4, $1
+DATA gclocals·2c8d835d1806f483+4(SB)/4, $5
+DATA gclocals·2c8d835d1806f483+8(SB)/1, $0x00
+GLOBL gclocals·2c8d835d1806f483(SB), DUPOK|RODATA, $9
+
+TEXT ·mlib_do_glob(SB), $384-56
+	PCDATA $1, $-1
+	MOVWU 440(RSP), R23
+	MOVWU 424(RSP), R11
+	MOVD 432(RSP), R10
+	ANDW $2, R23, R8
+	CMPW $0, R11
+	MOVBU 0(R10), R15
+	WORD $0x531e750d
+	MOVD ZR, 376(RSP)
+	EORW $8, R13, R13
+	CSELW EQ, R13, R11, R13
+	LDP 408(RSP), (R11, R0)
+	CMPW $0, R15
+	WORD $0x7a4419a4
+	ADD $1, R0, R16
+	CSELW NE, ZR, R13, R14
+	MOVD R11, R9
+	CMP $4095, R16
+	BHI _LBB13_5
+	MOVW $47, R12
+	MOVD R0, R16
+	MOVD R10, R15
+_LBB13_2:
+	MOVD R15, R13
+	MOVBU 0(R15), R15
+	CMPW $47, R15
+	BNE _LBB13_7
+	ADD $1, R16, R15
+	ADD $1, R13, R13
+	WORD $0x3830692c
+	CMP $4095, R15
+	MOVD R15, R16
+	MOVD R13, R15
+	BNE _LBB13_2
+	MOVBU 0(R13), R12
+	MOVW $4095, R15
+	MOVWU R15, R0
+	MOVWU R12, R15
+	MOVD R13, R12
+	JMP _LBB13_6
+_LBB13_5:
+	MOVD R10, R12
+_LBB13_6:
+	MOVD R0, R13
+	JMP _LBB13_8
+_LBB13_7:
+	MOVD R13, R12
+	MOVD R16, R13
+_LBB13_8:
+	MOVD ZR, R0
+	CMPW $62, R15
+	MOVWU R23, R24
+	BLE _LBB13_14
+	CMPW $63, R15
+	BEQ _LBB13_16
+	CMPW $91, R15
+	BEQ _LBB13_17
+	CMPW $92, R15
+	BNE _LBB13_25
+	TBZ $6, R24, _LBB13_23
+	MOVD ZR, R0
+	MOVW $92, R15
+	JMP _LBB13_28
+_LBB13_14:
+	CBZW R15, _LBB13_19
+	CMPW $42, R15
+	BNE _LBB13_25
+_LBB13_16:
+	MOVWU R14, R11
+	JMP _LBB13_31
+_LBB13_17:
+	ADD $1, R13, R15
+	MOVW $1, R14
+	MOVD ZR, R2
+	CMP $4096, R15
+	MOVWU R14, R16
+	BHS _LBB13_22
+	MOVW $91, R15
+	MOVWU R14, R1
+	MOVD R2, R14
+	MOVWU ZR, R17
+	MOVD R2, R0
+	JMP _LBB13_130
+_LBB13_19:
+	MOVWU R15, R11
+	MOVWU R14, R1
+	MOVWU R11, R0
+	MOVD R0, R14
+_LBB13_20:
+	ADD R14, R13, R13
+_LBB13_21:
+	MOVWU R1, R11
+	JMP _LBB13_31
+_LBB13_22:
+	MOVWU R16, R0
+	MOVWU R16, R1
+	MOVD R2, R14
+	JMP _LBB13_131
+_LBB13_23:
+	MOVBU 1(R12), R14
+	CBZW R14, _LBB13_125
+	MOVW $1, R15
+	MOVWU R15, R0
+	MOVWU R14, R15
+_LBB13_25:
+	CMPW $47, R15
+	BNE _LBB13_28
+	ADD $1, R13, R13
+	CMP $4095, R13
+	BHI _LBB13_125
+	ADD R0, R12, R12
+	MOVD $-1, R14
+	MOVD ZR, R1
+	WORD $0x3840158f
+	MOVD R14, R0
+	MOVWU ZR, R17
+	MOVWU ZR, R16
+	JMP _LBB13_130
+_LBB13_28:
+	ADD $1, R13, R14
+	MOVWU ZR, R17
+	CMP $4096, R14
+	BHS _LBB13_30
+	MOVW $1, R14
+	MOVWU R17, R16
+	MOVWU R14, R2
+	MOVD ZR, R14
+	MOVD R2, R1
+	JMP _LBB13_130
+_LBB13_30:
+	MOVWU R17, R0
+	JMP _LBB13_126
+_LBB13_31:
+	MOVD R13, R15
+	MOVD R12, R13
+	MOVW R23, 124(RSP)
+	WORD $0x382f693f
+	MOVBU 0(R12), R14
+	LDP 448(RSP), (R16, R12)
+	MOVD R15, 144(RSP)
+	MOVD R16, 128(RSP)
+	CBZW R14, _LBB13_38
+	STP (R9, R12), 224(RSP)
+	MOVD RSP, R8
+	MOVW $47, R9
+	MOVW R24, 108(RSP)
+	STP (R10, R13), 240(RSP)
+	MOVW R9, 16(R8)
+	MOVD R13, 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·strchr(SB)
+_Ltmp72:
+	MOVD RSP, R8
+	MOVW $47, R11
+	MOVD 24(R8), R10
+	MOVD 224(RSP), R8
+	MOVD R10, R9
+	MOVD R10, R12
+	CBZ R10, _LBB13_45
+	MOVWU 124(RSP), R13
+	MOVD 144(RSP), R16
+	TBNZ $6, R13, _LBB13_46
+	MOVD 248(RSP), R11
+	MOVD ZR, R13
+	MOVD R9, R14
+_LBB13_35:
+	CMP R11, R14
+	MOVD R13, R12
+	BLS _LBB13_37
+	WORD $0x385ffdcd
+	ADD $1, R12, R15
+	CMPW $92, R13
+	MOVD R15, R13
+	BEQ _LBB13_35
+_LBB13_37:
+	WORD $0xf240018b
+	MOVW $47, R12
+	MOVW $92, R13
+	CSELW NE, R13, R12, R12
+	SUB R11, R10, R10
+	MOVWU R12, R11
+	MOVD R10, R12
+	JMP _LBB13_46
+_LBB13_38:
+	MOVW R8, 160(RSP)
+	CBZW R8, _LBB13_43
+	CMPW $10, R11
+	BEQ _LBB13_41
+	CBNZW R11, _LBB13_44
+_LBB13_41:
+	MOVD RSP, R8
+	ADD $256, RSP, R10
+	MOVW R11, 152(RSP)
+	STP (R12, R9), 240(RSP)
+	STP (R9, R10), 8(R8)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·stat(SB)
+_Ltmp73:
+	MOVD RSP, R8
+	LDP 240(RSP), (R12, R9)
+	MOVWU 24(R8), R8
+	CBZW R8, _LBB13_106
+	MOVD 144(RSP), R15
+	MOVWU 152(RSP), R11
+_LBB13_43:
+	CBZW R11, _LBB13_102
+_LBB13_44:
+	MOVWU R11, R8
+	CMN $3, R15
+	BHI _LBB13_118
+	JMP _LBB13_109
+_LBB13_45:
+	MOVD 144(RSP), R16
+_LBB13_46:
+	CMP $0, R16
+	MOVD $_L_str_1<>(SB), R13
+	STP (R12, R9), 192(RSP)
+	CSEL EQ, R13, R8, R9
+	CSEL EQ, ZR, R8, R8
+	STP (R8, R9), 208(RSP)
+	MOVD RSP, R8
+	ADD $376, RSP, R10
+	MOVD ZR, 376(RSP)
+	MOVW R11, 104(RSP)
+	STP (R9, R10), 8(R8)
+	PCDATA $1, $3
+	CALL ·DirOpen(SB)
+_Ltmp74:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	CBZW R8, _LBB13_49
+	MOVW R8, 160(RSP)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp75:
+	MOVD RSP, R8
+	MOVWU 160(RSP), R9
+_LBB13_48:
+	MOVD 8(R8), R8
+	MOVW R9, 0(R8)
+	MOVD ZR, R8
+	JMP _LBB13_51
+_LBB13_49:
+	MOVD RSP, R8
+	MOVW $288, R9
+	MOVD ·_typeinfo_mlib_DIR(SB), R10
+	STP (R10, R9), 8(R8)
+	PCDATA $1, $5
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp76:
+	MOVD RSP, R8
+	MOVD 24(R8), R9
+	MOVD 376(RSP), R8
+	CBZ R9, _LBB13_105
+	MOVD R8, 0(R9)
+	MOVD R9, R8
+_LBB13_51:
+	MOVD R8, 216(RSP)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp77:
+	MOVD RSP, R8
+	MOVD 8(R8), R9
+	MOVD 216(RSP), R8
+	MOVWU 0(R9), R10
+	CBZ R8, _LBB13_88
+	MOVW R10, 88(RSP)
+	MOVD R8, 208(RSP)
+	PCDATA $1, $7
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp78:
+	MOVD RSP, R8
+	MOVD 208(RSP), R10
+	MOVD RSP, R9
+	MOVD 8(R8), R8
+	MOVW ZR, 0(R8)
+	WORD $0xf8408548
+	STP (R10, R8), 176(RSP)
+	STP (R8, R10), 8(R9)
+	PCDATA $1, $8
+	CALL ·DirRead(SB)
+_Ltmp79:
+	MOVD RSP, R8
+	LDP 216(RSP), (R4, R0)
+	LDP 200(RSP), (R5, R6)
+	MOVWU 24(R8), R8
+	LDP 232(RSP), (R1, R2)
+	MOVD 192(RSP), R9
+	CMPW $0, R8
+	MOVD 248(RSP), R3
+	BLE _LBB13_89
+	MOVD 176(RSP), R8
+	MOVD R9, R20
+	CBZ R8, _LBB13_92
+_LBB13_54:
+	MOVWU 124(RSP), R12
+	MOVW $4, R11
+	MOVW $4096, R10
+	MOVD R5, R14
+	MOVD R3, R16
+	MOVD R2, R15
+	TSTW $128, R12
+	WORD $0x53057d8c
+	MOVD R8, R17
+	CSELW EQ, R11, ZR, R9
+	MOVD 144(RSP), R11
+	CSETW EQ, R13
+	CMP $0, R20
+	SUB R11, R10, R10
+	WORD $0x1a9f15ab
+	MOVD R1, R13
+	STP (R10, R20), 152(RSP)
+	ANDW $2, R12, R10
+	MOVD R0, R12
+	ORRW R10, R9, R9
+	ORRW $4, R10, R10
+	MOVW R11, 92(RSP)
+	MOVW R9, 136(RSP)
+	MOVD R4, R9
+	MOVD R20, R11
+	MOVW R10, 84(RSP)
+	MOVD R6, R10
+	JMP _LBB13_57
+_LBB13_55:
+	MOVD 176(RSP), R8
+_LBB13_56:
+	MOVD R8, R19
+	MOVD R5, R11
+	MOVD 160(RSP), R20
+	MOVD R4, R13
+	MOVD R0, R12
+	MOVD R6, R15
+	MOVD R7, R16
+	MOVD R1, R9
+	MOVD R3, R14
+	MOVD R2, R10
+	MOVD R2, R6
+	MOVD R3, R5
+	MOVD R11, R8
+	MOVD R19, R17
+	CBZ R19, _LBB13_93
+_LBB13_57:
+	MOVD R17, R8
+	CBZ R20, _LBB13_63
+	MOVBU 18(R8), R17
+	CMPW $10, R17
+	BHI _LBB13_68
+	MOVW $1, R19
+	WORD $0x1ad12271
+	MOVW $1041, R19
+	TSTW R19, R17
+	BEQ _LBB13_68
+	STP (R8, R16), 240(RSP)
+	ADD $19, R8, R8
+	STP (R9, R14), 208(RSP)
+	MOVD RSP, R9
+	STP (R13, R15), 224(RSP)
+	STP (R10, R11), 192(RSP)
+	MOVD R12, 184(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $9
+	CALL github·com∕c2gohq∕c2go_libc·strlen(SB)
+_Ltmp80:
+	MOVD RSP, R8
+	MOVD 200(RSP), R11
+	MOVD 248(RSP), R14
+	MOVD 16(R8), R9
+	MOVD 152(RSP), R8
+	CMP R8, R9
+	BHS _LBB13_66
+	MOVD R9, 112(RSP)
+	MOVD 240(RSP), R9
+	MOVWU 136(RSP), R10
+	MOVB ZR, 0(R11)
+	ADD $19, R9, R8
+	MOVD R9, 176(RSP)
+	MOVD RSP, R9
+	MOVW R10, 24(R9)
+	STP (R14, R8), 8(R9)
+	PCDATA $1, $8
+	CALL github·com∕c2gohq∕c2go_libc·fnmatch(SB)
+_Ltmp81:
+	MOVD RSP, R8
+	MOVD 184(RSP), R0
+	MOVD 248(RSP), R12
+	MOVWU 32(R8), R8
+	CBZW R8, _LBB13_69
+	LDP 208(RSP), (R8, R10)
+	MOVD R12, R14
+	LDP 192(RSP), (R9, R11)
+	MOVD R0, R12
+	LDP 224(RSP), (R13, R15)
+	JMP _LBB13_81
+_LBB13_63:
+	STP (R8, R16), 240(RSP)
+	ADD $19, R8, R8
+	STP (R9, R14), 208(RSP)
+	MOVD RSP, R9
+	STP (R13, R15), 224(RSP)
+	STP (R10, R11), 192(RSP)
+	MOVD R12, 184(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $9
+	CALL github·com∕c2gohq∕c2go_libc·strlen(SB)
+_Ltmp82:
+	MOVD RSP, R8
+	MOVD 248(RSP), R14
+	MOVD 16(R8), R9
+	MOVD 152(RSP), R8
+	CMP R8, R9
+	BHS _LBB13_67
+	MOVD 240(RSP), R8
+	MOVWU 136(RSP), R10
+	MOVD R9, 112(RSP)
+	ADD $19, R8, R9
+	MOVD R8, 176(RSP)
+	MOVD RSP, R8
+	MOVW R10, 24(R8)
+	STP (R14, R9), 8(R8)
+	PCDATA $1, $8
+	CALL github·com∕c2gohq∕c2go_libc·fnmatch(SB)
+_Ltmp83:
+	MOVD RSP, R8
+	MOVWU 32(R8), R9
+	MOVD 184(RSP), R8
+	CBZW R9, _LBB13_71
+	LDP 224(RSP), (R13, R0)
+	MOVD R8, R12
+	LDP 208(RSP), (R8, R10)
+	MOVD 248(RSP), R14
+	LDP 192(RSP), (R9, R11)
+	MOVD R0, R15
+	JMP _LBB13_81
+_LBB13_66:
+	LDP 184(RSP), (R0, R10)
+	LDP 208(RSP), (R8, R12)
+	LDP 224(RSP), (R13, R15)
+	MOVD R10, R9
+	MOVD R12, R10
+	JMP _LBB13_80
+_LBB13_67:
+	LDP 184(RSP), (R0, R10)
+	MOVD 200(RSP), R12
+	LDP 208(RSP), (R8, R11)
+	LDP 224(RSP), (R13, R15)
+	MOVD R10, R9
+	JMP _LBB13_79
+_LBB13_68:
+	MOVD R9, R8
+	MOVD R10, R9
+	MOVD R14, R10
+	MOVD R16, R14
+	JMP _LBB13_81
+_LBB13_69:
+	MOVD 240(RSP), R8
+	MOVWU 92(RSP), R9
+	ADD $19, R8, R8
+	TBZ $0, R9, _LBB13_72
+_LBB13_70:
+	MOVD 144(RSP), R11
+	JMP _LBB13_76
+_LBB13_71:
+	MOVD 240(RSP), R9
+	MOVD 112(RSP), R10
+	MOVD 144(RSP), R11
+	MOVD R10, 96(RSP)
+	ADD $19, R9, R9
+	ADD $1, R10, R10
+	ADD R11, R8, R8
+	MOVD RSP, R11
+	STP (R9, R10), 16(R11)
+	MOVD R8, 8(R11)
+	PCDATA $1, $8
+	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
+_Ltmp84:
+	LDP 176(RSP), (R9, R8)
+	MOVD $_L_str_2<>(SB), R13
+	MOVD 224(RSP), R1
+	MOVD 96(RSP), R11
+	MOVD ZR, R12
+	MOVD R1, R10
+	JMP _LBB13_77
+_LBB13_72:
+	MOVBU 0(R8), R9
+	MOVD 144(RSP), R11
+	CMPW $46, R9
+	BNE _LBB13_76
+	MOVD 176(RSP), R9
+	MOVBU 20(R9), R10
+	CBZW R10, _LBB13_85
+	CMPW $46, R10
+	BNE _LBB13_76
+	MOVBU 21(R9), R9
+	CBZW R9, _LBB13_85
+_LBB13_76:
+	MOVD 112(RSP), R9
+	ADD R11, R0, R10
+	MOVD RSP, R11
+	MOVD R8, 168(RSP)
+	MOVD R9, 112(RSP)
+	ADD $1, R9, R9
+	STP (R8, R9), 16(R11)
+	MOVD R10, 8(R11)
+	PCDATA $1, $10
+	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
+_Ltmp85:
+	LDP 216(RSP), (R0, R11)
+	MOVD 200(RSP), R13
+	LDP 176(RSP), (R9, R10)
+	MOVWU 104(RSP), R8
+	MOVB R8, 0(R13)
+	MOVD R0, R12
+	MOVD R10, R8
+	MOVD R11, R10
+	MOVD 112(RSP), R11
+_LBB13_77:
+	MOVBU 18(R9), R9
+	MOVD R12, 176(RSP)
+	MOVD 144(RSP), R12
+	MOVD R13, 240(RSP)
+	ADD R12, R11, R11
+	MOVD RSP, R12
+	MOVD R10, 56(R12)
+	MOVD 128(RSP), R10
+	MOVD R13, 32(R12)
+	MOVD R10, 48(R12)
+	MOVWU 108(RSP), R10
+	MOVW R9, 24(R12)
+	MOVW R10, 40(R12)
+	STP (R8, R11), 8(R12)
+	PCDATA $1, $8
+	CALL ·mlib_do_glob(SB)
+_Ltmp86:
+	MOVD 192(RSP), R9
+	CBNZW R0, _LBB13_119
+	LDP 208(RSP), (R10, R11)
+	MOVD 184(RSP), R0
+	LDP 224(RSP), (R13, R15)
+	MOVD 200(RSP), R12
+	MOVD 248(RSP), R14
+	MOVD R10, R8
+_LBB13_79:
+	MOVD R11, R10
+	MOVD R12, R11
+_LBB13_80:
+	MOVD R0, R12
+_LBB13_81:
+	STP (R15, R14), 240(RSP)
+	STP (R10, R13), 224(RSP)
+	STP (R11, R8), 208(RSP)
+	STP (R12, R9), 192(RSP)
+	PCDATA $1, $7
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp87:
+	MOVD RSP, R8
+	MOVD 200(RSP), R10
+	MOVD RSP, R9
+	MOVD 8(R8), R8
+	MOVW ZR, 0(R8)
+	WORD $0xf8408548
+	STP (R10, R8), 176(RSP)
+	STP (R8, R10), 8(R9)
+	PCDATA $1, $8
+	CALL ·DirRead(SB)
+_Ltmp88:
+	MOVD RSP, R8
+	LDP 192(RSP), (R0, R2)
+	LDP 216(RSP), (R1, R3)
+	MOVWU 24(R8), R8
+	LDP 232(RSP), (R4, R6)
+	MOVD 208(RSP), R5
+	CMPW $0, R8
+	MOVD 248(RSP), R7
+	BGT _LBB13_55
+	TBNZ $31, R8, _LBB13_84
+	MOVD ZR, R8
+	JMP _LBB13_56
+_LBB13_84:
+	SUBW R8, ZR, R8
+	MOVW R8, 112(RSP)
+	PCDATA $1, $7
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp89:
+	MOVD RSP, R8
+	LDP 192(RSP), (R0, R2)
+	LDP 216(RSP), (R1, R3)
+	MOVD 8(R8), R8
+	LDP 232(RSP), (R4, R6)
+	MOVWU 112(RSP), R17
+	MOVD 208(RSP), R5
+	MOVD 248(RSP), R7
+	MOVW R17, 0(R8)
+	MOVD ZR, R8
+	JMP _LBB13_56
+_LBB13_85:
+	MOVWU 84(RSP), R10
+	MOVD RSP, R9
+	STP (R12, R8), 8(R9)
+	MOVW R10, 24(R9)
+	PCDATA $1, $8
+	CALL github·com∕c2gohq∕c2go_libc·fnmatch(SB)
+_Ltmp90:
+	MOVD RSP, R8
+	MOVD 184(RSP), R12
+	MOVWU 32(R8), R8
+	CBZW R8, _LBB13_87
+	LDP 208(RSP), (R10, R0)
+	MOVD 248(RSP), R14
+	LDP 192(RSP), (R9, R1)
+	LDP 224(RSP), (R13, R15)
+	MOVD R10, R8
+	MOVD R0, R10
+	MOVD R1, R11
+	JMP _LBB13_81
+_LBB13_87:
+	MOVD 240(RSP), R8
+	MOVD R12, R0
+	ADD $19, R8, R8
+	JMP _LBB13_70
+_LBB13_88:
+	MOVD 224(RSP), R8
+	MOVD RSP, R9
+	MOVW R10, 16(R9)
+	MOVD R8, 8(R9)
+	MOVD 128(RSP), R8
+	PCDATA $1, $11
+	CALL (R8)
+_Ltmp91:
+	MOVWU 124(RSP), R9
+	ANDW $1, R9, R9
+	ORRW R9, R0, R9
+	CMPW $0, R9
+	MOVW $2, R9
+	CSELW EQ, ZR, R9, R0
+	JMP _LBB13_126
+_LBB13_89:
+	TBZ $31, R8, _LBB13_91
+	SUBW R8, ZR, R8
+	MOVW R8, 160(RSP)
+	PCDATA $1, $7
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp92:
+	MOVD RSP, R8
+	LDP 232(RSP), (R14, R2)
+	LDP 216(RSP), (R4, R0)
+	MOVD 8(R8), R8
+	LDP 200(RSP), (R5, R6)
+	MOVWU 160(RSP), R17
+	MOVD R14, R1
+	MOVD 192(RSP), R9
+	MOVD 248(RSP), R3
+	MOVW R17, 0(R8)
+_LBB13_91:
+	MOVD ZR, R8
+	MOVD R9, R20
+	CBNZ R8, _LBB13_54
+_LBB13_92:
+	MOVD R20, R8
+_LBB13_93:
+	STP (R8, R5), 240(RSP)
+	STP (R0, R6), 224(RSP)
+	PCDATA $1, $12
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp93:
+	MOVD RSP, R8
+	LDP 232(RSP), (R10, R9)
+	MOVD 8(R8), R8
+	MOVWU 0(R8), R8
+	MOVW R8, 160(RSP)
+	MOVD R10, R8
+	CBZ R9, _LBB13_95
+	MOVWU 104(RSP), R10
+	MOVB R10, 0(R9)
+_LBB13_95:
+	MOVD 0(R8), R10
+	MOVD ZR, 0(R8)
+	MOVD RSP, R8
+	MOVD R10, 248(RSP)
+	MOVD R10, 8(R8)
+	PCDATA $1, $13
+	CALL ·DirClose(SB)
+_Ltmp94:
+	MOVD RSP, R8
+	MOVWU 16(R8), R8
+	TBNZ $31, R8, _LBB13_97
+	MOVWU 160(RSP), R8
+	CBNZW R8, _LBB13_98
+	JMP _LBB13_100
+_LBB13_97:
+	SUBW R8, ZR, R8
+	MOVW R8, 152(RSP)
+	PCDATA $1, $11
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp95:
+	MOVD RSP, R8
+	MOVWU 152(RSP), R9
+	MOVD 8(R8), R8
+	MOVW R9, 0(R8)
+	MOVWU 160(RSP), R8
+	CBZW R8, _LBB13_100
+_LBB13_98:
+	PCDATA $1, $11
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp96:
+	MOVD RSP, R8
+	MOVD RSP, R10
+	MOVD 224(RSP), R9
+	MOVD 8(R8), R8
+	MOVWU 0(R8), R8
+	MOVD R9, 8(R10)
+	MOVW R8, 16(R10)
+	MOVD 128(RSP), R8
+	PCDATA $1, $11
+	CALL (R8)
+_Ltmp97:
+	MOVWU 124(RSP), R8
+	ANDW $1, R8, R8
+	ORRW R8, R0, R8
+	CBZW R8, _LBB13_100
+_LBB13_99:
+	MOVW $2, R0
+	JMP _LBB13_126
+_LBB13_100:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp98:
+	MOVD RSP, R8
+	MOVWU 88(RSP), R9
+	MOVWU ZR, R0
+_LBB13_101:
+	MOVD 8(R8), R8
+	MOVW R9, 0(R8)
+	JMP _LBB13_126
+_LBB13_102:
+	MOVD RSP, R8
+	ADD $256, RSP, R10
+	STP (R12, R9), 240(RSP)
+	STP (R9, R10), 8(R8)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·lstat(SB)
+_Ltmp99:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	CBZW R8, _LBB13_107
+	PCDATA $1, $14
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp100:
+	MOVD RSP, R8
+	MOVD 8(R8), R8
+	MOVWU 0(R8), R8
+	CMPW $2, R8
+	BEQ _LBB13_125
+	PCDATA $1, $14
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp101:
+	MOVD RSP, R8
+	MOVD RSP, R10
+	MOVD 248(RSP), R9
+	MOVD 8(R8), R8
+	MOVWU 0(R8), R8
+	MOVD R9, 8(R10)
+	MOVW R8, 16(R10)
+	MOVD 128(RSP), R8
+	PCDATA $1, $14
+	CALL (R8)
+_Ltmp102:
+	MOVWU 124(RSP), R8
+	ANDW $1, R8, R8
+	ORRW R8, R0, R8
+	CBNZW R8, _LBB13_99
+	JMP _LBB13_125
+_LBB13_105:
+	MOVD RSP, R9
+	MOVD R8, 216(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $6
+	CALL ·DirClose(SB)
+_Ltmp103:
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp104:
+	MOVD RSP, R8
+	MOVW $12, R9
+	JMP _LBB13_48
+_LBB13_106:
+	MOVWU 280(RSP), R8
+	MOVW $4, R10
+	ANDW $61440, R8, R8
+	CMPW $16384, R8
+	MOVW $8, R8
+	CSELW EQ, R10, R8, R8
+	JMP _LBB13_108
+_LBB13_107:
+	LDP 240(RSP), (R12, R9)
+_LBB13_108:
+	MOVD 144(RSP), R15
+	CMN $3, R15
+	BHI _LBB13_118
+_LBB13_109:
+	MOVW R8, 152(RSP)
+	ADD $2, R15, R8
+	STP (R12, R9), 240(RSP)
+	MOVD RSP, R9
+	STP (ZR, R8), 8(R9)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp105:
+	MOVD RSP, R8
+	MOVD 24(R8), R8
+	CBZ R8, _LBB13_118
+	MOVD R8, 232(RSP)
+	MOVD RSP, R8
+	MOVW $16, R9
+	MOVD ·_typeinfo_mlib_match(SB), R10
+	STP (R10, R9), 8(R8)
+	PCDATA $1, $15
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp106:
+	MOVD RSP, R8
+	MOVD 24(R8), R8
+	CBZ R8, _LBB13_118
+	MOVD 232(RSP), R9
+	MOVD 144(RSP), R11
+	MOVD 248(RSP), R10
+	STP (R8, R9), 216(RSP)
+	ADD $1, R11, R12
+	MOVD RSP, R8
+	ADD $1, R11, R11
+	STP (R10, R12), 16(R8)
+	MOVD R11, 136(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $12
+	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
+_Ltmp107:
+	LDP 216(RSP), (R14, R8)
+	MOVD 144(RSP), R13
+	MOVD 240(RSP), R9
+	MOVWU 160(RSP), R10
+	CBZW R10, _LBB13_116
+	CBZ R13, _LBB13_116
+	MOVWU 152(RSP), R10
+	CMPW $4, R10
+	BNE _LBB13_116
+	MOVD 248(RSP), R10
+	ADD R13, R10, R10
+	MOVBU -1(R10), R10
+	CMPW $47, R10
+	BEQ _LBB13_116
+	MOVD 136(RSP), R11
+	MOVW $47, R12
+	WORD $0x382d690c
+	WORD $0x382b691f
+_LBB13_116:
+	MOVD $runtime·writeBarrier(SB), R13
+	ADD $8, R14, R11
+	MOVD R9, R12
+	MOVD runtime·writeBarrier(SB), R13
+	MOVD R11, R9
+	MOVD R12, 160(RSP)
+	MOVWU 0(R13), R10
+	CBZW R10, _LBB13_121
+	MOVD RSP, R10
+	MOVD R14, 152(RSP)
+	STP (R9, R8), 8(R10)
+	CALL ·_c2go_writePtr(SB)
+	MOVD $runtime·writeBarrier(SB), R13
+	LDP 152(RSP), (R14, R12)
+	JMP _LBB13_122
+_LBB13_118:
+	MOVW $1, R0
+	JMP _LBB13_126
+_LBB13_119:
+	MOVD 0(R9), R10
+	MOVD RSP, R8
+	MOVD ZR, 0(R9)
+	MOVW R0, 160(RSP)
+	MOVD R10, 248(RSP)
+	MOVD R10, 8(R8)
+	PCDATA $1, $14
+	CALL ·DirClose(SB)
+_Ltmp108:
+	MOVD RSP, R8
+	MOVWU 16(R8), R8
+	TBNZ $31, R8, _LBB13_129
+	MOVWU 160(RSP), R0
+	JMP _LBB13_126
+_LBB13_121:
+	MOVD R8, 0(R9)
+_LBB13_122:
+	MOVD 0(R12), R8
+	MOVWU 0(R13), R9
+	MOVD R14, 152(RSP)
+	CBZW R9, _LBB13_127
+	MOVD RSP, R9
+	STP (R8, R14), 8(R9)
+	CALL ·_c2go_writePtr(SB)
+	MOVD $runtime·writeBarrier(SB), R13
+	MOVD 160(RSP), R12
+	MOVWU 0(R13), R8
+	CBZW R8, _LBB13_128
+_LBB13_124:
+	MOVD 152(RSP), R9
+	MOVD RSP, R8
+	STP (R12, R9), 8(R8)
+	CALL ·_c2go_writePtr(SB)
+_LBB13_125:
+	MOVWU ZR, R0
+_LBB13_126:
+	RET
+_LBB13_127:
+	MOVD R14, 0(R8)
+	MOVWU 0(R13), R8
+	CBNZW R8, _LBB13_124
+_LBB13_128:
+	MOVD 152(RSP), R8
+	MOVWU ZR, R0
+	MOVD R8, 0(R12)
+	JMP _LBB13_126
+_LBB13_129:
+	SUBW R8, ZR, R8
+	MOVW R8, 152(RSP)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp109:
+	MOVD RSP, R8
+	MOVWU 160(RSP), R0
+	MOVWU 152(RSP), R9
+	JMP _LBB13_101
+_LBB13_130:
+	MOVD R1, R3
+	ADD R13, R11, R19
+	MOVD R0, R2
+	WORD $0x382e6a6f
+	MOVWU R16, R0
+	MOVWU R17, R1
+	MOVD R3, R14
+_LBB13_131:
+	ADD $1, R14, R16
+	MOVWU R0, R3
+	MOVWU R1, R17
+	ADD R16, R13, R15
+	MOVD R16, R0
+	MOVWU R3, R16
+	MOVD R2, R19
+	MOVW $1, R3
+_LBB13_132:
+	ADD $1, R19, R22
+	MOVWU ZR, R1
+	ADD R22, R12, R21
+	MOVBU 0(R21), R20
+	CMPW $42, R20
+	BEQ _LBB13_21
+	CMPW $63, R20
+	BEQ _LBB13_21
+	CBZW R16, _LBB13_136
+	CMPW $93, R20
+	BEQ _LBB13_175
+_LBB13_136:
+	CMPW $91, R20
+	BEQ _LBB13_141
+	CMPW $92, R20
+	BEQ _LBB13_139
+	MOVWU R20, R19
+	CBNZW R20, _LBB13_147
+	JMP _LBB13_178
+_LBB13_139:
+	TBZ $6, R24, _LBB13_143
+	MOVW $92, R1
+	MOVD R22, R2
+	JMP _LBB13_148
+_LBB13_141:
+	MOVD R22, R2
+_LBB13_142:
+	MOVWU R17, R1
+	CMP $4096, R15
+	MOVWU R3, R16
+	MOVWU R3, R17
+	MOVD R2, R19
+	BHS _LBB13_132
+	JMP _LBB13_177
+_LBB13_143:
+	CBZW R16, _LBB13_145
+	MOVBU 1(R21), R20
+	CMPW $93, R20
+	BEQ _LBB13_175
+_LBB13_145:
+	ADD $2, R19, R19
+	WORD $0x38736994
+	CBZW R20, _LBB13_125
+	MOVD R19, R22
+	MOVWU R20, R19
+_LBB13_147:
+	CMPW $47, R19
+	MOVD R22, R2
+	MOVWU R19, R1
+	BEQ _LBB13_176
+_LBB13_148:
+	CMP $4096, R15
+	BLO _LBB13_169
+	CBZW R16, _LBB13_125
+	MOVD R2, R17
+	JMP _LBB13_153
+_LBB13_151:
+	MOVW $92, R17
+	MOVD R1, R2
+	MOVWU R17, R1
+_LBB13_152:
+	CMP $4096, R15
+	MOVD R2, R17
+	BLO _LBB13_168
+_LBB13_153:
+	ADD $1, R17, R1
+	MOVWU ZR, R2
+	ADD R1, R12, R21
+	MOVBU 0(R21), R19
+	CMPW $90, R19
+	MOVWU R19, R20
+	BLE _LBB13_159
+	CMPW $92, R19
+	BNE _LBB13_162
+	TBNZ $6, R24, _LBB13_151
+	MOVBU 1(R21), R19
+	CMPW $93, R19
+	BEQ _LBB13_175
+	ADD $2, R17, R17
+	WORD $0x38716993
+	CBZW R19, _LBB13_125
+	MOVWU R19, R20
+	MOVD R17, R1
+	JMP _LBB13_164
+_LBB13_159:
+	CBZW R20, _LBB13_174
+	CMPW $42, R19
+	BEQ _LBB13_167
+	CMPW $63, R19
+	BNE _LBB13_164
+	JMP _LBB13_167
+_LBB13_162:
+	CMPW $91, R19
+	BEQ _LBB13_166
+	CMPW $93, R19
+	BEQ _LBB13_167
+_LBB13_164:
+	CMPW $47, R20
+	BEQ _LBB13_171
+	MOVD R1, R2
+	MOVWU R20, R1
+	JMP _LBB13_152
+_LBB13_166:
+	MOVW $1, R17
+	MOVD R1, R2
+	JMP _LBB13_142
+_LBB13_167:
+	MOVWU R2, R11
+	JMP _LBB13_31
+_LBB13_168:
+	MOVW $1, R17
+_LBB13_169:
+	MOVWU R1, R15
+_LBB13_170:
+	MOVD R0, R1
+	MOVD R2, R0
+	JMP _LBB13_130
+_LBB13_171:
+	MOVW $1, R17
+	MOVD R1, R15
+	CBNZW R17, _LBB13_125
+_LBB13_172:
+	ADD R13, R14, R13
+	ADD $1, R13, R13
+	CMP $4095, R13
+	BHI _LBB13_125
+	ADD R15, R12, R12
+	MOVD $-1, R14
+	MOVWU ZR, R16
+	WORD $0x3840158f
+	MOVD R14, R0
+	MOVD ZR, R1
+	JMP _LBB13_130
+_LBB13_174:
+	MOVWU R20, R0
+	JMP _LBB13_126
+_LBB13_175:
+	MOVWU ZR, R11
+	JMP _LBB13_31
+_LBB13_176:
+	MOVD R22, R15
+	CBZW R17, _LBB13_172
+	JMP _LBB13_125
+_LBB13_177:
+	MOVW $91, R15
+	MOVWU R3, R16
+	MOVWU R1, R17
+	JMP _LBB13_170
+_LBB13_178:
+	MOVD R21, R12
+	MOVWU ZR, R1
+	MOVWU ZR, R0
+	CBNZW R17, _LBB13_126
+	JMP _LBB13_20
+_Lfunc_end13:
+	FUNCDATA $0, gclocals·efe3c9ce42c5c692(SB)
+DATA gclocals·efe3c9ce42c5c692+0(SB)/4, $16
+DATA gclocals·efe3c9ce42c5c692+4(SB)/4, $7
+DATA gclocals·efe3c9ce42c5c692+8(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+9(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+10(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+11(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+12(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+13(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+14(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+15(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+16(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+17(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+18(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+19(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+20(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+21(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+22(SB)/1, $0x49
+DATA gclocals·efe3c9ce42c5c692+23(SB)/1, $0x49
+GLOBL gclocals·efe3c9ce42c5c692(SB), DUPOK|RODATA, $24
+
+	FUNCDATA $1, gclocals·d664e044693c9e60(SB)
+DATA gclocals·d664e044693c9e60+0(SB)/4, $16
+DATA gclocals·d664e044693c9e60+4(SB)/4, $49
+DATA gclocals·d664e044693c9e60+8(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+9(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+10(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+11(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+12(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+13(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+14(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+15(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+16(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+17(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+18(SB)/1, $0xf0
+DATA gclocals·d664e044693c9e60+19(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+20(SB)/1, $0x80
+DATA gclocals·d664e044693c9e60+21(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+22(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+23(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+24(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+25(SB)/1, $0xc0
+DATA gclocals·d664e044693c9e60+26(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+27(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+28(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+29(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+30(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+31(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+32(SB)/1, $0xff
+DATA gclocals·d664e044693c9e60+33(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+34(SB)/1, $0x80
+DATA gclocals·d664e044693c9e60+35(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+36(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+37(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+38(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+39(SB)/1, $0xf3
+DATA gclocals·d664e044693c9e60+40(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+41(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+42(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+43(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+44(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+45(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+46(SB)/1, $0xf3
+DATA gclocals·d664e044693c9e60+47(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+48(SB)/1, $0x80
+DATA gclocals·d664e044693c9e60+49(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+50(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+51(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+52(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+53(SB)/1, $0xfb
+DATA gclocals·d664e044693c9e60+54(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+55(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+56(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+57(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+58(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+59(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+60(SB)/1, $0xff
+DATA gclocals·d664e044693c9e60+61(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+62(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+63(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+64(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+65(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+66(SB)/1, $0xc0
+DATA gclocals·d664e044693c9e60+67(SB)/1, $0xff
+DATA gclocals·d664e044693c9e60+68(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+69(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+70(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+71(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+72(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+73(SB)/1, $0x80
+DATA gclocals·d664e044693c9e60+74(SB)/1, $0xff
+DATA gclocals·d664e044693c9e60+75(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+76(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+77(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+78(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+79(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+80(SB)/1, $0xe0
+DATA gclocals·d664e044693c9e60+81(SB)/1, $0xff
+DATA gclocals·d664e044693c9e60+82(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+83(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+84(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+85(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+86(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+87(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+88(SB)/1, $0x10
+DATA gclocals·d664e044693c9e60+89(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+90(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+91(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+92(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+93(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+94(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+95(SB)/1, $0xf8
+DATA gclocals·d664e044693c9e60+96(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+97(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+98(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+99(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+100(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+101(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+102(SB)/1, $0x90
+DATA gclocals·d664e044693c9e60+103(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+104(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+105(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+106(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+107(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+108(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+109(SB)/1, $0x80
+DATA gclocals·d664e044693c9e60+110(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+111(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+112(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+113(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+114(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+115(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+116(SB)/1, $0xe0
+DATA gclocals·d664e044693c9e60+117(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+118(SB)/1, $0x00
+DATA gclocals·d664e044693c9e60+119(SB)/1, $0x00
+GLOBL gclocals·d664e044693c9e60(SB), DUPOK|RODATA, $120
+
+TEXT ·mlib_glob_sort(SB), $128-16
+	PCDATA $1, $-1
+	MOVD 160(RSP), R11
+	SUBS $2, R11, R8
+	BLO _LBB14_43
+	WORD $0xd341fd09
+	MOVD 152(RSP), R0
+	MOVW $1, R10
+	MOVD R11, 40(RSP)
+	SUB $1, R11, R11
+	ADD $1, R9, R8
+	STP (R11, R9), 64(RSP)
+	MOVD R10, 56(RSP)
+	JMP _LBB14_4
+_LBB14_2:
+	MOVD R0, R9
+_LBB14_3:
+	MOVD R9, R10
+	MOVD R9, R0
+	MOVD 48(RSP), R9
+	MOVD R9, R8
+	CBZ R9, _LBB14_16
+_LBB14_4:
+	MOVD 72(RSP), R9
+	SUB $1, R8, R8
+	MOVD R8, 48(RSP)
+	CMP R9, R8
+	BHI _LBB14_2
+	MOVD R8, R9
+	MOVD R0, R8
+	MOVD R9, R10
+	JMP _LBB14_8
+_LBB14_6:
+	MOVD RSP, R8
+	STP (R11, R12), 8(R8)
+	CALL ·_c2go_writePtr(SB)
+_LBB14_7:
+	LDP 72(RSP), (R8, R9)
+	MOVD 104(RSP), R10
+	CMP R8, R10
+	MOVD R9, R8
+	BHI _LBB14_3
+_LBB14_8:
+	LDP 56(RSP), (R11, R9)
+	WORD $0xb37ff94b
+	CMP R9, R11
+	MOVD R11, R9
+	BHS _LBB14_10
+	MOVD R10, 104(RSP)
+	WORD $0xd37ff94a
+	WORD $0xf8697909
+	MOVD R11, 88(RSP)
+	ADD $2, R10, R10
+	MOVD R10, 96(RSP)
+	WORD $0xf86a790a
+	MOVD R8, 112(RSP)
+	MOVD RSP, R8
+	STP (R9, R10), 120(RSP)
+	STP (R9, R10), 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
+_Ltmp110:
+	MOVD RSP, R8
+	LDP 104(RSP), (R10, R9)
+	MOVWU 24(R8), R8
+	CMPW $0, R8
+	LDP 88(RSP), (R11, R8)
+	CSEL MI, R8, R11, R0
+	MOVD R9, R8
+	MOVD R0, R9
+_LBB14_10:
+	WORD $0xd37df14a
+	WORD $0xd37df12b
+	STP (R10, R9), 96(RSP)
+	WORD $0xf86a6909
+	WORD $0xf86b690a
+	MOVD R8, 112(RSP)
+	MOVD RSP, R8
+	MOVD R11, 88(RSP)
+	STP (R9, R10), 120(RSP)
+	STP (R9, R10), 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
+_Ltmp111:
+	MOVD RSP, R9
+	MOVD 112(RSP), R8
+	MOVWU 24(R9), R9
+	MOVD R8, R0
+	TBZ $31, R9, _LBB14_2
+	LDP 88(RSP), (R10, R9)
+	MOVD R0, 80(RSP)
+	ADD R9, R8, R9
+	ADD R10, R8, R11
+	MOVD R9, R8
+	MOVD $runtime·writeBarrier(SB), R9
+	MOVD 0(R8), R12
+	MOVWU 0(R9), R10
+	MOVD 0(R11), R9
+	CBZW R10, _LBB14_13
+	MOVD RSP, R10
+	STP (R12, R11), 88(RSP)
+	STP (R8, R9), 8(R10)
+	CALL ·_c2go_writePtr(SB)
+	LDP 88(RSP), (R12, R11)
+	JMP _LBB14_14
+_LBB14_13:
+	MOVD R9, 0(R8)
+_LBB14_14:
+	MOVD $runtime·writeBarrier(SB), R8
+	MOVWU 0(R8), R8
+	CBNZW R8, _LBB14_6
+	MOVD R12, 0(R11)
+	JMP _LBB14_7
+_LBB14_16:
+	MOVD 64(RSP), R8
+	WORD $0x8b080d4c
+	MOVD $runtime·writeBarrier(SB), R8
+	MOVD 0(R10), R11
+	MOVD 0(R12), R9
+	MOVWU 0(R8), R8
+	STP (R9, R10), 96(RSP)
+	CBZW R8, _LBB14_18
+	MOVD RSP, R8
+	STP (R12, R11), 80(RSP)
+	STP (R10, R9), 8(R8)
+	CALL ·_c2go_writePtr(SB)
+	LDP 80(RSP), (R12, R11)
+	JMP _LBB14_19
+_LBB14_18:
+	MOVD R9, 0(R10)
+_LBB14_19:
+	MOVD $runtime·writeBarrier(SB), R8
+	MOVWU 0(R8), R9
+	MOVD R12, R8
+	CBZW R9, _LBB14_21
+	MOVD RSP, R9
+	STP (R8, R11), 8(R9)
+	CALL ·_c2go_writePtr(SB)
+	JMP _LBB14_22
+_LBB14_21:
+	MOVD R11, 0(R8)
+_LBB14_22:
+	MOVD 40(RSP), R9
+	SUBS $2, R9, R8
+	BEQ _LBB14_43
+	MOVW $1, R10
+	SUB $3, R9, R9
+	MOVD R8, R1
+	MOVWU R10, R8
+	MOVD R8, 48(RSP)
+	MOVD R9, R8
+	MOVD R1, R9
+	LDP 96(RSP), (R1, R0)
+	JMP _LBB14_26
+_LBB14_24:
+	MOVD R11, 0(R8)
+_LBB14_25:
+	MOVD 64(RSP), R8
+	LDP 96(RSP), (R0, R1)
+	SUB $1, R8, R10
+	SUB $2, R8, R8
+	MOVD R10, R9
+	CBZ R10, _LBB14_43
+_LBB14_26:
+	WORD $0xd341fd08
+	STP (R8, R9), 56(RSP)
+	MOVD R0, R8
+	MOVD R1, R0
+	MOVD ZR, R9
+	JMP _LBB14_29
+_LBB14_27:
+	MOVD R0, 0(R12)
+_LBB14_28:
+	LDP 80(RSP), (R11, R9)
+	MOVD 56(RSP), R8
+	MOVD 96(RSP), R10
+	CMP R8, R9
+	MOVD R10, R8
+	BHI _LBB14_38
+_LBB14_29:
+	MOVD 48(RSP), R12
+	MOVD R9, R11
+	MOVD R11, 104(RSP)
+	WORD $0xb37ff92c
+	MOVD 64(RSP), R9
+	CMP R9, R12
+	MOVD R12, R10
+	BHS _LBB14_31
+	WORD $0xd37ff969
+	WORD $0xf86a790a
+	MOVD R12, 88(RSP)
+	ADD $2, R9, R9
+	MOVD R9, 96(RSP)
+	WORD $0xf8697909
+	MOVD R8, 112(RSP)
+	MOVD RSP, R8
+	STP (R10, R9), 120(RSP)
+	STP (R10, R9), 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
+_Ltmp112:
+	MOVD RSP, R8
+	LDP 104(RSP), (R10, R9)
+	MOVWU 24(R8), R8
+	CMPW $0, R8
+	LDP 88(RSP), (R11, R8)
+	WORD $0xf86a792a
+	CSEL MI, R8, R11, R0
+	MOVD R9, R8
+	MOVD R10, R9
+	MOVD R0, R10
+	JMP _LBB14_32
+_LBB14_31:
+	MOVD R0, R9
+_LBB14_32:
+	MOVD R10, 88(RSP)
+	WORD $0xd37df14a
+	MOVD R10, 80(RSP)
+	WORD $0xf86a690a
+	MOVD R8, 112(RSP)
+	MOVD RSP, R8
+	STP (R9, R10), 120(RSP)
+	STP (R9, R10), 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
+_Ltmp113:
+	MOVD RSP, R8
+	MOVD 112(RSP), R11
+	MOVWU 24(R8), R8
+	MOVD R11, R10
+	MOVD R11, 96(RSP)
+	TBZ $31, R8, _LBB14_38
+	MOVD 80(RSP), R8
+	MOVD 104(RSP), R9
+	MOVD R11, 80(RSP)
+	ADD R8, R11, R12
+	MOVD $runtime·writeBarrier(SB), R8
+	WORD $0x8b090d6a
+	MOVD runtime·writeBarrier(SB), R8
+	MOVD 0(R12), R9
+	MOVD 0(R10), R0
+	MOVWU 0(R8), R11
+	MOVD R10, R8
+	MOVD R0, 104(RSP)
+	CBZW R11, _LBB14_35
+	MOVD RSP, R10
+	MOVD R12, 72(RSP)
+	STP (R8, R9), 8(R10)
+	CALL ·_c2go_writePtr(SB)
+	MOVD 72(RSP), R12
+	MOVD 104(RSP), R0
+	JMP _LBB14_36
+_LBB14_35:
+	MOVD R9, 0(R8)
+_LBB14_36:
+	MOVD $runtime·writeBarrier(SB), R8
+	MOVWU 0(R8), R8
+	CBZW R8, _LBB14_27
+	MOVD RSP, R8
+	STP (R12, R0), 8(R8)
+	CALL ·_c2go_writePtr(SB)
+	MOVD 104(RSP), R0
+	JMP _LBB14_28
+_LBB14_38:
+	MOVD 64(RSP), R8
+	WORD $0x8b080d6c
+	MOVD $runtime·writeBarrier(SB), R8
+	MOVD 0(R10), R11
+	MOVD 0(R12), R9
+	MOVWU 0(R8), R8
+	MOVD R9, 104(RSP)
+	CBZW R8, _LBB14_40
+	MOVD RSP, R8
+	STP (R12, R11), 80(RSP)
+	STP (R10, R9), 8(R8)
+	CALL ·_c2go_writePtr(SB)
+	LDP 80(RSP), (R12, R11)
+	JMP _LBB14_41
+_LBB14_40:
+	MOVD R9, 0(R10)
+_LBB14_41:
+	MOVD $runtime·writeBarrier(SB), R8
+	MOVWU 0(R8), R9
+	MOVD R12, R8
+	CBZW R9, _LBB14_24
+	MOVD RSP, R9
+	STP (R8, R11), 8(R9)
+	CALL ·_c2go_writePtr(SB)
+	JMP _LBB14_25
+_LBB14_43:
+	RET
+_Lfunc_end14:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·eb52a438f0d9a5a9(SB)
+DATA gclocals·eb52a438f0d9a5a9+0(SB)/4, $2
+DATA gclocals·eb52a438f0d9a5a9+4(SB)/4, $17
+DATA gclocals·eb52a438f0d9a5a9+8(SB)/1, $0x00
+DATA gclocals·eb52a438f0d9a5a9+9(SB)/1, $0x00
+DATA gclocals·eb52a438f0d9a5a9+10(SB)/1, $0x00
+DATA gclocals·eb52a438f0d9a5a9+11(SB)/1, $0x00
+DATA gclocals·eb52a438f0d9a5a9+12(SB)/1, $0xc0
+DATA gclocals·eb52a438f0d9a5a9+13(SB)/1, $0x01
+GLOBL gclocals·eb52a438f0d9a5a9(SB), DUPOK|RODATA, $14
+
+TEXT ·mlib_globfree(SB), $48-8
+	PCDATA $1, $-1
+	MOVD 72(RSP), R8
+	MOVD RSP, R9
+	STP (ZR, R8), 40(RSP)
+	STP (R8, ZR), 8(R9)
+	PCDATA $1, $1
+	CALL ·mlib_glob_store_paths(SB)
+_Ltmp114:
+	LDP 40(RSP), (R9, R8)
+	MOVD R9, 0(R8)
+	RET
+_Lfunc_end15:
+	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
+	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
 TEXT ·mlib_scandir(SB), $208-40
 	PCDATA $1, $-1
 	LDP 232(RSP), (R8, R9)
@@ -1382,7 +4004,7 @@ TEXT ·mlib_scandir(SB), $208-40
 	STP (R9, R8), 184(RSP)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp57:
+_Ltmp115:
 	MOVD RSP, R8
 	LDP 184(RSP), (R9, R10)
 	MOVD 8(R8), R8
@@ -1396,42 +4018,42 @@ _Ltmp57:
 	STP (R10, R9), 8(R8)
 	PCDATA $1, $1
 	CALL ·DirOpen(SB)
-_Ltmp58:
+_Ltmp116:
 	MOVD RSP, R8
 	MOVWU 24(R8), R8
-	CBZW R8, _LBB10_3
+	CBZW R8, _LBB16_3
 	MOVW R8, 128(RSP)
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp59:
+_Ltmp117:
 	MOVD RSP, R8
 	MOVWU 128(RSP), R9
-_LBB10_2:
+_LBB16_2:
 	MOVD 8(R8), R8
 	MOVW R9, 0(R8)
 	MOVD ZR, R8
-	CBNZ R8, _LBB10_5
-	JMP _LBB10_63
-_LBB10_3:
+	CBNZ R8, _LBB16_5
+	JMP _LBB16_63
+_LBB16_3:
 	MOVD RSP, R8
 	MOVW $288, R9
 	MOVD ·_typeinfo_mlib_DIR(SB), R10
 	STP (R10, R9), 8(R8)
 	PCDATA $1, $3
 	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
-_Ltmp60:
+_Ltmp118:
 	MOVD RSP, R8
 	MOVD 24(R8), R9
 	MOVD 208(RSP), R8
-	CBZ R9, _LBB10_38
+	CBZ R9, _LBB16_38
 	MOVD R8, 0(R9)
 	MOVD R9, R8
-	CBZ R8, _LBB10_63
-_LBB10_5:
+	CBZ R8, _LBB16_63
+_LBB16_5:
 	MOVD R8, 192(RSP)
 	PCDATA $1, $4
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp61:
+_Ltmp119:
 	MOVD RSP, R8
 	MOVD 192(RSP), R10
 	MOVD RSP, R9
@@ -1442,17 +4064,17 @@ _Ltmp61:
 	STP (R8, R10), 8(R9)
 	PCDATA $1, $5
 	CALL ·DirRead(SB)
-_Ltmp62:
+_Ltmp120:
 	MOVD RSP, R8
 	LDP 184(RSP), (R1, R0)
 	MOVWU 24(R8), R9
 	CMPW $0, R9
 	MOVD R0, R8
-	BLE _LBB10_36
+	BLE _LBB16_36
 	MOVD 168(RSP), R11
 	MOVD R8, R9
-	CBZ R11, _LBB10_40
-_LBB10_7:
+	CBZ R11, _LBB16_40
+_LBB16_7:
 	MOVD 248(RSP), R8
 	MOVW $1, R10
 	MOVW $280, R12
@@ -1469,10 +4091,10 @@ _LBB10_7:
 	MOVWU R12, R8
 	MOVD R8, 88(RSP)
 	MOVD R0, R8
-	JMP _LBB10_10
-_LBB10_8:
+	JMP _LBB16_10
+_LBB16_8:
 	MOVD 144(RSP), R8
-_LBB10_9:
+_LBB16_9:
 	MOVD R3, R9
 	MOVD R0, R16
 	MOVD R3, R0
@@ -1484,8 +4106,8 @@ _LBB10_9:
 	MOVD R17, R11
 	MOVD R16, R12
 	MOVD R3, R14
-	CBZ R17, _LBB10_41
-_LBB10_10:
+	CBZ R17, _LBB16_41
+_LBB16_10:
 	MOVD R15, R12
 	MOVD R9, R15
 	MOVD 104(RSP), R9
@@ -1496,7 +4118,7 @@ _LBB10_10:
 	MOVD R8, R14
 	MOVD R16, 128(RSP)
 	MOVD R17, 112(RSP)
-	CBZ R9, _LBB10_13
+	CBZ R9, _LBB16_13
 	MOVD RSP, R8
 	MOVD R19, 120(RSP)
 	STP (R15, R11), 184(RSP)
@@ -1505,36 +4127,36 @@ _LBB10_10:
 	MOVD R11, 8(R8)
 	PCDATA $1, $6
 	CALL (R9)
-_Ltmp63:
+_Ltmp121:
 	LDP 152(RSP), (R9, R3)
 	MOVD 168(RSP), R1
 	MOVD 184(RSP), R2
-	CBZW R0, _LBB10_31
+	CBZW R0, _LBB16_31
 	MOVD 192(RSP), R10
 	LDP 120(RSP), (R19, R16)
 	MOVD 176(RSP), R14
 	MOVD R3, R8
 	MOVD R9, R12
 	MOVD R10, R9
-	JMP _LBB10_14
-_LBB10_13:
+	JMP _LBB16_14
+_LBB16_13:
 	MOVD R11, R9
 	MOVD R11, R10
 	MOVD R17, R8
 	MOVD R15, R2
 	MOVD R13, R1
-_LBB10_14:
+_LBB16_14:
 	MOVD 96(RSP), R11
 	MOVD R1, R0
 	MOVD R2, R1
 	CMP R11, R16
 	MOVD R8, R11
-	BEQ _LBB10_44
+	BEQ _LBB16_44
 	CMP R19, R16
-	BNE _LBB10_28
-	TBNZ $63, R16, _LBB10_46
+	BNE _LBB16_28
+	TBNZ $63, R16, _LBB16_46
 	WORD $0xd37cfe08
-	CBNZ R8, _LBB10_46
+	CBNZ R8, _LBB16_46
 	MOVD 80(RSP), R8
 	STP (R10, R9), 184(RSP)
 	MOVD RSP, R9
@@ -1548,60 +4170,60 @@ _LBB10_14:
 	STP (R8, R10), 8(R9)
 	PCDATA $1, $7
 	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
-_Ltmp64:
+_Ltmp122:
 	MOVD RSP, R8
 	MOVD 152(RSP), R12
 	MOVD 24(R8), R10
 	MOVD R12, R9
-	CBZ R10, _LBB10_50
+	CBZ R10, _LBB16_50
 	LDP 120(RSP), (R8, R17)
 	MOVD 192(RSP), R4
 	LDP 160(RSP), (R0, R1)
 	LDP 176(RSP), (R2, R3)
-	CBZ R17, _LBB10_27
+	CBZ R17, _LBB16_27
 	MOVD R10, R11
 	MOVD ZR, R5
 	CMP $4, R17
-	BLO _LBB10_25
+	BLO _LBB16_25
 	MOVD 112(RSP), R13
 	SUB R13, R10, R13
 	CMP $32, R13
-	BLO _LBB10_25
+	BLO _LBB16_25
 	AND $1152921504606846972, R17, R13
 	ADD $16, R10, R14
 	ADD $16, R12, R15
 	MOVD R13, R12
 	MOVD R13, R16
-_LBB10_23:
+_LBB16_23:
 	WORD $0xad7f85e0
 	SUBS $4, R16, R16
 	ADD $32, R15, R15
 	WORD $0xad3f85c0
 	ADD $32, R14, R14
-	BNE _LBB10_23
+	BNE _LBB16_23
 	CMP R13, R17
 	MOVD R12, R5
-	BEQ _LBB10_27
-_LBB10_25:
+	BEQ _LBB16_27
+_LBB16_25:
 	MOVD R5, R12
-_LBB10_26:
+_LBB16_26:
 	ADD $1, R12, R13
 	WORD $0xf86c792e
 	CMP R13, R17
 	WORD $0xf82c796e
 	MOVD R13, R12
-	BNE _LBB10_26
-_LBB10_27:
+	BNE _LBB16_26
+_LBB16_27:
 	MOVD R10, R9
-	JMP _LBB10_29
-_LBB10_28:
+	JMP _LBB16_29
+_LBB16_28:
 	MOVD R9, R4
 	MOVD R10, R3
 	MOVD R14, R2
 	MOVD R12, R9
 	MOVD R11, R10
 	MOVD R19, R8
-_LBB10_29:
+_LBB16_29:
 	STP (R10, R0), 152(RSP)
 	MOVD 88(RSP), R10
 	MOVD R8, 120(RSP)
@@ -1612,10 +4234,10 @@ _LBB10_29:
 	STP (ZR, R10), 8(R8)
 	PCDATA $1, $7
 	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
-_Ltmp65:
+_Ltmp123:
 	MOVD RSP, R8
 	MOVD 24(R8), R8
-	CBZ R8, _LBB10_48
+	CBZ R8, _LBB16_48
 	MOVD 192(RSP), R9
 	MOVD RSP, R10
 	MOVW $280, R11
@@ -1624,24 +4246,24 @@ _Ltmp65:
 	MOVD R8, 8(R10)
 	PCDATA $1, $8
 	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
-_Ltmp66:
+_Ltmp124:
 	LDP 128(RSP), (R14, R13)
 	MOVD 120(RSP), R0
 	LDP 144(RSP), (R9, R3)
 	LDP 160(RSP), (R1, R8)
 	ADD $1, R14, R2
 	WORD $0xf82e786d
-	JMP _LBB10_32
-_LBB10_31:
+	JMP _LBB16_32
+_LBB16_31:
 	MOVD R2, R8
 	LDP 120(RSP), (R0, R2)
-_LBB10_32:
+_LBB16_32:
 	STP (R1, R8), 184(RSP)
 	STP (R9, R3), 160(RSP)
 	STP (R0, R2), 120(RSP)
 	PCDATA $1, $9
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp67:
+_Ltmp125:
 	MOVD RSP, R8
 	MOVD 192(RSP), R10
 	MOVD RSP, R9
@@ -1652,23 +4274,23 @@ _Ltmp67:
 	STP (R8, R10), 8(R9)
 	PCDATA $1, $7
 	CALL ·DirRead(SB)
-_Ltmp68:
+_Ltmp126:
 	MOVD RSP, R8
 	LDP 160(RSP), (R2, R0)
 	MOVWU 24(R8), R8
 	LDP 176(RSP), (R4, R1)
 	MOVD 192(RSP), R3
 	CMPW $0, R8
-	BGT _LBB10_8
-	TBNZ $31, R8, _LBB10_35
+	BGT _LBB16_8
+	TBNZ $31, R8, _LBB16_35
 	MOVD ZR, R8
-	JMP _LBB10_9
-_LBB10_35:
+	JMP _LBB16_9
+_LBB16_35:
 	SUBW R8, ZR, R8
 	MOVW R8, 112(RSP)
 	PCDATA $1, $9
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp69:
+_Ltmp127:
 	MOVD RSP, R8
 	LDP 160(RSP), (R2, R0)
 	MOVD 8(R8), R8
@@ -1677,33 +4299,33 @@ _Ltmp69:
 	MOVD 192(RSP), R3
 	MOVW R14, 0(R8)
 	MOVD ZR, R8
-	JMP _LBB10_9
-_LBB10_36:
-	TBNZ $31, R9, _LBB10_39
+	JMP _LBB16_9
+_LBB16_36:
+	TBNZ $31, R9, _LBB16_39
 	MOVD R8, R9
 	MOVD ZR, R11
-	CBNZ R11, _LBB10_7
-	JMP _LBB10_40
-_LBB10_38:
+	CBNZ R11, _LBB16_7
+	JMP _LBB16_40
+_LBB16_38:
 	MOVD RSP, R9
 	MOVD R8, 192(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $4
 	CALL ·DirClose(SB)
-_Ltmp70:
+_Ltmp128:
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp71:
+_Ltmp129:
 	MOVD RSP, R8
 	MOVW $12, R9
-	JMP _LBB10_2
-_LBB10_39:
+	JMP _LBB16_2
+_LBB16_39:
 	MOVD R8, 176(RSP)
 	SUBW R9, ZR, R8
 	MOVW R8, 128(RSP)
 	PCDATA $1, $10
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp72:
+_Ltmp130:
 	MOVD RSP, R8
 	LDP 184(RSP), (R1, R0)
 	MOVD 176(RSP), R11
@@ -1712,16 +4334,16 @@ _Ltmp72:
 	MOVD R11, R9
 	MOVW R12, 0(R8)
 	MOVD ZR, R11
-	CBNZ R11, _LBB10_7
-_LBB10_40:
+	CBNZ R11, _LBB16_7
+_LBB16_40:
 	MOVD ZR, R2
 	MOVD R9, R0
 	MOVD ZR, R12
 	MOVD ZR, R3
-_LBB10_41:
+_LBB16_41:
 	MOVD $runtime·writeBarrier(SB), R8
 	MOVWU 0(R8), R8
-	CBZW R8, _LBB10_43
+	CBZW R8, _LBB16_43
 	MOVD RSP, R8
 	ADD $200, RSP, R9
 	STP (R12, R3), 120(RSP)
@@ -1732,18 +4354,18 @@ _LBB10_41:
 	LDP 96(RSP), (R9, R8)
 	MOVD 128(RSP), R11
 	LDP 112(RSP), (R10, R12)
-	JMP _LBB10_60
-_LBB10_43:
+	JMP _LBB16_60
+_LBB16_43:
 	MOVD R0, R9
 	MOVD R1, R8
 	MOVD R2, R10
 	MOVD R3, R11
 	MOVD R12, 200(RSP)
-	JMP _LBB10_60
-_LBB10_44:
+	JMP _LBB16_60
+_LBB16_44:
 	MOVD $runtime·writeBarrier(SB), R8
 	MOVWU 0(R8), R8
-	CBZW R8, _LBB10_52
+	CBZW R8, _LBB16_52
 	MOVD RSP, R8
 	ADD $200, RSP, R9
 	STP (R0, R12), 112(RSP)
@@ -1754,11 +4376,11 @@ _LBB10_44:
 	LDP 88(RSP), (R14, R1)
 	MOVD 120(RSP), R12
 	LDP 104(RSP), (R11, R0)
-	JMP _LBB10_53
-_LBB10_46:
+	JMP _LBB16_53
+_LBB16_46:
 	MOVD $runtime·writeBarrier(SB), R8
 	MOVWU 0(R8), R8
-	CBZW R8, _LBB10_54
+	CBZW R8, _LBB16_54
 	MOVD RSP, R8
 	ADD $200, RSP, R9
 	STP (R0, R12), 112(RSP)
@@ -1769,35 +4391,35 @@ _LBB10_46:
 	LDP 88(RSP), (R14, R1)
 	MOVD 120(RSP), R12
 	LDP 104(RSP), (R11, R0)
-	JMP _LBB10_55
-_LBB10_48:
+	JMP _LBB16_55
+_LBB16_48:
 	MOVD $runtime·writeBarrier(SB), R8
 	MOVWU 0(R8), R9
 	MOVD 152(RSP), R8
-	CBZW R9, _LBB10_56
+	CBZW R9, _LBB16_56
 	MOVD RSP, R9
 	ADD $200, RSP, R10
 	STP (R10, R8), 8(R9)
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB10_58
-_LBB10_50:
+	JMP _LBB16_58
+_LBB16_50:
 	MOVD $runtime·writeBarrier(SB), R8
 	MOVWU 0(R8), R8
-	CBZW R8, _LBB10_57
+	CBZW R8, _LBB16_57
 	MOVD RSP, R8
 	ADD $200, RSP, R10
 	STP (R10, R9), 8(R8)
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB10_58
-_LBB10_52:
+	JMP _LBB16_58
+_LBB16_52:
 	MOVD R11, 200(RSP)
-_LBB10_53:
+_LBB16_53:
 	STP (R1, R14), 184(RSP)
 	STP (R11, R0), 168(RSP)
 	MOVD R12, 160(RSP)
 	PCDATA $1, $9
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp73:
+_Ltmp131:
 	MOVD RSP, R8
 	LDP 160(RSP), (R0, R13)
 	MOVD 8(R8), R8
@@ -1810,33 +4432,33 @@ _Ltmp73:
 	MOVD R10, R8
 	MOVD R0, R10
 	MOVD R1, R11
-	JMP _LBB10_60
-_LBB10_54:
+	JMP _LBB16_60
+_LBB16_54:
 	MOVD R11, 200(RSP)
-_LBB10_55:
+_LBB16_55:
 	STP (R1, R14), 184(RSP)
 	STP (R11, R0), 168(RSP)
 	MOVD R12, 160(RSP)
 	PCDATA $1, $9
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp74:
+_Ltmp132:
 	LDP 160(RSP), (R0, R1)
 	MOVD RSP, R8
 	LDP 176(RSP), (R11, R12)
-	JMP _LBB10_59
-_LBB10_56:
+	JMP _LBB16_59
+_LBB16_56:
 	MOVD R8, 200(RSP)
-	JMP _LBB10_58
-_LBB10_57:
+	JMP _LBB16_58
+_LBB16_57:
 	MOVD R9, 200(RSP)
-_LBB10_58:
+_LBB16_58:
 	PCDATA $1, $11
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp75:
+_Ltmp133:
 	LDP 144(RSP), (R0, R1)
 	MOVD RSP, R8
 	LDP 160(RSP), (R11, R12)
-_LBB10_59:
+_LBB16_59:
 	MOVD 8(R8), R8
 	MOVW $12, R9
 	MOVD R0, R10
@@ -1845,7 +4467,7 @@ _LBB10_59:
 	MOVD 128(RSP), R11
 	MOVD R12, R9
 	MOVD R1, R12
-_LBB10_60:
+_LBB16_60:
 	MOVD 0(R9), R14
 	MOVD ZR, 0(R9)
 	STP (R8, R10), 168(RSP)
@@ -1855,36 +4477,36 @@ _LBB10_60:
 	MOVD R14, 8(R8)
 	PCDATA $1, $5
 	CALL ·DirClose(SB)
-_Ltmp76:
+_Ltmp134:
 	MOVD RSP, R8
 	MOVWU 16(R8), R8
-	TBZ $31, R8, _LBB10_62
+	TBZ $31, R8, _LBB16_62
 	SUBW R8, ZR, R8
 	MOVW R8, 128(RSP)
 	PCDATA $1, $12
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp77:
+_Ltmp135:
 	MOVD RSP, R8
 	MOVWU 128(RSP), R9
 	MOVD 8(R8), R8
 	MOVW R9, 0(R8)
-_LBB10_62:
+_LBB16_62:
 	PCDATA $1, $12
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp78:
+_Ltmp136:
 	MOVD RSP, R8
 	MOVD 8(R8), R8
 	MOVWU 0(R8), R8
-	CBZW R8, _LBB10_64
-_LBB10_63:
+	CBZW R8, _LBB16_64
+_LBB16_63:
 	MOVW $-1, R8
-	JMP _LBB10_88
-_LBB10_64:
+	JMP _LBB16_88
+_LBB16_64:
 	MOVD 256(RSP), R8
 	MOVD R8, 128(RSP)
 	PCDATA $1, $12
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp79:
+_Ltmp137:
 	MOVD RSP, R8
 	MOVD 128(RSP), R12
 	MOVD 184(RSP), R9
@@ -1892,10 +4514,10 @@ _Ltmp79:
 	LDP 168(RSP), (R0, R8)
 	MOVWU 72(RSP), R11
 	MOVW R11, 0(R10)
-	CBZ R12, _LBB10_86
+	CBZ R12, _LBB16_86
 	MOVD 64(RSP), R11
 	SUBS $2, R11, R10
-	BLO _LBB10_86
+	BLO _LBB16_86
 	WORD $0xd341fd4d
 	MOVD R8, R2
 	MOVD R9, R3
@@ -1908,12 +4530,12 @@ _Ltmp79:
 	MOVWU R11, R10
 	STP (R10, R13), 96(RSP)
 	MOVD R0, R10
-	JMP _LBB10_69
-_LBB10_67:
+	JMP _LBB16_69
+_LBB16_67:
 	MOVD R2, R3
 	MOVD R9, R2
 	MOVD R10, R0
-_LBB10_68:
+_LBB16_68:
 	MOVD 72(RSP), R11
 	MOVD R2, R8
 	MOVD R3, R1
@@ -1921,22 +4543,22 @@ _LBB10_68:
 	MOVD R8, R3
 	MOVD R0, R10
 	MOVD R11, R9
-	CBZ R11, _LBB10_77
-_LBB10_69:
+	CBZ R11, _LBB16_77
+_LBB16_69:
 	SUB $1, R9, R11
 	MOVD 112(RSP), R9
 	MOVD R11, 72(RSP)
 	CMP R9, R11
 	MOVD R3, R9
-	BHI _LBB10_67
+	BHI _LBB16_67
 	MOVD R2, R8
-_LBB10_71:
+_LBB16_71:
 	MOVD 96(RSP), R14
 	MOVD R11, R13
 	WORD $0xb37ff96e
 	MOVD 104(RSP), R11
 	CMP R11, R14
-	BHS _LBB10_73
+	BHS _LBB16_73
 	WORD $0xd37ff9ab
 	STP (R8, R9), 168(RSP)
 	MOVD R10, 160(RSP)
@@ -1952,7 +4574,7 @@ _LBB10_71:
 	MOVD 128(RSP), R8
 	PCDATA $1, $9
 	CALL (R8)
-_Ltmp80:
+_Ltmp138:
 	LDP 160(RSP), (R8, R9)
 	CMPW $0, R0
 	LDP 120(RSP), (R13, R12)
@@ -1963,10 +4585,10 @@ _Ltmp80:
 	MOVD R9, R8
 	MOVD R10, R9
 	MOVD R0, R10
-	JMP _LBB10_74
-_LBB10_73:
+	JMP _LBB16_74
+_LBB16_73:
 	MOVD R14, R11
-_LBB10_74:
+_LBB16_74:
 	MOVD R11, R14
 	STP (R8, R9), 168(RSP)
 	WORD $0x8b0d0d2b
@@ -1978,10 +4600,10 @@ _LBB10_74:
 	STP (R11, R8), 8(R9)
 	PCDATA $1, $9
 	CALL (R12)
-_Ltmp81:
+_Ltmp139:
 	LDP 160(RSP), (R1, R3)
 	MOVD 176(RSP), R2
-	TBZ $31, R0, _LBB10_76
+	TBZ $31, R0, _LBB16_76
 	LDP 184(RSP), (R9, R10)
 	MOVD R1, R0
 	LDP 112(RSP), (R11, R12)
@@ -1995,28 +4617,28 @@ _Ltmp81:
 	MOVD R12, R11
 	MOVD 128(RSP), R12
 	MOVD R1, R10
-	BLS _LBB10_71
-	JMP _LBB10_68
-_LBB10_76:
+	BLS _LBB16_71
+	JMP _LBB16_68
+_LBB16_76:
 	MOVD 128(RSP), R12
 	MOVD R1, R0
-	JMP _LBB10_68
-_LBB10_77:
+	JMP _LBB16_68
+_LBB16_77:
 	MOVD 48(RSP), R11
 	MOVD 0(R8), R10
 	WORD $0xf86b7909
 	MOVD R9, 0(R8)
 	WORD $0xf82b790a
 	MOVD 56(RSP), R11
-	CBZ R11, _LBB10_86
+	CBZ R11, _LBB16_86
 	MOVD 64(RSP), R9
 	MOVW $1, R10
 	MOVD R1, R2
 	MOVD R10, 96(RSP)
 	SUB $3, R9, R9
 	MOVD R11, R10
-	JMP _LBB10_80
-_LBB10_79:
+	JMP _LBB16_80
+_LBB16_79:
 	MOVD 112(RSP), R12
 	MOVD 0(R8), R9
 	MOVD R1, R0
@@ -2026,21 +4648,21 @@ _LBB10_79:
 	SUB $2, R12, R9
 	MOVD R10, 0(R8)
 	MOVD R11, R10
-	CBZ R11, _LBB10_87
-_LBB10_80:
+	CBZ R11, _LBB16_87
+_LBB16_80:
 	WORD $0xd341fd29
 	MOVD R0, R11
 	MOVD ZR, R12
 	STP (R9, R10), 104(RSP)
 	MOVD R2, R9
 	MOVD R8, R10
-_LBB10_81:
+_LBB16_81:
 	MOVD 96(RSP), R13
 	MOVD R11, R8
 	MOVD 112(RSP), R11
 	WORD $0xb37ff98d
 	CMP R11, R13
-	BHS _LBB10_83
+	BHS _LBB16_83
 	WORD $0xd37ff98b
 	STP (R9, R10), 168(RSP)
 	MOVD R8, 160(RSP)
@@ -2056,17 +4678,17 @@ _LBB10_81:
 	MOVD 128(RSP), R8
 	PCDATA $1, $9
 	CALL (R8)
-_Ltmp82:
+_Ltmp140:
 	LDP 80(RSP), (R13, R11)
 	CMPW $0, R0
 	LDP 160(RSP), (R8, R9)
 	MOVD 120(RSP), R12
 	MOVD 176(RSP), R10
 	CSEL MI, R11, R13, R11
-	JMP _LBB10_84
-_LBB10_83:
+	JMP _LBB16_84
+_LBB16_83:
 	MOVD R13, R11
-_LBB10_84:
+_LBB16_84:
 	STP (R10, R9), 168(RSP)
 	WORD $0x8b0c0d49
 	WORD $0x8b0b0d4a
@@ -2078,10 +4700,10 @@ _LBB10_84:
 	MOVD R11, 120(RSP)
 	PCDATA $1, $9
 	CALL (R8)
-_Ltmp83:
+_Ltmp141:
 	LDP 160(RSP), (R1, R8)
 	MOVD 176(RSP), R2
-	TBZ $31, R0, _LBB10_79
+	TBZ $31, R0, _LBB16_79
 	LDP 184(RSP), (R10, R11)
 	MOVD 120(RSP), R13
 	MOVD 0(R11), R9
@@ -2094,19 +4716,33 @@ _Ltmp83:
 	MOVD R13, R12
 	CMP R9, R13
 	MOVD R2, R9
-	BLS _LBB10_81
-	JMP _LBB10_79
-_LBB10_86:
+	BLS _LBB16_81
+	JMP _LBB16_79
+_LBB16_86:
 	MOVD R0, R1
-_LBB10_87:
+_LBB16_87:
 	MOVD 200(RSP), R8
 	MOVD 64(RSP), R9
 	MOVD R8, 0(R1)
 	MOVWU R9, R8
-_LBB10_88:
+_LBB16_88:
 	MOVW R8, 264(RSP)
 	RET
-_Lfunc_end10:
+_Lfunc_end16:
+DATA _L_str<>+0(SB)/1, $0x48
+DATA _L_str<>+1(SB)/1, $0x4f
+DATA _L_str<>+2(SB)/1, $0x4d
+DATA _L_str<>+3(SB)/1, $0x45
+DATA _L_str<>+4(SB)/1, $0x00
+GLOBL _L_str<>(SB), RODATA, $5
+
+DATA _L_str_1<>+0(SB)/1, $0x2e
+DATA _L_str_1<>+1(SB)/1, $0x00
+GLOBL _L_str_1<>(SB), RODATA, $2
+
+DATA _L_str_2<>+0(SB)/1, $0x00
+GLOBL _L_str_2<>(SB), RODATA, $1
+
 	FUNCDATA $0, gclocals·1ec991673ffe368e(SB)
 DATA gclocals·1ec991673ffe368e+0(SB)/4, $13
 DATA gclocals·1ec991673ffe368e+4(SB)/4, $5

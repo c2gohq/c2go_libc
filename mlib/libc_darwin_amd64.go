@@ -29,6 +29,20 @@ type mlib_DIR struct {
 type mlib_dirent_slot struct {
 	value *dirent
 }
+type mlib_glob_slot struct {
+	value *byte
+}
+type mlib_glob_t struct {
+	gl_pathc uint64
+	gl_pathv **byte
+	gl_offs  uint64
+	__dummy1 int32
+	__dummy2 [5]uint64
+}
+type mlib_match struct {
+	next *mlib_match
+	name *byte
+}
 
 // ─── Forward-only opaque types ───────────────────
 // Types declared in C as `typedef struct X X;` without a
@@ -44,6 +58,8 @@ type dirent struct{}
 var (
 	_typeinfo_mlib_DIR         unsafe.Pointer
 	_typeinfo_mlib_dirent_slot unsafe.Pointer
+	_typeinfo_mlib_glob_slot   unsafe.Pointer
+	_typeinfo_mlib_match       unsafe.Pointer
 )
 
 // reflect.Type's 2nd interface word is the *runtime._type mallocgc wants.
@@ -54,6 +70,8 @@ func _c2go_rtype(t reflect.Type) unsafe.Pointer {
 func init() {
 	_typeinfo_mlib_DIR = _c2go_rtype(reflect.TypeFor[mlib_DIR]())
 	_typeinfo_mlib_dirent_slot = _c2go_rtype(reflect.TypeFor[mlib_dirent_slot]())
+	_typeinfo_mlib_glob_slot = _c2go_rtype(reflect.TypeFor[mlib_glob_slot]())
+	_typeinfo_mlib_match = _c2go_rtype(reflect.TypeFor[mlib_match]())
 }
 
 // ─── Function declarations ──────────────────────────────────
@@ -71,6 +89,12 @@ func MlibFdopendir(fd int32) *mlib_DIR
 
 //go:linkname MlibFtw github.com/c2gohq/c2go_libc/mlib.mlib_ftw
 func MlibFtw(path *byte, fn uintptr, fd_limit int32) int32
+
+//go:linkname MlibGlob github.com/c2gohq/c2go_libc/mlib.mlib_glob
+func MlibGlob(pattern *byte, flags int32, error_function uintptr, result *mlib_glob_t) int32
+
+//go:linkname MlibGlobfree github.com/c2gohq/c2go_libc/mlib.mlib_globfree
+func MlibGlobfree(result *mlib_glob_t)
 
 //go:linkname MlibNftw github.com/c2gohq/c2go_libc/mlib.mlib_nftw
 func MlibNftw(path *byte, fn uintptr, fd_limit int32, flags int32) int32

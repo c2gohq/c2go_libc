@@ -16,6 +16,7 @@ The default API is explicitly namespaced:
 #include <c2go/mlib/semaphore.h>
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
+#include <c2go/mlib/glob.h>
 
 #pragma c2go managed push
 
@@ -40,6 +41,12 @@ static void example(void) {
     struct dirent **names;
     int count = mlib_scandir(".", &names, NULL, by_name);
     /* Use names[0..count), then drop all references. Do not call free(). */
+
+    mlib_glob_t matches = {0};
+    if (mlib_glob("*.c", 0, NULL, &matches) == 0) {
+        /* Use matches.gl_pathv[0..matches.gl_pathc). */
+        mlib_globfree(&matches);
+    }
 }
 
 #pragma c2go pop
@@ -53,6 +60,7 @@ corresponding standard names for the entire C2Go/LTO package:
 #include <c2go/mlib/semaphore.h>
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
+#include <c2go/mlib/glob.h>
 
 #pragma c2go managed push
 
@@ -84,7 +92,8 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 
 `mlib` does not provide or use `malloc`, `realloc`, or `free`. It currently
 implements unnamed semaphores; pthread mutexes, condition variables, and
-rwlocks; the directory-stream lifecycle; `scandir`; and Unix `nftw`/`ftw`.
+rwlocks; the directory-stream lifecycle; `scandir`; Unix `nftw`/`ftw`; and
+`glob`.
 Their state algorithms are shared with root libc; only state resolution differs
 (direct managed pointer versus unmanaged handle ID). Managed `opendir` and
 `fdopendir` allocate the carrier internally with typed `gc_malloc`; `closedir`
@@ -101,12 +110,18 @@ algorithm over mlib's `DIR` operations; they do not allocate a second state
 model. Callback arguments are borrowed views into the active walk frames and
 must not be retained after the callback returns.
 
+Managed `glob_t.gl_pathv`, its pointer slots, and every returned string form a
+typed GC-owned graph. `GLOB_APPEND` grows it by allocating a new typed vector
+and copying pointers with write barriers. `mlib_globfree` clears the carrier's
+root for early release or reuse; callers must never pass `gl_pathv` or its
+strings to `free`.
+
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
 `pthread_atfork` remain available from the root pthread surface.
 
-Managed `glob` is not implemented yet. The future unprefixed mlib glob header
-must not fall back to the root unmanaged result graph.
+The directory propagation cluster is now complete. FILE/stdio/popen and the
+remaining state families still require separate designs described below.
 
 ## 简体中文
 
@@ -121,6 +136,7 @@ must not fall back to the root unmanaged result graph.
 #include <c2go/mlib/semaphore.h>
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
+#include <c2go/mlib/glob.h>
 
 #pragma c2go managed push
 
@@ -145,6 +161,12 @@ static void example(void) {
     struct dirent **names;
     int count = mlib_scandir(".", &names, NULL, by_name);
     /* 使用 names[0..count) 后丢弃引用；不要调用 free()。 */
+
+    mlib_glob_t matches = {0};
+    if (mlib_glob("*.c", 0, NULL, &matches) == 0) {
+        /* 使用 matches.gl_pathv[0..matches.gl_pathc)。 */
+        mlib_globfree(&matches);
+    }
 }
 
 #pragma c2go pop
@@ -157,6 +179,7 @@ static void example(void) {
 #include <c2go/mlib/semaphore.h>
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
+#include <c2go/mlib/glob.h>
 
 #pragma c2go managed push
 
@@ -188,7 +211,7 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 
 `mlib` 不提供、也不使用 `malloc`、`realloc` 或 `free`。当前已经实现无名
 信号量、pthread 的 mutex/condition variable/rwlock、目录流生命周期、
-`scandir`，以及 Unix `nftw`/`ftw`。它们的行为核心与根 libc 共用，只有状态解析
+`scandir`、Unix `nftw`/`ftw`，以及 `glob`。它们的行为核心与根 libc 共用，只有状态解析
 方式不同：`mlib` 直接读取 managed pointer，根 libc 仍通过 unmanaged handle ID 查表。managed `opendir`
 和 `fdopendir` 在内部使用 typed `gc_malloc` 分配 carrier；`closedir` 清空状态
 指针，由 GC 回收 carrier。managed `scandir` 的结果数组及每个 `dirent` 都位于
@@ -201,8 +224,12 @@ managed `nftw` 和 `ftw` 在 mlib 的 `DIR` 操作之上选择性实例化 musl 
 遍历算法，不会引入第二套状态模型。回调参数只是当前遍历栈帧的借用视图，回调返回后
 不得继续持有。
 
+managed `glob_t.gl_pathv`、其中的 pointer slot 和每个返回字符串共同组成 typed、
+GC-owned 的对象图。`GLOB_APPEND` 会分配新的 typed vector，并通过 write barrier
+复制旧指针。`mlib_globfree` 会清除 carrier 中的根，便于提前释放或复用；调用方
+不能把 `gl_pathv` 或其中的字符串传给 `free`。
+
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、
 `pthread_once` 和 `pthread_atfork` 仍由根 pthread 接口提供。
 
-managed `glob` 尚未实现。未来的 mlib 无前缀 glob 头文件不能静默退回根包的
-unmanaged 返回图。
+目录传播簇现已完整。FILE/stdio/popen 及其余状态簇仍需按照下文分别设计。

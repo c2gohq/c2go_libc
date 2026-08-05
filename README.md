@@ -64,7 +64,7 @@ ID-to-pointer registry. The implemented families are unnamed semaphores and
 the pthread mutex/condition-variable/rwlock synchronization cluster, plus the
 basic directory-stream lifecycle (`opendir`, `fdopendir`, `readdir`,
 `readdir_r`, `rewinddir`, `dirfd`, and `closedir`), managed `scandir`, and the
-Unix `nftw`/`ftw` tree-walk APIs.
+Unix `nftw`/`ftw` tree-walk APIs, plus managed `glob` results.
 
 Managed names are explicit by default (`mlib_sem_t`, `mlib_sem_init`,
 `mlib_pthread_mutex_t`, `mlib_pthread_mutex_lock`, `mlib_DIR`,
@@ -73,7 +73,7 @@ Managed names are explicit by default (`mlib_sem_t`, `mlib_sem_init`,
 standard names instead. That switch applies to the whole C2Go/LTO package; do
 not mix both routings in one package. Managed C heap objects use typed
 `gc_malloc(c2go_typeinfo(T), sizeof(T))`, never ordinary `malloc`. Managed
-`scandir` results are GC-owned and must not be passed to `free`. See
+`scandir` and `glob` results are GC-owned and must not be passed to `free`. See
 [mlib/README.md](mlib/README.md) for examples and constraints.
 
 ## Current target manifest

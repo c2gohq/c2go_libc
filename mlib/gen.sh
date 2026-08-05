@@ -45,6 +45,28 @@ verify_arm64_link_register() {
 	fi
 }
 
+verify_glob_write_barriers() {
+	local asm_path="$1"
+	if ! awk '
+		/^TEXT ·mlib_glob_sort\(SB\)/ { in_function=1; next }
+		in_function && /^TEXT / { exit }
+		in_function && /_c2go_writePtr\(SB\)/ { found=1; exit }
+		END { exit !found }
+	' "$asm_path"; then
+		echo "mlib/gen.sh: managed glob pointer swaps lost write barriers in $asm_path" >&2
+		exit 1
+	fi
+	if ! awk '
+		/^TEXT ·mlib_glob_store_paths\(SB\)/ { in_function=1; next }
+		in_function && /^TEXT / { exit }
+		in_function && /_c2go_writePtr\(SB\)/ { found=1; exit }
+		END { exit !found }
+	' "$asm_path"; then
+		echo "mlib/gen.sh: managed glob carrier updates lost write barriers in $asm_path" >&2
+		exit 1
+	fi
+}
+
 TARGETS=(
 	"darwin:arm64:aarch64-apple-darwin"
 	"darwin:amd64:x86_64-apple-darwin"
@@ -59,6 +81,7 @@ trap 'rm -rf "$tmp"' EXIT
 LIB_SOURCES=(
 	"$ROOT/csrc/mlib/dirent.c"
 	"$ROOT/csrc/mlib/ftw.c"
+	"$ROOT/csrc/mlib/glob.c"
 	"$ROOT/csrc/mlib/scandir.c"
 )
 
@@ -88,6 +111,7 @@ generate_library() {
 			amd64) verify_amd64_stack_moves "$asm" ;;
 			arm64) verify_arm64_link_register "$asm" ;;
 		esac
+		verify_glob_write_barriers "$asm"
 		out="$tmp/out_lib_${goos}_${arch}"
 		mkdir -p "$out"
 		"$C2GOBIND" -pkgname=mlib -goname="libc_${goos}_${arch}" \

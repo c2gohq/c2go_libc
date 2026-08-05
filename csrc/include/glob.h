@@ -9,6 +9,7 @@
 
 #include <bits/alltypes.h>
 
+#ifndef C2GO_GLOB_OMIT_TYPE
 typedef struct {
 	size_t gl_pathc;
 	char **gl_pathv;
@@ -16,15 +17,18 @@ typedef struct {
 	int __dummy1;
 	void *__dummy2[5];
 } glob_t;
+#endif
 
 /* Cross-platform since #678: the dirent walk layer is (MinGW ships dirent.h;
  * our enumeration is os.File.ReadDir), and stat/fnmatch already are. The `~`
  * expansion uses $HOME — commonly unset on windows, where it degrades to
  * GLOB_NOMATCH (musl's own tilde-failure path). */
+#ifndef C2GO_GLOB_OMIT_FUNCTIONS
 int glob(const char *__restrict, int, int (*)(const char *, int), glob_t *__restrict)
     c2go_linkname("github.com/c2gohq/c2go_libc.glob", C2GO_GOABI0);
 void globfree(glob_t *)
     c2go_linkname("github.com/c2gohq/c2go_libc.globfree", C2GO_GOABI0);
+#endif
 
 #define GLOB_ERR      0x01
 #define GLOB_MARK     0x02

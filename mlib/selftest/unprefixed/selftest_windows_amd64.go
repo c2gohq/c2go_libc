@@ -20,6 +20,13 @@ type DIR struct {
 	_state unsafe.Pointer
 	_entry [280]int8
 }
+type glob_t struct {
+	gl_pathc uint64
+	gl_pathv **byte
+	gl_offs  uint64
+	__dummy1 int32
+	__dummy2 [5]uint64
+}
 type pthread_cond_t struct {
 	_state unsafe.Pointer
 }
@@ -56,6 +63,9 @@ func init() {
 
 //go:linkname MlibDirentUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_dirent_unprefixed_selftest
 func MlibDirentUnprefixedSelftest() int32
+
+//go:linkname MlibGlobUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_glob_unprefixed_selftest
+func MlibGlobUnprefixedSelftest() int32
 
 //go:linkname MlibPthreadUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_pthread_unprefixed_selftest
 func MlibPthreadUnprefixedSelftest() int32

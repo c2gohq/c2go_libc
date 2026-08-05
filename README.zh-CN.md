@@ -59,6 +59,7 @@ github.com/c2gohq/c2go_libc
 mutex、condition variable、rwlock 同步簇，并实现基础目录流生命周期：
 `opendir`、`fdopendir`、`readdir`、`readdir_r`、`rewinddir`、`dirfd`
 和 `closedir`，并实现 managed `scandir` 以及 Unix `nftw`/`ftw` 文件树遍历。
+managed `glob` 返回图也已经实现。
 
 默认名称显式带 `mlib_` 前缀，例如 `mlib_sem_t`、`mlib_sem_init`、
 `mlib_pthread_mutex_t`、`mlib_pthread_mutex_lock`、`mlib_DIR`、
@@ -66,7 +67,7 @@ mutex、condition variable、rwlock 同步簇，并实现基础目录流生命�
 头文件前定义 `C2GO_MLIB_UNPREFIXED`，则会改为对应的标准名称。这个开关作用于
 整个 C2Go/LTO 包，不能在同一包里混用两套路由。managed C 堆对象必须使用带类型信息的
 `gc_malloc(c2go_typeinfo(T), sizeof(T))`，不能使用普通 `malloc`。managed
-`scandir` 的返回图由 GC 持有，不能传给 `free`。示例和约束见
+`scandir` 和 `glob` 的返回图由 GC 持有，不能传给 `free`。示例和约束见
 [mlib/README.md](mlib/README.md)。
 
 ## 当前目标清单

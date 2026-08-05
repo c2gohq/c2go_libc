@@ -5,6 +5,7 @@
 
 /* Umbrella include for the managed libc surface implemented so far. */
 #include <c2go/mlib/dirent.h>
+#include <c2go/mlib/glob.h>
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/semaphore.h>
 #if !defined(_WIN32)

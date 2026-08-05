@@ -20,6 +20,13 @@ type mlib_DIR struct {
 	_state unsafe.Pointer
 	_entry [280]int8
 }
+type mlib_glob_t struct {
+	gl_pathc uint64
+	gl_pathv **byte
+	gl_offs  uint64
+	__dummy1 int32
+	__dummy2 [5]uint64
+}
 type mlib_pthread_cond_t struct {
 	_state unsafe.Pointer
 }
@@ -61,6 +68,9 @@ func MlibDirentPrefixedSelftest() int32
 
 //go:linkname MlibFtwPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_ftw_prefixed_selftest
 func MlibFtwPrefixedSelftest() int32
+
+//go:linkname MlibGlobPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_glob_prefixed_selftest
+func MlibGlobPrefixedSelftest() int32
 
 //go:linkname MlibPthreadPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_pthread_prefixed_selftest
 func MlibPthreadPrefixedSelftest() int32
