@@ -7,6 +7,8 @@
 #include <c2go/mlib/stdio.h>
 #include <bits/stdio_impl.h>
 #include <errno.h>
+#include <limits.h>
+#include <stddef.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <string.h>
@@ -32,7 +34,12 @@ struct _c2go_mlib_FILE {
     uintptr_t _cookie_raw[MLIB_FILE_COOKIE_WORDS];
     mlib_buffer_pointer _buffer_root;
     mlib_state_pointer _object_root;
+    mlib_state_pointer _result_pointer_slot;
+    mlib_state_pointer _result_size_slot;
     mlib_state_pointer _lock_state;
+    size_t _memory_pos;
+    size_t _memory_len;
+    size_t _memory_space;
     mlib_managed_file_pointer _prev;
     mlib_managed_file_pointer _next;
     int _active;
@@ -41,6 +48,8 @@ struct _c2go_mlib_FILE {
 
 _Static_assert(sizeof(FILE) <= MLIB_FILE_RAW_WORDS * sizeof(uintptr_t),
     "mlib raw FILE exceeds its managed carrier envelope");
+_Static_assert(offsetof(struct _c2go_mlib_FILE, _raw) == 0,
+    "mlib raw FILE must remain the carrier prefix");
 
 /* Root libc owns the descriptor callbacks and all buffer algorithms. These
  * helpers initialize/close a caller-owned engine without malloc, free, root
@@ -168,6 +177,20 @@ static void mlib_clear_state_pointer(mlib_state_pointer *slot)
 }
 
 __attribute__((noinline))
+static void mlib_store_state_pointer(mlib_state_pointer *slot,
+                                     mlib_state_pointer value)
+{
+    *slot = value;
+}
+
+__attribute__((noinline))
+static void mlib_store_line_pointer(mlib_line_slot slot,
+                                    mlib_line_pointer value)
+{
+    *slot = value;
+}
+
+__attribute__((noinline))
 static void mlib_file_clear_links(mlib_file_pointer f)
 {
     /* Keep each deletion as an individual pointer store. A single inline pair
@@ -259,7 +282,7 @@ c2go_extern mlib_FILE *mlib_fmemopen(void *restrict buffer, size_t size,
             return (void *)0;
         }
     }
-    f->_object_root = (mlib_state_pointer)buffer;
+    mlib_store_state_pointer(&f->_object_root, (mlib_state_pointer)buffer);
     if (__c2go_file_raw_fmemopen(mlib_raw(f), f->_cookie_raw,
             sizeof(f->_cookie_raw), (unsigned char *)(void *)f->_buffer_root,
             MLIB_FILE_BUFFER_SIZE, buffer, size, mode) != 0) {
@@ -267,6 +290,119 @@ c2go_extern mlib_FILE *mlib_fmemopen(void *restrict buffer, size_t size,
         mlib_clear_buffer_pointer(&f->_buffer_root);
         return (void *)0;
     }
+    f->_active = 1;
+    mlib_ofl_add(f);
+    return f;
+}
+
+static off_t mlib_memstream_seek(FILE *raw, off_t offset, int whence)
+{
+    mlib_file_pointer f = (mlib_file_pointer)(void *)raw;
+    ssize_t base;
+    if (whence > 2U) {
+fail:
+        errno = EINVAL;
+        return -1;
+    }
+    base = (size_t [3]){0, f->_memory_pos, f->_memory_len}[whence];
+    if (offset < -base || offset > SSIZE_MAX-base) goto fail;
+    return f->_memory_pos = base + offset;
+}
+
+static size_t mlib_memstream_write(FILE *raw, const unsigned char *source,
+                                   size_t length)
+{
+    mlib_file_pointer f = (mlib_file_pointer)(void *)raw;
+    mlib_line_pointer current;
+    mlib_line_pointer next;
+    mlib_line_slot result_slot;
+    mlib_size_slot size_slot;
+    size_t buffered = raw->wpos - raw->wbase;
+    size_t required, new_space;
+
+    if (buffered) {
+        raw->wpos = raw->wbase;
+        if (mlib_memstream_write(raw, raw->wbase, buffered) < buffered)
+            return 0;
+    }
+    if (length > SIZE_MAX - f->_memory_pos - 1) {
+        errno = ENOMEM;
+        return 0;
+    }
+    required = f->_memory_pos + length + 1;
+    current = (mlib_line_pointer)f->_object_root;
+    result_slot = (mlib_line_slot)f->_result_pointer_slot;
+    size_slot = (mlib_size_slot)f->_result_size_slot;
+    if (required > f->_memory_space) {
+        if (f->_memory_space <= (SIZE_MAX - 1) / 2)
+            new_space = 2 * f->_memory_space + 1;
+        else
+            new_space = required;
+        if (new_space < required) new_space = required;
+        next = (mlib_line_pointer)gc_malloc((void *)0, new_space);
+        if (!next) return 0;
+        if (f->_memory_space)
+            memcpy((void *)next, (const void *)current, f->_memory_space);
+        mlib_store_state_pointer(&f->_object_root,
+            (mlib_state_pointer)next);
+        mlib_store_line_pointer(result_slot, next);
+        f->_memory_space = new_space;
+        current = next;
+    }
+    memcpy((void *)(current + f->_memory_pos), source, length);
+    f->_memory_pos += length;
+    if (f->_memory_pos >= f->_memory_len) f->_memory_len = f->_memory_pos;
+    *size_slot = f->_memory_pos;
+    return length;
+}
+
+static int mlib_memstream_close(FILE *raw)
+{
+    (void)raw;
+    return 0;
+}
+
+c2go_extern mlib_FILE *mlib_open_memstream(char **buffer_slot,
+                                            size_t *size_slot)
+{
+    mlib_file_pointer f;
+    mlib_line_pointer buffer;
+    FILE *raw;
+    if (!buffer_slot || !size_slot) {
+        errno = EINVAL;
+        return (void *)0;
+    }
+    f = mlib_file_allocate();
+    if (!f) return (void *)0;
+    buffer = (mlib_line_pointer)gc_malloc((void *)0, 1);
+    if (!buffer) {
+        mlib_clear_buffer_pointer(&f->_buffer_root);
+        errno = ENOMEM;
+        return (void *)0;
+    }
+
+    mlib_store_state_pointer(&f->_object_root, (mlib_state_pointer)buffer);
+    mlib_store_state_pointer(&f->_result_pointer_slot,
+        (mlib_state_pointer)buffer_slot);
+    mlib_store_state_pointer(&f->_result_size_slot,
+        (mlib_state_pointer)size_slot);
+    mlib_store_line_pointer((mlib_line_slot)buffer_slot, buffer);
+    *size_slot = 0;
+    f->_memory_space = 1;
+
+    raw = mlib_raw(f);
+    memset(raw, 0, sizeof(*raw));
+    raw->flags = F_NORD;
+    raw->fd = -1;
+    raw->buf = (unsigned char *)(void *)f->_buffer_root + UNGET;
+    raw->buf_size = BUFSIZ;
+    raw->lbf = EOF;
+    raw->write = mlib_memstream_write;
+    raw->seek = mlib_memstream_seek;
+    raw->close = mlib_memstream_close;
+    raw->mode = -1;
+    raw->lock = -1;
+
     f->_active = 1;
     mlib_ofl_add(f);
     return f;
@@ -283,6 +419,8 @@ c2go_extern int mlib_fclose(mlib_FILE *stream)
     memset(raw, 0, sizeof(*raw));
     memset(f->_cookie_raw, 0, sizeof(f->_cookie_raw));
     mlib_clear_state_pointer(&f->_object_root);
+    mlib_clear_state_pointer(&f->_result_pointer_slot);
+    mlib_clear_state_pointer(&f->_result_size_slot);
     mlib_clear_buffer_pointer(&f->_buffer_root);
     mlib_file_release(f);
     mlib_ofl_remove(f);

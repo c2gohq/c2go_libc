@@ -95,8 +95,20 @@ verify_managed_write_barriers() {
 		"managed glob carrier updates"
 	verify_function_write_barrier "$asm_path" mlib_file_allocate \
 		"managed FILE buffer ownership"
-	verify_function_write_barrier "$asm_path" mlib_fmemopen \
-		"managed fmemopen buffer ownership"
+	verify_function_write_barrier "$asm_path" mlib_store_state_pointer \
+		"managed FILE state publication"
+	verify_function_write_barrier "$asm_path" mlib_store_line_pointer \
+		"managed memory-stream result publication"
+	verify_function_call_count "$asm_path" mlib_fmemopen \
+		mlib_store_state_pointer 1 "managed fmemopen buffer ownership"
+	verify_function_call_count "$asm_path" mlib_open_memstream \
+		mlib_store_state_pointer 3 "managed open_memstream roots"
+	verify_function_call_count "$asm_path" mlib_open_memstream \
+		mlib_store_line_pointer 1 "managed open_memstream initial result"
+	verify_function_call_count "$asm_path" mlib_memstream_write \
+		mlib_store_state_pointer 1 "managed memstream buffer growth"
+	verify_function_call_count "$asm_path" mlib_memstream_write \
+		mlib_store_line_pointer 1 "managed memstream result replacement"
 	verify_function_write_barrier "$asm_path" mlib_stdfile_store \
 		"managed standard-stream rooting"
 	verify_function_write_barrier "$asm_path" mlib_ofl_add \
@@ -114,7 +126,7 @@ verify_managed_write_barriers() {
 	verify_function_call_count "$asm_path" mlib_fclose \
 		mlib_clear_buffer_pointer 1 "managed FILE buffer release"
 	verify_function_call_count "$asm_path" mlib_fclose \
-		mlib_clear_state_pointer 1 "managed FILE object release"
+		mlib_clear_state_pointer 3 "managed FILE object and slot release"
 }
 
 TARGETS=(

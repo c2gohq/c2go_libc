@@ -6,6 +6,9 @@
 #ifndef C2GO_MLIB_TEST_FMEMOPEN
 #error "C2GO_MLIB_TEST_FMEMOPEN must name the managed fmemopen"
 #endif
+#ifndef C2GO_MLIB_TEST_OPEN_MEMSTREAM
+#error "C2GO_MLIB_TEST_OPEN_MEMSTREAM must name the managed open_memstream"
+#endif
 #ifndef C2GO_MLIB_TEST_FPOS
 #error "C2GO_MLIB_TEST_FPOS must name the managed fpos type"
 #endif
@@ -78,6 +81,8 @@ struct c2go_mlib_scan_result {
     void *pointer;
     char *line;
     size_t line_capacity;
+    char *output;
+    size_t output_size;
 };
 
 static int c2go_mlib_test_vscanf(const char *format, ...)
@@ -133,7 +138,7 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     const char memory_text[] = "managed-memory";
     char root[512], path[600], input[32] = {0}, formatted[16];
     char word[8] = {0}, set[4] = {0}, mark = 0;
-    char pointer_text[32], *target, *line_before, *memory;
+    char pointer_text[32], *target, *line_before, *memory, *output_initial;
     struct c2go_mlib_scan_result *scan;
     C2GO_MLIB_TEST_FILE *stream;
     C2GO_MLIB_TEST_FPOS position;
@@ -277,7 +282,35 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
         strcmp(input, "owned")) return 51;
     if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 52;
 
-    if (unlink(path) || rmdir(root)) return 53;
+    /* open_memstream retains both result slots, grows only with GC storage,
+     * and republishes the replacement pointer through a write barrier. The
+     * slots therefore live in this typed result object rather than on the C
+     * stack. */
+    stream = C2GO_MLIB_TEST_OPEN_MEMSTREAM(&scan->output,
+                                           &scan->output_size);
+    if (!stream || !scan->output || scan->output_size != 0 ||
+        scan->output[0] != 0) return 53;
+    output_initial = scan->output;
+    C2GO_MLIB_TEST_FORCE_GC();
+    for (index = 0; index < 3072; ++index) {
+        if (C2GO_MLIB_TEST_FPUTC('a' + index % 26, stream) == EOF) return 54;
+    }
+    if (C2GO_MLIB_TEST_FFLUSH(stream) != 0 ||
+        scan->output_size != 3072 || scan->output == output_initial ||
+        scan->output[3072] != 0) return 55;
+    output_initial = (void *)0;
+    C2GO_MLIB_TEST_FORCE_GC();
+    for (index = 0; index < 3072; ++index) {
+        if (scan->output[index] != 'a' + index % 26) return 56;
+    }
+    if (C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_END) != 0 ||
+        C2GO_MLIB_TEST_FPUTS("|tail", stream) < 0 ||
+        C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 57;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (scan->output_size != 3077 || scan->output[3077] != 0 ||
+        strcmp(scan->output + 3072, "|tail")) return 58;
+
+    if (unlink(path) || rmdir(root)) return 59;
     return 0;
 }
 
@@ -320,6 +353,7 @@ c2go_extern int C2GO_MLIB_TEST_STDIN_EXPORT(void)
 #undef C2GO_MLIB_TEST_SCANF
 #undef C2GO_MLIB_TEST_GETLINE
 #undef C2GO_MLIB_TEST_GETDELIM
+#undef C2GO_MLIB_TEST_OPEN_MEMSTREAM
 #undef C2GO_MLIB_TEST_FMEMOPEN
 #undef C2GO_MLIB_TEST_GETCHAR
 #undef C2GO_MLIB_TEST_STDIN

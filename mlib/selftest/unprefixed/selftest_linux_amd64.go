@@ -27,6 +27,8 @@ type c2go_mlib_scan_result struct {
 	pointer       unsafe.Pointer
 	line          *byte
 	line_capacity uint64
+	output        *byte
+	output_size   uint64
 }
 type glob_t struct {
 	gl_pathc uint64

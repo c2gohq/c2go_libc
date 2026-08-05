@@ -23,6 +23,8 @@ type c2go_mlib_scan_result struct {
 	pointer       unsafe.Pointer
 	line          *byte
 	line_capacity uint64
+	output        *byte
+	output_size   uint64
 }
 type mlib_DIR struct {
 	_state unsafe.Pointer

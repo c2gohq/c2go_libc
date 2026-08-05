@@ -16,15 +16,20 @@ import (
 
 // ─── Types ──────────────────────────────────────────────────
 type _c2go_mlib_FILE struct {
-	_raw         [32]uint64
-	_cookie_raw  [8]uint64
-	_buffer_root *byte
-	_object_root unsafe.Pointer
-	_lock_state  unsafe.Pointer
-	_prev        *_c2go_mlib_FILE
-	_next        *_c2go_mlib_FILE
-	_active      int32
-	_listed      int32
+	_raw                 [32]uint64
+	_cookie_raw          [8]uint64
+	_buffer_root         *byte
+	_object_root         unsafe.Pointer
+	_result_pointer_slot unsafe.Pointer
+	_result_size_slot    unsafe.Pointer
+	_lock_state          unsafe.Pointer
+	_memory_pos          uint64
+	_memory_len          uint64
+	_memory_space        uint64
+	_prev                *_c2go_mlib_FILE
+	_next                *_c2go_mlib_FILE
+	_active              int32
+	_listed              int32
 }
 type history struct {
 	chain *history
@@ -202,6 +207,9 @@ func MlibGlobfree(result *mlib_glob_t)
 
 //go:linkname MlibNftw github.com/c2gohq/c2go_libc/mlib.mlib_nftw
 func MlibNftw(path *byte, fn uintptr, fd_limit int32, flags int32) int32
+
+//go:linkname MlibOpenMemstream github.com/c2gohq/c2go_libc/mlib.mlib_open_memstream
+func MlibOpenMemstream(buffer_slot **byte, size_slot *uint64) *_c2go_mlib_FILE
 
 //go:linkname MlibOpendir github.com/c2gohq/c2go_libc/mlib.mlib_opendir
 func MlibOpendir(name *byte) *mlib_DIR

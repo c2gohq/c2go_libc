@@ -103,6 +103,12 @@ C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(fdopen)(int, const char *)
 C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(fmemopen)(void *__restrict, size_t,
     const char *__restrict)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fmemopen", C2GO_GOABI0);
+/* bufp and sizep are retained until close and therefore must refer to
+ * GC-visible storage whose lifetime covers the stream (normally fields of a
+ * typed gc_malloc record), not C stack locals. The published buffer is
+ * GC-owned and must not be passed to free(). */
+C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(open_memstream)(char **, size_t *)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_open_memstream", C2GO_GOABI0);
 int C2GO_MLIB_NAME(fclose)(C2GO_MLIB_NAME(FILE) *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fclose", C2GO_GOABI0);
 

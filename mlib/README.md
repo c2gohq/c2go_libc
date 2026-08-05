@@ -149,8 +149,12 @@ with a null result or reuse a buffer returned by the managed family, and never
 pass that buffer to `free`. Managed `fmemopen` retains a caller-supplied
 GC-heap buffer for the stream lifetime, or creates GC-owned storage when its
 buffer is null; a caller-supplied C stack array is not a valid retained buffer.
-`popen`, `open_memstream`, `fopencookie`, and wide stdio are not yet part of
-mlib; do not pass an `mlib_FILE *` to their root-libc counterparts.
+Managed `open_memstream` returns GC-owned output and updates it through write
+barriers when the buffer grows. Its `char **` and `size_t *` result slots escape
+until `fclose`, so they must live in GC-visible long-lived storage (normally a
+typed `gc_malloc` record), not in C stack locals; never pass its output to
+`free`. `popen`, `fopencookie`, and wide stdio are not yet part of mlib; do not
+pass an `mlib_FILE *` to their root-libc counterparts.
 
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
@@ -295,9 +299,12 @@ hook 会先刷新这一套独立的 FILE world，再由 root libc 刷新自己�
 managed `getline`/`getdelim` 遵循同一所有权规则：传入空结果，或复用该 managed
 函数族之前返回的缓冲区，并且不能把结果传给 `free`。
 managed `fmemopen` 会在整个 stream 生命周期内保留调用者的 GC heap 缓冲区，
-因此不能传入 C 栈数组；传入空缓冲区时，则创建 GC-owned storage。`popen`、
-`open_memstream`、`fopencookie` 和 wide stdio 尚未进入 mlib；不能把
-`mlib_FILE *` 传给这些根 libc 接口。
+因此不能传入 C 栈数组；传入空缓冲区时，则创建 GC-owned storage。
+managed `open_memstream` 返回 GC-owned 输出，扩容时通过写屏障重新发布指针。
+它会一直保留 `char **` 与 `size_t *` 两个结果槽直到 `fclose`，所以结果槽必须
+位于 GC 可见且寿命足够长的存储中（通常是 typed `gc_malloc` record 的字段），
+不能是 C 栈局部变量；输出也不能传给 `free`。`popen`、`fopencookie` 和 wide
+stdio 尚未进入 mlib；不能把 `mlib_FILE *` 传给这些根 libc 接口。
 
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、
 `pthread_once` 和 `pthread_atfork` 仍由根 pthread 接口提供。
