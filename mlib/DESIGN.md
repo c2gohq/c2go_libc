@@ -134,11 +134,15 @@ retains either the caller buffer or a GC-owned replacement. Managed
 retains the caller's two result-slot addresses in the carrier, and publishes
 each replacement buffer through write barriers. Because those addresses escape
 until close, they must refer to GC-visible long-lived storage, normally fields
-of a typed `gc_malloc` record; C stack locals are invalid. The root policy
-continues to use ordinary malloc/realloc/free. APIs that create other owned
-graphs (`popen`, `fopencookie`, and wide stdio) remain separate propagation
-phases; they must not be routed to root FILE declarations under the managed
-carrier type.
+of a typed `gc_malloc` record; C stack locals are invalid. Managed
+`fopencookie` keeps its cookie as a direct managed carrier root, while its four
+code pointers remain in the carrier's no-scan callback envelope. The callbacks
+are synchronous internal-ABI functions: the cookie parameter is explicitly
+managed, while data buffers and the seek-position pointer are borrowed and may
+not escape. The root policy continues to use ordinary malloc/realloc/free and
+caller-managed cookie lifetime. APIs that create other owned graphs (`popen`
+and wide stdio) remain separate propagation phases; they must not be routed to
+root FILE declarations under the managed carrier type.
 
 ## Next safe migration order
 
@@ -148,7 +152,7 @@ carrier type.
    unprefixed sync switch implicitly.
 3. Keep the completed DIR propagation cluster under GC-stress regression.
 4. Extend the managed FILE cluster in ownership-closed phases:
-   custom cookies, then wide stdio and `popen` process state.
+   wide stdio, then `popen` process state.
 
 At every step the default API remains `mlib_`-prefixed, the unprefixed form is a
 whole-LTO-package choice, and root libc must never import or depend on `mlib`.

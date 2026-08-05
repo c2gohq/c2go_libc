@@ -9,6 +9,12 @@
 #ifndef C2GO_MLIB_TEST_OPEN_MEMSTREAM
 #error "C2GO_MLIB_TEST_OPEN_MEMSTREAM must name the managed open_memstream"
 #endif
+#ifndef C2GO_MLIB_TEST_COOKIE_IO
+#error "C2GO_MLIB_TEST_COOKIE_IO must name the managed cookie callback table"
+#endif
+#ifndef C2GO_MLIB_TEST_FOPENCOOKIE
+#error "C2GO_MLIB_TEST_FOPENCOOKIE must name the managed fopencookie"
+#endif
 #ifndef C2GO_MLIB_TEST_FPOS
 #error "C2GO_MLIB_TEST_FPOS must name the managed fpos type"
 #endif
@@ -85,6 +91,83 @@ struct c2go_mlib_scan_result {
     size_t output_size;
 };
 
+struct c2go_mlib_cookie_state {
+    char bytes[128];
+    char *managed snapshot;
+    size_t position;
+    size_t length;
+};
+typedef struct c2go_mlib_cookie_state *managed
+    c2go_mlib_cookie_state_pointer;
+
+static int c2go_mlib_cookie_close_count;
+
+static ssize_t c2go_mlib_cookie_read(void *managed opaque, char *buffer,
+                                     size_t length)
+{
+    c2go_mlib_cookie_state_pointer state = opaque;
+    size_t remaining;
+    if (state->position >= state->length) return 0;
+    remaining = state->length - state->position;
+    if (length > remaining) length = remaining;
+    if (!state->snapshot) {
+        errno = EIO;
+        return -1;
+    }
+    memcpy(buffer, (const void *)(state->snapshot + state->position), length);
+    state->position += length;
+    return length;
+}
+
+static ssize_t c2go_mlib_cookie_write(void *managed opaque,
+                                      const char *buffer, size_t length)
+{
+    c2go_mlib_cookie_state_pointer state = opaque;
+    char *managed snapshot;
+    if (length > sizeof(state->bytes) - state->position) {
+        errno = ENOSPC;
+        return -1;
+    }
+    memcpy(state->bytes + state->position, buffer, length);
+    state->position += length;
+    if (state->position > state->length) state->length = state->position;
+    snapshot = (char *managed)gc_malloc((void *)0, state->length + 1);
+    if (!snapshot) {
+        errno = ENOMEM;
+        return -1;
+    }
+    memcpy((void *)snapshot, state->bytes, state->length);
+    state->snapshot = snapshot;
+    return length;
+}
+
+static int c2go_mlib_cookie_seek(void *managed opaque, off_t *offset,
+                                 int whence)
+{
+    c2go_mlib_cookie_state_pointer state = opaque;
+    off_t base;
+    switch (whence) {
+    case SEEK_SET: base = 0; break;
+    case SEEK_CUR: base = state->position; break;
+    case SEEK_END: base = state->length; break;
+    default: errno = EINVAL; return -1;
+    }
+    if (*offset < -base || *offset > (off_t)sizeof(state->bytes) - base) {
+        errno = EINVAL;
+        return -1;
+    }
+    state->position = base + *offset;
+    *offset = state->position;
+    return 0;
+}
+
+static int c2go_mlib_cookie_close(void *managed opaque)
+{
+    (void)opaque;
+    ++c2go_mlib_cookie_close_count;
+    return 0;
+}
+
 static int c2go_mlib_test_vscanf(const char *format, ...)
 {
     int result;
@@ -136,10 +219,18 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     const char managed_text[] =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-long";
     const char memory_text[] = "managed-memory";
+    const char cookie_text[] = "managed-cookie";
     char root[512], path[600], input[32] = {0}, formatted[16];
     char word[8] = {0}, set[4] = {0}, mark = 0;
     char pointer_text[32], *target, *line_before, *memory, *output_initial;
     struct c2go_mlib_scan_result *scan;
+    c2go_mlib_cookie_state_pointer cookie_state;
+    C2GO_MLIB_TEST_COOKIE_IO cookie_functions = {
+        c2go_mlib_cookie_read,
+        c2go_mlib_cookie_write,
+        c2go_mlib_cookie_seek,
+        c2go_mlib_cookie_close,
+    };
     C2GO_MLIB_TEST_FILE *stream;
     C2GO_MLIB_TEST_FPOS position;
     double fraction = 0;
@@ -310,7 +401,29 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     if (scan->output_size != 3077 || scan->output[3077] != 0 ||
         strcmp(scan->output + 3072, "|tail")) return 58;
 
-    if (unlink(path) || rmdir(root)) return 59;
+    /* The FILE carrier is the only remaining root for the typed cookie while
+     * callbacks run. Callback buffer/offset arguments remain borrowed and
+     * synchronous. */
+    cookie_state = (c2go_mlib_cookie_state_pointer)gc_malloc(
+        c2go_typeinfo(struct c2go_mlib_cookie_state), sizeof(*cookie_state));
+    if (!cookie_state) return 59;
+    c2go_mlib_cookie_close_count = 0;
+    stream = C2GO_MLIB_TEST_FOPENCOOKIE(cookie_state, "w+",
+                                        cookie_functions);
+    if (!stream) return 60;
+    cookie_state = (void *)0;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (C2GO_MLIB_TEST_FPUTS(cookie_text, stream) < 0 ||
+        C2GO_MLIB_TEST_FFLUSH(stream) != 0 ||
+        C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0) return 61;
+    memset(input, 0, sizeof(input));
+    if (C2GO_MLIB_TEST_FREAD(input, 1, sizeof(cookie_text) - 1, stream)
+            != sizeof(cookie_text) - 1 || strcmp(input, cookie_text)) return 62;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (C2GO_MLIB_TEST_FCLOSE(stream) != 0 ||
+        c2go_mlib_cookie_close_count != 1) return 63;
+
+    if (unlink(path) || rmdir(root)) return 64;
     return 0;
 }
 
@@ -353,6 +466,8 @@ c2go_extern int C2GO_MLIB_TEST_STDIN_EXPORT(void)
 #undef C2GO_MLIB_TEST_SCANF
 #undef C2GO_MLIB_TEST_GETLINE
 #undef C2GO_MLIB_TEST_GETDELIM
+#undef C2GO_MLIB_TEST_FOPENCOOKIE
+#undef C2GO_MLIB_TEST_COOKIE_IO
 #undef C2GO_MLIB_TEST_OPEN_MEMSTREAM
 #undef C2GO_MLIB_TEST_FMEMOPEN
 #undef C2GO_MLIB_TEST_GETCHAR

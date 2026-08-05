@@ -35,6 +35,12 @@ type mlib_DIR struct {
 	_state unsafe.Pointer
 	_entry [280]int8
 }
+type mlib_cookie_io_functions_t struct {
+	read  uintptr
+	write uintptr
+	seek  uintptr
+	close uintptr
+}
 type mlib_dirent_slot struct {
 	value *dirent
 }
@@ -130,6 +136,9 @@ func MlibFmemopen(buffer unsafe.Pointer, size uint64, mode *byte) *_c2go_mlib_FI
 
 //go:linkname MlibFopen github.com/c2gohq/c2go_libc/mlib.mlib_fopen
 func MlibFopen(filename *byte, mode *byte) *_c2go_mlib_FILE
+
+//go:linkname MlibFopencookie github.com/c2gohq/c2go_libc/mlib.mlib_fopencookie
+func MlibFopencookie(cookie unsafe.Pointer, mode *byte, functions mlib_cookie_io_functions_t) *_c2go_mlib_FILE
 
 //go:linkname MlibFprintf github.com/c2gohq/c2go_libc/mlib.mlib_fprintf
 func MlibFprintf(stream *_c2go_mlib_FILE, format *byte, argptrs unsafe.Pointer) int32

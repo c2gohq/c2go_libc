@@ -109,6 +109,26 @@ C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(fmemopen)(void *__restrict, size_t,
  * GC-owned and must not be passed to free(). */
 C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(open_memstream)(char **, size_t *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_open_memstream", C2GO_GOABI0);
+/* The cookie is retained as a managed root until fclose. A non-null cookie
+ * must therefore be a valid GC-visible pointer with sufficient lifetime, not
+ * a C stack address. Callbacks are synchronous c2go internal-ABI functions;
+ * their buffer and seek-position arguments are borrowed for the call only. */
+typedef ssize_t (*C2GO_MLIB_NAME(cookie_read_function_t))
+    (void *managed, char *, size_t);
+typedef ssize_t (*C2GO_MLIB_NAME(cookie_write_function_t))
+    (void *managed, const char *, size_t);
+typedef int (*C2GO_MLIB_NAME(cookie_seek_function_t))
+    (void *managed, off_t *, int);
+typedef int (*C2GO_MLIB_NAME(cookie_close_function_t))(void *managed);
+typedef struct {
+    C2GO_MLIB_NAME(cookie_read_function_t) read;
+    C2GO_MLIB_NAME(cookie_write_function_t) write;
+    C2GO_MLIB_NAME(cookie_seek_function_t) seek;
+    C2GO_MLIB_NAME(cookie_close_function_t) close;
+} C2GO_MLIB_NAME(cookie_io_functions_t);
+C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(fopencookie)(void *managed, const char *,
+    C2GO_MLIB_NAME(cookie_io_functions_t))
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fopencookie", C2GO_GOABI0);
 int C2GO_MLIB_NAME(fclose)(C2GO_MLIB_NAME(FILE) *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fclose", C2GO_GOABI0);
 

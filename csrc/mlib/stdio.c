@@ -50,6 +50,9 @@ _Static_assert(sizeof(FILE) <= MLIB_FILE_RAW_WORDS * sizeof(uintptr_t),
     "mlib raw FILE exceeds its managed carrier envelope");
 _Static_assert(offsetof(struct _c2go_mlib_FILE, _raw) == 0,
     "mlib raw FILE must remain the carrier prefix");
+_Static_assert(sizeof(mlib_cookie_io_functions_t) <=
+        MLIB_FILE_COOKIE_WORDS * sizeof(uintptr_t),
+    "mlib cookie callbacks exceed their raw envelope");
 
 /* Root libc owns the descriptor callbacks and all buffer algorithms. These
  * helpers initialize/close a caller-owned engine without malloc, free, root
@@ -401,6 +404,129 @@ c2go_extern mlib_FILE *mlib_open_memstream(char **buffer_slot,
     raw->seek = mlib_memstream_seek;
     raw->close = mlib_memstream_close;
     raw->mode = -1;
+    raw->lock = -1;
+
+    f->_active = 1;
+    mlib_ofl_add(f);
+    return f;
+}
+
+static mlib_cookie_io_functions_t *mlib_cookie_functions(mlib_file_pointer f)
+{
+    return (mlib_cookie_io_functions_t *)(void *)f->_cookie_raw;
+}
+
+static size_t mlib_cookie_read(FILE *raw, unsigned char *buffer, size_t length)
+{
+    mlib_file_pointer f = (mlib_file_pointer)(void *)raw;
+    mlib_cookie_io_functions_t *functions = mlib_cookie_functions(f);
+    ssize_t result = -1;
+    size_t remaining = length, read_length = 0;
+    size_t direct_length = length - !!raw->buf_size;
+
+    if (!functions->read) goto fail;
+    if (direct_length) {
+        result = functions->read(f->_object_root, (char *)buffer,
+                                 direct_length);
+        if (result <= 0) goto fail;
+        read_length += result;
+        remaining -= result;
+    }
+    if (!raw->buf_size || remaining > !!raw->buf_size) return read_length;
+
+    raw->rpos = raw->buf;
+    result = functions->read(f->_object_root, (char *)raw->rpos,
+                             raw->buf_size);
+    if (result <= 0) goto fail;
+    raw->rend = raw->rpos + result;
+    buffer[read_length++] = *raw->rpos++;
+    return read_length;
+
+fail:
+    raw->flags |= result == 0 ? F_EOF : F_ERR;
+    raw->rpos = raw->rend = raw->buf;
+    return read_length;
+}
+
+static size_t mlib_cookie_write(FILE *raw, const unsigned char *buffer,
+                                size_t length)
+{
+    mlib_file_pointer f = (mlib_file_pointer)(void *)raw;
+    mlib_cookie_io_functions_t *functions = mlib_cookie_functions(f);
+    ssize_t result;
+    size_t buffered = raw->wpos - raw->wbase;
+
+    if (!functions->write) return length;
+    if (buffered) {
+        raw->wpos = raw->wbase;
+        if (mlib_cookie_write(raw, raw->wpos, buffered) < buffered) return 0;
+    }
+    result = functions->write(f->_object_root, (const char *)buffer, length);
+    if (result < 0) {
+        raw->wpos = raw->wbase = raw->wend = (void *)0;
+        raw->flags |= F_ERR;
+        return 0;
+    }
+    return result;
+}
+
+static off_t mlib_cookie_seek(FILE *raw, off_t offset, int whence)
+{
+    mlib_file_pointer f = (mlib_file_pointer)(void *)raw;
+    mlib_cookie_io_functions_t *functions = mlib_cookie_functions(f);
+    int result;
+
+    if (whence > 2U) {
+        errno = EINVAL;
+        return -1;
+    }
+    if (!functions->seek) {
+        errno = ENOTSUP;
+        return -1;
+    }
+    result = functions->seek(f->_object_root, &offset, whence);
+    if (result < 0) return result;
+    return offset;
+}
+
+static int mlib_cookie_close(FILE *raw)
+{
+    mlib_file_pointer f = (mlib_file_pointer)(void *)raw;
+    mlib_cookie_io_functions_t *functions = mlib_cookie_functions(f);
+    if (functions->close) return functions->close(f->_object_root);
+    return 0;
+}
+
+c2go_extern mlib_FILE *mlib_fopencookie(
+    void *managed cookie, const char *mode,
+    mlib_cookie_io_functions_t functions)
+{
+    mlib_file_pointer f;
+    FILE *raw;
+
+    if (!mode || !strchr("rwa", *mode)) {
+        errno = EINVAL;
+        return (void *)0;
+    }
+    f = mlib_file_allocate();
+    if (!f) return (void *)0;
+    mlib_store_state_pointer(&f->_object_root, (mlib_state_pointer)cookie);
+    mlib_cookie_functions(f)->read = functions.read;
+    mlib_cookie_functions(f)->write = functions.write;
+    mlib_cookie_functions(f)->seek = functions.seek;
+    mlib_cookie_functions(f)->close = functions.close;
+
+    raw = mlib_raw(f);
+    memset(raw, 0, sizeof(*raw));
+    if (!strchr(mode, '+')) raw->flags = (*mode == 'r') ? F_NOWR : F_NORD;
+    raw->fd = -1;
+    raw->buf = (unsigned char *)(void *)f->_buffer_root + UNGET;
+    raw->buf_size = BUFSIZ;
+    raw->lbf = EOF;
+    raw->read = mlib_cookie_read;
+    raw->write = mlib_cookie_write;
+    raw->seek = mlib_cookie_seek;
+    raw->close = mlib_cookie_close;
     raw->lock = -1;
 
     f->_active = 1;

@@ -15,6 +15,8 @@ void c2go_mlib_stdio_test_gc(void);
 #define C2GO_MLIB_TEST_FDOPEN fdopen
 #define C2GO_MLIB_TEST_FMEMOPEN fmemopen
 #define C2GO_MLIB_TEST_OPEN_MEMSTREAM open_memstream
+#define C2GO_MLIB_TEST_COOKIE_IO cookie_io_functions_t
+#define C2GO_MLIB_TEST_FOPENCOOKIE fopencookie
 #define C2GO_MLIB_TEST_FCLOSE fclose
 #define C2GO_MLIB_TEST_FFLUSH fflush
 #define C2GO_MLIB_TEST_FTELL ftell

@@ -9,5 +9,5 @@
 // ordinary malloc. The current surface covers unnamed semaphores; pthread
 // mutex, condition-variable, and rwlock synchronization; managed directory
 // graphs; and managed explicit/standard FILE streams with formatted and
-// allocation-returning line I/O, fmemopen, and GC-owned open_memstream output.
+// allocation-returning line I/O, managed memory streams, and custom cookies.
 package mlib

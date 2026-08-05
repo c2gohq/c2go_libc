@@ -109,6 +109,8 @@ verify_managed_write_barriers() {
 		mlib_store_state_pointer 1 "managed memstream buffer growth"
 	verify_function_call_count "$asm_path" mlib_memstream_write \
 		mlib_store_line_pointer 1 "managed memstream result replacement"
+	verify_function_call_count "$asm_path" mlib_fopencookie \
+		mlib_store_state_pointer 1 "managed fopencookie state ownership"
 	verify_function_write_barrier "$asm_path" mlib_stdfile_store \
 		"managed standard-stream rooting"
 	verify_function_write_barrier "$asm_path" mlib_ofl_add \
@@ -219,6 +221,8 @@ generate_mode() {
 			amd64) verify_amd64_stack_moves "$test_dir/selftest_${goos}_${arch}.s" ;;
 			arm64) verify_arm64_link_register "$test_dir/selftest_${goos}_${arch}.s" ;;
 		esac
+		verify_function_write_barrier "$test_dir/selftest_${goos}_${arch}.s" \
+			c2go_mlib_cookie_write "managed cookie callback publication"
 		out="$tmp/out_${mode}_${goos}_${arch}"
 		mkdir -p "$out"
 		"$C2GOBIND" -pkgname="$mode" -goname="selftest_${goos}_${arch}" \
