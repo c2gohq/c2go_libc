@@ -12,6 +12,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <string.h>
+#include <unistd.h>
 
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
 
@@ -34,6 +35,7 @@ struct _c2go_mlib_FILE {
     uintptr_t _cookie_raw[MLIB_FILE_COOKIE_WORDS];
     mlib_buffer_pointer _buffer_root;
     mlib_state_pointer _object_root;
+    mlib_state_pointer _process_root;
     mlib_state_pointer _result_pointer_slot;
     mlib_state_pointer _result_size_slot;
     mlib_state_pointer _lock_state;
@@ -94,6 +96,10 @@ c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_vfwscanf_managed", C2
 int __c2go_file_raw_vfwscanf_managed(FILE *, const wchar_t *, va_list);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_vswscanf_managed", C2GO_GOABI0)
 int __c2go_vswscanf_managed(const wchar_t *, const wchar_t *, va_list);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_popen_managed", C2GO_GOABI0)
+mlib_state_pointer __c2go_popen_managed(const char *, int, int *, int *);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_pclose_managed", C2GO_GOABI0)
+long long __c2go_pclose_managed(mlib_state_pointer);
 
 c2go_linkname("github.com/c2gohq/c2go_libc/mlib.FileLock", C2GO_GOABI0)
 void __c2go_mlib_file_lock(mlib_state_pointer *);
@@ -283,6 +289,45 @@ c2go_extern mlib_FILE *mlib_fdopen(int fd, const char *mode)
             (unsigned char *)(void *)f->_buffer_root,
             MLIB_FILE_BUFFER_SIZE) != 0) {
         f->_buffer_root = (void *)0;
+        return (void *)0;
+    }
+    f->_active = 1;
+    mlib_ofl_add(f);
+    return f;
+}
+
+c2go_extern mlib_FILE *mlib_popen(const char *command, const char *mode)
+{
+    mlib_file_pointer f;
+    mlib_state_pointer process;
+    int fd = -1, error = 0, saved_errno;
+
+    if (!mode || (mode[0] != 'r' && mode[0] != 'w')) {
+        errno = EINVAL;
+        return (void *)0;
+    }
+    f = mlib_file_allocate();
+    if (!f) return (void *)0;
+    process = __c2go_popen_managed(command, mode[0] == 'w', &fd, &error);
+    if (!process) {
+        mlib_clear_buffer_pointer(&f->_buffer_root);
+        errno = error ? error : EIO;
+        return (void *)0;
+    }
+
+    /* Root the command before another cross-package call can trigger GC. The
+     * raw engine owns the duplicated descriptor, while this managed field is
+     * the only long-lived root for the Go process object. */
+    mlib_store_state_pointer(&f->_process_root, process);
+    if (__c2go_file_raw_fdopen(mlib_raw(f), fd, mode,
+            (unsigned char *)(void *)f->_buffer_root,
+            MLIB_FILE_BUFFER_SIZE) != 0) {
+        saved_errno = errno;
+        close(fd);
+        __c2go_pclose_managed(process);
+        mlib_clear_state_pointer(&f->_process_root);
+        mlib_clear_buffer_pointer(&f->_buffer_root);
+        errno = saved_errno;
         return (void *)0;
     }
     f->_active = 1;
@@ -749,12 +794,35 @@ c2go_extern int mlib_fclose(mlib_FILE *stream)
     memset(raw, 0, sizeof(*raw));
     memset(f->_cookie_raw, 0, sizeof(f->_cookie_raw));
     mlib_clear_state_pointer(&f->_object_root);
+    mlib_clear_state_pointer(&f->_process_root);
     mlib_clear_state_pointer(&f->_result_pointer_slot);
     mlib_clear_state_pointer(&f->_result_size_slot);
     mlib_clear_buffer_pointer(&f->_buffer_root);
     mlib_file_release(f);
     mlib_ofl_remove(f);
     return result;
+}
+
+c2go_extern int mlib_pclose(mlib_FILE *stream)
+{
+    mlib_file_pointer f = stream;
+    mlib_state_pointer process;
+    long long status;
+
+    if (!f || !(process = f->_process_root)) {
+        errno = EINVAL;
+        return -1;
+    }
+    /* fclose flushes and closes the pipe before Wait, so writers deliver EOF
+     * and readers release the child exactly like root libc's pclose. process
+     * is a managed local and stays live after the carrier field is cleared. */
+    (void)mlib_fclose(stream);
+    status = __c2go_pclose_managed(process);
+    if (status < 0) {
+        errno = (int)-status;
+        return -1;
+    }
+    return (int)status;
 }
 
 c2go_extern int mlib_fflush(mlib_FILE *stream)

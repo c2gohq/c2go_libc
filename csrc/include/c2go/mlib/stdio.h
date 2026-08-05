@@ -97,6 +97,13 @@ C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(fopen)(const char *__restrict,
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fopen", C2GO_GOABI0);
 C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(fdopen)(int, const char *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fdopen", C2GO_GOABI0);
+/* The managed carrier retains the Go process object directly until pclose;
+ * no process-wide handle table is involved. As with ordinary popen, close a
+ * process stream with pclose rather than fclose so the child is reaped. */
+C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(popen)(const char *, const char *)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_popen", C2GO_GOABI0);
+int C2GO_MLIB_NAME(pclose)(C2GO_MLIB_NAME(FILE) *)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_pclose", C2GO_GOABI0);
 /* A caller-supplied buffer is retained by the managed FILE carrier and must be
  * GC-heap storage (for example gc_malloc), not a C stack array. With a null
  * buffer, mlib allocates GC-owned storage released naturally after close. */

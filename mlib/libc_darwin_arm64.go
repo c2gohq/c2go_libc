@@ -20,6 +20,7 @@ type _c2go_mlib_FILE struct {
 	_cookie_raw          [8]uint64
 	_buffer_root         *byte
 	_object_root         unsafe.Pointer
+	_process_root        unsafe.Pointer
 	_result_pointer_slot unsafe.Pointer
 	_result_size_slot    unsafe.Pointer
 	_lock_state          unsafe.Pointer
@@ -248,6 +249,12 @@ func MlibOpenMemstream(buffer_slot **byte, size_slot *uint64) *_c2go_mlib_FILE
 
 //go:linkname MlibOpendir github.com/c2gohq/c2go_libc/mlib.mlib_opendir
 func MlibOpendir(name *byte) *mlib_DIR
+
+//go:linkname MlibPclose github.com/c2gohq/c2go_libc/mlib.mlib_pclose
+func MlibPclose(stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibPopen github.com/c2gohq/c2go_libc/mlib.mlib_popen
+func MlibPopen(command *byte, mode *byte) *_c2go_mlib_FILE
 
 //go:linkname MlibPrintf github.com/c2gohq/c2go_libc/mlib.mlib_printf
 func MlibPrintf(format *byte, argptrs unsafe.Pointer) int32

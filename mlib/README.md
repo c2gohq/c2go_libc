@@ -55,6 +55,8 @@ static void example(void) {
         mlib_fprintf(file, "count=%d\n", count);
         mlib_fclose(file); /* The carrier itself is reclaimed by the GC. */
     }
+    mlib_FILE *pipe = mlib_popen("echo managed process", "r");
+    if (pipe) mlib_pclose(pipe); /* Close the pipe, then reap the child. */
     mlib_printf("managed stdout is also available\n");
 }
 
@@ -111,7 +113,8 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 `mlib` does not provide or use `malloc`, `realloc`, or `free`. It currently
 implements unnamed semaphores; pthread mutexes, condition variables, and
 rwlocks; the directory-stream lifecycle; `scandir`; Unix `nftw`/`ftw`; and
-`glob`; and the first ownership-closed managed `FILE` surface.
+`glob`; and the ownership-closed managed `FILE` surface, including process
+streams.
 Their state algorithms are shared with root libc; only state resolution differs
 (direct managed pointer versus unmanaged handle ID). Managed `opendir` and
 `fdopendir` allocate the carrier internally with typed `gc_malloc`; `closedir`
@@ -162,17 +165,20 @@ c2go-compiled internal-ABI functions. Wide-stream orientation,
 character/string I/O, pushback, and formatted input/output are available through
 `<c2go/mlib/wchar.h>` and reuse root libc's lock-free UTF, formatting, and
 scanning engines under the managed FILE lock. Wide scanf follows the same `%m`
-GC-allocation and `%m`/`%p` write-barrier rules described above. `popen` remains
-outside mlib; do not pass an `mlib_FILE *` to the root-libc process-stream
-family.
+GC-allocation and `%m`/`%p` write-barrier rules described above. Managed
+`popen` keeps its Go process object in a dedicated carrier root and shares root
+libc's platform-specific launch, descriptor-transfer, and wait logic without
+using `popenTab`. Always close such a stream with managed `pclose`, which closes
+the pipe before waiting; plain `fclose` does not reap the process. Never pass an
+`mlib_FILE *` to the root-libc process-stream family.
 
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
 `pthread_atfork` remain available from the root pthread surface.
 
-The directory propagation cluster is complete. FILE is being extended in
-ownership-closed phases; `popen` and the remaining state families retain the
-boundaries documented in DESIGN.md.
+The directory propagation and managed FILE clusters are complete for the
+documented surface. Remaining state families retain the boundaries documented
+in DESIGN.md.
 
 ## 简体中文
 
@@ -226,6 +232,8 @@ static void example(void) {
         mlib_fprintf(file, "count=%d\n", count);
         mlib_fclose(file); /* carrier 本身由 GC 回收。 */
     }
+    mlib_FILE *pipe = mlib_popen("echo managed process", "r");
+    if (pipe) mlib_pclose(pipe); /* 先关闭管道，再回收子进程。 */
     mlib_printf("managed stdout 同样可用\n");
 }
 
@@ -280,7 +288,7 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 
 `mlib` 不提供、也不使用 `malloc`、`realloc` 或 `free`。当前已经实现无名
 信号量、pthread 的 mutex/condition variable/rwlock、目录流生命周期、
-`scandir`、Unix `nftw`/`ftw`、`glob`，以及第一阶段 ownership-closed 的
+`scandir`、Unix `nftw`/`ftw`、`glob`，以及包含进程流的 ownership-closed
 managed `FILE` 接口。它们的行为核心与根 libc 共用，只有状态解析
 方式不同：`mlib` 直接读取 managed pointer，根 libc 仍通过 unmanaged handle ID 查表。managed `opendir`
 和 `fdopendir` 在内部使用 typed `gc_malloc` 分配 carrier；`closedir` 清空状态
@@ -322,10 +330,13 @@ managed `fopencookie` 会保留非空 cookie 直到 `fclose`；回调的 cookie 
 `<c2go/mlib/wchar.h>` 已提供 wide stream 定向、字符/字符串读写、回退和格式化
 输入输出，并在 managed FILE 锁内复用 root libc 的无锁 UTF、格式化与扫描
 engine。wide scanf 遵循上文相同的 `%m` GC 分配及 `%m`/`%p` 写屏障规则。
-`popen` 尚未进入 mlib；不能把 `mlib_FILE *` 传给根 libc 的进程流接口。
+managed `popen` 会把 Go 进程对象直接保存在 carrier 的专用 managed root 中，
+并复用 root libc 的跨平台启动、描述符交接与 wait 逻辑，不经过 `popenTab`。
+进程流必须用 managed `pclose` 关闭：它先关闭管道，再等待并回收子进程；普通
+`fclose` 不负责回收子进程。不能把 `mlib_FILE *` 传给根 libc 的进程流接口。
 
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、
 `pthread_once` 和 `pthread_atfork` 仍由根 pthread 接口提供。
 
-目录传播簇现已完整。FILE 将继续按 ownership-closed 阶段扩展；`popen` 与其余
-状态簇仍遵循 DESIGN.md 中记录的边界。
+目录传播簇和文档所列的 managed FILE 簇现已完整；其余状态簇仍遵循
+DESIGN.md 中记录的边界。

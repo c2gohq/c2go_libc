@@ -39,8 +39,8 @@ RWMutex` implementation in `handle.go`.
 | `rwlockTab` | `pthread_rwlock_t._id` | rwlock init/destroy/read/write/try/unlock and attrs | none outside the rwlock family | Implemented |
 | `threadTab` | scalar `pthread_t` ID | create/join/exit/detach/self/equal/yield | pthread-key destructor lifetime and goroutine-local state | Not replaced; unprefixed mlib pthread intentionally retains the root thread API |
 | `dirTab` | `DIR.handle` | opendir/fdopendir/readdir/readdir_r/rewinddir/closedir/dirfd | `scandir`; directory traversal in `glob`; `nftw`/`ftw` | Complete: lifecycle plus managed `scandir`, `glob`, and Unix `nftw`/`ftw` |
-| `fileLockTab` | `FILE.lockid` | internal file lock/trylock/unlock/drop | effectively every stdio operation using `FILE *` | Not implemented; part of the FILE cluster |
-| `popenTab` | `FILE.pipe_id` | popen/pclose bridge | FILE close/pipe ownership and process wait | Not implementable independently of the FILE cluster |
+| `fileLockTab` | `FILE.lockid` | internal file lock/trylock/unlock/drop | effectively every stdio operation using `FILE *` | Implemented: direct lock pointer in the managed FILE carrier |
+| `popenTab` | `FILE.pipe_id` | popen/pclose bridge | FILE close/pipe ownership and process wait | Implemented: direct process pointer in the managed FILE carrier |
 | `iconvTab` | roots the real `*iconvState` returned as `iconv_t`; the state also records its table ID for close | iconv_open/iconv/iconv_close | none | Not implemented; a managed descriptor can remove the extra root, but `(iconv_t)-1` must remain only in the C wrapper |
 
 The following roots have a similar motivation but are not interchangeable with
@@ -64,6 +64,10 @@ mlib carrier (direct managed pointer) --+
 root DIR carrier (handle id) -----------+
                                         +--> internal/posixdir --> Go stream
 mlib DIR (direct pointer, typed heap) ---+
+
+root FILE lock/process (handle ids) -----+
+                                        +--> shared Go lock/process core
+mlib FILE (direct managed pointers) -----+
 ```
 
 No musl source is dual-compiled for semaphore or pthread synchronization. Their
@@ -72,7 +76,7 @@ unprefixed pthread mode, `<c2go/mlib/pthread.h>` replaces mutex, condition
 variable, and rwlock types/functions while retaining root `pthread_create`,
 thread keys, `pthread_once`, and `pthread_atfork`.
 
-## Stateful clusters still requiring selective C instantiation
+## Stateful clusters and selective C instantiation
 
 ### DIR cluster
 
@@ -110,8 +114,8 @@ typed Go-heap carrier with two deliberately separate regions:
 
 - a fixed-size, aligned no-scan envelope containing root libc's raw musl FILE
   engine; and
-- explicit managed roots for its GC buffer, direct recursive lock, and managed
-  open-file-list links.
+- explicit managed roots for its GC buffer, direct recursive lock, managed
+  open-file-list links, and optional memory/cookie/process ownership.
 
 Root libc supplies internal raw init/close helpers and the stateless buffering,
 formatting, read, write, seek, and status algorithms. Those helpers never
@@ -145,8 +149,13 @@ pushback, and formatted input/output reuse root libc's lock-free UTF, formatting
 and scanning engines beneath the managed carrier lock. Wide scanf selects the
 same managed result policy as narrow scanf: `%m` buffers use `gc_malloc`, while
 `%m` and `%p` pointers are published through the checked write-barrier helper.
-`popen` remains separate because it creates process-owned state. No mlib FILE
-may be routed to a root public FILE declaration.
+Managed `popen`/`pclose` reuse root libc's platform-specific process launch,
+descriptor handoff, and wait-status logic. Root libc still puts `*exec.Cmd` in
+`popenTab`; mlib instead stores that direct pointer in a dedicated managed FILE
+field. `pclose` first flushes and closes the raw pipe, then waits while a managed
+local keeps the process alive. A process stream must be retired with `pclose`,
+not plain `fclose`, so the child is reaped. No mlib FILE may be routed to a root
+public FILE declaration.
 
 ## Next safe migration order
 
@@ -155,8 +164,10 @@ may be routed to a root public FILE declaration.
 2. Design pthread thread/key ownership separately; do not extend the current
    unprefixed sync switch implicitly.
 3. Keep the completed DIR propagation cluster under GC-stress regression.
-4. Extend the managed FILE cluster with `popen` process state as a separate
-   ownership-closed phase.
+4. Keep the completed managed FILE process-stream phase under native and
+   GC-stress regression.
+5. Treat pthread thread/key and iconv carriers as separate future designs;
+   neither should be pulled into the existing sync or FILE switches implicitly.
 
 At every step the default API remains `mlib_`-prefixed, the unprefixed form is a
 whole-LTO-package choice, and root libc must never import or depend on `mlib`.

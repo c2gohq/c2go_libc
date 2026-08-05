@@ -93,6 +93,9 @@ func MlibDirentUnprefixedSelftest() int32
 //go:linkname MlibGlobUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_glob_unprefixed_selftest
 func MlibGlobUnprefixedSelftest() int32
 
+//go:linkname MlibPopenUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_popen_unprefixed_selftest
+func MlibPopenUnprefixedSelftest() int32
+
 //go:linkname MlibPthreadUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_pthread_unprefixed_selftest
 func MlibPthreadUnprefixedSelftest() int32
 

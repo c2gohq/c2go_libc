@@ -98,6 +98,9 @@ func MlibFtwPrefixedSelftest() int32
 //go:linkname MlibGlobPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_glob_prefixed_selftest
 func MlibGlobPrefixedSelftest() int32
 
+//go:linkname MlibPopenPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_popen_prefixed_selftest
+func MlibPopenPrefixedSelftest() int32
+
 //go:linkname MlibPthreadPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_pthread_prefixed_selftest
 func MlibPthreadPrefixedSelftest() int32
 
