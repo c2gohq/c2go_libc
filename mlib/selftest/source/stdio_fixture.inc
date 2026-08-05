@@ -48,6 +48,12 @@
 #ifndef C2GO_MLIB_TEST_VSSCANF
 #error "C2GO_MLIB_TEST_VSSCANF must name the managed vsscanf"
 #endif
+#ifndef C2GO_MLIB_TEST_GETDELIM
+#error "C2GO_MLIB_TEST_GETDELIM must name the managed getdelim"
+#endif
+#ifndef C2GO_MLIB_TEST_GETLINE
+#error "C2GO_MLIB_TEST_GETLINE must name the managed getline"
+#endif
 #ifndef C2GO_MLIB_TEST_STDOUT_EXPORT
 #error "C2GO_MLIB_TEST_STDOUT_EXPORT must name the standard-output selftest"
 #endif
@@ -67,6 +73,8 @@ struct c2go_mlib_scan_result {
     char *text;
     wchar_t *wide;
     void *pointer;
+    char *line;
+    size_t line_capacity;
 };
 
 static int c2go_mlib_test_vscanf(const char *format, ...)
@@ -121,12 +129,13 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-long";
     char root[512], path[600], input[32] = {0}, formatted[16];
     char word[8] = {0}, set[4] = {0}, mark = 0;
-    char pointer_text[32], *target;
+    char pointer_text[32], *target, *line_before;
     struct c2go_mlib_scan_result *scan;
     C2GO_MLIB_TEST_FILE *stream;
     C2GO_MLIB_TEST_FPOS position;
     double fraction = 0;
     int fd, number = 0;
+    size_t index;
 
     /* Replacement mode retains FILE-independent root stdio utilities. */
     if (snprintf(formatted, sizeof(formatted), "value=%d", 42) != 8 ||
@@ -213,7 +222,33 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
         strcmp((const char *)scan->pointer, "alive")) return 34;
     if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 35;
 
-    if (unlink(path) || rmdir(root)) return 36;
+    /* Force getdelim through more than one managed growth. The returned slot
+     * and its capacity live inside a typed GC object; getline then reuses the
+     * same allocation for the short tail. */
+    stream = C2GO_MLIB_TEST_FOPEN(path, "w+");
+    if (!stream) return 36;
+    for (index = 0; index < 3072; ++index) {
+        if (C2GO_MLIB_TEST_FPUTC('a' + index % 26, stream) == EOF) return 37;
+    }
+    if (C2GO_MLIB_TEST_FPUTS("|tail", stream) < 0 ||
+        C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0) return 38;
+    if (C2GO_MLIB_TEST_GETDELIM(&scan->line, &scan->line_capacity, '|', stream)
+            != 3073 || scan->line_capacity <= 3073 || scan->line[3072] != '|' ||
+        scan->line[3073] != 0) return 39;
+    for (index = 0; index < 3072; ++index) {
+        if (scan->line[index] != 'a' + index % 26) return 40;
+    }
+    line_before = scan->line;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (scan->line != line_before || scan->line[2048] != 'u') return 41;
+    if (C2GO_MLIB_TEST_GETLINE(&scan->line, &scan->line_capacity, stream) != 4 ||
+        strcmp(scan->line, "tail") || scan->line != line_before) return 42;
+    line_before = (void *)0;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (strcmp(scan->line, "tail")) return 43;
+    if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 44;
+
+    if (unlink(path) || rmdir(root)) return 45;
     return 0;
 }
 
@@ -254,6 +289,8 @@ c2go_extern int C2GO_MLIB_TEST_STDIN_EXPORT(void)
 #undef C2GO_MLIB_TEST_FSCANF
 #undef C2GO_MLIB_TEST_VSCANF
 #undef C2GO_MLIB_TEST_SCANF
+#undef C2GO_MLIB_TEST_GETLINE
+#undef C2GO_MLIB_TEST_GETDELIM
 #undef C2GO_MLIB_TEST_GETCHAR
 #undef C2GO_MLIB_TEST_STDIN
 #undef C2GO_MLIB_TEST_PUTS

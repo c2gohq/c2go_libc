@@ -123,15 +123,15 @@ parallel managed owner fields.
 
 Implemented now: `fopen`/`fdopen`/`fclose`, managed `stdin`/`stdout`/`stderr`,
 flushing (including `NULL` and exit-time hooks), block and character I/O,
-positioning/status, formatted output/input, descriptor access, and the
-`flockfile` family. Narrow scanf parsing remains one shared implementation, but
-its managed policy allocates `%m` buffers with `gc_malloc`, retains growing
-buffers in managed locals, and publishes `%m`/`%p` results through a checked
-write-barrier helper. The root policy continues to use ordinary malloc/free.
-APIs that create other owned graphs (`popen`, `getdelim`, `open_memstream`,
-`fmemopen`, `fopencookie`, and wide stdio) remain separate propagation phases;
-they must not be routed to root FILE declarations under the managed carrier
-type.
+positioning/status, formatted output/input, managed `getline`/`getdelim`,
+descriptor access, and the `flockfile` family. Narrow scanf and line-reading
+parsers remain shared implementations, but their managed policy allocates
+result buffers with `gc_malloc`, retains growing buffers in managed locals, and
+publishes replacement pointers through a checked write-barrier helper. The root
+policy continues to use ordinary malloc/realloc/free. APIs that create other
+owned graphs (`popen`, `open_memstream`, `fmemopen`, `fopencookie`, and wide
+stdio) remain separate propagation phases; they must not be routed to root FILE
+declarations under the managed carrier type.
 
 ## Next safe migration order
 
@@ -140,9 +140,8 @@ type.
 2. Design pthread thread/key ownership separately; do not extend the current
    unprefixed sync switch implicitly.
 3. Keep the completed DIR propagation cluster under GC-stress regression.
-4. Extend the managed FILE cluster in ownership-closed phases: managed
-   `getline`/`getdelim`, then managed-output buffers/custom cookies, then wide
-   stdio and `popen` process state.
+4. Extend the managed FILE cluster in ownership-closed phases: managed-output
+   buffers/custom cookies, then wide stdio and `popen` process state.
 
 At every step the default API remains `mlib_`-prefixed, the unprefixed form is a
 whole-LTO-package choice, and root libc must never import or depend on `mlib`.

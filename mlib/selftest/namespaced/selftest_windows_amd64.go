@@ -17,10 +17,12 @@ import (
 
 // ─── Types ──────────────────────────────────────────────────
 type c2go_mlib_scan_result struct {
-	file_text *byte
-	text      *byte
-	wide      *uint16
-	pointer   unsafe.Pointer
+	file_text     *byte
+	text          *byte
+	wide          *uint16
+	pointer       unsafe.Pointer
+	line          *byte
+	line_capacity uint64
 }
 type mlib_DIR struct {
 	_state unsafe.Pointer

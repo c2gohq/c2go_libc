@@ -23,6 +23,8 @@ void c2go_mlib_stdio_test_gc(void);
 #define C2GO_MLIB_TEST_FPUTS fputs
 #define C2GO_MLIB_TEST_FPUTC fputc
 #define C2GO_MLIB_TEST_FGETC fgetc
+#define C2GO_MLIB_TEST_GETDELIM getdelim
+#define C2GO_MLIB_TEST_GETLINE getline
 #define C2GO_MLIB_TEST_GETC getc
 #define C2GO_MLIB_TEST_UNGETC ungetc
 #define C2GO_MLIB_TEST_FEOF feof

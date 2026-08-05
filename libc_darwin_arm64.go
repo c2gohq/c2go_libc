@@ -60,6 +60,9 @@ func C2goFileRawClose(f *FILE) int32
 //go:linkname C2goFileRawFdopen github.com/c2gohq/c2go_libc.__c2go_file_raw_fdopen
 func C2goFileRawFdopen(f *FILE, fd int32, mode *byte, storage *byte, storage_size uint64) int32
 
+//go:linkname C2goFileRawGetdelimManaged github.com/c2gohq/c2go_libc.__c2go_file_raw_getdelim_managed
+func C2goFileRawGetdelimManaged(s *unsafe.Pointer, n *uint64, delim int32, f *FILE) int64
+
 //go:linkname C2goFileRawOpen github.com/c2gohq/c2go_libc.__c2go_file_raw_open
 func C2goFileRawOpen(f *FILE, filename *byte, mode *byte, storage *byte, storage_size uint64) int32
 

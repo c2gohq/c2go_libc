@@ -144,9 +144,11 @@ supports the root scanner's conversions, including `%m` and `%p`; `%m` buffers
 are allocated by `gc_malloc`, and all pointer results are published with a Go
 write barrier. Those results are GC-owned and must not be passed to `free`; a
 non-null `%p` result must be a valid Go-managed address, not an arbitrary
-foreign address.
-`popen`, `getline`/`getdelim`, custom/memory streams, and wide stdio are not yet
-part of mlib; do not pass an `mlib_FILE *` to their root-libc counterparts.
+foreign address. Managed `getline`/`getdelim` use the same ownership rule: begin
+with a null result or reuse a buffer returned by the managed family, and never
+pass that buffer to `free`.
+`popen`, custom/memory streams, and wide stdio are not yet part of mlib; do not
+pass an `mlib_FILE *` to their root-libc counterparts.
 
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
@@ -288,8 +290,10 @@ hook 会先刷新这一套独立的 FILE world，再由 root libc 刷新自己�
 支持 root scanner 的全部转换，包括 `%m` 与 `%p`；`%m` 缓冲区由 `gc_malloc`
 分配，所有指针结果都通过 Go 写屏障发布。这些结果归 GC 所有，不能传给 `free`；
 非空 `%p` 结果必须是有效的 Go managed 地址，不能是任意外部地址。
-`popen`、`getline`/`getdelim`、memory/custom stream 和 wide stdio 尚未进入
-mlib；不能把 `mlib_FILE *` 传给这些根 libc 接口。
+managed `getline`/`getdelim` 遵循同一所有权规则：传入空结果，或复用该 managed
+函数族之前返回的缓冲区，并且不能把结果传给 `free`。
+`popen`、memory/custom stream 和 wide stdio 尚未进入 mlib；不能把
+`mlib_FILE *` 传给这些根 libc 接口。
 
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、
 `pthread_once` 和 `pthread_atfork` 仍由根 pthread 接口提供。

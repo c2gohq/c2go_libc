@@ -19,6 +19,7 @@ typedef struct _c2go_mlib_FILE FILE;
 #define __DEFINED_FILE 1
 #define _STDIO_H 1
 #define __NEED_size_t
+#define __NEED_ssize_t
 #define __NEED_off_t
 #define __NEED_va_list
 #include <bits/alltypes.h>
@@ -47,8 +48,8 @@ typedef struct _c2go_mlib_FILE mlib_FILE;
 /* Keep FILE-independent stdio utilities available in replacement mode. They
  * use root libc internally but neither accept nor return a FILE carrier and do
  * not create managed ownership graphs. Allocation-returning asprintf remains
- * intentionally excluded; the scanf family below adds its own managed-policy
- * validation before it reuses root libc's scalar scanner. */
+ * intentionally excluded; the scanf family below selects managed allocation
+ * and pointer-publication policy inside the shared root parser. */
 int remove(const char *)
     c2go_linkname("github.com/c2gohq/c2go_libc.remove", C2GO_GOABI0);
 int rename(const char *, const char *)
@@ -148,6 +149,15 @@ int C2GO_MLIB_NAME(putchar)(int)
 char *C2GO_MLIB_NAME(fgets)(char *__restrict, int,
     C2GO_MLIB_NAME(FILE) *__restrict)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fgets", C2GO_GOABI0);
+/* The result buffer is GC-owned. Start with *lineptr == NULL, or pass a buffer
+ * previously returned by this managed getline/getdelim family; never pass the
+ * result to free(). Successful growth publishes *lineptr with a write barrier. */
+ssize_t C2GO_MLIB_NAME(getdelim)(char **__restrict, size_t *__restrict, int,
+    C2GO_MLIB_NAME(FILE) *__restrict)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_getdelim", C2GO_GOABI0);
+ssize_t C2GO_MLIB_NAME(getline)(char **__restrict, size_t *__restrict,
+    C2GO_MLIB_NAME(FILE) *__restrict)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_getline", C2GO_GOABI0);
 int C2GO_MLIB_NAME(fputs)(const char *__restrict,
     C2GO_MLIB_NAME(FILE) *__restrict)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fputs", C2GO_GOABI0);

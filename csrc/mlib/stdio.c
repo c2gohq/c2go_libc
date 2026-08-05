@@ -20,6 +20,9 @@ typedef struct _c2go_mlib_FILE *mlib_file_pointer;
 typedef struct _c2go_mlib_FILE *managed mlib_managed_file_pointer;
 typedef unsigned char *managed mlib_buffer_pointer;
 typedef void *managed mlib_state_pointer;
+typedef char *managed mlib_line_pointer;
+typedef mlib_line_pointer *managed mlib_line_slot;
+typedef size_t *managed mlib_size_slot;
 
 struct _c2go_mlib_FILE {
     /* A word array gives the raw engine its required alignment without making
@@ -52,6 +55,9 @@ c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_vfscanf_managed", C2G
 int __c2go_file_raw_vfscanf_managed(FILE *, const char *, va_list);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_vsscanf_managed", C2GO_GOABI0)
 int __c2go_vsscanf_managed(const char *, const char *, va_list);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_getdelim_managed", C2GO_GOABI0)
+ssize_t __c2go_file_raw_getdelim_managed(mlib_line_slot, mlib_size_slot,
+    int, FILE *);
 
 c2go_linkname("github.com/c2gohq/c2go_libc/mlib.FileLock", C2GO_GOABI0)
 void __c2go_mlib_file_lock(mlib_state_pointer *);
@@ -450,6 +456,27 @@ c2go_extern char *mlib_fgets(char *restrict destination, int count,
     result = fgets(destination, count, raw);
     mlib_file_release(f);
     return result;
+}
+
+c2go_extern ssize_t mlib_getdelim(char **restrict line,
+                                   size_t *restrict capacity, int delimiter,
+                                   mlib_FILE *restrict stream)
+{
+    mlib_file_pointer f = stream;
+    FILE *raw = mlib_file_acquire(f);
+    ssize_t result;
+    if (!raw) return -1;
+    result = __c2go_file_raw_getdelim_managed((mlib_line_slot)line,
+        (mlib_size_slot)capacity, delimiter, raw);
+    mlib_file_release(f);
+    return result;
+}
+
+c2go_extern ssize_t mlib_getline(char **restrict line,
+                                  size_t *restrict capacity,
+                                  mlib_FILE *restrict stream)
+{
+    return mlib_getdelim(line, capacity, '\n', stream);
 }
 
 c2go_extern int mlib_fputs(const char *restrict text,

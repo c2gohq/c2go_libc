@@ -182,6 +182,12 @@ func MlibGetc(stream *_c2go_mlib_FILE) int32
 //go:linkname MlibGetchar github.com/c2gohq/c2go_libc/mlib.mlib_getchar
 func MlibGetchar() int32
 
+//go:linkname MlibGetdelim github.com/c2gohq/c2go_libc/mlib.mlib_getdelim
+func MlibGetdelim(line **byte, capacity *uint64, delimiter int32, stream *_c2go_mlib_FILE) int64
+
+//go:linkname MlibGetline github.com/c2gohq/c2go_libc/mlib.mlib_getline
+func MlibGetline(line **byte, capacity *uint64, stream *_c2go_mlib_FILE) int64
+
 //go:linkname MlibGlob github.com/c2gohq/c2go_libc/mlib.mlib_glob
 func MlibGlob(pattern *byte, flags int32, error_function uintptr, result *mlib_glob_t) int32
 

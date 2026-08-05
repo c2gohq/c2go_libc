@@ -2761,17 +2761,17 @@ enum c2go_scan_allocation {
 	SCAN_ALLOC_GC,
 };
 
-/* A managed scanf instantiation uses the same parser but changes the two
- * ownership-sensitive operations: `%m` allocates a noscan Go-heap buffer, and
- * pointer results are published through a write barrier. The helper is kept
- * noinline so generation can verify that this contract did not optimize away. */
-typedef void *managed c2go_scan_managed_pointer;
-typedef c2go_scan_managed_pointer *managed c2go_scan_managed_slot;
+/* Managed stdio entry points share the root algorithms but change allocation
+ * and pointer-publication policy. Keep this store helper noinline so every
+ * managed result crosses one auditable Go write-barrier boundary. */
+typedef void *managed c2go_stdio_managed_pointer;
+typedef c2go_stdio_managed_pointer *managed c2go_stdio_managed_slot;
+typedef size_t *managed c2go_stdio_managed_size_slot;
 
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
 static __attribute__((noinline)) void
-c2go_scan_managed_store(c2go_scan_managed_slot slot,
-			c2go_scan_managed_pointer value)
+c2go_stdio_managed_store(c2go_stdio_managed_slot slot,
+			c2go_stdio_managed_pointer value)
 {
 	*slot = value;
 }
@@ -2790,7 +2790,7 @@ static int vfscanf_core(FILE *restrict f, const char *restrict fmt,
 	wchar_t *managed wcs;
 	mbstate_t st;
 	void *dest=NULL;
-	c2go_scan_managed_slot managed_slot = (void *)0;
+	c2go_stdio_managed_slot managed_slot = (void *)0;
 	int invert;
 	int matches=0;
 	unsigned long long x;
@@ -2840,7 +2840,7 @@ static int vfscanf_core(FILE *restrict f, const char *restrict fmt,
 			dest = va_arg(ap, void *);
 		}
 		managed_slot = managed_results && dest
-			? (c2go_scan_managed_slot)dest : (c2go_scan_managed_slot)0;
+			? (c2go_stdio_managed_slot)dest : (c2go_stdio_managed_slot)0;
 
 		for (width=0; isdigit(*p); p++) {
 			width = 10*width + *p - '0';
@@ -3051,11 +3051,11 @@ static int vfscanf_core(FILE *restrict f, const char *restrict fmt,
 			if (t == 'c' && shcnt(f) != width) goto match_fail;
 			if (alloc) {
 				if (alloc == SCAN_ALLOC_GC) {
-					c2go_scan_managed_store(
+					c2go_stdio_managed_store(
 						managed_slot,
 						size == SIZE_l ?
-							(c2go_scan_managed_pointer)wcs :
-							(c2go_scan_managed_pointer)s);
+							(c2go_stdio_managed_pointer)wcs :
+							(c2go_stdio_managed_pointer)s);
 				} else if (size == SIZE_l) {
 					*(wchar_t **)(void *)dest = (wchar_t *)(void *)wcs;
 				} else {
@@ -3086,9 +3086,9 @@ static int vfscanf_core(FILE *restrict f, const char *restrict fmt,
 			if (!shcnt(f)) goto match_fail;
 			if (t=='p' && dest) {
 				if (managed_results)
-					c2go_scan_managed_store(
+					c2go_stdio_managed_store(
 						managed_slot,
-						(c2go_scan_managed_pointer)(uintptr_t)x);
+						(c2go_stdio_managed_pointer)(uintptr_t)x);
 				else
 					*(void **)(void *)dest = (void *)(uintptr_t)x;
 			}
@@ -3569,20 +3569,42 @@ size_t fread(void *restrict destv, size_t size, size_t nmemb, FILE *restrict f)
 	return nmemb;
 }
 
-/* ── getline/getdelim (#607) — musl src/stdio/{getdelim,getline}.c, verbatim.
- * Grows *s via realloc; uses getc_unlocked + the feof MACRO under one FLOCK. */
-c2go_extern
-ssize_t getdelim(char **restrict s, size_t *restrict n, int delim, FILE *restrict f)
+/* ── getline/getdelim (#607) — musl src/stdio/{getdelim,getline}.c.
+ * The parser remains shared. Root libc grows its caller-owned buffer with
+ * realloc; the managed entry grows a GC-owned noscan buffer and publishes each
+ * successful replacement through c2go_stdio_managed_store. */
+#pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
+static __attribute__((noinline)) char *managed
+c2go_getdelim_resize(char *managed old, size_t used, size_t size,
+	int managed_result)
 {
-	char *tmp;
+	char *managed next;
+
+	if (!managed_result)
+		return (char *managed)realloc((void *)old, size);
+	next = (char *managed)gc_malloc(0, size);
+	if (next && old && used)
+		memcpy((void *)next, (const void *)old, used);
+	return next;
+}
+#pragma c2go pop
+
+static __attribute__((noinline)) ssize_t getdelim_core(char **restrict root_s,
+	c2go_stdio_managed_slot managed_s, size_t *restrict root_n,
+	c2go_stdio_managed_size_slot managed_n, int delim, FILE *restrict f,
+	int managed_result)
+{
+	char *managed current;
+	char *managed tmp;
 	unsigned char *z;
+	size_t capacity;
 	size_t k;
 	size_t i=0;
 	int c;
 
 	FLOCK(f);
 
-	if (!n || !s) {
+	if (managed_result ? (!managed_s || !managed_n) : (!root_s || !root_n)) {
 		f->mode |= f->mode-1;
 		f->flags |= F_ERR;
 		FUNLOCK(f);
@@ -3590,7 +3612,21 @@ ssize_t getdelim(char **restrict s, size_t *restrict n, int delim, FILE *restric
 		return -1;
 	}
 
-	if (!*s) *n=0;
+	if (managed_result) {
+		current = (char *managed)*managed_s;
+		capacity = *managed_n;
+		if (!current) {
+			capacity = 0;
+			*managed_n = 0;
+		}
+	} else {
+		current = (char *managed)*root_s;
+		capacity = *root_n;
+		if (!current) {
+			capacity = 0;
+			*root_n = 0;
+		}
+	}
 
 	for (;;) {
 		if (f->rpos != f->rend) {
@@ -3600,18 +3636,19 @@ ssize_t getdelim(char **restrict s, size_t *restrict n, int delim, FILE *restric
 			z = 0;
 			k = 0;
 		}
-		if (i+k >= *n) {
+		if (i+k >= capacity) {
 			size_t m = i+k+2;
 			if (!z && m < SIZE_MAX/4) m += m/2;
-			tmp = realloc(*s, m);
+			tmp = c2go_getdelim_resize(current, i, m, managed_result);
 			if (!tmp) {
 				m = i+k+2;
-				tmp = realloc(*s, m);
+				tmp = c2go_getdelim_resize(current, i, m,
+					managed_result);
 				if (!tmp) {
 					/* Copy as much as fits and ensure no
 					 * pushback remains in the FILE buf. */
-					k = *n-i;
-					memcpy(*s+i, f->rpos, k);
+					k = capacity-i;
+					if (k) memcpy((void *)(current+i), f->rpos, k);
 					f->rpos += k;
 					f->mode |= f->mode-1;
 					f->flags |= F_ERR;
@@ -3620,11 +3657,19 @@ ssize_t getdelim(char **restrict s, size_t *restrict n, int delim, FILE *restric
 					return -1;
 				}
 			}
-			*s = tmp;
-			*n = m;
+			current = tmp;
+			capacity = m;
+			if (managed_result) {
+				c2go_stdio_managed_store(managed_s,
+					(c2go_stdio_managed_pointer)current);
+				*managed_n = m;
+			} else {
+				*root_s = (char *)(void *)current;
+				*root_n = m;
+			}
 		}
 		if (k) {
-			memcpy(*s+i, f->rpos, k);
+			memcpy((void *)(current+i), f->rpos, k);
 			f->rpos += k;
 			i += k;
 		}
@@ -3638,14 +3683,31 @@ ssize_t getdelim(char **restrict s, size_t *restrict n, int delim, FILE *restric
 		}
 		/* If the byte read by getc won't fit without growing the
 		 * output buffer, push it back for next iteration. */
-		if (i+1 >= *n) *--f->rpos = c;
-		else if (((*s)[i++] = c) == delim) break;
+		if (i+1 >= capacity) *--f->rpos = c;
+		else if ((current[i++] = c) == delim) break;
 	}
-	(*s)[i] = 0;
+	current[i] = 0;
 
 	FUNLOCK(f);
 
 	return i;
+}
+
+c2go_extern
+ssize_t getdelim(char **restrict s, size_t *restrict n, int delim,
+	FILE *restrict f)
+{
+	return getdelim_core(s, (c2go_stdio_managed_slot)0, n,
+		(c2go_stdio_managed_size_slot)0, delim, f, 0);
+}
+
+/* Internal cross-package entry for mlib's managed FILE carrier and result
+ * slots. The caller owns the outer FILE lock; raw mlib engines have lock=-1. */
+c2go_extern ssize_t __c2go_file_raw_getdelim_managed(
+	c2go_stdio_managed_slot s, c2go_stdio_managed_size_slot n, int delim,
+	FILE *restrict f)
+{
+	return getdelim_core((char **)0, s, (size_t *)0, n, delim, f, 1);
 }
 
 c2go_extern

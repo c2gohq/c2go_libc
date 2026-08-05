@@ -78,6 +78,25 @@ verify_function_write_barrier() {
 	fi
 }
 
+verify_function_call_count() {
+	local asm_path="$1"
+	local symbol="$2"
+	local callee="$3"
+	local minimum="$4"
+	local description="$5"
+	local count
+	count="$(awk -v prefix="TEXT ·${symbol}(SB)" -v call="CALL ·${callee}(SB)" '
+		index($0, prefix) == 1 { in_function=1; next }
+		in_function && /^TEXT / { exit }
+		in_function && index($0, call) { count++ }
+		END { print count+0 }
+	' "$asm_path")"
+	if [ "$count" -lt "$minimum" ]; then
+		echo "gen.sh: $description has $count calls, want at least $minimum in $asm_path" >&2
+		exit 1
+	fi
+}
+
 # Pull the .c paths out of CMakeLists.txt, expanding ${MUSL_DIR}/${CSRC_DIR}.
 SOURCES=()
 while IFS= read -r line; do
@@ -150,7 +169,13 @@ for t in "${LIBC_TARGETS[@]}"; do
 		arm64) verify_arm64_link_register "$ROOT/libc_${goos}_${arch}.s" ;;
 	esac
 	verify_function_write_barrier "$ROOT/libc_${goos}_${arch}.s" \
-		c2go_scan_managed_store "managed scanf result publication"
+		c2go_stdio_managed_store "managed stdio result publication"
+	verify_function_call_count "$ROOT/libc_${goos}_${arch}.s" \
+		vfscanf_core c2go_stdio_managed_store 2 \
+		"managed scanf pointer publication"
+	verify_function_call_count "$ROOT/libc_${goos}_${arch}.s" \
+		getdelim_core c2go_stdio_managed_store 1 \
+		"managed getdelim pointer publication"
 	out="$tmp/out_${goos}_${arch}"; mkdir -p "$out"
 	"$C2GOBIND" -pkgname=libc -goname="libc_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" ${lib:+-l "$lib"} "$asm"
