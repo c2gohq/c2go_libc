@@ -52,6 +52,10 @@ type mlib_cookie_io_functions_t struct {
 type mlib_dirent_slot struct {
 	value *dirent
 }
+type mlib_entry struct {
+	key  *byte
+	data unsafe.Pointer
+}
 type mlib_glob_slot struct {
 	value *byte
 }
@@ -61,6 +65,16 @@ type mlib_glob_t struct {
 	gl_offs  uint64
 	__dummy1 int32
 	__dummy2 [5]uint64
+}
+type mlib_hsearch_data struct {
+	__tab     *mlib_hsearch_table
+	__unused1 uint32
+	__unused2 uint32
+}
+type mlib_hsearch_table struct {
+	entries *mlib_entry
+	mask    uint64
+	used    uint64
 }
 type mlib_match struct {
 	next *mlib_match
@@ -74,6 +88,20 @@ type mlib_pthread_mutex_t struct {
 }
 type mlib_pthread_rwlock_t struct {
 	_state unsafe.Pointer
+}
+type mlib_qelem struct {
+	q_forw *mlib_qelem
+	q_back *mlib_qelem
+	q_data [1]int8
+}
+type mlib_queue_node struct {
+	next     *mlib_queue_node
+	previous *mlib_queue_node
+}
+type mlib_tnode struct {
+	key    unsafe.Pointer
+	child  [2]*mlib_tnode
+	height int32
 }
 
 // ─── Forward-only opaque types ───────────────────
@@ -89,11 +117,14 @@ type mlib_pthread_attr_t struct{}
 // _typeinfo_<X> var below; each caches the *runtime._type computed
 // once at init via reflect.TypeFor[T] (no value construction).
 var (
-	_typeinfo__c2go_mlib_FILE  unsafe.Pointer
-	_typeinfo_mlib_DIR         unsafe.Pointer
-	_typeinfo_mlib_dirent_slot unsafe.Pointer
-	_typeinfo_mlib_glob_slot   unsafe.Pointer
-	_typeinfo_mlib_match       unsafe.Pointer
+	_typeinfo__c2go_mlib_FILE    unsafe.Pointer
+	_typeinfo_mlib_DIR           unsafe.Pointer
+	_typeinfo_mlib_dirent_slot   unsafe.Pointer
+	_typeinfo_mlib_entry         unsafe.Pointer
+	_typeinfo_mlib_glob_slot     unsafe.Pointer
+	_typeinfo_mlib_hsearch_table unsafe.Pointer
+	_typeinfo_mlib_match         unsafe.Pointer
+	_typeinfo_mlib_tnode         unsafe.Pointer
 )
 
 // reflect.Type's 2nd interface word is the *runtime._type mallocgc wants.
@@ -105,8 +136,11 @@ func init() {
 	_typeinfo__c2go_mlib_FILE = _c2go_rtype(reflect.TypeFor[_c2go_mlib_FILE]())
 	_typeinfo_mlib_DIR = _c2go_rtype(reflect.TypeFor[mlib_DIR]())
 	_typeinfo_mlib_dirent_slot = _c2go_rtype(reflect.TypeFor[mlib_dirent_slot]())
+	_typeinfo_mlib_entry = _c2go_rtype(reflect.TypeFor[mlib_entry]())
 	_typeinfo_mlib_glob_slot = _c2go_rtype(reflect.TypeFor[mlib_glob_slot]())
+	_typeinfo_mlib_hsearch_table = _c2go_rtype(reflect.TypeFor[mlib_hsearch_table]())
 	_typeinfo_mlib_match = _c2go_rtype(reflect.TypeFor[mlib_match]())
+	_typeinfo_mlib_tnode = _c2go_rtype(reflect.TypeFor[mlib_tnode]())
 }
 
 // ─── Function declarations ──────────────────────────────────
@@ -251,6 +285,27 @@ func MlibGlob(pattern *byte, flags int32, error_function uintptr, result *mlib_g
 //go:linkname MlibGlobfree github.com/c2gohq/c2go_libc/mlib.mlib_globfree
 func MlibGlobfree(result *mlib_glob_t)
 
+//go:linkname MlibHcreate github.com/c2gohq/c2go_libc/mlib.mlib_hcreate
+func MlibHcreate(count uint64) int32
+
+//go:linkname MlibHcreateR github.com/c2gohq/c2go_libc/mlib.mlib_hcreate_r
+func MlibHcreateR(count uint64, table *mlib_hsearch_data) int32
+
+//go:linkname MlibHdestroy github.com/c2gohq/c2go_libc/mlib.mlib_hdestroy
+func MlibHdestroy()
+
+//go:linkname MlibHdestroyR github.com/c2gohq/c2go_libc/mlib.mlib_hdestroy_r
+func MlibHdestroyR(table *mlib_hsearch_data)
+
+//go:linkname MlibHsearch github.com/c2gohq/c2go_libc/mlib.mlib_hsearch
+func MlibHsearch(item mlib_entry, action uintptr) *mlib_entry
+
+//go:linkname MlibHsearchR github.com/c2gohq/c2go_libc/mlib.mlib_hsearch_r
+func MlibHsearchR(item mlib_entry, action uintptr, result **mlib_entry, table *mlib_hsearch_data) int32
+
+//go:linkname MlibInsque github.com/c2gohq/c2go_libc/mlib.mlib_insque
+func MlibInsque(element unsafe.Pointer, predecessor unsafe.Pointer)
+
 //go:linkname MlibNftw github.com/c2gohq/c2go_libc/mlib.mlib_nftw
 func MlibNftw(path *byte, fn uintptr, fd_limit int32, flags int32) int32
 
@@ -335,6 +390,9 @@ func MlibReaddir(dir *mlib_DIR) *dirent
 //go:linkname MlibReaddirR github.com/c2gohq/c2go_libc/mlib.mlib_readdir_r
 func MlibReaddirR(dir *mlib_DIR, entry *dirent, result **dirent) int32
 
+//go:linkname MlibRemque github.com/c2gohq/c2go_libc/mlib.mlib_remque
+func MlibRemque(element unsafe.Pointer)
+
 //go:linkname MlibRewind github.com/c2gohq/c2go_libc/mlib.mlib_rewind
 func MlibRewind(stream *_c2go_mlib_FILE)
 
@@ -355,6 +413,21 @@ func MlibStdfile(which int32) *_c2go_mlib_FILE
 
 //go:linkname MlibSwscanf github.com/c2gohq/c2go_libc/mlib.mlib_swscanf
 func MlibSwscanf(input *int32, format *int32, argptrs unsafe.Pointer) int32
+
+//go:linkname MlibTdelete github.com/c2gohq/c2go_libc/mlib.mlib_tdelete
+func MlibTdelete(key unsafe.Pointer, rootp *unsafe.Pointer, compare uintptr) unsafe.Pointer
+
+//go:linkname MlibTdestroy github.com/c2gohq/c2go_libc/mlib.mlib_tdestroy
+func MlibTdestroy(root unsafe.Pointer, destroy_key uintptr)
+
+//go:linkname MlibTfind github.com/c2gohq/c2go_libc/mlib.mlib_tfind
+func MlibTfind(key unsafe.Pointer, rootp *unsafe.Pointer, compare uintptr) unsafe.Pointer
+
+//go:linkname MlibTsearch github.com/c2gohq/c2go_libc/mlib.mlib_tsearch
+func MlibTsearch(key unsafe.Pointer, rootp *unsafe.Pointer, compare uintptr) unsafe.Pointer
+
+//go:linkname MlibTwalk github.com/c2gohq/c2go_libc/mlib.mlib_twalk
+func MlibTwalk(root unsafe.Pointer, action uintptr)
 
 //go:linkname MlibUngetc github.com/c2gohq/c2go_libc/mlib.mlib_ungetc
 func MlibUngetc(character int32, stream *_c2go_mlib_FILE) int32
@@ -405,6 +478,10 @@ func MlibWscanf(format *int32, argptrs unsafe.Pointer) int32
 // the Go compiler emits matching gcdata bits and the runtime
 // scans every pointer slot as a root. Clang's .s output
 // suppresses the matching GLOBL trailer for each name below.
+var mlib_global_hsearch struct {
+	w0 unsafe.Pointer
+	w1 uintptr
+}
 var mlib_ofl_head unsafe.Pointer
 var mlib_std_files [3]unsafe.Pointer
 

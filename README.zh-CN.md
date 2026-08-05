@@ -55,11 +55,10 @@ github.com/c2gohq/c2go_libc
 
 根包继续保留基于 unmanaged handle ID 的兼容接口。新的 `mlib` 子包用于提供
 有状态 API 的 managed 版本：C 对象直接保存 Go GC 可见的状态指针，因此不再
-需要全局 ID 到指针的注册表。目前已经实现无名信号量，以及 pthread 的
-mutex、condition variable、rwlock 同步簇，并实现基础目录流生命周期：
-`opendir`、`fdopendir`、`readdir`、`readdir_r`、`rewinddir`、`dirfd`
-和 `closedir`，并实现 managed `scandir` 以及 Unix `nftw`/`ftw` 文件树遍历。
-managed `glob` 返回图也已经实现。
+需要全局 ID 到指针的注册表。目前已实现无名信号量；pthread 生命周期、key 与
+同步对象；完整的 managed 目录传播簇（`DIR`、`scandir`、`nftw`/`ftw`、
+`glob`）；标准、显式、内存、自定义、宽字符和进程流；以及 managed
+`search.h` 树、哈希表和队列容器。
 
 默认名称显式带 `mlib_` 前缀，例如 `mlib_sem_t`、`mlib_sem_init`、
 `mlib_pthread_mutex_t`、`mlib_pthread_mutex_lock`、`mlib_DIR`、
@@ -67,7 +66,9 @@ managed `glob` 返回图也已经实现。
 头文件前定义 `C2GO_MLIB_UNPREFIXED`，则会改为对应的标准名称。这个开关作用于
 整个 C2Go/LTO 包，不能在同一包里混用两套路由。managed C 堆对象必须使用带类型信息的
 `gc_malloc(c2go_typeinfo(T), sizeof(T))`，不能使用普通 `malloc`。managed
-`scandir` 和 `glob` 的返回图由 GC 持有，不能传给 `free`。示例和约束见
+`scandir`、`glob` 和 managed search 容器均由 GC 持有，不能传给 `free`。
+按字节处理元素的 `lsearch`/`lfind` 仍只提供 root 版本，并且只能用于不含指针
+的元素。示例和约束见
 [mlib/README.md](mlib/README.md)。
 
 ## 当前目标清单

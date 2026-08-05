@@ -60,11 +60,11 @@ human-facing repository name `c2go-libc`.
 The root package keeps its unmanaged, handle-ID-based compatibility surface.
 The new `mlib` subpackage is the managed counterpart for stateful APIs: its C
 carrier stores a direct GC-visible Go pointer and therefore needs no global
-ID-to-pointer registry. The implemented families are unnamed semaphores and
-the pthread mutex/condition-variable/rwlock synchronization cluster, plus the
-basic directory-stream lifecycle (`opendir`, `fdopendir`, `readdir`,
-`readdir_r`, `rewinddir`, `dirfd`, and `closedir`), managed `scandir`, and the
-Unix `nftw`/`ftw` tree-walk APIs, plus managed `glob` results.
+ID-to-pointer registry. The implemented families cover unnamed semaphores;
+pthread lifecycle, keys, and synchronization; the complete managed directory
+propagation cluster (`DIR`, `scandir`, `nftw`/`ftw`, and `glob`); managed
+standard, explicit, memory, custom, wide, and process streams; and managed
+`search.h` tree, hash-table, and queue containers.
 
 Managed names are explicit by default (`mlib_sem_t`, `mlib_sem_init`,
 `mlib_pthread_mutex_t`, `mlib_pthread_mutex_lock`, `mlib_DIR`,
@@ -73,7 +73,9 @@ Managed names are explicit by default (`mlib_sem_t`, `mlib_sem_init`,
 standard names instead. That switch applies to the whole C2Go/LTO package; do
 not mix both routings in one package. Managed C heap objects use typed
 `gc_malloc(c2go_typeinfo(T), sizeof(T))`, never ordinary `malloc`. Managed
-`scandir` and `glob` results are GC-owned and must not be passed to `free`. See
+`scandir`, `glob`, and managed search containers are GC-owned and must not be
+passed to `free`. The byte-oriented `lsearch`/`lfind` pair remains root-only
+and may be used only with pointer-free elements. See
 [mlib/README.md](mlib/README.md) for examples and constraints.
 
 ## Current target manifest

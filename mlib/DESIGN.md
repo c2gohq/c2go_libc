@@ -18,7 +18,7 @@ listed family is already available from `mlib`.
   Go-heap pointer stored in a carrier or typed container uses an explicit
   `managed` pointer type so it remains AS1 through LLVM and every heap/root
   update receives a Go write barrier. `mlib/gen.sh` rejects generated assembly
-  if the DIR, `scandir`, or `glob` barrier sites disappear.
+  if required carrier, pointer-container, or retirement barriers disappear.
 - `mlib` never exposes or uses ordinary `malloc`, `realloc`, or `free`.
 - Stateless implementations are shared. Go-owned state algorithms are shared
   below both carrier layers. C code is instantiated twice only when allocation,
@@ -72,6 +72,9 @@ mlib DIR (direct pointer, typed heap) ---+
 root FILE lock/process (handle ids) -----+
                                         +--> shared Go lock/process core
 mlib FILE (direct managed pointers) -----+
+
+root search containers (noscan malloc) --+--> musl search algorithms
+mlib search containers (typed GC heap) --+
 ```
 
 No musl source is dual-compiled for semaphore or pthread state. Their behavior
@@ -128,6 +131,28 @@ typed objects and their variable-length strings are separate no-pointer
 objects. `GLOB_APPEND` allocates a replacement vector and copies old slots with
 write barriers; sorting uses typed swaps; `globfree` clears the carrier root.
 No ordinary `malloc`, `realloc`, `qsort`, or `free` participates in this graph.
+
+### Search-container cluster
+
+The managed search header selectively instantiates musl's AVL tree, open-address
+hash table, and linked-queue algorithms. Root libc keeps its ordinary
+malloc-backed, noscan containers and its stable-unmanaged-pointer contract.
+The mlib instance instead allocates every internal tree node and hash array
+with typed `gc_malloc`; hash entries, tree keys, and queue links are explicit
+managed fields. Rotations, rehash copies, insertion, unlinking, and retirement
+therefore preserve pointer metadata and Go write barriers. The global and
+reentrant hash APIs share this same managed implementation.
+
+The public algorithm shape is shared, but the storage instance cannot be: a
+root node is a noscan C object while an mlib node is a precisely scanned Go
+object. `tdelete`, `tdestroy`, `hdestroy`, and `remque` clear managed roots and
+let the GC reclaim unreachable storage rather than calling `free`.
+
+`lsearch` and `lfind` are deliberately not instantiated for mlib. Their
+`void * + element width` interface performs byte copies without carrying a C
+element type, so no implementation can derive the pointer bitmap needed for a
+pointer-bearing managed element. Both namespace modes retain the root functions
+for pointer-free elements only.
 
 ### FILE cluster
 
@@ -186,7 +211,9 @@ public FILE declaration.
 2. Keep the completed DIR propagation cluster under GC-stress regression.
 3. Keep the completed managed FILE process-stream phase under native and
    GC-stress regression.
-4. Treat iconv as a separate design: its POSIX `(iconv_t)-1` failure sentinel
+4. Keep managed search trees, hash tables, and queues under GC-stress and
+   generated write-barrier regression; keep `lsearch`/`lfind` pointer-free.
+5. Treat iconv as a separate design: its POSIX `(iconv_t)-1` failure sentinel
    cannot be stored in a precise-GC managed pointer slot, so it must not be
    migrated mechanically.
 

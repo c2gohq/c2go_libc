@@ -36,11 +36,29 @@ type c2go_mlib_scan_result struct {
 	output        *byte
 	output_size   uint64
 }
+type c2go_mlib_search_item struct {
+	key     int32
+	payload *c2go_mlib_search_payload
+}
+type c2go_mlib_search_payload struct {
+	value  int32
+	nested *int32
+}
+type c2go_mlib_search_queue struct {
+	next     *c2go_mlib_search_queue
+	previous *c2go_mlib_search_queue
+	payload  *c2go_mlib_search_payload
+	key      int32
+}
 type cookie_io_functions_t struct {
 	read  uintptr
 	write uintptr
 	seek  uintptr
 	close uintptr
+}
+type entry struct {
+	key  *byte
+	data unsafe.Pointer
 }
 type glob_t struct {
 	gl_pathc uint64
@@ -48,6 +66,11 @@ type glob_t struct {
 	gl_offs  uint64
 	__dummy1 int32
 	__dummy2 [5]uint64
+}
+type hsearch_data struct {
+	__tab     *mlib_hsearch_table
+	__unused1 uint32
+	__unused2 uint32
 }
 type pthread_cond_t struct {
 	_state unsafe.Pointer
@@ -58,18 +81,33 @@ type pthread_mutex_t struct {
 type pthread_rwlock_t struct {
 	_state unsafe.Pointer
 }
+type qelem struct {
+	q_forw *qelem
+	q_back *qelem
+	q_data [1]int8
+}
 type sem_t struct {
 	_state unsafe.Pointer
 }
+
+// ─── Forward-only opaque types ───────────────────
+// Types declared in C as `typedef struct X X;` without a
+// matching definition in any c2go-compiled TU. Emitted as
+// zero-size opaque structs; pointers to them remain valid
+// handles but contents are inaccessible from Go-side code.
+type mlib_hsearch_table struct{}
 
 // ─── Type-descriptor indirection (#218) ──────
 // clang's Plan 9 .s loads each type descriptor from the per-type
 // _typeinfo_<X> var below; each caches the *runtime._type computed
 // once at init via reflect.TypeFor[T] (no value construction).
 var (
-	_typeinfo_c2go_mlib_cookie_state unsafe.Pointer
-	_typeinfo_c2go_mlib_scan_result  unsafe.Pointer
-	_typeinfo_pthread_mutex_t        unsafe.Pointer
+	_typeinfo_c2go_mlib_cookie_state   unsafe.Pointer
+	_typeinfo_c2go_mlib_scan_result    unsafe.Pointer
+	_typeinfo_c2go_mlib_search_item    unsafe.Pointer
+	_typeinfo_c2go_mlib_search_payload unsafe.Pointer
+	_typeinfo_c2go_mlib_search_queue   unsafe.Pointer
+	_typeinfo_pthread_mutex_t          unsafe.Pointer
 )
 
 // reflect.Type's 2nd interface word is the *runtime._type mallocgc wants.
@@ -80,6 +118,9 @@ func _c2go_rtype(t reflect.Type) unsafe.Pointer {
 func init() {
 	_typeinfo_c2go_mlib_cookie_state = _c2go_rtype(reflect.TypeFor[c2go_mlib_cookie_state]())
 	_typeinfo_c2go_mlib_scan_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_scan_result]())
+	_typeinfo_c2go_mlib_search_item = _c2go_rtype(reflect.TypeFor[c2go_mlib_search_item]())
+	_typeinfo_c2go_mlib_search_payload = _c2go_rtype(reflect.TypeFor[c2go_mlib_search_payload]())
+	_typeinfo_c2go_mlib_search_queue = _c2go_rtype(reflect.TypeFor[c2go_mlib_search_queue]())
 	_typeinfo_pthread_mutex_t = _c2go_rtype(reflect.TypeFor[pthread_mutex_t]())
 }
 
@@ -101,6 +142,9 @@ func MlibPopenUnprefixedSelftest() int32
 
 //go:linkname MlibPthreadUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_pthread_unprefixed_selftest
 func MlibPthreadUnprefixedSelftest() int32
+
+//go:linkname MlibSearchUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_search_unprefixed_selftest
+func MlibSearchUnprefixedSelftest() int32
 
 //go:linkname MlibSemUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_sem_unprefixed_selftest
 func MlibSemUnprefixedSelftest() int32

@@ -7,6 +7,7 @@
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
 #include <c2go/mlib/pthread.h>
+#include <c2go/mlib/search.h>
 #include <c2go/mlib/semaphore.h>
 #include <c2go/mlib/stdio.h>
 #if !defined(_WIN32)

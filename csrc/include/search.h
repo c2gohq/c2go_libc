@@ -17,7 +17,11 @@
  * one): it must hold for the whole lifetime of the entry, not just the call.
  * lsearch additionally inherits qsort's memcpy caveat — the appended element
  * is an untyped byte copy, so elements must not hold managed pointers either.
- * musl itself has no such caveat only because it has no GC. */
+ * musl itself has no such caveat only because it has no GC.
+ *
+ * Code that needs GC-owned keys, values, nodes, or links should include
+ * <c2go/mlib/search.h>. That header provides managed tree/hash/queue variants;
+ * lsearch/lfind remain pointer-free-only because their element type is erased. */
 #ifndef _SEARCH_H
 #define _SEARCH_H
 
@@ -29,6 +33,7 @@
 typedef enum { FIND, ENTER } ACTION;
 typedef enum { preorder, postorder, endorder, leaf } VISIT;
 
+#ifndef C2GO_SEARCH_OMIT_HASH
 typedef struct entry {
 	char *key;
 	void *data;
@@ -55,11 +60,14 @@ void hdestroy_r(struct hsearch_data *)
 int hsearch_r(ENTRY, ACTION, ENTRY **, struct hsearch_data *)
     c2go_linkname("github.com/c2gohq/c2go_libc.hsearch_r", C2GO_GOABI0);
 #endif
+#endif /* !C2GO_SEARCH_OMIT_HASH */
 
+#ifndef C2GO_SEARCH_OMIT_QUEUE
 void insque(void *, void *)
     c2go_linkname("github.com/c2gohq/c2go_libc.insque", C2GO_GOABI0);
 void remque(void *)
     c2go_linkname("github.com/c2gohq/c2go_libc.remque", C2GO_GOABI0);
+#endif
 
 void *lsearch(const void *, void *, size_t *, size_t,
 	int (*)(const void *, const void *))
@@ -68,6 +76,7 @@ void *lfind(const void *, const void *, size_t *, size_t,
 	int (*)(const void *, const void *))
     c2go_linkname("github.com/c2gohq/c2go_libc.lfind", C2GO_GOABI0);
 
+#ifndef C2GO_SEARCH_OMIT_TREE
 void *tdelete(const void *__restrict, void **__restrict, int(*)(const void *, const void *))
     c2go_linkname("github.com/c2gohq/c2go_libc.tdelete", C2GO_GOABI0);
 void *tfind(const void *, void *const *, int(*)(const void *, const void *))
@@ -76,15 +85,20 @@ void *tsearch(const void *, void **, int (*)(const void *, const void *))
     c2go_linkname("github.com/c2gohq/c2go_libc.tsearch", C2GO_GOABI0);
 void twalk(const void *, void (*)(const void *, VISIT, int))
     c2go_linkname("github.com/c2gohq/c2go_libc.twalk", C2GO_GOABI0);
+#endif
 
 #ifdef _GNU_SOURCE
+#ifndef C2GO_SEARCH_OMIT_QUEUE
 struct qelem {
 	struct qelem *q_forw, *q_back;
 	char q_data[1];
 };
+#endif
 
+#ifndef C2GO_SEARCH_OMIT_TREE
 void tdestroy(void *, void (*)(void *))
     c2go_linkname("github.com/c2gohq/c2go_libc.tdestroy", C2GO_GOABI0);
+#endif
 #endif
 
 #endif /* _SEARCH_H */

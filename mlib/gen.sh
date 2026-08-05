@@ -131,6 +131,46 @@ verify_managed_write_barriers() {
 		mlib_clear_buffer_pointer 1 "managed FILE buffer release"
 	verify_function_call_count "$asm_path" mlib_fclose \
 		mlib_clear_state_pointer 4 "managed FILE object, process, and slot release"
+	verify_function_write_barrier "$asm_path" mlib_tnode_clear_key \
+		"managed tree key retirement"
+	verify_function_write_barrier "$asm_path" mlib_tnode_clear_child \
+		"managed tree link retirement"
+	verify_function_write_barrier "$asm_path" mlib_tsearch \
+		"managed tree insertion and rotation"
+	verify_function_write_barrier "$asm_path" mlib_tdelete \
+		"managed tree unlink and rebalance"
+	verify_function_call_count "$asm_path" mlib_tdelete \
+		mlib_tnode_clear_key 1 "managed tree deleted-key retirement"
+	verify_function_call_count "$asm_path" mlib_tdelete \
+		mlib_tnode_clear_child 2 "managed tree deleted-link retirement"
+	verify_function_call_count "$asm_path" mlib_tdestroy_node \
+		mlib_tnode_clear_key 1 "managed tree destroy-key retirement"
+	verify_function_call_count "$asm_path" mlib_tdestroy_node \
+		mlib_tnode_clear_child 2 "managed tree destroy-link retirement"
+	verify_function_call_count "$asm_path" mlib_hsearch_resize \
+		_c2go_typedmemmove 1 "managed hash rehash copies"
+	verify_function_write_barrier "$asm_path" mlib_hsearch_resize \
+		"managed hash table replacement"
+	verify_function_call_count "$asm_path" mlib_hsearch_r \
+		_c2go_typedmemmove 1 "managed hash entry publication"
+	verify_function_write_barrier "$asm_path" mlib_hsearch_r \
+		"managed hash result publication"
+	verify_function_write_barrier "$asm_path" mlib_hsearch_clear_key \
+		"managed hash failed-key retirement"
+	verify_function_write_barrier "$asm_path" mlib_hsearch_clear_data \
+		"managed hash failed-data retirement"
+	verify_function_write_barrier "$asm_path" mlib_hdestroy_r \
+		"managed hash table retirement"
+	verify_function_write_barrier "$asm_path" mlib_insque \
+		"managed queue insertion"
+	verify_function_write_barrier "$asm_path" mlib_queue_clear_link \
+		"managed queue link retirement"
+	verify_function_call_count "$asm_path" mlib_insque \
+		mlib_queue_clear_link 2 "managed queue head reset"
+	verify_function_call_count "$asm_path" mlib_remque \
+		mlib_queue_clear_link 2 "managed queue removed-link retirement"
+	verify_function_write_barrier "$asm_path" mlib_remque \
+		"managed queue unlink"
 }
 
 TARGETS=(
@@ -151,6 +191,7 @@ LIB_SOURCES=(
 	"$ROOT/csrc/mlib/scandir.c"
 	"$ROOT/csrc/mlib/stdio.c"
 	"$ROOT/csrc/mlib/thread.c"
+	"$ROOT/csrc/mlib/search.c"
 )
 
 # Build the selectively-instantiated C part of package mlib once per target.

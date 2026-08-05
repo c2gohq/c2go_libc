@@ -17,6 +17,7 @@ The default API is explicitly namespaced:
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
+#include <c2go/mlib/search.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/wchar.h>
 
@@ -72,6 +73,7 @@ corresponding standard names for the entire C2Go/LTO package:
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
+#include <c2go/mlib/search.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/wchar.h>
 
@@ -113,10 +115,12 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 `mlib` does not provide or use `malloc`, `realloc`, or `free`. It currently
 implements unnamed semaphores; pthread lifecycle, thread-specific keys,
 mutexes, condition variables, and rwlocks; the directory-stream lifecycle;
-`scandir`; Unix `nftw`/`ftw`; `glob`; and the ownership-closed managed `FILE`
-surface, including process streams.
-Their state algorithms are shared with root libc; only state resolution differs
-(direct managed pointer versus unmanaged handle ID). Managed `opendir` and
+`scandir`; Unix `nftw`/`ftw`; `glob`; managed search trees, hash tables, and
+queues; and the ownership-closed managed `FILE` surface, including process
+streams. Where state lives in Go, root libc and mlib share the same behavior
+core and differ only in state resolution (direct managed pointer versus
+unmanaged handle ID). Pointer-bearing C containers are selectively
+instantiated with typed GC storage. Managed `opendir` and
 `fdopendir` allocate the carrier internally with typed `gc_malloc`; `closedir`
 clears its state pointer and lets the GC reclaim the carrier. Managed `scandir` allocates
 both its result array and each `dirent` on the Go heap. They must remain in
@@ -180,9 +184,19 @@ the integer-only `pthread_once` carrier and stateless `pthread_atfork` remain
 shared from the root pthread surface. Never mix root and mlib thread/key
 carriers.
 
-The directory propagation and managed FILE clusters are complete for the
-documented surface. Remaining state families retain the boundaries documented
-in DESIGN.md.
+Managed `tsearch`/`tfind`/`tdelete`/`twalk`/`tdestroy`, the `hsearch` family,
+and `insque`/`remque` retain application pointers in typed GC objects and use
+write barriers for insertion, resizing, rotation, and removal. Keys, values,
+and queue nodes must live in managed storage. Destruction or removal clears
+references and leaves reclamation to the GC; never call `free` on these
+containers. Comparators, walk functions, and destroy functions are synchronous
+c2go internal-ABI callbacks. `lsearch`/`lfind` keep using the root implementation
+because their size-based API erases the element type; use them only with
+pointer-free elements.
+
+The directory propagation, managed search-container, and managed FILE clusters
+are complete for the documented surface. Remaining state families retain the
+boundaries documented in DESIGN.md.
 
 ## 简体中文
 
@@ -292,10 +306,11 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 
 `mlib` 不提供、也不使用 `malloc`、`realloc` 或 `free`。当前已经实现无名
 信号量、pthread 的线程生命周期、线程私有 key、mutex/condition variable/
-rwlock、目录流生命周期、`scandir`、Unix `nftw`/`ftw`、`glob`，以及包含
-进程流的 ownership-closed managed `FILE` 接口。它们的行为核心与根 libc
-共用，只有状态解析
-方式不同：`mlib` 直接读取 managed pointer，根 libc 仍通过 unmanaged handle ID 查表。managed `opendir`
+rwlock、目录流生命周期、`scandir`、Unix `nftw`/`ftw`、`glob`、managed
+search tree/hash/queue，以及包含进程流的 ownership-closed managed `FILE`
+接口。位于 Go 中的状态逻辑由 root libc 与 mlib 共用，两者只在状态解析方式上
+不同：`mlib` 直接读取 managed pointer，根 libc 仍通过 unmanaged handle ID
+查表；包含指针的 C 容器则使用 typed GC storage 选择性实例化。managed `opendir`
 和 `fdopendir` 在内部使用 typed `gc_malloc` 分配 carrier；`closedir` 清空状态
 指针，由 GC 回收 carrier。managed `scandir` 的结果数组及每个 `dirent` 都位于
 Go heap，必须保存在 managed storage 中，使用完只需丢弃引用，不能调用 `free`；
@@ -346,5 +361,13 @@ managed `pthread_t` 和 `pthread_key_t` 都是 GC 可见的直接状态指针；
 `pthread_once` carrier 和无状态的 `pthread_atfork` 继续复用根 pthread 接口。
 不能在 root 与 mlib 之间混用 thread/key carrier。
 
-目录传播簇和文档所列的 managed FILE 簇现已完整；其余状态簇仍遵循
+managed `tsearch`/`tfind`/`tdelete`/`twalk`/`tdestroy`、`hsearch` family 和
+`insque`/`remque` 会把应用指针保存在 typed GC 对象中，并通过写屏障完成插入、
+扩容、旋转和移除。key、value 与 queue node 必须位于 managed storage；销毁或
+移除只会清除引用，由 GC 回收，不能调用 `free`。comparator、walk 与 destroy
+回调必须是 c2go 编译的同步 internal-ABI 函数。`lsearch`/`lfind` 的 `size_t`
+接口擦除了元素类型，无法生成 pointer bitmap，因此仍复用 root 版本且只允许
+不含指针的元素。
+
+目录传播簇、managed search 容器和文档所列的 managed FILE 簇现已完整；其余状态簇仍遵循
 DESIGN.md 中记录的边界。
