@@ -57,6 +57,10 @@ void c2go_mlib_stdio_test_gc(void);
 #define C2GO_MLIB_TEST_UNGETWC ungetwc
 #define C2GO_MLIB_TEST_VFWPRINTF vfwprintf
 #define C2GO_MLIB_TEST_FWPRINTF fwprintf
+#define C2GO_MLIB_TEST_VFWSCANF vfwscanf
+#define C2GO_MLIB_TEST_FWSCANF fwscanf
+#define C2GO_MLIB_TEST_VSWSCANF vswscanf
+#define C2GO_MLIB_TEST_SWSCANF swscanf
 #define C2GO_MLIB_TEST_EXPORT mlib_stdio_unprefixed_selftest
 #define C2GO_MLIB_TEST_STDOUT_EXPORT mlib_stdio_unprefixed_stdout_selftest
 #define C2GO_MLIB_TEST_STDIN_EXPORT mlib_stdio_unprefixed_stdin_selftest

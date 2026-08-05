@@ -159,11 +159,11 @@ typed `gc_malloc` record), not in C stack locals; never pass its output to
 callback parameter is `void *managed`, while callback data buffers and seek
 positions are borrowed for the synchronous call only. All callbacks must be
 c2go-compiled internal-ABI functions. Wide-stream orientation,
-character/string I/O, pushback, and formatted output are available through
-`<c2go/mlib/wchar.h>` and reuse root libc's lock-free UTF and formatting engines
-under the managed FILE lock. Wide formatted input is not yet available because
-its `%m` results require a managed allocation and publication policy; `popen`
-also remains outside mlib. Do not pass an `mlib_FILE *` to either root-libc
+character/string I/O, pushback, and formatted input/output are available through
+`<c2go/mlib/wchar.h>` and reuse root libc's lock-free UTF, formatting, and
+scanning engines under the managed FILE lock. Wide scanf follows the same `%m`
+GC-allocation and `%m`/`%p` write-barrier rules described above. `popen` remains
+outside mlib; do not pass an `mlib_FILE *` to the root-libc process-stream
 family.
 
 In unprefixed pthread mode only the synchronization records and functions are
@@ -320,9 +320,9 @@ managed `fopencookie` 会保留非空 cookie 直到 `fclose`；回调的 cookie 
 `void *managed`，数据缓冲区与 seek position 只在同步回调期间借用，不能逃逸。
 所有回调都必须是由 c2go 编译的 internal-ABI 函数。
 `<c2go/mlib/wchar.h>` 已提供 wide stream 定向、字符/字符串读写、回退和格式化
-输出，并在 managed FILE 锁内复用 root libc 的无锁 UTF 与格式化 engine。wide
-formatted input 尚未提供，因为其中的 `%m` 结果需要 managed 分配与写屏障发布
-策略；`popen` 也尚未进入 mlib。不能把 `mlib_FILE *` 传给这两类根 libc 接口。
+输入输出，并在 managed FILE 锁内复用 root libc 的无锁 UTF、格式化与扫描
+engine。wide scanf 遵循上文相同的 `%m` GC 分配及 `%m`/`%p` 写屏障规则。
+`popen` 尚未进入 mlib；不能把 `mlib_FILE *` 传给根 libc 的进程流接口。
 
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、
 `pthread_once` 和 `pthread_atfork` 仍由根 pthread 接口提供。

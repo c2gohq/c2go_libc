@@ -10,5 +10,5 @@
 // mutex, condition-variable, and rwlock synchronization; managed directory
 // graphs; and managed explicit/standard FILE streams with formatted and
 // allocation-returning line I/O, managed memory/custom streams, and wide
-// character, string, and formatted output I/O.
+// character, string, and formatted input/output I/O.
 package mlib

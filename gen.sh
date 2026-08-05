@@ -174,6 +174,9 @@ for t in "${LIBC_TARGETS[@]}"; do
 		vfscanf_core c2go_stdio_managed_store 2 \
 		"managed scanf pointer publication"
 	verify_function_call_count "$ROOT/libc_${goos}_${arch}.s" \
+		vfwscanf_core c2go_stdio_managed_store 2 \
+		"managed wide scanf pointer publication"
+	verify_function_call_count "$ROOT/libc_${goos}_${arch}.s" \
 		getdelim_core c2go_stdio_managed_store 1 \
 		"managed getdelim pointer publication"
 	out="$tmp/out_${goos}_${arch}"; mkdir -p "$out"

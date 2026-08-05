@@ -91,6 +91,9 @@ func C2goFileRawVfscanfManaged(f *FILE, fmt *byte, ap *byte) int32
 //go:linkname C2goFileRawVfwprintf github.com/c2gohq/c2go_libc.__c2go_file_raw_vfwprintf
 func C2goFileRawVfwprintf(f *FILE, fmt *uint16, ap *byte) int32
 
+//go:linkname C2goFileRawVfwscanfManaged github.com/c2gohq/c2go_libc.__c2go_file_raw_vfwscanf_managed
+func C2goFileRawVfwscanfManaged(f *FILE, fmt *uint16, ap *byte) int32
+
 //go:linkname C2goFinalize github.com/c2gohq/c2go_libc.__c2go_finalize
 func C2goFinalize()
 
@@ -112,6 +115,9 @@ func C2goStdfile(which int32) *FILE
 
 //go:linkname C2goVsscanfManaged github.com/c2gohq/c2go_libc.__c2go_vsscanf_managed
 func C2goVsscanfManaged(s *byte, fmt *byte, ap *byte) int32
+
+//go:linkname C2goVswscanfManaged github.com/c2gohq/c2go_libc.__c2go_vswscanf_managed
+func C2goVswscanfManaged(s *uint16, fmt *uint16, ap *byte) int32
 func __cos(x float64, y float64) float64
 func __cosdf(x float64) float32
 

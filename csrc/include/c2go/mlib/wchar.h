@@ -48,6 +48,26 @@ int C2GO_MLIB_NAME(vwprintf)(const wchar_t *__restrict, va_list)
 int C2GO_MLIB_NAME(wprintf)(const wchar_t *__restrict, ...)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_wprintf", C2GO_GOABI0);
 
+/* `%m` result buffers are GC-owned, and `%m`/`%p` pointer results are
+ * published through managed write barriers. Do not pass `%m` results to
+ * free(); non-null `%p` results must denote valid Go-managed addresses. */
+int C2GO_MLIB_NAME(vfwscanf)(C2GO_MLIB_NAME(FILE) *__restrict,
+    const wchar_t *__restrict, va_list)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vfwscanf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(fwscanf)(C2GO_MLIB_NAME(FILE) *__restrict,
+    const wchar_t *__restrict, ...)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fwscanf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(vwscanf)(const wchar_t *__restrict, va_list)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vwscanf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(wscanf)(const wchar_t *__restrict, ...)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_wscanf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(vswscanf)(const wchar_t *__restrict,
+    const wchar_t *__restrict, va_list)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vswscanf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(swscanf)(const wchar_t *__restrict,
+    const wchar_t *__restrict, ...)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_swscanf", C2GO_GOABI0);
+
 #pragma c2go pop
 
 #endif /* C2GO_MLIB_WCHAR_H */

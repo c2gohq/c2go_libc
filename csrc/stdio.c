@@ -4914,7 +4914,10 @@ int wprintf(const wchar_t *restrict fmt, ...)
  *      __fgetwc_unlocked / __ungetwc_unlocked (musl falls back to the PUBLIC
  *      LOCKING getwc/ungetwc, which would deadlock under FLOCK).
  *   3. fwide(f,1) -> __fwide_wide(f) (non-locking, defined above).
- *   4. weak_alias(...,__isoc99_*) dropped (c2go has no weak aliases). */
+ *   4. weak_alias(...,__isoc99_*) dropped (c2go has no weak aliases).
+ *   5. The shared core accepts root or managed result policy. Managed `%m`
+ *      buffers use gc_malloc with copy-on-grow, and `%m`/`%p` pointer results
+ *      cross the same auditable write-barrier helper as narrow scanf. */
 
 static int in_set(const wchar_t *set, int c)
 {
@@ -4984,17 +4987,18 @@ static wint_t unget_wide(wint_t c, FILE *f)
 	return ungetwc(c, f);
 }
 
-c2go_extern
-int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
+static int vfwscanf_core(FILE *restrict f, const wchar_t *restrict fmt,
+	va_list ap, int managed_results)
 {
 	int width;
 	int size;
-	int alloc;
+	int alloc = SCAN_ALLOC_NONE;
 	const wchar_t *p;
 	int c, t;
-	char *s;
-	wchar_t *wcs;
+	char *managed s;
+	wchar_t *managed wcs;
 	void *dest=NULL;
+	c2go_stdio_managed_slot managed_slot = (void *)0;
 	int invert;
 	int matches=0;
 	off_t pos = 0;
@@ -5011,7 +5015,7 @@ int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 
 	for (p=fmt; *p; p++) {
 
-		alloc = 0;
+		alloc = SCAN_ALLOC_NONE;
 
 		if (iswspace(*p)) {
 			while (iswspace(p[1])) p++;
@@ -5043,6 +5047,8 @@ int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 		} else {
 			dest = va_arg(ap, void *);
 		}
+		managed_slot = managed_results && dest
+			? (c2go_stdio_managed_slot)dest : (c2go_stdio_managed_slot)0;
 
 		for (width=0; iswdigit(*p); p++) {
 			width = 10*width + *p - '0';
@@ -5051,10 +5057,11 @@ int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 		if (*p=='m') {
 			wcs = 0;
 			s = 0;
-			alloc = !!dest;
+			alloc = !dest ? SCAN_ALLOC_NONE :
+				managed_results ? SCAN_ALLOC_GC : SCAN_ALLOC_LIBC;
 			p++;
 		} else {
-			alloc = 0;
+			alloc = SCAN_ALLOC_NONE;
 		}
 
 		size = SIZE_def;
@@ -5142,8 +5149,8 @@ int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 				}
 			}
 
-			s = (size == SIZE_def) ? dest : 0;
-			wcs = (size == SIZE_l) ? dest : 0;
+			s = (size == SIZE_def) ? (char *managed)dest : 0;
+			wcs = (size == SIZE_l) ? (wchar_t *managed)dest : 0;
 
 			int gotmatch = 0;
 
@@ -5153,11 +5160,21 @@ int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 			if (alloc) {
 				k = t=='c' ? width+1U : 31;
 				if (size == SIZE_l) {
-					wcs = malloc(k*sizeof(wchar_t));
-					if (!wcs) goto alloc_fail;
+					wcs = alloc == SCAN_ALLOC_GC
+						? (wchar_t *managed)gc_malloc(0, k*sizeof(wchar_t))
+						: (wchar_t *managed)malloc(k*sizeof(wchar_t));
+					if (!wcs) {
+						if (alloc == SCAN_ALLOC_GC) errno = ENOMEM;
+						goto alloc_fail;
+					}
 				} else {
-					s = malloc(k);
-					if (!s) goto alloc_fail;
+					s = alloc == SCAN_ALLOC_GC
+						? (char *managed)gc_malloc(0, k)
+						: (char *managed)malloc(k);
+					if (!s) {
+						if (alloc == SCAN_ALLOC_GC) errno = ENOMEM;
+						goto alloc_fail;
+					}
 				}
 			}
 			while (width) {
@@ -5167,14 +5184,28 @@ int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 				if (wcs) {
 					wcs[i++] = c;
 					if (alloc && i==k) {
+						wchar_t *managed tmp2;
 						k += k+1;
-						wchar_t *tmp2 = realloc(wcs, k*sizeof(wchar_t));
-						if (!tmp2) goto alloc_fail;
+						if (alloc == SCAN_ALLOC_GC) {
+							tmp2 = (wchar_t *managed)gc_malloc(0,
+								k*sizeof(wchar_t));
+							if (tmp2) memcpy((void *)tmp2, (const void *)wcs,
+								i*sizeof(wchar_t));
+						} else {
+							tmp2 = (wchar_t *managed)realloc((void *)wcs,
+								k*sizeof(wchar_t));
+						}
+						if (!tmp2) {
+							if (alloc == SCAN_ALLOC_GC) errno = ENOMEM;
+							goto alloc_fail;
+						}
 						wcs = tmp2;
 					}
 				} else if (size != SIZE_l) {
-					char *d = s ? s+i : tmp;
+					char *d;
 					int l;
+					if (s) d = (char *)(void *)(s+i);
+					else d = tmp;
 					if (WCHAR_UTF16 && IS_HIGH_SURR(c)) {
 						/* Supplementary: the low half is the next code unit. Require
 						 * field room for BOTH units (else break, leaving the pair via
@@ -5203,9 +5234,18 @@ int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 					if (l<0) goto input_fail;
 					i += l;
 					if (alloc && i > k-4) {
+						char *managed tmp2;
 						k += k+1;
-						char *tmp2 = realloc(s, k);
-						if (!tmp2) goto alloc_fail;
+						if (alloc == SCAN_ALLOC_GC) {
+							tmp2 = (char *managed)gc_malloc(0, k);
+							if (tmp2) memcpy((void *)tmp2, (const void *)s, i);
+						} else {
+							tmp2 = (char *managed)realloc((void *)s, k);
+						}
+						if (!tmp2) {
+							if (alloc == SCAN_ALLOC_GC) errno = ENOMEM;
+							goto alloc_fail;
+						}
 						s = tmp2;
 					}
 				}
@@ -5221,8 +5261,17 @@ int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 			}
 
 			if (alloc) {
-				if (size == SIZE_l) *(wchar_t **)dest = wcs;
-				else *(char **)dest = s;
+				if (alloc == SCAN_ALLOC_GC) {
+					c2go_stdio_managed_store(
+						managed_slot,
+						size == SIZE_l ?
+							(c2go_stdio_managed_pointer)wcs :
+							(c2go_stdio_managed_pointer)s);
+				} else if (size == SIZE_l) {
+					*(wchar_t **)(void *)dest = (wchar_t *)(void *)wcs;
+				} else {
+					*(char **)(void *)dest = (char *)(void *)s;
+				}
 			}
 			if (t != 'c') {
 				if (wcs) wcs[i] = 0;
@@ -5250,7 +5299,14 @@ int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 			int_common_w:
 				x = __intscan(f, base, 0, ULLONG_MAX);
 				if (!shcnt(f)) goto match_fail;
-				if (t=='p' && dest) *(void **)dest = (void *)(uintptr_t)x;
+				if (t=='p' && dest) {
+					if (managed_results)
+						c2go_stdio_managed_store(
+							managed_slot,
+							(c2go_stdio_managed_pointer)(uintptr_t)x);
+					else
+						*(void **)(void *)dest = (void *)(uintptr_t)x;
+				}
 				else store_int(dest, size, x);
 				break;
 			default: /* a e f g A E F G */
@@ -5277,13 +5333,29 @@ alloc_fail:
 input_fail:
 		if (!matches) matches--;
 match_fail:
-		if (alloc) {
-			free(s);
-			free(wcs);
+		if (alloc == SCAN_ALLOC_LIBC) {
+			free((void *)s);
+			free((void *)wcs);
 		}
 	}
 	FUNLOCK(f);
 	return matches;
+}
+
+c2go_extern
+int vfwscanf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
+{
+	return vfwscanf_core(f, fmt, ap, 0);
+}
+
+/* Internal cross-package entry for mlib. The raw FILE has no root lock; its
+ * managed carrier is already locked by the caller. Result allocation and
+ * pointer publication use the managed policy above. */
+c2go_extern
+int __c2go_file_raw_vfwscanf_managed(FILE *restrict f,
+	const wchar_t *restrict fmt, va_list ap)
+{
+	return vfwscanf_core(f, fmt, ap, 1);
 }
 
 /* ── wide scanf family public wrappers (musl fwscanf.c/wscanf.c/…) ───────── */
@@ -5342,8 +5414,8 @@ static size_t wstring_read(FILE *f, unsigned char *buf, size_t len)
 	return 1;
 }
 
-c2go_extern
-int vswscanf(const wchar_t *restrict s, const wchar_t *restrict fmt, va_list ap)
+static int vswscanf_core(const wchar_t *restrict s,
+	const wchar_t *restrict fmt, va_list ap, int managed_results)
 {
 	unsigned char buf[256];
 	FILE f;
@@ -5353,7 +5425,20 @@ int vswscanf(const wchar_t *restrict s, const wchar_t *restrict fmt, va_list ap)
 	f.cookie = (void *)s;
 	f.read = wstring_read;
 	f.lock = -1;
-	return vfwscanf(&f, fmt, ap);
+	return vfwscanf_core(&f, fmt, ap, managed_results);
+}
+
+c2go_extern
+int vswscanf(const wchar_t *restrict s, const wchar_t *restrict fmt, va_list ap)
+{
+	return vswscanf_core(s, fmt, ap, 0);
+}
+
+c2go_extern
+int __c2go_vswscanf_managed(const wchar_t *restrict s,
+	const wchar_t *restrict fmt, va_list ap)
+{
+	return vswscanf_core(s, fmt, ap, 1);
 }
 
 c2go_extern

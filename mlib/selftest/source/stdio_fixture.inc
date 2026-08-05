@@ -39,6 +39,18 @@
 #ifndef C2GO_MLIB_TEST_FWPRINTF
 #error "C2GO_MLIB_TEST_FWPRINTF must name the managed fwprintf"
 #endif
+#ifndef C2GO_MLIB_TEST_VFWSCANF
+#error "C2GO_MLIB_TEST_VFWSCANF must name the managed vfwscanf"
+#endif
+#ifndef C2GO_MLIB_TEST_FWSCANF
+#error "C2GO_MLIB_TEST_FWSCANF must name the managed fwscanf"
+#endif
+#ifndef C2GO_MLIB_TEST_VSWSCANF
+#error "C2GO_MLIB_TEST_VSWSCANF must name the managed vswscanf"
+#endif
+#ifndef C2GO_MLIB_TEST_SWSCANF
+#error "C2GO_MLIB_TEST_SWSCANF must name the managed swscanf"
+#endif
 #ifndef C2GO_MLIB_TEST_FPOS
 #error "C2GO_MLIB_TEST_FPOS must name the managed fpos type"
 #endif
@@ -224,6 +236,28 @@ static int c2go_mlib_test_vfwprintf(C2GO_MLIB_TEST_FILE *stream,
     return result;
 }
 
+static int c2go_mlib_test_vfwscanf(C2GO_MLIB_TEST_FILE *stream,
+                                   const wchar_t *format, ...)
+{
+    int result;
+    va_list arguments;
+    va_start(arguments, format);
+    result = C2GO_MLIB_TEST_VFWSCANF(stream, format, arguments);
+    va_end(arguments);
+    return result;
+}
+
+static int c2go_mlib_test_vswscanf(const wchar_t *input,
+                                   const wchar_t *format, ...)
+{
+    int result;
+    va_list arguments;
+    va_start(arguments, format);
+    result = C2GO_MLIB_TEST_VSWSCANF(input, format, arguments);
+    va_end(arguments);
+    return result;
+}
+
 static int c2go_mlib_test_vsscanf(const char *input,
                                   const char *format, ...)
 {
@@ -256,6 +290,8 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     const char memory_text[] = "managed-memory";
     const char cookie_text[] = "managed-cookie";
     const wchar_t wide_text[] = L"wide-stream:42!";
+    const wchar_t managed_wide_text[] =
+        L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-long";
     char root[512], path[600], input[32] = {0}, formatted[16];
     char word[8] = {0}, set[4] = {0}, mark = 0;
     char pointer_text[32], *target, *line_before, *memory, *output_initial;
@@ -483,8 +519,40 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     if (C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0 ||
         C2GO_MLIB_TEST_FGETWS(wide_input, 32, stream) != wide_input ||
         wcscmp(wide_input, wide_text)) return 69;
+    number = 0;
+    if (C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0 ||
+        C2GO_MLIB_TEST_FWSCANF(stream, L"wide-stream:%d", &number) != 1 ||
+        number != 42 || C2GO_MLIB_TEST_FGETWC(stream) != L'!') return 72;
+    memset(wide_input, 0, sizeof(wide_input));
+    if (C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0 ||
+        c2go_mlib_test_vfwscanf(stream, L"%15ls", wide_input) != 1 ||
+        wcscmp(wide_input, wide_text)) return 73;
     C2GO_MLIB_TEST_FORCE_GC();
     if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 70;
+
+    /* Wide string scanning uses the same managed `%m` allocation and pointer
+     * publication policy as the stream parser. The long inputs force both the
+     * wchar_t and UTF-8 result buffers through managed growth. */
+    scan->wide = (void *)0;
+    scan->text = (void *)0;
+    if (C2GO_MLIB_TEST_SWSCANF(managed_wide_text, L"%mls", &scan->wide) != 1 ||
+        wcscmp(scan->wide, managed_wide_text)) return 74;
+    if (c2go_mlib_test_vswscanf(managed_wide_text, L"%ms", &scan->text) != 1 ||
+        strcmp(scan->text, managed_text)) return 75;
+    target = gc_malloc((void *)0, 10);
+    if (!target) return 76;
+    memcpy(target, "widealive", 10);
+    number = snprintf(pointer_text, sizeof(pointer_text), "%p", (void *)target);
+    if (number < 1 || number >= 32 ||
+        mbstowcs(wide_input, pointer_text, 32) != (size_t)number) return 77;
+    if (C2GO_MLIB_TEST_SWSCANF(wide_input, L"%p", &scan->pointer) != 1)
+        return 79;
+    if (scan->pointer != target) return 80;
+    target = (void *)0;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (wcscmp(scan->wide, managed_wide_text) ||
+        strcmp(scan->text, managed_text) ||
+        strcmp((const char *)scan->pointer, "widealive")) return 78;
 
     if (unlink(path) || rmdir(root)) return 71;
     return 0;
@@ -529,6 +597,10 @@ c2go_extern int C2GO_MLIB_TEST_STDIN_EXPORT(void)
 #undef C2GO_MLIB_TEST_SCANF
 #undef C2GO_MLIB_TEST_GETLINE
 #undef C2GO_MLIB_TEST_GETDELIM
+#undef C2GO_MLIB_TEST_SWSCANF
+#undef C2GO_MLIB_TEST_VSWSCANF
+#undef C2GO_MLIB_TEST_FWSCANF
+#undef C2GO_MLIB_TEST_VFWSCANF
 #undef C2GO_MLIB_TEST_FWPRINTF
 #undef C2GO_MLIB_TEST_VFWPRINTF
 #undef C2GO_MLIB_TEST_UNGETWC

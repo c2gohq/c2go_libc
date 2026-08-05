@@ -237,7 +237,10 @@ int vswprintf(wchar_t *__restrict, size_t, const wchar_t *__restrict, va_list)
  * the SIZE_* macros and the __intscan/__floatscan scan primitives are reused
  * from the narrow vfscanf (same TU); the numeric conversions are inlined
  * (rather than musl's fscanf reuse) so the non-reentrant FILE lock is never
- * re-taken. Each c2go_extern definition needs its matching linkname here. */
+ * re-taken. Each c2go_extern definition needs its matching linkname here.
+ * Managed FILE replacement mode hides all six root entry points because even
+ * the string-only pair needs mlib's `%m` allocation and pointer-publication
+ * policy; <c2go/mlib/wchar.h> supplies their managed replacements. */
 
 #ifndef C2GO_MLIB_FILE_REPLACEMENT
 int vfwscanf(FILE *__restrict, const wchar_t *__restrict, va_list)
@@ -248,11 +251,11 @@ int wscanf(const wchar_t *__restrict, ...)
     c2go_linkname("github.com/c2gohq/c2go_libc.wscanf", C2GO_GOABI0);
 int vwscanf(const wchar_t *__restrict, va_list)
     c2go_linkname("github.com/c2gohq/c2go_libc.vwscanf", C2GO_GOABI0);
-#endif
 int swscanf(const wchar_t *__restrict, const wchar_t *__restrict, ...)
     c2go_linkname("github.com/c2gohq/c2go_libc.swscanf", C2GO_GOABI0);
 int vswscanf(const wchar_t *__restrict, const wchar_t *__restrict, va_list)
     c2go_linkname("github.com/c2gohq/c2go_libc.vswscanf", C2GO_GOABI0);
+#endif
 
 /* wide locale-aware collation (source/locale.c). c2go has only the C locale, so
  * these collate by code point; the _l variants ignore their locale_t. */

@@ -90,6 +90,10 @@ c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_ungetwc", C2GO_GOABI0
 wint_t __c2go_file_raw_ungetwc(wint_t, FILE *);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_vfwprintf", C2GO_GOABI0)
 int __c2go_file_raw_vfwprintf(FILE *, const wchar_t *, va_list);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_vfwscanf_managed", C2GO_GOABI0)
+int __c2go_file_raw_vfwscanf_managed(FILE *, const wchar_t *, va_list);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_vswscanf_managed", C2GO_GOABI0)
+int __c2go_vswscanf_managed(const wchar_t *, const wchar_t *, va_list);
 
 c2go_linkname("github.com/c2gohq/c2go_libc/mlib.FileLock", C2GO_GOABI0)
 void __c2go_mlib_file_lock(mlib_state_pointer *);
@@ -672,6 +676,64 @@ c2go_extern int mlib_wprintf(const wchar_t *restrict format, ...)
     int result;
     va_start(arguments, format);
     result = mlib_vwprintf(format, arguments);
+    va_end(arguments);
+    return result;
+}
+
+c2go_extern int mlib_vfwscanf(mlib_FILE *restrict stream,
+                              const wchar_t *restrict format,
+                              va_list arguments)
+{
+    mlib_file_pointer f = stream;
+    FILE *raw = mlib_file_acquire(f);
+    int result;
+    if (!raw) return EOF;
+    result = __c2go_file_raw_vfwscanf_managed(raw, format, arguments);
+    mlib_file_release(f);
+    return result;
+}
+
+c2go_extern int mlib_fwscanf(mlib_FILE *restrict stream,
+                             const wchar_t *restrict format, ...)
+{
+    va_list arguments;
+    int result;
+    va_start(arguments, format);
+    result = mlib_vfwscanf(stream, format, arguments);
+    va_end(arguments);
+    return result;
+}
+
+c2go_extern int mlib_vwscanf(const wchar_t *restrict format,
+                             va_list arguments)
+{
+    return mlib_vfwscanf(mlib_stdfile(0), format, arguments);
+}
+
+c2go_extern int mlib_wscanf(const wchar_t *restrict format, ...)
+{
+    va_list arguments;
+    int result;
+    va_start(arguments, format);
+    result = mlib_vwscanf(format, arguments);
+    va_end(arguments);
+    return result;
+}
+
+c2go_extern int mlib_vswscanf(const wchar_t *restrict input,
+                              const wchar_t *restrict format,
+                              va_list arguments)
+{
+    return __c2go_vswscanf_managed(input, format, arguments);
+}
+
+c2go_extern int mlib_swscanf(const wchar_t *restrict input,
+                             const wchar_t *restrict format, ...)
+{
+    va_list arguments;
+    int result;
+    va_start(arguments, format);
+    result = mlib_vswscanf(input, format, arguments);
     va_end(arguments);
     return result;
 }
