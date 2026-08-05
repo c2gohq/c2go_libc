@@ -146,9 +146,11 @@ write barrier. Those results are GC-owned and must not be passed to `free`; a
 non-null `%p` result must be a valid Go-managed address, not an arbitrary
 foreign address. Managed `getline`/`getdelim` use the same ownership rule: begin
 with a null result or reuse a buffer returned by the managed family, and never
-pass that buffer to `free`.
-`popen`, custom/memory streams, and wide stdio are not yet part of mlib; do not
-pass an `mlib_FILE *` to their root-libc counterparts.
+pass that buffer to `free`. Managed `fmemopen` retains a caller-supplied
+GC-heap buffer for the stream lifetime, or creates GC-owned storage when its
+buffer is null; a caller-supplied C stack array is not a valid retained buffer.
+`popen`, `open_memstream`, `fopencookie`, and wide stdio are not yet part of
+mlib; do not pass an `mlib_FILE *` to their root-libc counterparts.
 
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
@@ -292,7 +294,9 @@ hook 会先刷新这一套独立的 FILE world，再由 root libc 刷新自己�
 非空 `%p` 结果必须是有效的 Go managed 地址，不能是任意外部地址。
 managed `getline`/`getdelim` 遵循同一所有权规则：传入空结果，或复用该 managed
 函数族之前返回的缓冲区，并且不能把结果传给 `free`。
-`popen`、memory/custom stream 和 wide stdio 尚未进入 mlib；不能把
+managed `fmemopen` 会在整个 stream 生命周期内保留调用者的 GC heap 缓冲区，
+因此不能传入 C 栈数组；传入空缓冲区时，则创建 GC-owned storage。`popen`、
+`open_memstream`、`fopencookie` 和 wide stdio 尚未进入 mlib；不能把
 `mlib_FILE *` 传给这些根 libc 接口。
 
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、

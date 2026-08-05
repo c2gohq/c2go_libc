@@ -13,6 +13,7 @@ void c2go_mlib_stdio_test_gc(void);
 #define C2GO_MLIB_TEST_FPOS mlib_fpos_t
 #define C2GO_MLIB_TEST_FOPEN mlib_fopen
 #define C2GO_MLIB_TEST_FDOPEN mlib_fdopen
+#define C2GO_MLIB_TEST_FMEMOPEN mlib_fmemopen
 #define C2GO_MLIB_TEST_FCLOSE mlib_fclose
 #define C2GO_MLIB_TEST_FFLUSH mlib_fflush
 #define C2GO_MLIB_TEST_FTELL mlib_ftell

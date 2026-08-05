@@ -97,6 +97,12 @@ C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(fopen)(const char *__restrict,
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fopen", C2GO_GOABI0);
 C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(fdopen)(int, const char *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fdopen", C2GO_GOABI0);
+/* A caller-supplied buffer is retained by the managed FILE carrier and must be
+ * GC-heap storage (for example gc_malloc), not a C stack array. With a null
+ * buffer, mlib allocates GC-owned storage released naturally after close. */
+C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(fmemopen)(void *__restrict, size_t,
+    const char *__restrict)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fmemopen", C2GO_GOABI0);
 int C2GO_MLIB_NAME(fclose)(C2GO_MLIB_NAME(FILE) *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fclose", C2GO_GOABI0);
 

@@ -17,7 +17,9 @@ import (
 // ─── Types ──────────────────────────────────────────────────
 type _c2go_mlib_FILE struct {
 	_raw         [32]uint64
+	_cookie_raw  [8]uint64
 	_buffer_root *byte
+	_object_root unsafe.Pointer
 	_lock_state  unsafe.Pointer
 	_prev        *_c2go_mlib_FILE
 	_next        *_c2go_mlib_FILE
@@ -130,6 +132,9 @@ func MlibFileno(stream *_c2go_mlib_FILE) int32
 
 //go:linkname MlibFlockfile github.com/c2gohq/c2go_libc/mlib.mlib_flockfile
 func MlibFlockfile(stream *_c2go_mlib_FILE)
+
+//go:linkname MlibFmemopen github.com/c2gohq/c2go_libc/mlib.mlib_fmemopen
+func MlibFmemopen(buffer unsafe.Pointer, size uint64, mode *byte) *_c2go_mlib_FILE
 
 //go:linkname MlibFopen github.com/c2gohq/c2go_libc/mlib.mlib_fopen
 func MlibFopen(filename *byte, mode *byte) *_c2go_mlib_FILE

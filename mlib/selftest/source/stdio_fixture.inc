@@ -3,6 +3,9 @@
 #ifndef C2GO_MLIB_TEST_FILE
 #error "C2GO_MLIB_TEST_FILE must name the managed FILE type"
 #endif
+#ifndef C2GO_MLIB_TEST_FMEMOPEN
+#error "C2GO_MLIB_TEST_FMEMOPEN must name the managed fmemopen"
+#endif
 #ifndef C2GO_MLIB_TEST_FPOS
 #error "C2GO_MLIB_TEST_FPOS must name the managed fpos type"
 #endif
@@ -127,9 +130,10 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     const char expected[] = "value=42!";
     const char managed_text[] =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-long";
+    const char memory_text[] = "managed-memory";
     char root[512], path[600], input[32] = {0}, formatted[16];
     char word[8] = {0}, set[4] = {0}, mark = 0;
-    char pointer_text[32], *target, *line_before;
+    char pointer_text[32], *target, *line_before, *memory;
     struct c2go_mlib_scan_result *scan;
     C2GO_MLIB_TEST_FILE *stream;
     C2GO_MLIB_TEST_FPOS position;
@@ -248,7 +252,32 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     if (strcmp(scan->line, "tail")) return 43;
     if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 44;
 
-    if (unlink(path) || rmdir(root)) return 45;
+    /* fmemopen retains a caller-provided managed buffer for the FILE lifetime,
+     * even after the caller drops its direct local root. */
+    memory = gc_malloc((void *)0, 4096);
+    if (!memory) return 45;
+    stream = C2GO_MLIB_TEST_FMEMOPEN(memory, 4096, "w+");
+    if (!stream) return 46;
+    memory = (void *)0;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (C2GO_MLIB_TEST_FPUTS(memory_text, stream) < 0 ||
+        C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0) return 47;
+    memset(input, 0, sizeof(input));
+    if (C2GO_MLIB_TEST_FREAD(input, 1, sizeof(memory_text) - 1, stream)
+            != sizeof(memory_text) - 1 || strcmp(input, memory_text)) return 48;
+    if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 49;
+
+    /* NULL buffer selects a second GC allocation owned only by the carrier. */
+    stream = C2GO_MLIB_TEST_FMEMOPEN((void *)0, 64, "w+");
+    if (!stream || C2GO_MLIB_TEST_FPUTS("owned", stream) < 0 ||
+        C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0) return 50;
+    memset(input, 0, sizeof(input));
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (C2GO_MLIB_TEST_FREAD(input, 1, 5, stream) != 5 ||
+        strcmp(input, "owned")) return 51;
+    if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 52;
+
+    if (unlink(path) || rmdir(root)) return 53;
     return 0;
 }
 
@@ -291,6 +320,7 @@ c2go_extern int C2GO_MLIB_TEST_STDIN_EXPORT(void)
 #undef C2GO_MLIB_TEST_SCANF
 #undef C2GO_MLIB_TEST_GETLINE
 #undef C2GO_MLIB_TEST_GETDELIM
+#undef C2GO_MLIB_TEST_FMEMOPEN
 #undef C2GO_MLIB_TEST_GETCHAR
 #undef C2GO_MLIB_TEST_STDIN
 #undef C2GO_MLIB_TEST_PUTS

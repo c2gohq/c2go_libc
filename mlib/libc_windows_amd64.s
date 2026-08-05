@@ -4542,7 +4542,7 @@ _Ltmp100:
 	BYTE $0x85
 	BYTE $0xc0
 	JEQ _LBB14_9
-	MOVQ 256(AX), CX
+	MOVQ 320(AX), CX
 	MOVQ AX, -8(BP)
 	MOVQ CX, -16(BP)
 	MOVQ SP, DX
@@ -4559,7 +4559,7 @@ _Ltmp101:
 	MOVQ -8(BP), AX
 	LONG $0x00207983
 	JEQ _LBB14_5
-	LONG $0x01000548
+	LONG $0x01400548
 	BYTE $0x00
 	BYTE $0x00
 	LEAQ runtime·writeBarrier(SB), CX
@@ -4574,7 +4574,7 @@ _Ltmp101:
 	CALL ·_c2go_writePtr(SB)
 	JMP _LBB14_9
 _LBB14_5:
-	LONG $0x012080c7
+	LONG $0x016880c7
 	LONG $0x00010000
 	BYTE $0x00
 	BYTE $0x00
@@ -4633,7 +4633,7 @@ TEXT ·mlib_file_allocate(SB), $56-0
 	MOVQ ·_typeinfo__c2go_mlib_FILE(SB), CX
 	MOVQ CX, 0(AX)
 	LONG $0x0840c748
-	LONG $0x00000128
+	LONG $0x00000170
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
 _Ltmp104:
@@ -4661,7 +4661,7 @@ _Ltmp105:
 	BYTE $0xc0
 	JEQ _LBB15_1
 	MOVQ -8(BP), SI
-	LEAQ 256(SI), CX
+	LEAQ 320(SI), CX
 	LEAQ runtime·writeBarrier(SB), DX
 	BYTE $0x83
 	BYTE $0x3a
@@ -4747,7 +4747,7 @@ _Ltmp107:
 	JEQ _LBB17_1
 	MOVQ -16(BP), CX
 	MOVQ -24(BP), DX
-	MOVQ 256(AX), SI
+	MOVQ 320(AX), SI
 	MOVQ AX, -8(BP)
 	MOVQ SI, -32(BP)
 	MOVQ SP, DI
@@ -4764,7 +4764,7 @@ _Ltmp108:
 	MOVQ -8(BP), AX
 	LONG $0x00287983
 	JEQ _LBB17_6
-	LONG $0x01000548
+	LONG $0x01400548
 	BYTE $0x00
 	BYTE $0x00
 	LEAQ runtime·writeBarrier(SB), CX
@@ -4779,7 +4779,7 @@ _Ltmp108:
 	CALL ·_c2go_writePtr(SB)
 	JMP _LBB17_1
 _LBB17_6:
-	LONG $0x012080c7
+	LONG $0x016880c7
 	LONG $0x00010000
 	BYTE $0x00
 	BYTE $0x00
@@ -4831,7 +4831,7 @@ TEXT ·mlib_ofl_add(SB), $56-8
 	CALL ·OpenFileListLock(SB)
 _Ltmp110:
 	MOVQ -16(BP), DX
-	LEAQ 272(DX), AX
+	LEAQ 344(DX), AX
 	LEAQ runtime·writeBarrier(SB), CX
 	BYTE $0x83
 	BYTE $0x39
@@ -4853,7 +4853,7 @@ _LBB18_2:
 	BYTE $0x00
 _LBB18_3:
 	MOVQ ·mlib_ofl_head(SB), SI
-	LEAQ 280(DX), AX
+	LEAQ 352(DX), AX
 	BYTE $0x83
 	BYTE $0x39
 	BYTE $0x00
@@ -4879,7 +4879,7 @@ _LBB18_5:
 	JEQ _LBB18_10
 _LBB18_7:
 	MOVQ SI, AX
-	LONG $0x01100548
+	LONG $0x01580548
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x83
@@ -4914,7 +4914,7 @@ _LBB18_9:
 _LBB18_12:
 	MOVQ DX, ·mlib_ofl_head(SB)
 _LBB18_13:
-	LONG $0x012482c7
+	LONG $0x016c82c7
 	LONG $0x00010000
 	BYTE $0x00
 	BYTE $0x00
@@ -4944,7 +4944,7 @@ _Ltmp112:
 	JEQ _LBB19_1
 	MOVL 16(BP), CX
 	MOVQ -16(BP), DX
-	MOVQ 256(AX), SI
+	MOVQ 320(AX), SI
 	MOVQ AX, -8(BP)
 	MOVQ SI, -24(BP)
 	MOVQ SP, DI
@@ -4961,7 +4961,7 @@ _Ltmp113:
 	MOVQ -8(BP), AX
 	LONG $0x00287983
 	JEQ _LBB19_6
-	LONG $0x01000548
+	LONG $0x01400548
 	BYTE $0x00
 	BYTE $0x00
 	LEAQ runtime·writeBarrier(SB), CX
@@ -4976,7 +4976,7 @@ _Ltmp113:
 	CALL ·_c2go_writePtr(SB)
 	JMP _LBB19_1
 _LBB19_6:
-	LONG $0x012080c7
+	LONG $0x016880c7
 	LONG $0x00010000
 	BYTE $0x00
 	BYTE $0x00
@@ -5020,14 +5020,238 @@ DATA gclocals·c9802be7466434f5+14(SB)/1, $0x00
 DATA gclocals·c9802be7466434f5+15(SB)/1, $0x04
 GLOBL gclocals·c9802be7466434f5(SB), DUPOK|RODATA, $16
 
+TEXT ·mlib_fmemopen(SB), $136-32
+	PCDATA $1, $-1
+	MOVQ 32(BP), AX
+	MOVQ 16(BP), CX
+	MOVQ CX, -8(BP)
+	MOVQ AX, -24(BP)
+	PCDATA $1, $1
+	CALL ·mlib_file_allocate(SB)
+_Ltmp115:
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc0
+	JEQ _LBB20_1
+	MOVQ -8(BP), CX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc9
+	JNE _LBB20_4
+	MOVQ 24(BP), CX
+	LONG $0x01f98348
+	LONG $0x00d18348
+	MOVQ AX, -8(BP)
+	MOVQ SP, AX
+	MOVQ CX, 8(AX)
+	LONG $0x0000c748
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp116:
+	MOVQ SP, AX
+	MOVQ 16(AX), CX
+	MOVQ -8(BP), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc9
+	JEQ _LBB20_11
+_LBB20_4:
+	MOVQ -24(BP), SI
+	MOVQ CX, R8
+	MOVQ AX, DI
+	LONG $0x01480548
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ runtime·writeBarrier(SB), CX
+	BYTE $0x83
+	BYTE $0x39
+	BYTE $0x00
+	JEQ _LBB20_6
+	MOVQ SP, CX
+	MOVQ R8, 8(CX)
+	MOVQ AX, 0(CX)
+	MOVQ DI, -48(BP)
+	MOVQ R8, -40(BP)
+	MOVQ SI, -32(BP)
+	CALL ·_c2go_writePtr(SB)
+	MOVQ -32(BP), SI
+	MOVQ -40(BP), R8
+	MOVQ -48(BP), DI
+	JMP _LBB20_7
+_LBB20_6:
+	MOVQ R8, 0(AX)
+_LBB20_7:
+	LEAQ 256(DI), AX
+	MOVQ 320(DI), CX
+	MOVQ CX, -56(BP)
+	MOVQ R8, -8(BP)
+	MOVQ DI, -16(BP)
+	MOVQ SP, DX
+	MOVQ SI, 56(DX)
+	MOVQ 24(BP), SI
+	MOVQ SI, 48(DX)
+	MOVQ R8, 40(DX)
+	MOVQ CX, 24(DX)
+	MOVQ AX, 8(DX)
+	MOVQ DI, 0(DX)
+	LONG $0x2042c748
+	LONG $0x00000408
+	LONG $0x1042c748
+	LONG $0x00000040
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_fmemopen(SB)
+_Ltmp117:
+	MOVQ SP, CX
+	MOVQ -16(BP), AX
+	LONG $0x00407983
+	JEQ _LBB20_9
+	LONG $0x01480548
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $3
+	CALL ·mlib_clear_state_pointer(SB)
+_Ltmp118:
+	MOVL $320, AX
+	LONG $0xf0450348
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $3
+	CALL ·mlib_clear_buffer_pointer(SB)
+_Ltmp119:
+	JMP _LBB20_1
+_LBB20_9:
+	LONG $0x016880c7
+	LONG $0x00010000
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $3
+	CALL ·mlib_ofl_add(SB)
+_Ltmp120:
+	MOVQ -16(BP), AX
+	JMP _LBB20_10
+_LBB20_11:
+	LONG $0x01400548
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $4
+	CALL ·mlib_clear_buffer_pointer(SB)
+_Ltmp121:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp122:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	LONG $0x000c00c7
+	BYTE $0x00
+	BYTE $0x00
+_LBB20_1:
+	XORL AX, AX
+_LBB20_10:
+	MOVQ AX, 40(BP)
+	RET
+_Lfunc_end20:
+	FUNCDATA $0, gclocals·dfaa714bda5fa23f(SB)
+DATA gclocals·dfaa714bda5fa23f+0(SB)/4, $5
+DATA gclocals·dfaa714bda5fa23f+4(SB)/4, $4
+DATA gclocals·dfaa714bda5fa23f+8(SB)/1, $0x05
+DATA gclocals·dfaa714bda5fa23f+9(SB)/1, $0x05
+DATA gclocals·dfaa714bda5fa23f+10(SB)/1, $0x05
+DATA gclocals·dfaa714bda5fa23f+11(SB)/1, $0x05
+DATA gclocals·dfaa714bda5fa23f+12(SB)/1, $0x05
+GLOBL gclocals·dfaa714bda5fa23f(SB), DUPOK|RODATA, $13
+
+	FUNCDATA $1, gclocals·aa5863cf9d174b5e(SB)
+DATA gclocals·aa5863cf9d174b5e+0(SB)/4, $5
+DATA gclocals·aa5863cf9d174b5e+4(SB)/4, $17
+DATA gclocals·aa5863cf9d174b5e+8(SB)/1, $0x00
+DATA gclocals·aa5863cf9d174b5e+9(SB)/1, $0x00
+DATA gclocals·aa5863cf9d174b5e+10(SB)/1, $0x00
+DATA gclocals·aa5863cf9d174b5e+11(SB)/1, $0x00
+DATA gclocals·aa5863cf9d174b5e+12(SB)/1, $0x40
+DATA gclocals·aa5863cf9d174b5e+13(SB)/1, $0x01
+DATA gclocals·aa5863cf9d174b5e+14(SB)/1, $0x00
+DATA gclocals·aa5863cf9d174b5e+15(SB)/1, $0xc4
+DATA gclocals·aa5863cf9d174b5e+16(SB)/1, $0x01
+DATA gclocals·aa5863cf9d174b5e+17(SB)/1, $0x00
+DATA gclocals·aa5863cf9d174b5e+18(SB)/1, $0x80
+DATA gclocals·aa5863cf9d174b5e+19(SB)/1, $0x00
+DATA gclocals·aa5863cf9d174b5e+20(SB)/1, $0x00
+DATA gclocals·aa5863cf9d174b5e+21(SB)/1, $0x00
+DATA gclocals·aa5863cf9d174b5e+22(SB)/1, $0x01
+GLOBL gclocals·aa5863cf9d174b5e(SB), DUPOK|RODATA, $23
+
+TEXT ·mlib_clear_buffer_pointer(SB), $24-8
+	PCDATA $1, $-1
+	LEAQ runtime·writeBarrier(SB), AX
+	BYTE $0x83
+	BYTE $0x38
+	BYTE $0x00
+	JEQ _LBB21_2
+	MOVQ SP, AX
+	MOVQ 16(BP), CX
+	MOVQ CX, 0(AX)
+	LONG $0x0840c748
+	LONG $0x00000000
+	CALL ·_c2go_writePtr(SB)
+	JMP _LBB21_3
+_LBB21_2:
+	MOVQ 16(BP), AX
+	LONG $0x0000c748
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+_LBB21_3:
+	RET
+_Lfunc_end21:
+	FUNCDATA $0, gclocals·5f490f070d449c5c(SB)
+DATA gclocals·5f490f070d449c5c+0(SB)/4, $1
+DATA gclocals·5f490f070d449c5c+4(SB)/4, $1
+DATA gclocals·5f490f070d449c5c+8(SB)/1, $0x01
+GLOBL gclocals·5f490f070d449c5c(SB), DUPOK|RODATA, $9
+
+	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
+TEXT ·mlib_clear_state_pointer(SB), $24-8
+	PCDATA $1, $-1
+	LEAQ runtime·writeBarrier(SB), AX
+	BYTE $0x83
+	BYTE $0x38
+	BYTE $0x00
+	JEQ _LBB22_2
+	MOVQ SP, AX
+	MOVQ 16(BP), CX
+	MOVQ CX, 0(AX)
+	LONG $0x0840c748
+	LONG $0x00000000
+	CALL ·_c2go_writePtr(SB)
+	JMP _LBB22_3
+_LBB22_2:
+	MOVQ 16(BP), AX
+	LONG $0x0000c748
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+_LBB22_3:
+	RET
+_Lfunc_end22:
+	FUNCDATA $0, gclocals·5f490f070d449c5c(SB)
+	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
 TEXT ·mlib_fclose(SB), $72-16
 	PCDATA $1, $-1
 	MOVQ 16(BP), AX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB20_3
-	LONG $0x01080548
+	JEQ _LBB23_3
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 16(BP), CX
@@ -5036,14 +5260,14 @@ TEXT ·mlib_fclose(SB), $72-16
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp115:
+_Ltmp123:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB20_2
-	LONG $0x012080c7
+	JEQ _LBB23_2
+	LONG $0x016880c7
 	LONG $0x00000000
 	BYTE $0x00
 	BYTE $0x00
@@ -5051,7 +5275,7 @@ _Ltmp115:
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_close(SB)
-_Ltmp116:
+_Ltmp124:
 	MOVQ SP, AX
 	MOVL 8(AX), AX
 	MOVL AX, -12(BP)
@@ -5066,65 +5290,68 @@ _Ltmp116:
 	BYTE $0x00
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·memset(SB)
-_Ltmp117:
-	MOVQ -8(BP), DX
-	LEAQ 256(DX), AX
-	LEAQ runtime·writeBarrier(SB), CX
-	BYTE $0x83
-	BYTE $0x39
+_Ltmp125:
+	MOVQ -8(BP), AX
+	BYTE $0x0f
+	BYTE $0x57
+	BYTE $0xc0
+	MOVUPS X0, 256(AX)
+	MOVUPS X0, 304(AX)
+	MOVUPS X0, 288(AX)
+	MOVUPS X0, 272(AX)
+	LONG $0x01480548
 	BYTE $0x00
-	JEQ _LBB20_6
+	BYTE $0x00
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
-	LONG $0x0841c748
-	LONG $0x00000000
-	MOVQ DX, -24(BP)
-	CALL ·_c2go_writePtr(SB)
-	MOVQ -24(BP), DX
-	JMP _LBB20_7
-_LBB20_2:
-	MOVQ 264(AX), AX
+	PCDATA $1, $1
+	CALL ·mlib_clear_state_pointer(SB)
+_Ltmp126:
+	MOVL $320, AX
+	LONG $0xf8450348
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·mlib_clear_buffer_pointer(SB)
+_Ltmp127:
+	MOVQ -8(BP), AX
+	MOVQ 336(AX), AX
+	MOVQ AX, -24(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp128:
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·mlib_ofl_remove(SB)
+_Ltmp129:
+	MOVL -12(BP), AX
+	JMP _LBB23_5
+_LBB23_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp118:
-_LBB20_3:
+_Ltmp130:
+_LBB23_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp119:
+_Ltmp131:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-	JMP _LBB20_8
-_LBB20_6:
-	LONG $0x0000c748
-	BYTE $0x00
-	BYTE $0x00
-	BYTE $0x00
-_LBB20_7:
-	MOVQ 264(DX), AX
-	MOVQ AX, -32(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $2
-	CALL ·FileUnlock(SB)
-_Ltmp120:
-	MOVQ -8(BP), AX
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·mlib_ofl_remove(SB)
-_Ltmp121:
-	MOVL -12(BP), AX
-_LBB20_8:
+_LBB23_5:
 	MOVL AX, 24(BP)
 	RET
-_Lfunc_end20:
+_Lfunc_end23:
 	FUNCDATA $0, gclocals·77404dbf8600c621(SB)
 DATA gclocals·77404dbf8600c621+0(SB)/4, $3
 DATA gclocals·77404dbf8600c621+4(SB)/4, $2
@@ -5133,16 +5360,16 @@ DATA gclocals·77404dbf8600c621+9(SB)/1, $0x01
 DATA gclocals·77404dbf8600c621+10(SB)/1, $0x01
 GLOBL gclocals·77404dbf8600c621(SB), DUPOK|RODATA, $11
 
-	FUNCDATA $1, gclocals·641cc2c46b3514af(SB)
-DATA gclocals·641cc2c46b3514af+0(SB)/4, $3
-DATA gclocals·641cc2c46b3514af+4(SB)/4, $9
-DATA gclocals·641cc2c46b3514af+8(SB)/1, $0x00
-DATA gclocals·641cc2c46b3514af+9(SB)/1, $0x00
-DATA gclocals·641cc2c46b3514af+10(SB)/1, $0x00
-DATA gclocals·641cc2c46b3514af+11(SB)/1, $0x01
-DATA gclocals·641cc2c46b3514af+12(SB)/1, $0x20
-DATA gclocals·641cc2c46b3514af+13(SB)/1, $0x01
-GLOBL gclocals·641cc2c46b3514af(SB), DUPOK|RODATA, $14
+	FUNCDATA $1, gclocals·656302c46c4a440f(SB)
+DATA gclocals·656302c46c4a440f+0(SB)/4, $3
+DATA gclocals·656302c46c4a440f+4(SB)/4, $9
+DATA gclocals·656302c46c4a440f+8(SB)/1, $0x00
+DATA gclocals·656302c46c4a440f+9(SB)/1, $0x00
+DATA gclocals·656302c46c4a440f+10(SB)/1, $0x00
+DATA gclocals·656302c46c4a440f+11(SB)/1, $0x01
+DATA gclocals·656302c46c4a440f+12(SB)/1, $0x40
+DATA gclocals·656302c46c4a440f+13(SB)/1, $0x01
+GLOBL gclocals·656302c46c4a440f(SB), DUPOK|RODATA, $14
 
 TEXT ·mlib_ofl_remove(SB), $56-8
 	PCDATA $1, $-1
@@ -5150,26 +5377,26 @@ TEXT ·mlib_ofl_remove(SB), $56-8
 	MOVQ AX, -8(BP)
 	PCDATA $1, $1
 	CALL ·OpenFileListLock(SB)
-_Ltmp122:
+_Ltmp132:
 	MOVQ -8(BP), DX
-	LONG $0x0124ba83
+	LONG $0x016cba83
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB21_14
-	MOVQ 272(DX), DI
-	MOVQ 280(DX), SI
+	JEQ _LBB24_14
+	MOVQ 344(DX), DI
+	MOVQ 352(DX), SI
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xff
 	MOVQ DX, -24(BP)
-	JEQ _LBB21_5
-	LEAQ 280(DI), AX
+	JEQ _LBB24_5
+	LEAQ 352(DI), AX
 	LEAQ runtime·writeBarrier(SB), CX
 	BYTE $0x83
 	BYTE $0x39
 	BYTE $0x00
-	JEQ _LBB21_4
+	JEQ _LBB24_4
 	MOVQ SP, CX
 	MOVQ SI, 8(CX)
 	MOVQ AX, 0(CX)
@@ -5179,18 +5406,18 @@ _Ltmp122:
 	MOVQ -32(BP), DI
 	MOVQ -16(BP), SI
 	MOVQ -24(BP), DX
-_LBB21_5:
+_LBB24_5:
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xf6
-	JEQ _LBB21_9
-_LBB21_6:
-	LEAQ 272(SI), AX
+	JEQ _LBB24_9
+_LBB24_6:
+	LEAQ 344(SI), AX
 	LEAQ runtime·writeBarrier(SB), CX
 	BYTE $0x83
 	BYTE $0x39
 	BYTE $0x00
-	JEQ _LBB21_8
+	JEQ _LBB24_8
 	MOVQ SP, CX
 	MOVQ DI, 8(CX)
 	MOVQ AX, 0(CX)
@@ -5198,73 +5425,73 @@ _LBB21_6:
 	CALL ·_c2go_writePtr(SB)
 	MOVQ -16(BP), SI
 	MOVQ -24(BP), DX
-	JMP _LBB21_9
-_LBB21_4:
+	JMP _LBB24_9
+_LBB24_4:
 	MOVQ SI, 0(AX)
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xf6
-	JNE _LBB21_6
-	JMP _LBB21_9
-_LBB21_8:
+	JNE _LBB24_6
+	JMP _LBB24_9
+_LBB24_8:
 	MOVQ DI, 0(AX)
-_LBB21_9:
+_LBB24_9:
 	CMPQ ·mlib_ofl_head(SB), DX
-	JNE _LBB21_13
+	JNE _LBB24_13
 	LEAQ runtime·writeBarrier(SB), AX
 	BYTE $0x83
 	BYTE $0x38
 	BYTE $0x00
-	JEQ _LBB21_12
+	JEQ _LBB24_12
 	MOVQ SP, AX
 	MOVQ SI, 8(AX)
 	LEAQ ·mlib_ofl_head(SB), CX
 	MOVQ CX, 0(AX)
 	CALL ·_c2go_writePtr(SB)
 	MOVQ -24(BP), DX
-	JMP _LBB21_13
-_LBB21_12:
+	JMP _LBB24_13
+_LBB24_12:
 	MOVQ SI, ·mlib_ofl_head(SB)
-_LBB21_13:
+_LBB24_13:
 	MOVQ SP, AX
 	MOVQ DX, 0(AX)
 	PCDATA $1, $1
 	CALL ·mlib_file_clear_links(SB)
-_Ltmp123:
+_Ltmp133:
 	MOVQ -8(BP), AX
-	LONG $0x012480c7
+	LONG $0x016c80c7
 	LONG $0x00000000
 	BYTE $0x00
 	BYTE $0x00
-_LBB21_14:
+_LBB24_14:
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp124:
+_Ltmp134:
 	RET
-_Lfunc_end21:
+_Lfunc_end24:
 	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
 	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
 TEXT ·mlib_file_clear_links(SB), $24-8
 	PCDATA $1, $-1
 	MOVQ 16(BP), AX
 	MOVQ AX, -8(BP)
-	LONG $0x01100548
+	LONG $0x01580548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·mlib_clear_file_pointer(SB)
-_Ltmp125:
-	MOVL $280, AX
+_Ltmp135:
+	MOVL $352, AX
 	LONG $0xf8450348
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·mlib_clear_file_pointer(SB)
-_Ltmp126:
+_Ltmp136:
 	RET
-_Lfunc_end22:
+_Lfunc_end25:
 	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
 	FUNCDATA $1, gclocals·055a193a5dc1daa8(SB)
 DATA gclocals·055a193a5dc1daa8+0(SB)/4, $2
@@ -5279,29 +5506,24 @@ TEXT ·mlib_clear_file_pointer(SB), $24-8
 	BYTE $0x83
 	BYTE $0x38
 	BYTE $0x00
-	JEQ _LBB23_2
+	JEQ _LBB26_2
 	MOVQ SP, AX
 	MOVQ 16(BP), CX
 	MOVQ CX, 0(AX)
 	LONG $0x0840c748
 	LONG $0x00000000
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB23_3
-_LBB23_2:
+	JMP _LBB26_3
+_LBB26_2:
 	MOVQ 16(BP), AX
 	LONG $0x0000c748
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-_LBB23_3:
+_LBB26_3:
 	RET
-_Lfunc_end23:
+_Lfunc_end26:
 	FUNCDATA $0, gclocals·5f490f070d449c5c(SB)
-DATA gclocals·5f490f070d449c5c+0(SB)/4, $1
-DATA gclocals·5f490f070d449c5c+4(SB)/4, $1
-DATA gclocals·5f490f070d449c5c+8(SB)/1, $0x01
-GLOBL gclocals·5f490f070d449c5c(SB), DUPOK|RODATA, $9
-
 	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
 TEXT ·mlib_fflush(SB), $56-16
 	PCDATA $1, $-1
@@ -5309,8 +5531,8 @@ TEXT ·mlib_fflush(SB), $56-16
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB24_4
-	LONG $0x01080548
+	JEQ _LBB27_4
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 16(BP), CX
@@ -5319,223 +5541,96 @@ TEXT ·mlib_fflush(SB), $56-16
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp127:
+_Ltmp137:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB24_2
+	JEQ _LBB27_2
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
-_Ltmp128:
+_Ltmp138:
 	MOVQ SP, AX
 	MOVL 8(AX), AX
 	MOVL AX, -12(BP)
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp129:
-	JMP _LBB24_28
-_LBB24_4:
+_Ltmp139:
+	JMP _LBB27_28
+_LBB27_4:
 	PCDATA $1, $0
 	CALL ·OpenFileListLock(SB)
-_Ltmp130:
+_Ltmp140:
 	MOVQ ·mlib_std_files(SB), AX
 	XORL CX, CX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB24_5
+	JEQ _LBB27_5
 	MOVQ AX, -8(BP)
-	LONG $0x01080548
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp131:
+_Ltmp141:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB24_7
+	JEQ _LBB27_7
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
-_Ltmp132:
+_Ltmp142:
 	MOVQ SP, AX
 	MOVL 8(AX), AX
 	MOVL AX, -12(BP)
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp133:
+_Ltmp143:
 	MOVL -12(BP), AX
-	JMP _LBB24_9
-_LBB24_2:
-	MOVQ 264(AX), AX
+	JMP _LBB27_9
+_LBB27_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp134:
+_Ltmp144:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp135:
+_Ltmp145:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-	JMP _LBB24_29
-_LBB24_5:
+	JMP _LBB27_29
+_LBB27_5:
 	MOVL CX, AX
-	JMP _LBB24_9
-_LBB24_7:
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp136:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp137:
-	MOVQ SP, AX
-	MOVQ 0(AX), AX
-	LONG $0x000900c7
-	BYTE $0x00
-	BYTE $0x00
-	XORL AX, AX
-_LBB24_9:
-	MOVL AX, CX
-	MOVQ ·mlib_std_files+8(SB), AX
-	BYTE $0x48
-	BYTE $0x85
-	BYTE $0xc0
-	JEQ _LBB24_10
-	MOVL CX, -12(BP)
-	MOVQ AX, -8(BP)
-	LONG $0x01080548
-	BYTE $0x00
-	BYTE $0x00
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp138:
-	MOVQ -8(BP), AX
-	LONG $0x0120b883
-	BYTE $0x00
-	BYTE $0x00
-	BYTE $0x00
-	JEQ _LBB24_13
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
-_Ltmp139:
-	MOVQ SP, AX
-	MOVQ -8(BP), CX
-	MOVL -12(BP), DX
-	BYTE $0x0b
-	BYTE $0x50
-	BYTE $0x08
-	MOVL DX, -12(BP)
-	MOVQ 264(CX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp140:
-	JMP _LBB24_14
-_LBB24_10:
-	MOVL CX, AX
-	JMP _LBB24_15
-_LBB24_13:
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp141:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp142:
-	MOVQ SP, AX
-	MOVQ 0(AX), AX
-	LONG $0x000900c7
-	BYTE $0x00
-	BYTE $0x00
-_LBB24_14:
-	MOVL -12(BP), AX
-_LBB24_15:
-	MOVL AX, CX
-	MOVQ ·mlib_std_files+16(SB), AX
-	BYTE $0x48
-	BYTE $0x85
-	BYTE $0xc0
-	JEQ _LBB24_16
-	MOVL CX, -12(BP)
-	MOVQ AX, -8(BP)
-	LONG $0x01080548
-	BYTE $0x00
-	BYTE $0x00
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp143:
-	MOVQ -8(BP), AX
-	LONG $0x0120b883
-	BYTE $0x00
-	BYTE $0x00
-	BYTE $0x00
-	JEQ _LBB24_19
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
-_Ltmp144:
-	MOVQ SP, AX
-	MOVQ -8(BP), CX
-	MOVL -12(BP), DX
-	BYTE $0x0b
-	BYTE $0x50
-	BYTE $0x08
-	MOVL DX, -12(BP)
-	MOVQ 264(CX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp145:
-	JMP _LBB24_20
-_LBB24_16:
-	MOVL CX, AX
-	JMP _LBB24_21
-_LBB24_19:
-	MOVQ 264(AX), AX
+	JMP _LBB27_9
+_LBB27_7:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
@@ -5550,23 +5645,35 @@ _Ltmp147:
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
-_LBB24_20:
-	MOVL -12(BP), AX
-_LBB24_21:
-	MOVQ ·mlib_ofl_head(SB), CX
+	XORL AX, AX
+_LBB27_9:
+	MOVL AX, CX
+	MOVQ ·mlib_std_files+8(SB), AX
 	BYTE $0x48
 	BYTE $0x85
-	BYTE $0xc9
-	JEQ _LBB24_27
-	MOVQ CX, DX
-	MOVL AX, SI
-	JMP _LBB24_23
-_LBB24_25:
+	BYTE $0xc0
+	JEQ _LBB27_10
+	MOVL CX, -12(BP)
+	MOVQ AX, -8(BP)
+	LONG $0x01500548
+	BYTE $0x00
+	BYTE $0x00
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
-	PCDATA $1, $2
-	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
 _Ltmp148:
+	MOVQ -8(BP), AX
+	LONG $0x0168b883
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	JEQ _LBB27_13
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
+_Ltmp149:
 	MOVQ SP, AX
 	MOVQ -8(BP), CX
 	MOVL -12(BP), DX
@@ -5574,51 +5681,166 @@ _Ltmp148:
 	BYTE $0x50
 	BYTE $0x08
 	MOVL DX, -12(BP)
-	MOVQ 264(CX), AX
+	MOVQ 336(CX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp150:
+	JMP _LBB27_14
+_LBB27_10:
+	MOVL CX, AX
+	JMP _LBB27_15
+_LBB27_13:
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp151:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp152:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	LONG $0x000900c7
+	BYTE $0x00
+	BYTE $0x00
+_LBB27_14:
+	MOVL -12(BP), AX
+_LBB27_15:
+	MOVL AX, CX
+	MOVQ ·mlib_std_files+16(SB), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc0
+	JEQ _LBB27_16
+	MOVL CX, -12(BP)
+	MOVQ AX, -8(BP)
+	LONG $0x01500548
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp153:
+	MOVQ -8(BP), AX
+	LONG $0x0168b883
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	JEQ _LBB27_19
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
+_Ltmp154:
+	MOVQ SP, AX
+	MOVQ -8(BP), CX
+	MOVL -12(BP), DX
+	BYTE $0x0b
+	BYTE $0x50
+	BYTE $0x08
+	MOVL DX, -12(BP)
+	MOVQ 336(CX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp155:
+	JMP _LBB27_20
+_LBB27_16:
+	MOVL CX, AX
+	JMP _LBB27_21
+_LBB27_19:
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp156:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp157:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	LONG $0x000900c7
+	BYTE $0x00
+	BYTE $0x00
+_LBB27_20:
+	MOVL -12(BP), AX
+_LBB27_21:
+	MOVQ ·mlib_ofl_head(SB), CX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc9
+	JEQ _LBB27_27
+	MOVQ CX, DX
+	MOVL AX, SI
+	JMP _LBB27_23
+_LBB27_25:
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
+_Ltmp158:
+	MOVQ SP, AX
+	MOVQ -8(BP), CX
+	MOVL -12(BP), DX
+	BYTE $0x0b
+	BYTE $0x50
+	BYTE $0x08
+	MOVL DX, -12(BP)
+	MOVQ 336(CX), AX
 	MOVQ AX, -32(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $3
 	CALL ·FileUnlock(SB)
-_Ltmp149:
+_Ltmp159:
 	MOVQ -24(BP), AX
-_LBB24_26:
+_LBB27_26:
 	MOVL -12(BP), CX
 	MOVL CX, SI
-	MOVQ 280(AX), DX
+	MOVQ 352(AX), DX
 	MOVL CX, AX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xd2
 	MOVQ DX, CX
-	JEQ _LBB24_27
-_LBB24_23:
+	JEQ _LBB27_27
+_LBB27_23:
 	MOVL SI, -12(BP)
 	MOVQ CX, -24(BP)
-	ADDQ $264, CX
+	ADDQ $336, CX
 	MOVQ DX, -8(BP)
 	MOVQ SP, AX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $2
 	CALL ·FileLock(SB)
-_Ltmp150:
+_Ltmp160:
 	MOVQ -24(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JNE _LBB24_25
+	JNE _LBB27_25
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -32(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $3
 	CALL ·FileUnlock(SB)
-_Ltmp151:
+_Ltmp161:
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp152:
+_Ltmp162:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	MOVQ -24(BP), CX
@@ -5626,18 +5848,18 @@ _Ltmp152:
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ CX, AX
-	JMP _LBB24_26
-_LBB24_27:
+	JMP _LBB27_26
+_LBB27_27:
 	MOVL AX, -12(BP)
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp153:
-_LBB24_28:
+_Ltmp163:
+_LBB27_28:
 	MOVL -12(BP), AX
-_LBB24_29:
+_LBB27_29:
 	MOVL AX, 24(BP)
 	RET
-_Lfunc_end24:
+_Lfunc_end27:
 	FUNCDATA $0, gclocals·25fa9a62766576b7(SB)
 	FUNCDATA $1, gclocals·ef3d7d84adf96e0e(SB)
 DATA gclocals·ef3d7d84adf96e0e+0(SB)/4, $4
@@ -5654,138 +5876,8 @@ TEXT ·mlib_feof(SB), $40-16
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB25_3
-	LONG $0x01080548
-	BYTE $0x00
-	BYTE $0x00
-	MOVQ 16(BP), CX
-	MOVQ CX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp154:
-	MOVQ -8(BP), AX
-	LONG $0x0120b883
-	BYTE $0x00
-	BYTE $0x00
-	BYTE $0x00
-	JEQ _LBB25_2
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·feof(SB)
-_Ltmp155:
-	MOVQ SP, AX
-	MOVL 8(AX), AX
-	MOVL AX, -12(BP)
-	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp156:
-	MOVL -12(BP), AX
-	JMP _LBB25_5
-_LBB25_2:
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp157:
-_LBB25_3:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp158:
-	MOVQ SP, AX
-	MOVQ 0(AX), AX
-	LONG $0x000900c7
-	BYTE $0x00
-	BYTE $0x00
-	MOVL $-1, AX
-_LBB25_5:
-	MOVL AX, 24(BP)
-	RET
-_Lfunc_end25:
-	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_ferror(SB), $40-16
-	PCDATA $1, $-1
-	MOVQ 16(BP), AX
-	BYTE $0x48
-	BYTE $0x85
-	BYTE $0xc0
-	JEQ _LBB26_3
-	LONG $0x01080548
-	BYTE $0x00
-	BYTE $0x00
-	MOVQ 16(BP), CX
-	MOVQ CX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp159:
-	MOVQ -8(BP), AX
-	LONG $0x0120b883
-	BYTE $0x00
-	BYTE $0x00
-	BYTE $0x00
-	JEQ _LBB26_2
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·ferror(SB)
-_Ltmp160:
-	MOVQ SP, AX
-	MOVL 8(AX), AX
-	MOVL AX, -12(BP)
-	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp161:
-	MOVL -12(BP), AX
-	JMP _LBB26_5
-_LBB26_2:
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp162:
-_LBB26_3:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp163:
-	MOVQ SP, AX
-	MOVQ 0(AX), AX
-	LONG $0x000900c7
-	BYTE $0x00
-	BYTE $0x00
-	MOVL $-1, AX
-_LBB26_5:
-	MOVL AX, 24(BP)
-	RET
-_Lfunc_end26:
-	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_fgetc(SB), $40-16
-	PCDATA $1, $-1
-	MOVQ 16(BP), AX
-	BYTE $0x48
-	BYTE $0x85
-	BYTE $0xc0
-	JEQ _LBB27_3
-	LONG $0x01080548
+	JEQ _LBB28_3
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 16(BP), CX
@@ -5796,72 +5888,7 @@ TEXT ·mlib_fgetc(SB), $40-16
 	CALL ·FileLock(SB)
 _Ltmp164:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
-	BYTE $0x00
-	BYTE $0x00
-	BYTE $0x00
-	JEQ _LBB27_2
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fgetc(SB)
-_Ltmp165:
-	MOVQ SP, AX
-	MOVL 8(AX), AX
-	MOVL AX, -12(BP)
-	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp166:
-	MOVL -12(BP), AX
-	JMP _LBB27_5
-_LBB27_2:
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp167:
-_LBB27_3:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp168:
-	MOVQ SP, AX
-	MOVQ 0(AX), AX
-	LONG $0x000900c7
-	BYTE $0x00
-	BYTE $0x00
-	MOVL $-1, AX
-_LBB27_5:
-	MOVL AX, 24(BP)
-	RET
-_Lfunc_end27:
-	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_getc(SB), $40-16
-	PCDATA $1, $-1
-	MOVQ 16(BP), AX
-	BYTE $0x48
-	BYTE $0x85
-	BYTE $0xc0
-	JEQ _LBB28_3
-	LONG $0x01080548
-	BYTE $0x00
-	BYTE $0x00
-	MOVQ 16(BP), CX
-	MOVQ CX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp169:
-	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
@@ -5869,33 +5896,33 @@ _Ltmp169:
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·getc(SB)
-_Ltmp170:
+	CALL github·com∕c2gohq∕c2go_libc·feof(SB)
+_Ltmp165:
 	MOVQ SP, AX
 	MOVL 8(AX), AX
 	MOVL AX, -12(BP)
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp171:
+_Ltmp166:
 	MOVL -12(BP), AX
 	JMP _LBB28_5
 _LBB28_2:
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp172:
+_Ltmp167:
 _LBB28_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp173:
+_Ltmp168:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
@@ -5908,14 +5935,14 @@ _LBB28_5:
 _Lfunc_end28:
 	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
 	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_fileno(SB), $40-16
+TEXT ·mlib_ferror(SB), $40-16
 	PCDATA $1, $-1
 	MOVQ 16(BP), AX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
 	JEQ _LBB29_3
-	LONG $0x01080548
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 16(BP), CX
@@ -5924,9 +5951,9 @@ TEXT ·mlib_fileno(SB), $40-16
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp174:
+_Ltmp169:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
@@ -5934,33 +5961,33 @@ _Ltmp174:
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fileno(SB)
-_Ltmp175:
+	CALL github·com∕c2gohq∕c2go_libc·ferror(SB)
+_Ltmp170:
 	MOVQ SP, AX
 	MOVL 8(AX), AX
 	MOVL AX, -12(BP)
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp176:
+_Ltmp171:
 	MOVL -12(BP), AX
 	JMP _LBB29_5
 _LBB29_2:
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp177:
+_Ltmp172:
 _LBB29_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp178:
+_Ltmp173:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
@@ -5973,14 +6000,79 @@ _LBB29_5:
 _Lfunc_end29:
 	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
 	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_clearerr(SB), $24-8
+TEXT ·mlib_fgetc(SB), $40-16
 	PCDATA $1, $-1
 	MOVQ 16(BP), AX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
 	JEQ _LBB30_3
-	LONG $0x01080548
+	LONG $0x01500548
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ 16(BP), CX
+	MOVQ CX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp174:
+	MOVQ -8(BP), AX
+	LONG $0x0168b883
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	JEQ _LBB30_2
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·fgetc(SB)
+_Ltmp175:
+	MOVQ SP, AX
+	MOVL 8(AX), AX
+	MOVL AX, -12(BP)
+	MOVQ -8(BP), AX
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp176:
+	MOVL -12(BP), AX
+	JMP _LBB30_5
+_LBB30_2:
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp177:
+_LBB30_3:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp178:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	LONG $0x000900c7
+	BYTE $0x00
+	BYTE $0x00
+	MOVL $-1, AX
+_LBB30_5:
+	MOVL AX, 24(BP)
+	RET
+_Lfunc_end30:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_getc(SB), $40-16
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc0
+	JEQ _LBB31_3
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 16(BP), CX
@@ -5991,34 +6083,38 @@ TEXT ·mlib_clearerr(SB), $24-8
 	CALL ·FileLock(SB)
 _Ltmp179:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB30_2
+	JEQ _LBB31_2
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·clearerr(SB)
+	CALL github·com∕c2gohq∕c2go_libc·getc(SB)
 _Ltmp180:
+	MOVQ SP, AX
+	MOVL 8(AX), AX
+	MOVL AX, -12(BP)
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
 _Ltmp181:
-	JMP _LBB30_5
-_LBB30_2:
-	MOVQ 264(AX), AX
+	MOVL -12(BP), AX
+	JMP _LBB31_5
+_LBB31_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
 _Ltmp182:
-_LBB30_3:
+_LBB31_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
 _Ltmp183:
@@ -6027,19 +6123,21 @@ _Ltmp183:
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
-_LBB30_5:
+	MOVL $-1, AX
+_LBB31_5:
+	MOVL AX, 24(BP)
 	RET
-_Lfunc_end30:
-	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
-	FUNCDATA $1, gclocals·055a193a5dc1daa8(SB)
-TEXT ·mlib_fseek(SB), $40-24
+_Lfunc_end31:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_fileno(SB), $40-16
 	PCDATA $1, $-1
 	MOVQ 16(BP), AX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB31_3
-	LONG $0x01080548
+	JEQ _LBB32_3
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 16(BP), CX
@@ -6050,25 +6148,21 @@ TEXT ·mlib_fseek(SB), $40-24
 	CALL ·FileLock(SB)
 _Ltmp184:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB31_2
-	MOVL 28(BP), CX
-	MOVL 24(BP), DX
-	MOVQ SP, SI
-	MOVL CX, 12(SI)
-	MOVL DX, 8(SI)
-	MOVQ AX, 0(SI)
+	JEQ _LBB32_2
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fseek(SB)
+	CALL github·com∕c2gohq∕c2go_libc·fileno(SB)
 _Ltmp185:
 	MOVQ SP, AX
-	MOVL 16(AX), AX
+	MOVL 8(AX), AX
 	MOVL AX, -12(BP)
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
@@ -6076,16 +6170,16 @@ _Ltmp185:
 	CALL ·FileUnlock(SB)
 _Ltmp186:
 	MOVL -12(BP), AX
-	JMP _LBB31_5
-_LBB31_2:
-	MOVQ 264(AX), AX
+	JMP _LBB32_5
+_LBB32_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
 _Ltmp187:
-_LBB31_3:
+_LBB32_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
 _Ltmp188:
@@ -6095,20 +6189,20 @@ _Ltmp188:
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-_LBB31_5:
-	MOVL AX, 32(BP)
+_LBB32_5:
+	MOVL AX, 24(BP)
 	RET
-_Lfunc_end31:
-	FUNCDATA $0, gclocals·055d823a5dc4c2ea(SB)
+_Lfunc_end32:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
 	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_fseeko(SB), $56-32
+TEXT ·mlib_clearerr(SB), $24-8
 	PCDATA $1, $-1
 	MOVQ 16(BP), AX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB32_3
-	LONG $0x01080548
+	JEQ _LBB33_3
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 16(BP), CX
@@ -6119,42 +6213,34 @@ TEXT ·mlib_fseeko(SB), $56-32
 	CALL ·FileLock(SB)
 _Ltmp189:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB32_2
-	MOVL 32(BP), CX
-	MOVQ 24(BP), DX
-	MOVQ SP, SI
-	MOVL CX, 16(SI)
-	MOVQ DX, 8(SI)
-	MOVQ AX, 0(SI)
+	JEQ _LBB33_2
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fseeko(SB)
+	CALL github·com∕c2gohq∕c2go_libc·clearerr(SB)
 _Ltmp190:
-	MOVQ SP, AX
-	MOVL 24(AX), AX
-	MOVL AX, -12(BP)
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
 _Ltmp191:
-	MOVL -12(BP), AX
-	JMP _LBB32_5
-_LBB32_2:
-	MOVQ 264(AX), AX
+	JMP _LBB33_5
+_LBB33_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
 _Ltmp192:
-_LBB32_3:
+_LBB33_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
 _Ltmp193:
@@ -6163,11 +6249,147 @@ _Ltmp193:
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
+_LBB33_5:
+	RET
+_Lfunc_end33:
+	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
+	FUNCDATA $1, gclocals·055a193a5dc1daa8(SB)
+TEXT ·mlib_fseek(SB), $40-24
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc0
+	JEQ _LBB34_3
+	LONG $0x01500548
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ 16(BP), CX
+	MOVQ CX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp194:
+	MOVQ -8(BP), AX
+	LONG $0x0168b883
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	JEQ _LBB34_2
+	MOVL 28(BP), CX
+	MOVL 24(BP), DX
+	MOVQ SP, SI
+	MOVL CX, 12(SI)
+	MOVL DX, 8(SI)
+	MOVQ AX, 0(SI)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·fseek(SB)
+_Ltmp195:
+	MOVQ SP, AX
+	MOVL 16(AX), AX
+	MOVL AX, -12(BP)
+	MOVQ -8(BP), AX
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp196:
+	MOVL -12(BP), AX
+	JMP _LBB34_5
+_LBB34_2:
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp197:
+_LBB34_3:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp198:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	LONG $0x000900c7
+	BYTE $0x00
+	BYTE $0x00
 	MOVL $-1, AX
-_LBB32_5:
+_LBB34_5:
+	MOVL AX, 32(BP)
+	RET
+_Lfunc_end34:
+	FUNCDATA $0, gclocals·055d823a5dc4c2ea(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_fseeko(SB), $56-32
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc0
+	JEQ _LBB35_3
+	LONG $0x01500548
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ 16(BP), CX
+	MOVQ CX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp199:
+	MOVQ -8(BP), AX
+	LONG $0x0168b883
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	JEQ _LBB35_2
+	MOVL 32(BP), CX
+	MOVQ 24(BP), DX
+	MOVQ SP, SI
+	MOVL CX, 16(SI)
+	MOVQ DX, 8(SI)
+	MOVQ AX, 0(SI)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·fseeko(SB)
+_Ltmp200:
+	MOVQ SP, AX
+	MOVL 24(AX), AX
+	MOVL AX, -12(BP)
+	MOVQ -8(BP), AX
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp201:
+	MOVL -12(BP), AX
+	JMP _LBB35_5
+_LBB35_2:
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp202:
+_LBB35_3:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp203:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	LONG $0x000900c7
+	BYTE $0x00
+	BYTE $0x00
+	MOVL $-1, AX
+_LBB35_5:
 	MOVL AX, 40(BP)
 	RET
-_Lfunc_end32:
+_Lfunc_end35:
 	FUNCDATA $0, gclocals·28c054076fcd39c5(SB)
 DATA gclocals·28c054076fcd39c5+0(SB)/4, $2
 DATA gclocals·28c054076fcd39c5+4(SB)/4, $4
@@ -6182,138 +6404,8 @@ TEXT ·mlib_ftell(SB), $40-16
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB33_3
-	LONG $0x01080548
-	BYTE $0x00
-	BYTE $0x00
-	MOVQ 16(BP), CX
-	MOVQ CX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp194:
-	MOVQ -8(BP), AX
-	LONG $0x0120b883
-	BYTE $0x00
-	BYTE $0x00
-	BYTE $0x00
-	JEQ _LBB33_2
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·ftell(SB)
-_Ltmp195:
-	MOVQ SP, AX
-	MOVL 8(AX), AX
-	MOVL AX, -12(BP)
-	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp196:
-	MOVL -12(BP), AX
-	JMP _LBB33_5
-_LBB33_2:
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp197:
-_LBB33_3:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp198:
-	MOVQ SP, AX
-	MOVQ 0(AX), AX
-	LONG $0x000900c7
-	BYTE $0x00
-	BYTE $0x00
-	MOVL $-1, AX
-_LBB33_5:
-	MOVL AX, 24(BP)
-	RET
-_Lfunc_end33:
-	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_ftello(SB), $40-16
-	PCDATA $1, $-1
-	MOVQ 16(BP), AX
-	BYTE $0x48
-	BYTE $0x85
-	BYTE $0xc0
-	JEQ _LBB34_3
-	LONG $0x01080548
-	BYTE $0x00
-	BYTE $0x00
-	MOVQ 16(BP), CX
-	MOVQ CX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp199:
-	MOVQ -8(BP), AX
-	LONG $0x0120b883
-	BYTE $0x00
-	BYTE $0x00
-	BYTE $0x00
-	JEQ _LBB34_2
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·ftello(SB)
-_Ltmp200:
-	MOVQ SP, AX
-	MOVQ 8(AX), AX
-	MOVQ AX, -16(BP)
-	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp201:
-	MOVQ -16(BP), AX
-	JMP _LBB34_5
-_LBB34_2:
-	MOVQ 264(AX), AX
-	MOVQ AX, -8(BP)
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp202:
-_LBB34_3:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp203:
-	MOVQ SP, AX
-	MOVQ 0(AX), AX
-	LONG $0x000900c7
-	BYTE $0x00
-	BYTE $0x00
-	MOVQ $-1, AX
-_LBB34_5:
-	MOVQ AX, 24(BP)
-	RET
-_Lfunc_end34:
-	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_rewind(SB), $24-8
-	PCDATA $1, $-1
-	MOVQ 16(BP), AX
-	BYTE $0x48
-	BYTE $0x85
-	BYTE $0xc0
-	JEQ _LBB35_3
-	LONG $0x01080548
+	JEQ _LBB36_3
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 16(BP), CX
@@ -6324,34 +6416,38 @@ TEXT ·mlib_rewind(SB), $24-8
 	CALL ·FileLock(SB)
 _Ltmp204:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB35_2
+	JEQ _LBB36_2
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·rewind(SB)
+	CALL github·com∕c2gohq∕c2go_libc·ftell(SB)
 _Ltmp205:
+	MOVQ SP, AX
+	MOVL 8(AX), AX
+	MOVL AX, -12(BP)
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
 _Ltmp206:
-	JMP _LBB35_5
-_LBB35_2:
-	MOVQ 264(AX), AX
+	MOVL -12(BP), AX
+	JMP _LBB36_5
+_LBB36_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
 _Ltmp207:
-_LBB35_3:
+_LBB36_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
 _Ltmp208:
@@ -6360,64 +6456,63 @@ _Ltmp208:
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
-_LBB35_5:
+	MOVL $-1, AX
+_LBB36_5:
+	MOVL AX, 24(BP)
 	RET
-_Lfunc_end35:
-	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
-	FUNCDATA $1, gclocals·055a193a5dc1daa8(SB)
-TEXT ·mlib_fgetpos(SB), $56-24
+_Lfunc_end36:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_ftello(SB), $40-16
 	PCDATA $1, $-1
 	MOVQ 16(BP), AX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB36_3
-	MOVQ 24(BP), AX
+	JEQ _LBB37_3
+	LONG $0x01500548
+	BYTE $0x00
+	BYTE $0x00
 	MOVQ 16(BP), CX
-	ADDQ $264, CX
-	MOVQ 16(BP), DX
-	MOVQ DX, -16(BP)
-	MOVQ AX, -8(BP)
-	MOVQ SP, AX
-	MOVQ CX, 0(AX)
+	MOVQ CX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
 _Ltmp209:
-	MOVQ -16(BP), AX
-	LONG $0x0120b883
+	MOVQ -8(BP), AX
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB36_2
-	MOVQ -8(BP), CX
-	MOVQ SP, DX
-	MOVQ CX, 8(DX)
-	MOVQ AX, 0(DX)
+	JEQ _LBB37_2
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fgetpos(SB)
+	CALL github·com∕c2gohq∕c2go_libc·ftello(SB)
 _Ltmp210:
 	MOVQ SP, AX
-	MOVL 16(AX), AX
-	MOVL AX, -20(BP)
-	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 8(AX), AX
+	MOVQ AX, -16(BP)
+	MOVQ -8(BP), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
-	PCDATA $1, $2
+	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
 _Ltmp211:
-	MOVL -20(BP), AX
-	JMP _LBB36_5
-_LBB36_2:
-	MOVQ 264(AX), AX
+	MOVQ -16(BP), AX
+	JMP _LBB37_5
+_LBB37_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
-	PCDATA $1, $2
+	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
 _Ltmp212:
-_LBB36_3:
+_LBB37_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
 _Ltmp213:
@@ -6426,11 +6521,138 @@ _Ltmp213:
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
+	MOVQ $-1, AX
+_LBB37_5:
+	MOVQ AX, 24(BP)
+	RET
+_Lfunc_end37:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_rewind(SB), $24-8
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc0
+	JEQ _LBB38_3
+	LONG $0x01500548
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ 16(BP), CX
+	MOVQ CX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp214:
+	MOVQ -8(BP), AX
+	LONG $0x0168b883
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	JEQ _LBB38_2
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·rewind(SB)
+_Ltmp215:
+	MOVQ -8(BP), AX
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp216:
+	JMP _LBB38_5
+_LBB38_2:
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp217:
+_LBB38_3:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp218:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	LONG $0x000900c7
+	BYTE $0x00
+	BYTE $0x00
+_LBB38_5:
+	RET
+_Lfunc_end38:
+	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
+	FUNCDATA $1, gclocals·055a193a5dc1daa8(SB)
+TEXT ·mlib_fgetpos(SB), $56-24
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc0
+	JEQ _LBB39_3
+	MOVQ 24(BP), AX
+	MOVQ 16(BP), CX
+	ADDQ $336, CX
+	MOVQ 16(BP), DX
+	MOVQ DX, -16(BP)
+	MOVQ AX, -8(BP)
+	MOVQ SP, AX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp219:
+	MOVQ -16(BP), AX
+	LONG $0x0168b883
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	JEQ _LBB39_2
+	MOVQ -8(BP), CX
+	MOVQ SP, DX
+	MOVQ CX, 8(DX)
+	MOVQ AX, 0(DX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·fgetpos(SB)
+_Ltmp220:
+	MOVQ SP, AX
+	MOVL 16(AX), AX
+	MOVL AX, -20(BP)
+	MOVQ -16(BP), AX
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp221:
+	MOVL -20(BP), AX
+	JMP _LBB39_5
+_LBB39_2:
+	MOVQ 336(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp222:
+_LBB39_3:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp223:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	LONG $0x000900c7
+	BYTE $0x00
+	BYTE $0x00
 	MOVL $-1, AX
-_LBB36_5:
+_LBB39_5:
 	MOVL AX, 32(BP)
 	RET
-_Lfunc_end36:
+_Lfunc_end39:
 	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
 DATA gclocals·3c92c549d7d49230+0(SB)/4, $3
 DATA gclocals·3c92c549d7d49230+4(SB)/4, $3
@@ -6453,10 +6675,10 @@ TEXT ·mlib_fsetpos(SB), $56-24
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB37_3
+	JEQ _LBB40_3
 	MOVQ 24(BP), AX
 	MOVQ 16(BP), CX
-	ADDQ $264, CX
+	ADDQ $336, CX
 	MOVQ 16(BP), DX
 	MOVQ DX, -16(BP)
 	MOVQ AX, -8(BP)
@@ -6464,55 +6686,55 @@ TEXT ·mlib_fsetpos(SB), $56-24
 	MOVQ CX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp214:
+_Ltmp224:
 	MOVQ -16(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB37_2
+	JEQ _LBB40_2
 	MOVQ -8(BP), CX
 	MOVQ SP, DX
 	MOVQ CX, 8(DX)
 	MOVQ AX, 0(DX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fsetpos(SB)
-_Ltmp215:
+_Ltmp225:
 	MOVQ SP, AX
 	MOVL 16(AX), AX
 	MOVL AX, -20(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp216:
+_Ltmp226:
 	MOVL -20(BP), AX
-	JMP _LBB37_5
-_LBB37_2:
-	MOVQ 264(AX), AX
+	JMP _LBB40_5
+_LBB40_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp217:
-_LBB37_3:
+_Ltmp227:
+_LBB40_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp218:
+_Ltmp228:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-_LBB37_5:
+_LBB40_5:
 	MOVL AX, 32(BP)
 	RET
-_Lfunc_end37:
+_Lfunc_end40:
 	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
 	FUNCDATA $1, gclocals·1d5cc5208a8b6dbb(SB)
 TEXT ·mlib_fread(SB), $72-40
@@ -6521,10 +6743,10 @@ TEXT ·mlib_fread(SB), $72-40
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB38_3
+	JEQ _LBB41_3
 	MOVQ 16(BP), AX
 	MOVQ 40(BP), CX
-	ADDQ $264, CX
+	ADDQ $336, CX
 	MOVQ 40(BP), DX
 	MOVQ DX, -16(BP)
 	MOVQ AX, -8(BP)
@@ -6532,13 +6754,13 @@ TEXT ·mlib_fread(SB), $72-40
 	MOVQ CX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp219:
+_Ltmp229:
 	MOVQ -16(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB38_2
+	JEQ _LBB41_2
 	MOVQ 32(BP), CX
 	MOVQ 24(BP), DX
 	MOVQ -8(BP), SI
@@ -6549,42 +6771,42 @@ _Ltmp219:
 	MOVQ SI, 0(DI)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fread(SB)
-_Ltmp220:
+_Ltmp230:
 	MOVQ SP, AX
 	MOVQ 32(AX), AX
 	MOVQ AX, -24(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp221:
+_Ltmp231:
 	MOVQ -24(BP), AX
-	JMP _LBB38_5
-_LBB38_2:
-	MOVQ 264(AX), AX
+	JMP _LBB41_5
+_LBB41_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp222:
-_LBB38_3:
+_Ltmp232:
+_LBB41_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp223:
+_Ltmp233:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	XORL AX, AX
-_LBB38_5:
+_LBB41_5:
 	MOVQ AX, 48(BP)
 	RET
-_Lfunc_end38:
+_Lfunc_end41:
 	FUNCDATA $0, gclocals·e5d25635518ba284(SB)
 DATA gclocals·e5d25635518ba284+0(SB)/4, $3
 DATA gclocals·e5d25635518ba284+4(SB)/4, $5
@@ -6600,10 +6822,10 @@ TEXT ·mlib_fwrite(SB), $72-40
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB39_3
+	JEQ _LBB42_3
 	MOVQ 16(BP), AX
 	MOVQ 40(BP), CX
-	ADDQ $264, CX
+	ADDQ $336, CX
 	MOVQ 40(BP), DX
 	MOVQ DX, -16(BP)
 	MOVQ AX, -8(BP)
@@ -6611,13 +6833,13 @@ TEXT ·mlib_fwrite(SB), $72-40
 	MOVQ CX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp224:
+_Ltmp234:
 	MOVQ -16(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB39_2
+	JEQ _LBB42_2
 	MOVQ 32(BP), CX
 	MOVQ 24(BP), DX
 	MOVQ -8(BP), SI
@@ -6628,42 +6850,42 @@ _Ltmp224:
 	MOVQ SI, 0(DI)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fwrite(SB)
-_Ltmp225:
+_Ltmp235:
 	MOVQ SP, AX
 	MOVQ 32(AX), AX
 	MOVQ AX, -24(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp226:
+_Ltmp236:
 	MOVQ -24(BP), AX
-	JMP _LBB39_5
-_LBB39_2:
-	MOVQ 264(AX), AX
+	JMP _LBB42_5
+_LBB42_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp227:
-_LBB39_3:
+_Ltmp237:
+_LBB42_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp228:
+_Ltmp238:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	XORL AX, AX
-_LBB39_5:
+_LBB42_5:
 	MOVQ AX, 48(BP)
 	RET
-_Lfunc_end39:
+_Lfunc_end42:
 	FUNCDATA $0, gclocals·e5d25635518ba284(SB)
 	FUNCDATA $1, gclocals·67337e9950b3314f(SB)
 TEXT ·mlib_ungetc(SB), $40-24
@@ -6672,8 +6894,8 @@ TEXT ·mlib_ungetc(SB), $40-24
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB40_3
-	LONG $0x01080548
+	JEQ _LBB43_3
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 24(BP), CX
@@ -6682,55 +6904,55 @@ TEXT ·mlib_ungetc(SB), $40-24
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp229:
+_Ltmp239:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB40_2
+	JEQ _LBB43_2
 	MOVL 16(BP), CX
 	MOVQ SP, DX
 	MOVQ AX, 8(DX)
 	MOVL CX, 0(DX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·ungetc(SB)
-_Ltmp230:
+_Ltmp240:
 	MOVQ SP, AX
 	MOVL 16(AX), AX
 	MOVL AX, -12(BP)
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp231:
+_Ltmp241:
 	MOVL -12(BP), AX
-	JMP _LBB40_5
-_LBB40_2:
-	MOVQ 264(AX), AX
+	JMP _LBB43_5
+_LBB43_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp232:
-_LBB40_3:
+_Ltmp242:
+_LBB43_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp233:
+_Ltmp243:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-_LBB40_5:
+_LBB43_5:
 	MOVL AX, 32(BP)
 	RET
-_Lfunc_end40:
+_Lfunc_end43:
 	FUNCDATA $0, gclocals·0560e73a5dc7a460(SB)
 DATA gclocals·0560e73a5dc7a460+0(SB)/4, $2
 DATA gclocals·0560e73a5dc7a460+4(SB)/4, $3
@@ -6745,8 +6967,8 @@ TEXT ·mlib_fputc(SB), $40-24
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB41_3
-	LONG $0x01080548
+	JEQ _LBB44_3
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 24(BP), CX
@@ -6755,55 +6977,55 @@ TEXT ·mlib_fputc(SB), $40-24
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp234:
+_Ltmp244:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB41_2
+	JEQ _LBB44_2
 	MOVL 16(BP), CX
 	MOVQ SP, DX
 	MOVQ AX, 8(DX)
 	MOVL CX, 0(DX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fputc(SB)
-_Ltmp235:
+_Ltmp245:
 	MOVQ SP, AX
 	MOVL 16(AX), AX
 	MOVL AX, -12(BP)
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp236:
+_Ltmp246:
 	MOVL -12(BP), AX
-	JMP _LBB41_5
-_LBB41_2:
-	MOVQ 264(AX), AX
+	JMP _LBB44_5
+_LBB44_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp237:
-_LBB41_3:
+_Ltmp247:
+_LBB44_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp238:
+_Ltmp248:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-_LBB41_5:
+_LBB44_5:
 	MOVL AX, 32(BP)
 	RET
-_Lfunc_end41:
+_Lfunc_end44:
 	FUNCDATA $0, gclocals·0560e73a5dc7a460(SB)
 	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
 TEXT ·mlib_putc(SB), $40-24
@@ -6812,8 +7034,8 @@ TEXT ·mlib_putc(SB), $40-24
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB42_3
-	LONG $0x01080548
+	JEQ _LBB45_3
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 24(BP), CX
@@ -6822,114 +7044,114 @@ TEXT ·mlib_putc(SB), $40-24
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp239:
+_Ltmp249:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB42_2
+	JEQ _LBB45_2
 	MOVL 16(BP), CX
 	MOVQ SP, DX
 	MOVQ AX, 8(DX)
 	MOVL CX, 0(DX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fputc(SB)
-_Ltmp240:
+_Ltmp250:
 	MOVQ SP, AX
 	MOVL 16(AX), AX
 	MOVL AX, -12(BP)
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp241:
+_Ltmp251:
 	MOVL -12(BP), AX
-	JMP _LBB42_5
-_LBB42_2:
-	MOVQ 264(AX), AX
+	JMP _LBB45_5
+_LBB45_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp242:
-_LBB42_3:
+_Ltmp252:
+_LBB45_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp243:
+_Ltmp253:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-_LBB42_5:
+_LBB45_5:
 	MOVL AX, 32(BP)
 	RET
-_Lfunc_end42:
+_Lfunc_end45:
 	FUNCDATA $0, gclocals·0560e73a5dc7a460(SB)
 	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
 TEXT ·mlib_getchar(SB), $72-8
 	PCDATA $1, $-1
 	PCDATA $1, $0
 	CALL ·OpenFileListLock(SB)
-_Ltmp244:
+_Ltmp254:
 	MOVQ ·mlib_std_files(SB), CX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc9
 	MOVQ CX, AX
-	JEQ _LBB43_3
-_LBB43_1:
+	JEQ _LBB46_3
+_LBB46_1:
 	MOVQ CX, -16(BP)
 	MOVQ AX, -8(BP)
 	PCDATA $1, $1
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp245:
-	MOVL $264, AX
+_Ltmp255:
+	MOVL $336, AX
 	LONG $0xf8450348
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp246:
+_Ltmp256:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB43_7
+	JEQ _LBB46_7
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fgetc(SB)
-_Ltmp247:
+_Ltmp257:
 	MOVQ SP, AX
 	MOVL 8(AX), AX
 	MOVL AX, -20(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp248:
+_Ltmp258:
 	MOVL -20(BP), AX
-	JMP _LBB43_12
-_LBB43_3:
+	JMP _LBB46_12
+_LBB46_3:
 	PCDATA $1, $0
 	CALL ·mlib_file_allocate(SB)
-_Ltmp249:
+_Ltmp259:
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB43_10
-	MOVQ 256(AX), CX
+	JEQ _LBB46_10
+	MOVQ 320(AX), CX
 	MOVQ AX, -16(BP)
 	MOVQ CX, -8(BP)
 	MOVQ SP, DX
@@ -6943,45 +7165,45 @@ _Ltmp249:
 	BYTE $0x00
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
-_Ltmp250:
+_Ltmp260:
 	MOVQ SP, CX
 	MOVQ -16(BP), AX
 	LONG $0x00207983
-	JEQ _LBB43_8
-	LONG $0x01000548
+	JEQ _LBB46_8
+	LONG $0x01400548
 	BYTE $0x00
 	BYTE $0x00
 	LEAQ runtime·writeBarrier(SB), CX
 	BYTE $0x83
 	BYTE $0x39
 	BYTE $0x00
-	JEQ _LBB43_9
+	JEQ _LBB46_9
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	LONG $0x0841c748
 	LONG $0x00000000
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB43_10
-_LBB43_7:
+	JMP _LBB46_10
+_LBB46_7:
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp251:
+_Ltmp261:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp252:
+_Ltmp262:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
-	JMP _LBB43_11
-_LBB43_8:
-	LONG $0x012080c7
+	JMP _LBB46_11
+_LBB46_8:
+	LONG $0x016880c7
 	LONG $0x00010000
 	BYTE $0x00
 	BYTE $0x00
@@ -6992,25 +7214,25 @@ _LBB43_8:
 	BYTE $0x00
 	PCDATA $1, $3
 	CALL ·mlib_stdfile_store(SB)
-_Ltmp253:
+_Ltmp263:
 	MOVQ -16(BP), CX
 	MOVQ CX, AX
-	JMP _LBB43_1
-_LBB43_9:
+	JMP _LBB46_1
+_LBB46_9:
 	LONG $0x0000c748
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-_LBB43_10:
+_LBB46_10:
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp254:
-_LBB43_11:
+_Ltmp264:
+_LBB46_11:
 	MOVL $-1, AX
-_LBB43_12:
+_LBB46_12:
 	MOVL AX, 16(BP)
 	RET
-_Lfunc_end43:
+_Lfunc_end46:
 	FUNCDATA $0, gclocals·605edb4fa6e837b0(SB)
 DATA gclocals·605edb4fa6e837b0+0(SB)/4, $4
 DATA gclocals·605edb4fa6e837b0+4(SB)/4, $1
@@ -7037,61 +7259,61 @@ TEXT ·mlib_putchar(SB), $72-16
 	PCDATA $1, $-1
 	PCDATA $1, $0
 	CALL ·OpenFileListLock(SB)
-_Ltmp255:
+_Ltmp265:
 	MOVQ ·mlib_std_files+8(SB), CX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc9
 	MOVQ CX, AX
-	JEQ _LBB44_3
-_LBB44_1:
+	JEQ _LBB47_3
+_LBB47_1:
 	MOVQ CX, -16(BP)
 	MOVQ AX, -8(BP)
 	PCDATA $1, $1
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp256:
-	MOVL $264, AX
+_Ltmp266:
+	MOVL $336, AX
 	LONG $0xf8450348
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp257:
+_Ltmp267:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB44_7
+	JEQ _LBB47_7
 	MOVL 16(BP), CX
 	MOVQ SP, DX
 	MOVQ AX, 8(DX)
 	MOVL CX, 0(DX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fputc(SB)
-_Ltmp258:
+_Ltmp268:
 	MOVQ SP, AX
 	MOVL 16(AX), AX
 	MOVL AX, -20(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp259:
+_Ltmp269:
 	MOVL -20(BP), AX
-	JMP _LBB44_12
-_LBB44_3:
+	JMP _LBB47_12
+_LBB47_3:
 	PCDATA $1, $0
 	CALL ·mlib_file_allocate(SB)
-_Ltmp260:
+_Ltmp270:
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB44_10
-	MOVQ 256(AX), CX
+	JEQ _LBB47_10
+	MOVQ 320(AX), CX
 	MOVQ AX, -16(BP)
 	MOVQ CX, -8(BP)
 	MOVQ SP, DX
@@ -7105,45 +7327,45 @@ _Ltmp260:
 	BYTE $0x00
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
-_Ltmp261:
+_Ltmp271:
 	MOVQ SP, CX
 	MOVQ -16(BP), AX
 	LONG $0x00207983
-	JEQ _LBB44_8
-	LONG $0x01000548
+	JEQ _LBB47_8
+	LONG $0x01400548
 	BYTE $0x00
 	BYTE $0x00
 	LEAQ runtime·writeBarrier(SB), CX
 	BYTE $0x83
 	BYTE $0x39
 	BYTE $0x00
-	JEQ _LBB44_9
+	JEQ _LBB47_9
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	LONG $0x0841c748
 	LONG $0x00000000
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB44_10
-_LBB44_7:
+	JMP _LBB47_10
+_LBB47_7:
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp262:
+_Ltmp272:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp263:
+_Ltmp273:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
-	JMP _LBB44_11
-_LBB44_8:
-	LONG $0x012080c7
+	JMP _LBB47_11
+_LBB47_8:
+	LONG $0x016880c7
 	LONG $0x00010000
 	BYTE $0x00
 	BYTE $0x00
@@ -7154,25 +7376,25 @@ _LBB44_8:
 	BYTE $0x00
 	PCDATA $1, $3
 	CALL ·mlib_stdfile_store(SB)
-_Ltmp264:
+_Ltmp274:
 	MOVQ -16(BP), CX
 	MOVQ CX, AX
-	JMP _LBB44_1
-_LBB44_9:
+	JMP _LBB47_1
+_LBB47_9:
 	LONG $0x0000c748
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-_LBB44_10:
+_LBB47_10:
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp265:
-_LBB44_11:
+_Ltmp275:
+_LBB47_11:
 	MOVL $-1, AX
-_LBB44_12:
+_LBB47_12:
 	MOVL AX, 24(BP)
 	RET
-_Lfunc_end44:
+_Lfunc_end47:
 	FUNCDATA $0, gclocals·bd4f306ac7b61613(SB)
 DATA gclocals·bd4f306ac7b61613+0(SB)/4, $4
 DATA gclocals·bd4f306ac7b61613+4(SB)/4, $2
@@ -7189,10 +7411,10 @@ TEXT ·mlib_fgets(SB), $56-32
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB45_3
+	JEQ _LBB48_3
 	MOVQ 16(BP), AX
 	MOVQ 32(BP), CX
-	ADDQ $264, CX
+	ADDQ $336, CX
 	MOVQ 32(BP), DX
 	MOVQ DX, -8(BP)
 	MOVQ AX, -16(BP)
@@ -7200,13 +7422,13 @@ TEXT ·mlib_fgets(SB), $56-32
 	MOVQ CX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp266:
+_Ltmp276:
 	MOVQ -8(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB45_2
+	JEQ _LBB48_2
 	MOVL 24(BP), CX
 	MOVQ -16(BP), DX
 	MOVQ SP, SI
@@ -7215,42 +7437,42 @@ _Ltmp266:
 	MOVQ DX, 0(SI)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fgets(SB)
-_Ltmp267:
+_Ltmp277:
 	MOVQ SP, AX
 	MOVQ 24(AX), AX
 	MOVQ -8(BP), CX
-	MOVQ 264(CX), CX
+	MOVQ 336(CX), CX
 	MOVQ CX, -16(BP)
 	MOVQ AX, -8(BP)
 	MOVQ SP, AX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp268:
+_Ltmp278:
 	MOVQ -8(BP), AX
-	JMP _LBB45_5
-_LBB45_2:
-	MOVQ 264(AX), AX
+	JMP _LBB48_5
+_LBB48_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -16(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp269:
-_LBB45_3:
+_Ltmp279:
+_LBB48_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp270:
+_Ltmp280:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	XORL AX, AX
-_LBB45_5:
+_LBB48_5:
 	MOVQ AX, 40(BP)
 	RET
-_Lfunc_end45:
+_Lfunc_end48:
 	FUNCDATA $0, gclocals·0f33aeaaf5ed953f(SB)
 DATA gclocals·0f33aeaaf5ed953f+0(SB)/4, $3
 DATA gclocals·0f33aeaaf5ed953f+4(SB)/4, $4
@@ -7273,11 +7495,11 @@ TEXT ·mlib_getdelim(SB), $88-40
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB46_3
+	JEQ _LBB49_3
 	MOVQ 24(BP), AX
 	MOVQ 16(BP), CX
 	MOVQ 40(BP), DX
-	ADDQ $264, DX
+	ADDQ $336, DX
 	MOVQ AX, -24(BP)
 	MOVQ CX, -8(BP)
 	MOVQ 40(BP), AX
@@ -7286,13 +7508,13 @@ TEXT ·mlib_getdelim(SB), $88-40
 	MOVQ DX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp271:
+_Ltmp281:
 	MOVQ -16(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB46_2
+	JEQ _LBB49_2
 	MOVL 32(BP), CX
 	MOVQ -24(BP), DX
 	MOVQ -8(BP), SI
@@ -7305,42 +7527,42 @@ _Ltmp271:
 	MOVQ SI, 0(DI)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_getdelim_managed(SB)
-_Ltmp272:
+_Ltmp282:
 	MOVQ SP, AX
 	MOVQ 32(AX), AX
 	MOVQ AX, -32(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp273:
+_Ltmp283:
 	MOVQ -32(BP), AX
-	JMP _LBB46_5
-_LBB46_2:
-	MOVQ 264(AX), AX
+	JMP _LBB49_5
+_LBB49_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp274:
-_LBB46_3:
+_Ltmp284:
+_LBB49_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp275:
+_Ltmp285:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ $-1, AX
-_LBB46_5:
+_LBB49_5:
 	MOVQ AX, 48(BP)
 	RET
-_Lfunc_end46:
+_Lfunc_end49:
 	FUNCDATA $0, gclocals·d4861e3547c153b6(SB)
 DATA gclocals·d4861e3547c153b6+0(SB)/4, $3
 DATA gclocals·d4861e3547c153b6+4(SB)/4, $5
@@ -7366,11 +7588,11 @@ TEXT ·mlib_getline(SB), $88-32
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB47_3
+	JEQ _LBB50_3
 	MOVQ 24(BP), AX
 	MOVQ 16(BP), CX
 	MOVQ 32(BP), DX
-	ADDQ $264, DX
+	ADDQ $336, DX
 	MOVQ AX, -24(BP)
 	MOVQ CX, -8(BP)
 	MOVQ 32(BP), AX
@@ -7379,13 +7601,13 @@ TEXT ·mlib_getline(SB), $88-32
 	MOVQ DX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp276:
+_Ltmp286:
 	MOVQ -16(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB47_2
+	JEQ _LBB50_2
 	MOVQ -24(BP), CX
 	MOVQ -8(BP), DX
 	MOVQ DX, -24(BP)
@@ -7400,42 +7622,42 @@ _Ltmp276:
 	BYTE $0x00
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_getdelim_managed(SB)
-_Ltmp277:
+_Ltmp287:
 	MOVQ SP, AX
 	MOVQ 32(AX), AX
 	MOVQ AX, -32(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp278:
+_Ltmp288:
 	MOVQ -32(BP), AX
-	JMP _LBB47_5
-_LBB47_2:
-	MOVQ 264(AX), AX
+	JMP _LBB50_5
+_LBB50_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp279:
-_LBB47_3:
+_Ltmp289:
+_LBB50_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp280:
+_Ltmp290:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ $-1, AX
-_LBB47_5:
+_LBB50_5:
 	MOVQ AX, 40(BP)
 	RET
-_Lfunc_end47:
+_Lfunc_end50:
 	FUNCDATA $0, gclocals·fdd9eeaaec17d4fd(SB)
 DATA gclocals·fdd9eeaaec17d4fd+0(SB)/4, $3
 DATA gclocals·fdd9eeaaec17d4fd+4(SB)/4, $4
@@ -7451,10 +7673,10 @@ TEXT ·mlib_fputs(SB), $56-24
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB48_3
+	JEQ _LBB51_3
 	MOVQ 16(BP), AX
 	MOVQ 24(BP), CX
-	ADDQ $264, CX
+	ADDQ $336, CX
 	MOVQ 24(BP), DX
 	MOVQ DX, -16(BP)
 	MOVQ AX, -8(BP)
@@ -7462,55 +7684,55 @@ TEXT ·mlib_fputs(SB), $56-24
 	MOVQ CX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp281:
+_Ltmp291:
 	MOVQ -16(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB48_2
+	JEQ _LBB51_2
 	MOVQ -8(BP), CX
 	MOVQ SP, DX
 	MOVQ AX, 8(DX)
 	MOVQ CX, 0(DX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fputs(SB)
-_Ltmp282:
+_Ltmp292:
 	MOVQ SP, AX
 	MOVL 16(AX), AX
 	MOVL AX, -20(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp283:
+_Ltmp293:
 	MOVL -20(BP), AX
-	JMP _LBB48_5
-_LBB48_2:
-	MOVQ 264(AX), AX
+	JMP _LBB51_5
+_LBB51_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp284:
-_LBB48_3:
+_Ltmp294:
+_LBB51_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp285:
+_Ltmp295:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-_LBB48_5:
+_LBB51_5:
 	MOVL AX, 32(BP)
 	RET
-_Lfunc_end48:
+_Lfunc_end51:
 	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
 	FUNCDATA $1, gclocals·1d5cc5208a8b6dbb(SB)
 TEXT ·mlib_puts(SB), $72-16
@@ -7519,44 +7741,44 @@ TEXT ·mlib_puts(SB), $72-16
 	MOVQ AX, -16(BP)
 	PCDATA $1, $1
 	CALL ·OpenFileListLock(SB)
-_Ltmp286:
+_Ltmp296:
 	MOVQ ·mlib_std_files+8(SB), CX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc9
 	MOVQ CX, AX
-	JEQ _LBB49_4
-_LBB49_1:
+	JEQ _LBB52_4
+_LBB52_1:
 	MOVQ CX, -8(BP)
 	MOVQ AX, -24(BP)
 	PCDATA $1, $2
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp287:
-	MOVL $264, AX
+_Ltmp297:
+	MOVL $336, AX
 	LONG $0xf8450348
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileLock(SB)
-_Ltmp288:
+_Ltmp298:
 	MOVQ -24(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB49_8
+	JEQ _LBB52_8
 	MOVQ -16(BP), CX
 	MOVQ SP, DX
 	MOVQ AX, 8(DX)
 	MOVQ CX, 0(DX)
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·fputs(SB)
-_Ltmp289:
+_Ltmp299:
 	MOVQ SP, AX
 	MOVL 16(AX), DX
 	BYTE $0x85
 	BYTE $0xd2
-	JMI _LBB49_9
+	JMI _LBB52_9
 	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 8(CX)
@@ -7566,7 +7788,7 @@ _Ltmp289:
 	MOVL DX, -28(BP)
 	PCDATA $1, $3
 	CALL github·com∕c2gohq∕c2go_libc·fputc(SB)
-_Ltmp290:
+_Ltmp300:
 	MOVQ SP, AX
 	MOVL 16(AX), AX
 	MOVQ -8(BP), CX
@@ -7578,16 +7800,16 @@ _Ltmp290:
 	BYTE $0x44
 	BYTE $0xd0
 	MOVQ CX, AX
-	JMP _LBB49_10
-_LBB49_4:
+	JMP _LBB52_10
+_LBB52_4:
 	PCDATA $1, $1
 	CALL ·mlib_file_allocate(SB)
-_Ltmp291:
+_Ltmp301:
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB49_13
-	MOVQ 256(AX), CX
+	JEQ _LBB52_13
+	MOVQ 320(AX), CX
 	MOVQ AX, -8(BP)
 	MOVQ CX, -24(BP)
 	MOVQ SP, DX
@@ -7601,58 +7823,58 @@ _Ltmp291:
 	BYTE $0x00
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
-_Ltmp292:
+_Ltmp302:
 	MOVQ SP, CX
 	MOVQ -8(BP), AX
 	LONG $0x00207983
-	JEQ _LBB49_11
-	LONG $0x01000548
+	JEQ _LBB52_11
+	LONG $0x01400548
 	BYTE $0x00
 	BYTE $0x00
 	LEAQ runtime·writeBarrier(SB), CX
 	BYTE $0x83
 	BYTE $0x39
 	BYTE $0x00
-	JEQ _LBB49_12
+	JEQ _LBB52_12
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	LONG $0x0841c748
 	LONG $0x00000000
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB49_13
-_LBB49_8:
+	JMP _LBB52_13
+_LBB52_8:
 	MOVQ -8(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -16(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp293:
+_Ltmp303:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp294:
+_Ltmp304:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
-	JMP _LBB49_14
-_LBB49_9:
+	JMP _LBB52_14
+_LBB52_9:
 	MOVQ -8(BP), AX
-_LBB49_10:
+_LBB52_10:
 	MOVL DX, -28(BP)
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -16(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp295:
+_Ltmp305:
 	MOVL -28(BP), AX
-	JMP _LBB49_15
-_LBB49_11:
-	LONG $0x012080c7
+	JMP _LBB52_15
+_LBB52_11:
+	LONG $0x016880c7
 	LONG $0x00010000
 	BYTE $0x00
 	BYTE $0x00
@@ -7663,25 +7885,25 @@ _LBB49_11:
 	BYTE $0x00
 	PCDATA $1, $4
 	CALL ·mlib_stdfile_store(SB)
-_Ltmp296:
+_Ltmp306:
 	MOVQ -8(BP), CX
 	MOVQ CX, AX
-	JMP _LBB49_1
-_LBB49_12:
+	JMP _LBB52_1
+_LBB52_12:
 	LONG $0x0000c748
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-_LBB49_13:
+_LBB52_13:
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp297:
-_LBB49_14:
+_Ltmp307:
+_LBB52_14:
 	MOVL $-1, AX
-_LBB49_15:
+_LBB52_15:
 	MOVL AX, 24(BP)
 	RET
-_Lfunc_end49:
+_Lfunc_end52:
 	FUNCDATA $0, gclocals·490e4b1939fbf88d(SB)
 DATA gclocals·490e4b1939fbf88d+0(SB)/4, $5
 DATA gclocals·490e4b1939fbf88d+4(SB)/4, $2
@@ -7713,11 +7935,11 @@ TEXT ·mlib_vfprintf(SB), $72-32
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB50_3
+	JEQ _LBB53_3
 	MOVQ 32(BP), AX
 	MOVQ 24(BP), CX
 	MOVQ 16(BP), DX
-	ADDQ $264, DX
+	ADDQ $336, DX
 	MOVQ CX, -24(BP)
 	MOVQ AX, -8(BP)
 	MOVQ 16(BP), AX
@@ -7726,13 +7948,13 @@ TEXT ·mlib_vfprintf(SB), $72-32
 	MOVQ DX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp298:
+_Ltmp308:
 	MOVQ -16(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB50_2
+	JEQ _LBB53_2
 	MOVQ -24(BP), CX
 	MOVQ -8(BP), DX
 	MOVQ SP, SI
@@ -7741,42 +7963,42 @@ _Ltmp298:
 	MOVQ AX, 0(SI)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·vfprintf(SB)
-_Ltmp299:
+_Ltmp309:
 	MOVQ SP, AX
 	MOVL 24(AX), AX
 	MOVL AX, -28(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp300:
+_Ltmp310:
 	MOVL -28(BP), AX
-	JMP _LBB50_5
-_LBB50_2:
-	MOVQ 264(AX), AX
+	JMP _LBB53_5
+_LBB53_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp301:
-_LBB50_3:
+_Ltmp311:
+_LBB53_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp302:
+_Ltmp312:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-_LBB50_5:
+_LBB53_5:
 	MOVL AX, 40(BP)
 	RET
-_Lfunc_end50:
+_Lfunc_end53:
 	FUNCDATA $0, gclocals·fdd9eeaaec17d4fd(SB)
 	FUNCDATA $1, gclocals·68887c83c3440d0f(SB)
 DATA gclocals·68887c83c3440d0f+0(SB)/4, $3
@@ -7795,11 +8017,11 @@ TEXT ·mlib_fprintf(SB), $72-24
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB51_3
+	JEQ _LBB54_3
 	MOVQ 32(BP), AX
 	MOVQ 24(BP), CX
 	MOVQ 16(BP), DX
-	ADDQ $264, DX
+	ADDQ $336, DX
 	MOVQ CX, -24(BP)
 	MOVQ AX, -8(BP)
 	MOVQ 16(BP), AX
@@ -7808,13 +8030,13 @@ TEXT ·mlib_fprintf(SB), $72-24
 	MOVQ DX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp303:
+_Ltmp313:
 	MOVQ -16(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB51_2
+	JEQ _LBB54_2
 	MOVQ -24(BP), CX
 	MOVQ -8(BP), DX
 	MOVQ SP, SI
@@ -7823,42 +8045,42 @@ _Ltmp303:
 	MOVQ AX, 0(SI)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·vfprintf(SB)
-_Ltmp304:
+_Ltmp314:
 	MOVQ SP, AX
 	MOVL 24(AX), AX
 	MOVL AX, -28(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp305:
+_Ltmp315:
 	MOVL -28(BP), AX
-	JMP _LBB51_5
-_LBB51_2:
-	MOVQ 264(AX), AX
+	JMP _LBB54_5
+_LBB54_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp306:
-_LBB51_3:
+_Ltmp316:
+_LBB54_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp307:
+_Ltmp317:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-_LBB51_5:
+_LBB54_5:
 	MOVL AX, 40(BP)
 	RET
-_Lfunc_end51:
+_Lfunc_end54:
 	FUNCDATA $0, gclocals·19df4549c42911ac(SB)
 DATA gclocals·19df4549c42911ac+0(SB)/4, $3
 DATA gclocals·19df4549c42911ac+4(SB)/4, $3
@@ -7876,32 +8098,32 @@ TEXT ·mlib_vprintf(SB), $88-24
 	MOVQ AX, -8(BP)
 	PCDATA $1, $1
 	CALL ·OpenFileListLock(SB)
-_Ltmp308:
+_Ltmp318:
 	MOVQ ·mlib_std_files+8(SB), CX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc9
 	MOVQ CX, AX
-	JEQ _LBB52_3
-_LBB52_1:
+	JEQ _LBB55_3
+_LBB55_1:
 	MOVQ CX, -16(BP)
 	MOVQ AX, -32(BP)
 	PCDATA $1, $2
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp309:
-	MOVL $264, AX
+_Ltmp319:
+	MOVL $336, AX
 	LONG $0xe0450348
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileLock(SB)
-_Ltmp310:
+_Ltmp320:
 	MOVQ -32(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB52_7
+	JEQ _LBB55_7
 	MOVQ -24(BP), CX
 	MOVQ -8(BP), DX
 	MOVQ SP, SI
@@ -7910,29 +8132,29 @@ _Ltmp310:
 	MOVQ AX, 0(SI)
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·vfprintf(SB)
-_Ltmp311:
+_Ltmp321:
 	MOVQ SP, AX
 	MOVL 24(AX), AX
 	MOVL AX, -36(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $3
 	CALL ·FileUnlock(SB)
-_Ltmp312:
+_Ltmp322:
 	MOVL -36(BP), AX
-	JMP _LBB52_12
-_LBB52_3:
+	JMP _LBB55_12
+_LBB55_3:
 	PCDATA $1, $1
 	CALL ·mlib_file_allocate(SB)
-_Ltmp313:
+_Ltmp323:
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB52_10
-	MOVQ 256(AX), CX
+	JEQ _LBB55_10
+	MOVQ 320(AX), CX
 	MOVQ AX, -16(BP)
 	MOVQ CX, -32(BP)
 	MOVQ SP, DX
@@ -7946,45 +8168,45 @@ _Ltmp313:
 	BYTE $0x00
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
-_Ltmp314:
+_Ltmp324:
 	MOVQ SP, CX
 	MOVQ -16(BP), AX
 	LONG $0x00207983
-	JEQ _LBB52_8
-	LONG $0x01000548
+	JEQ _LBB55_8
+	LONG $0x01400548
 	BYTE $0x00
 	BYTE $0x00
 	LEAQ runtime·writeBarrier(SB), CX
 	BYTE $0x83
 	BYTE $0x39
 	BYTE $0x00
-	JEQ _LBB52_9
+	JEQ _LBB55_9
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	LONG $0x0841c748
 	LONG $0x00000000
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB52_10
-_LBB52_7:
+	JMP _LBB55_10
+_LBB55_7:
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $3
 	CALL ·FileUnlock(SB)
-_Ltmp315:
+_Ltmp325:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp316:
+_Ltmp326:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
-	JMP _LBB52_11
-_LBB52_8:
-	LONG $0x012080c7
+	JMP _LBB55_11
+_LBB55_8:
+	LONG $0x016880c7
 	LONG $0x00010000
 	BYTE $0x00
 	BYTE $0x00
@@ -7995,25 +8217,25 @@ _LBB52_8:
 	BYTE $0x00
 	PCDATA $1, $4
 	CALL ·mlib_stdfile_store(SB)
-_Ltmp317:
+_Ltmp327:
 	MOVQ -16(BP), CX
 	MOVQ CX, AX
-	JMP _LBB52_1
-_LBB52_9:
+	JMP _LBB55_1
+_LBB55_9:
 	LONG $0x0000c748
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-_LBB52_10:
+_LBB55_10:
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp318:
-_LBB52_11:
+_Ltmp328:
+_LBB55_11:
 	MOVL $-1, AX
-_LBB52_12:
+_LBB55_12:
 	MOVL AX, 32(BP)
 	RET
-_Lfunc_end52:
+_Lfunc_end55:
 	FUNCDATA $0, gclocals·29a7bfee3230308c(SB)
 DATA gclocals·29a7bfee3230308c+0(SB)/4, $5
 DATA gclocals·29a7bfee3230308c+4(SB)/4, $3
@@ -8050,12 +8272,12 @@ TEXT ·mlib_printf(SB), $56-16
 	MOVQ CX, 0(DX)
 	PCDATA $1, $1
 	CALL ·mlib_vprintf(SB)
-_Ltmp319:
+_Ltmp329:
 	MOVQ SP, AX
 	MOVL 16(AX), AX
 	MOVL AX, 32(BP)
 	RET
-_Lfunc_end53:
+_Lfunc_end56:
 	FUNCDATA $0, gclocals·e1f3e66d4bb68923(SB)
 DATA gclocals·e1f3e66d4bb68923+0(SB)/4, $2
 DATA gclocals·e1f3e66d4bb68923+4(SB)/4, $2
@@ -8076,11 +8298,11 @@ TEXT ·mlib_vfscanf(SB), $72-32
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB54_3
+	JEQ _LBB57_3
 	MOVQ 32(BP), AX
 	MOVQ 24(BP), CX
 	MOVQ 16(BP), DX
-	ADDQ $264, DX
+	ADDQ $336, DX
 	MOVQ CX, -24(BP)
 	MOVQ AX, -8(BP)
 	MOVQ 16(BP), AX
@@ -8089,13 +8311,13 @@ TEXT ·mlib_vfscanf(SB), $72-32
 	MOVQ DX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp320:
+_Ltmp330:
 	MOVQ -16(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB54_2
+	JEQ _LBB57_2
 	MOVQ -24(BP), CX
 	MOVQ -8(BP), DX
 	MOVQ SP, SI
@@ -8104,42 +8326,42 @@ _Ltmp320:
 	MOVQ AX, 0(SI)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfscanf_managed(SB)
-_Ltmp321:
+_Ltmp331:
 	MOVQ SP, AX
 	MOVL 24(AX), AX
 	MOVL AX, -28(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp322:
+_Ltmp332:
 	MOVL -28(BP), AX
-	JMP _LBB54_5
-_LBB54_2:
-	MOVQ 264(AX), AX
+	JMP _LBB57_5
+_LBB57_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp323:
-_LBB54_3:
+_Ltmp333:
+_LBB57_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp324:
+_Ltmp334:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-_LBB54_5:
+_LBB57_5:
 	MOVL AX, 40(BP)
 	RET
-_Lfunc_end54:
+_Lfunc_end57:
 	FUNCDATA $0, gclocals·fdd9eeaaec17d4fd(SB)
 	FUNCDATA $1, gclocals·68887c83c3440d0f(SB)
 TEXT ·mlib_fscanf(SB), $72-24
@@ -8148,11 +8370,11 @@ TEXT ·mlib_fscanf(SB), $72-24
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB55_3
+	JEQ _LBB58_3
 	MOVQ 32(BP), AX
 	MOVQ 24(BP), CX
 	MOVQ 16(BP), DX
-	ADDQ $264, DX
+	ADDQ $336, DX
 	MOVQ CX, -24(BP)
 	MOVQ AX, -8(BP)
 	MOVQ 16(BP), AX
@@ -8161,13 +8383,13 @@ TEXT ·mlib_fscanf(SB), $72-24
 	MOVQ DX, 0(AX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp325:
+_Ltmp335:
 	MOVQ -16(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB55_2
+	JEQ _LBB58_2
 	MOVQ -24(BP), CX
 	MOVQ -8(BP), DX
 	MOVQ SP, SI
@@ -8176,42 +8398,42 @@ _Ltmp325:
 	MOVQ AX, 0(SI)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfscanf_managed(SB)
-_Ltmp326:
+_Ltmp336:
 	MOVQ SP, AX
 	MOVL 24(AX), AX
 	MOVL AX, -28(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp327:
+_Ltmp337:
 	MOVL -28(BP), AX
-	JMP _LBB55_5
-_LBB55_2:
-	MOVQ 264(AX), AX
+	JMP _LBB58_5
+_LBB58_2:
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp328:
-_LBB55_3:
+_Ltmp338:
+_LBB58_3:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp329:
+_Ltmp339:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
 	MOVL $-1, AX
-_LBB55_5:
+_LBB58_5:
 	MOVL AX, 40(BP)
 	RET
-_Lfunc_end55:
+_Lfunc_end58:
 	FUNCDATA $0, gclocals·19df4549c42911ac(SB)
 	FUNCDATA $1, gclocals·68887c83c3440d0f(SB)
 TEXT ·mlib_vscanf(SB), $88-24
@@ -8222,32 +8444,32 @@ TEXT ·mlib_vscanf(SB), $88-24
 	MOVQ AX, -8(BP)
 	PCDATA $1, $1
 	CALL ·OpenFileListLock(SB)
-_Ltmp330:
+_Ltmp340:
 	MOVQ ·mlib_std_files(SB), CX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc9
 	MOVQ CX, AX
-	JEQ _LBB56_3
-_LBB56_1:
+	JEQ _LBB59_3
+_LBB59_1:
 	MOVQ CX, -16(BP)
 	MOVQ AX, -32(BP)
 	PCDATA $1, $2
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp331:
-	MOVL $264, AX
+_Ltmp341:
+	MOVL $336, AX
 	LONG $0xe0450348
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $2
 	CALL ·FileLock(SB)
-_Ltmp332:
+_Ltmp342:
 	MOVQ -32(BP), AX
-	LONG $0x0120b883
+	LONG $0x0168b883
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	JEQ _LBB56_7
+	JEQ _LBB59_7
 	MOVQ -24(BP), CX
 	MOVQ -8(BP), DX
 	MOVQ SP, SI
@@ -8256,29 +8478,29 @@ _Ltmp332:
 	MOVQ AX, 0(SI)
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfscanf_managed(SB)
-_Ltmp333:
+_Ltmp343:
 	MOVQ SP, AX
 	MOVL 24(AX), AX
 	MOVL AX, -36(BP)
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $3
 	CALL ·FileUnlock(SB)
-_Ltmp334:
+_Ltmp344:
 	MOVL -36(BP), AX
-	JMP _LBB56_12
-_LBB56_3:
+	JMP _LBB59_12
+_LBB59_3:
 	PCDATA $1, $1
 	CALL ·mlib_file_allocate(SB)
-_Ltmp335:
+_Ltmp345:
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB56_10
-	MOVQ 256(AX), CX
+	JEQ _LBB59_10
+	MOVQ 320(AX), CX
 	MOVQ AX, -16(BP)
 	MOVQ CX, -32(BP)
 	MOVQ SP, DX
@@ -8292,45 +8514,45 @@ _Ltmp335:
 	BYTE $0x00
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
-_Ltmp336:
+_Ltmp346:
 	MOVQ SP, CX
 	MOVQ -16(BP), AX
 	LONG $0x00207983
-	JEQ _LBB56_8
-	LONG $0x01000548
+	JEQ _LBB59_8
+	LONG $0x01400548
 	BYTE $0x00
 	BYTE $0x00
 	LEAQ runtime·writeBarrier(SB), CX
 	BYTE $0x83
 	BYTE $0x39
 	BYTE $0x00
-	JEQ _LBB56_9
+	JEQ _LBB59_9
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	LONG $0x0841c748
 	LONG $0x00000000
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB56_10
-_LBB56_7:
+	JMP _LBB59_10
+_LBB59_7:
 	MOVQ -16(BP), AX
-	MOVQ 264(AX), AX
+	MOVQ 336(AX), AX
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $3
 	CALL ·FileUnlock(SB)
-_Ltmp337:
+_Ltmp347:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp338:
+_Ltmp348:
 	MOVQ SP, AX
 	MOVQ 0(AX), AX
 	LONG $0x000900c7
 	BYTE $0x00
 	BYTE $0x00
-	JMP _LBB56_11
-_LBB56_8:
-	LONG $0x012080c7
+	JMP _LBB59_11
+_LBB59_8:
+	LONG $0x016880c7
 	LONG $0x00010000
 	BYTE $0x00
 	BYTE $0x00
@@ -8341,25 +8563,25 @@ _LBB56_8:
 	BYTE $0x00
 	PCDATA $1, $4
 	CALL ·mlib_stdfile_store(SB)
-_Ltmp339:
+_Ltmp349:
 	MOVQ -16(BP), CX
 	MOVQ CX, AX
-	JMP _LBB56_1
-_LBB56_9:
+	JMP _LBB59_1
+_LBB59_9:
 	LONG $0x0000c748
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-_LBB56_10:
+_LBB59_10:
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp340:
-_LBB56_11:
+_Ltmp350:
+_LBB59_11:
 	MOVL $-1, AX
-_LBB56_12:
+_LBB59_12:
 	MOVL AX, 32(BP)
 	RET
-_Lfunc_end56:
+_Lfunc_end59:
 	FUNCDATA $0, gclocals·29a7bfee3230308c(SB)
 	FUNCDATA $1, gclocals·928a9ef8e9233968(SB)
 TEXT ·mlib_scanf(SB), $56-16
@@ -8373,12 +8595,12 @@ TEXT ·mlib_scanf(SB), $56-16
 	MOVQ CX, 0(DX)
 	PCDATA $1, $1
 	CALL ·mlib_vscanf(SB)
-_Ltmp341:
+_Ltmp351:
 	MOVQ SP, AX
 	MOVL 16(AX), AX
 	MOVL AX, 32(BP)
 	RET
-_Lfunc_end57:
+_Lfunc_end60:
 	FUNCDATA $0, gclocals·e1f3e66d4bb68923(SB)
 	FUNCDATA $1, gclocals·9300ac6ea5fafef0(SB)
 TEXT ·mlib_vsscanf(SB), $72-32
@@ -8395,12 +8617,12 @@ TEXT ·mlib_vsscanf(SB), $72-32
 	MOVQ AX, 0(SI)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_vsscanf_managed(SB)
-_Ltmp342:
+_Ltmp352:
 	MOVQ SP, AX
 	MOVL 24(AX), AX
 	MOVL AX, 40(BP)
 	RET
-_Lfunc_end58:
+_Lfunc_end61:
 	FUNCDATA $0, gclocals·28c71e076fd2fcb1(SB)
 	FUNCDATA $1, gclocals·16f0aa5a1e7f1451(SB)
 DATA gclocals·16f0aa5a1e7f1451+0(SB)/4, $2
@@ -8425,12 +8647,12 @@ TEXT ·mlib_sscanf(SB), $72-24
 	MOVQ AX, 0(SI)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_vsscanf_managed(SB)
-_Ltmp343:
+_Ltmp353:
 	MOVQ SP, AX
 	MOVL 24(AX), AX
 	MOVL AX, 40(BP)
 	RET
-_Lfunc_end59:
+_Lfunc_end62:
 	FUNCDATA $0, gclocals·0556bc3a5dbf06ca(SB)
 DATA gclocals·0556bc3a5dbf06ca+0(SB)/4, $2
 DATA gclocals·0556bc3a5dbf06ca+4(SB)/4, $3
@@ -8445,8 +8667,8 @@ TEXT ·mlib_flockfile(SB), $24-8
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB60_2
-	LONG $0x01080548
+	JEQ _LBB63_2
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 16(BP), CX
@@ -8455,10 +8677,10 @@ TEXT ·mlib_flockfile(SB), $24-8
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp344:
-_LBB60_2:
+_Ltmp354:
+_LBB63_2:
 	RET
-_Lfunc_end60:
+_Lfunc_end63:
 	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
 	FUNCDATA $1, gclocals·055a193a5dc1daa8(SB)
 TEXT ·mlib_ftrylockfile(SB), $40-16
@@ -8467,8 +8689,8 @@ TEXT ·mlib_ftrylockfile(SB), $40-16
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB61_1
-	LONG $0x01080548
+	JEQ _LBB64_1
+	LONG $0x01500548
 	BYTE $0x00
 	BYTE $0x00
 	MOVQ 16(BP), CX
@@ -8477,16 +8699,16 @@ TEXT ·mlib_ftrylockfile(SB), $40-16
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileTryLock(SB)
-_Ltmp345:
+_Ltmp355:
 	MOVQ SP, AX
 	MOVL 8(AX), AX
-	JMP _LBB61_3
-_LBB61_1:
+	JMP _LBB64_3
+_LBB64_1:
 	XORL AX, AX
-_LBB61_3:
+_LBB64_3:
 	MOVL AX, 24(BP)
 	RET
-_Lfunc_end61:
+_Lfunc_end64:
 	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
 	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
 TEXT ·mlib_funlockfile(SB), $24-8
@@ -8495,21 +8717,21 @@ TEXT ·mlib_funlockfile(SB), $24-8
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB62_3
-	MOVQ 264(AX), AX
+	JEQ _LBB65_3
+	MOVQ 336(AX), AX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB62_3
+	JEQ _LBB65_3
 	MOVQ AX, -8(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp346:
-_LBB62_3:
+_Ltmp356:
+_LBB65_3:
 	RET
-_Lfunc_end62:
+_Lfunc_end65:
 DATA _L_str<>+0(SB)/1, $0x48
 DATA _L_str<>+1(SB)/1, $0x4f
 DATA _L_str<>+2(SB)/1, $0x4d

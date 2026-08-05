@@ -14,6 +14,7 @@
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
 
 #define MLIB_FILE_RAW_WORDS 32
+#define MLIB_FILE_COOKIE_WORDS 8
 #define MLIB_FILE_BUFFER_SIZE (UNGET + BUFSIZ)
 
 typedef struct _c2go_mlib_FILE *mlib_file_pointer;
@@ -28,7 +29,9 @@ struct _c2go_mlib_FILE {
     /* A word array gives the raw engine its required alignment without making
      * its internal buffer/callback addresses visible to the Go scanner. */
     uintptr_t _raw[MLIB_FILE_RAW_WORDS];
+    uintptr_t _cookie_raw[MLIB_FILE_COOKIE_WORDS];
     mlib_buffer_pointer _buffer_root;
+    mlib_state_pointer _object_root;
     mlib_state_pointer _lock_state;
     mlib_managed_file_pointer _prev;
     mlib_managed_file_pointer _next;
@@ -51,6 +54,9 @@ c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_close", C2GO_GOABI0)
 int __c2go_file_raw_close(FILE *);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_stdinit", C2GO_GOABI0)
 int __c2go_file_raw_stdinit(FILE *, int, unsigned char *, size_t);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_fmemopen", C2GO_GOABI0)
+int __c2go_file_raw_fmemopen(FILE *, void *, size_t, unsigned char *, size_t,
+    void *, size_t, const char *);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_vfscanf_managed", C2GO_GOABI0)
 int __c2go_file_raw_vfscanf_managed(FILE *, const char *, va_list);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_vsscanf_managed", C2GO_GOABI0)
@@ -150,6 +156,18 @@ static void mlib_clear_file_pointer(mlib_managed_file_pointer *slot)
 }
 
 __attribute__((noinline))
+static void mlib_clear_buffer_pointer(mlib_buffer_pointer *slot)
+{
+    *slot = (mlib_buffer_pointer)0;
+}
+
+__attribute__((noinline))
+static void mlib_clear_state_pointer(mlib_state_pointer *slot)
+{
+    *slot = (mlib_state_pointer)0;
+}
+
+__attribute__((noinline))
 static void mlib_file_clear_links(mlib_file_pointer f)
 {
     /* Keep each deletion as an individual pointer store. A single inline pair
@@ -228,6 +246,32 @@ c2go_extern mlib_FILE *mlib_fdopen(int fd, const char *mode)
     return f;
 }
 
+c2go_extern mlib_FILE *mlib_fmemopen(void *restrict buffer, size_t size,
+                                     const char *restrict mode)
+{
+    mlib_file_pointer f = mlib_file_allocate();
+    if (!f) return (void *)0;
+    if (!buffer) {
+        buffer = gc_malloc((void *)0, size ? size : 1);
+        if (!buffer) {
+            mlib_clear_buffer_pointer(&f->_buffer_root);
+            errno = ENOMEM;
+            return (void *)0;
+        }
+    }
+    f->_object_root = (mlib_state_pointer)buffer;
+    if (__c2go_file_raw_fmemopen(mlib_raw(f), f->_cookie_raw,
+            sizeof(f->_cookie_raw), (unsigned char *)(void *)f->_buffer_root,
+            MLIB_FILE_BUFFER_SIZE, buffer, size, mode) != 0) {
+        mlib_clear_state_pointer(&f->_object_root);
+        mlib_clear_buffer_pointer(&f->_buffer_root);
+        return (void *)0;
+    }
+    f->_active = 1;
+    mlib_ofl_add(f);
+    return f;
+}
+
 c2go_extern int mlib_fclose(mlib_FILE *stream)
 {
     mlib_file_pointer f = stream;
@@ -237,7 +281,9 @@ c2go_extern int mlib_fclose(mlib_FILE *stream)
     f->_active = 0;
     result = __c2go_file_raw_close(raw);
     memset(raw, 0, sizeof(*raw));
-    f->_buffer_root = (void *)0;
+    memset(f->_cookie_raw, 0, sizeof(f->_cookie_raw));
+    mlib_clear_state_pointer(&f->_object_root);
+    mlib_clear_buffer_pointer(&f->_buffer_root);
     mlib_file_release(f);
     mlib_ofl_remove(f);
     return result;

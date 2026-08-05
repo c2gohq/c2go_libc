@@ -95,6 +95,8 @@ verify_managed_write_barriers() {
 		"managed glob carrier updates"
 	verify_function_write_barrier "$asm_path" mlib_file_allocate \
 		"managed FILE buffer ownership"
+	verify_function_write_barrier "$asm_path" mlib_fmemopen \
+		"managed fmemopen buffer ownership"
 	verify_function_write_barrier "$asm_path" mlib_stdfile_store \
 		"managed standard-stream rooting"
 	verify_function_write_barrier "$asm_path" mlib_ofl_add \
@@ -103,10 +105,16 @@ verify_managed_write_barriers() {
 		"managed FILE open-list removal"
 	verify_function_write_barrier "$asm_path" mlib_clear_file_pointer \
 		"managed FILE link retirement"
+	verify_function_write_barrier "$asm_path" mlib_clear_buffer_pointer \
+		"managed FILE buffer retirement"
+	verify_function_write_barrier "$asm_path" mlib_clear_state_pointer \
+		"managed FILE object retirement"
 	verify_function_call_count "$asm_path" mlib_file_clear_links \
 		mlib_clear_file_pointer 2 "managed FILE link clearing"
-	verify_function_write_barrier "$asm_path" mlib_fclose \
-		"managed FILE buffer release"
+	verify_function_call_count "$asm_path" mlib_fclose \
+		mlib_clear_buffer_pointer 1 "managed FILE buffer release"
+	verify_function_call_count "$asm_path" mlib_fclose \
+		mlib_clear_state_pointer 1 "managed FILE object release"
 }
 
 TARGETS=(

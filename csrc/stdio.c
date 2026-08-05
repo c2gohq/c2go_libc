@@ -5458,13 +5458,49 @@ static int mem_close(FILE *m)
 	return 0;
 }
 
+static int __file_init_mem(FILE *f, struct mem_cookie *c,
+	unsigned char *storage, size_t storage_size, void *buf, size_t size,
+	const char *mode, int lock)
+{
+	int plus;
+
+	if (!mode || !strchr("rwa", *mode) || !buf || storage_size < UNGET) {
+		errno = EINVAL;
+		return -1;
+	}
+	plus = !!strchr(mode, '+');
+
+	memset(f, 0, sizeof *f);
+	memset(c, 0, sizeof *c);
+	f->cookie = c;
+	f->fd = -1;
+	f->lbf = EOF;
+	f->buf = storage + UNGET;
+	f->buf_size = storage_size - UNGET;
+	f->lock = lock;
+
+	c->buf = buf;
+	c->size = size;
+	c->mode = *mode;
+
+	if (!plus) f->flags = (*mode == 'r') ? F_NOWR : F_NORD;
+	if (*mode == 'r') c->len = size;
+	else if (*mode == 'a') c->len = c->pos = strnlen(buf, size);
+	else if (plus && size) *c->buf = 0;
+
+	f->read = mem_read;
+	f->write = mem_write;
+	f->seek = mem_seek;
+	f->close = mem_close;
+	return 0;
+}
+
 c2go_extern
 FILE *fmemopen(void *restrict buf, size_t size, const char *restrict mode)
 {
 	struct mem_FILE *f;
-	int plus = !!strchr(mode, '+');
 
-	if (!strchr("rwa", *mode)) {
+	if (!mode || !strchr("rwa", *mode)) {
 		errno = EINVAL;
 		return 0;
 	}
@@ -5476,32 +5512,32 @@ FILE *fmemopen(void *restrict buf, size_t size, const char *restrict mode)
 
 	f = malloc(sizeof *f + (buf?0:size));
 	if (!f) return 0;
-	memset(f, 0, offsetof(struct mem_FILE, buf));
-	f->f.cookie = &f->c;
-	f->f.fd = -1;
-	f->f.lbf = EOF;
-	f->f.buf = f->buf + UNGET;
-	f->f.buf_size = sizeof f->buf - UNGET;
 	if (!buf) {
 		buf = f->buf2;
 		memset(buf, 0, size);
 	}
-
-	f->c.buf = buf;
-	f->c.size = size;
-	f->c.mode = *mode;
-
-	if (!plus) f->f.flags = (*mode == 'r') ? F_NOWR : F_NORD;
-	if (*mode == 'r') f->c.len = size;
-	else if (*mode == 'a') f->c.len = f->c.pos = strnlen(buf, size);
-	else if (plus) *f->c.buf = 0;
-
-	f->f.read = mem_read;
-	f->f.write = mem_write;
-	f->f.seek = mem_seek;
-	f->f.close = mem_close;
+	if (__file_init_mem(&f->f, &f->c, f->buf, sizeof f->buf, buf, size,
+		mode, 0) != 0) {
+		free(f);
+		return 0;
+	}
 
 	return __ofl_add(&f->f);
+}
+
+/* Internal cross-package initializer for mlib's managed carrier. The FILE,
+ * cookie storage, stdio buffer, and memory buffer are all caller-owned; the
+ * mlib carrier keeps the Go buffers rooted and owns outer synchronization. */
+c2go_extern int __c2go_file_raw_fmemopen(FILE *f, void *cookie_storage,
+	size_t cookie_storage_size, unsigned char *storage, size_t storage_size,
+	void *buf, size_t size, const char *mode)
+{
+	if (!f || !cookie_storage || cookie_storage_size < sizeof(struct mem_cookie)) {
+		errno = EINVAL;
+		return -1;
+	}
+	return __file_init_mem(f, cookie_storage, storage, storage_size, buf, size,
+		mode, -1);
 }
 
 struct ms_cookie {
