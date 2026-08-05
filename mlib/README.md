@@ -54,6 +54,7 @@ static void example(void) {
         mlib_fprintf(file, "count=%d\n", count);
         mlib_fclose(file); /* The carrier itself is reclaimed by the GC. */
     }
+    mlib_printf("managed stdout is also available\n");
 }
 
 #pragma c2go pop
@@ -89,6 +90,7 @@ static void example(void) {
         fprintf(file, "managed stdio\n");
         fclose(file);
     }
+    printf("managed stdout is also available\n");
 }
 
 #pragma c2go pop
@@ -133,12 +135,13 @@ strings to `free`.
 Managed `FILE` objects use a typed GC carrier around the shared raw musl stdio
 engine. Their buffer, recursive lock, and open-file-list links are direct
 managed roots; `fopen` and `fdopen` never allocate with ordinary `malloc`, and
-`fclose` retires those roots instead of freeing the carrier. The current surface
-covers explicit file streams: open/close, `fflush` (including `NULL`), block and
-character I/O, seek/status, `fprintf`/`vfprintf`, `fileno`, and `flockfile`.
-Standard streams, `popen`, allocation-returning stdio, custom/memory streams,
-wide stdio, and formatted input are not yet part of mlib; do not pass an
-`mlib_FILE *` to their root-libc counterparts.
+`fclose` retires those roots instead of freeing the carrier. The surface covers
+explicit streams plus managed `stdin`/`stdout`/`stderr`: open/close, `fflush`
+(including `NULL`), block and character I/O, seek/status, formatted output,
+`fileno`, and `flockfile`. A package-level finalize hook flushes this separate
+FILE world before root libc flushes its own streams. `popen`, allocation-
+returning stdio, custom/memory streams, wide stdio, and formatted input are not
+yet part of mlib; do not pass an `mlib_FILE *` to their root-libc counterparts.
 
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
@@ -199,6 +202,7 @@ static void example(void) {
         mlib_fprintf(file, "count=%d\n", count);
         mlib_fclose(file); /* carrier 本身由 GC 回收。 */
     }
+    mlib_printf("managed stdout 同样可用\n");
 }
 
 #pragma c2go pop
@@ -233,6 +237,7 @@ static void example(void) {
         fprintf(file, "managed stdio\n");
         fclose(file);
     }
+    printf("managed stdout 同样可用\n");
 }
 
 #pragma c2go pop
@@ -271,10 +276,11 @@ GC-owned 的对象图。`GLOB_APPEND` 会分配新的 typed vector，并通过 w
 
 managed `FILE` 使用 typed GC carrier 包住共用的 raw musl stdio engine；缓冲区、
 递归锁和打开文件链表都由明确的 managed 字段直接持有。`fopen`/`fdopen` 不会调用
-普通 `malloc`，`fclose` 清除这些根并由 GC 回收 carrier。当前支持显式文件流的
-打开/关闭、`fflush`（包括 `NULL`）、块与字符 I/O、定位与状态、
-`fprintf`/`vfprintf`、`fileno` 和 `flockfile`。标准流、`popen`、返回新分配
-内存的 stdio、memory/custom stream、wide stdio 和 formatted input 尚未进入
+普通 `malloc`，`fclose` 清除这些根并由 GC 回收 carrier。当前同时支持显式文件流
+和 managed `stdin`/`stdout`/`stderr`：打开/关闭、`fflush`（包括 `NULL`）、块与
+字符 I/O、定位与状态、格式化输出、`fileno` 和 `flockfile`。包级 finalize hook
+会先刷新这一套独立的 FILE world，再由 root libc 刷新自己的流。`popen`、返回新
+分配内存的 stdio、memory/custom stream、wide stdio 和 formatted input 尚未进入
 mlib；不能把 `mlib_FILE *` 传给这些根 libc 接口。
 
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、

@@ -76,6 +76,12 @@ func MlibSemUnprefixedSelftest() int32
 //go:linkname MlibStdioUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_stdio_unprefixed_selftest
 func MlibStdioUnprefixedSelftest() int32
 
+//go:linkname MlibStdioUnprefixedStdinSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_stdio_unprefixed_stdin_selftest
+func MlibStdioUnprefixedStdinSelftest() int32
+
+//go:linkname MlibStdioUnprefixedStdoutSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_stdio_unprefixed_stdout_selftest
+func MlibStdioUnprefixedStdoutSelftest() int32
+
 // ─── §B4 Go-owned global storage ────────────────────────────
 // Pointer-carrying file-scope C globals whose storage is owned
 // by this Go package. Each var's layout mirrors the C global's

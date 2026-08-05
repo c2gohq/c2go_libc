@@ -121,12 +121,13 @@ and the shared `internal/posixstdio` lock algorithm. Thus the raw engine may
 hold borrowed addresses into its buffer while the scanner sees only the
 parallel managed owner fields.
 
-Implemented now: `fopen`/`fdopen`/`fclose`, explicit-stream flushing, block and
-character I/O, positioning/status, `fprintf`/`vfprintf`, descriptor access, and
-the `flockfile` family. Standard streams and APIs that create additional owned
-graphs (`popen`, `getdelim`, `open_memstream`, `fmemopen`, `fopencookie`, wide
-stdio, and scanf `%m`) remain separate propagation phases; they must not be
-routed to root FILE declarations under the managed carrier type.
+Implemented now: `fopen`/`fdopen`/`fclose`, managed `stdin`/`stdout`/`stderr`,
+flushing (including `NULL` and exit-time hooks), block and character I/O,
+positioning/status, `printf`/`fprintf` and their `va_list` forms, descriptor
+access, and the `flockfile` family. APIs that create additional owned graphs
+(`popen`, `getdelim`, `open_memstream`, `fmemopen`, `fopencookie`, wide stdio,
+and scanf `%m`) remain separate propagation phases; they must not be routed to
+root FILE declarations under the managed carrier type.
 
 ## Next safe migration order
 
@@ -135,9 +136,9 @@ routed to root FILE declarations under the managed carrier type.
 2. Design pthread thread/key ownership separately; do not extend the current
    unprefixed sync switch implicitly.
 3. Keep the completed DIR propagation cluster under GC-stress regression.
-4. Extend the managed FILE cluster in ownership-closed phases: standard streams
-   and plain formatted input, then managed-output buffers/custom cookies, then
-   wide stdio and `popen` process state.
+4. Extend the managed FILE cluster in ownership-closed phases: plain formatted
+   input with `%m` rejected or managed, then managed-output buffers/custom
+   cookies, then wide stdio and `popen` process state.
 
 At every step the default API remains `mlib_`-prefixed, the unprefixed form is a
 whole-LTO-package choice, and root libc must never import or depend on `mlib`.

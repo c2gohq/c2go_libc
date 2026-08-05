@@ -76,6 +76,20 @@ typedef long long C2GO_MLIB_NAME(fpos_t);
  * to root libc's stdio functions or to free(). */
 typedef struct _c2go_mlib_FILE C2GO_MLIB_NAME(FILE);
 
+/* Standard streams are lazily allocated managed carriers over the same live
+ * Go os.Stdin/os.Stdout/os.Stderr endpoints used by root libc. */
+C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(stdfile)(int)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_stdfile", C2GO_GOABI0);
+#ifdef C2GO_MLIB_UNPREFIXED
+#define stdin  (stdfile(0))
+#define stdout (stdfile(1))
+#define stderr (stdfile(2))
+#else
+#define mlib_stdin  (mlib_stdfile(0))
+#define mlib_stdout (mlib_stdfile(1))
+#define mlib_stderr (mlib_stdfile(2))
+#endif
+
 C2GO_MLIB_NAME(FILE) *C2GO_MLIB_NAME(fopen)(const char *__restrict,
     const char *__restrict)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fopen", C2GO_GOABI0);
@@ -120,19 +134,29 @@ int C2GO_MLIB_NAME(fgetc)(C2GO_MLIB_NAME(FILE) *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fgetc", C2GO_GOABI0);
 int C2GO_MLIB_NAME(getc)(C2GO_MLIB_NAME(FILE) *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_getc", C2GO_GOABI0);
+int C2GO_MLIB_NAME(getchar)(void)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_getchar", C2GO_GOABI0);
 int C2GO_MLIB_NAME(ungetc)(int, C2GO_MLIB_NAME(FILE) *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_ungetc", C2GO_GOABI0);
 int C2GO_MLIB_NAME(fputc)(int, C2GO_MLIB_NAME(FILE) *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fputc", C2GO_GOABI0);
 int C2GO_MLIB_NAME(putc)(int, C2GO_MLIB_NAME(FILE) *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_putc", C2GO_GOABI0);
+int C2GO_MLIB_NAME(putchar)(int)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_putchar", C2GO_GOABI0);
 char *C2GO_MLIB_NAME(fgets)(char *__restrict, int,
     C2GO_MLIB_NAME(FILE) *__restrict)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fgets", C2GO_GOABI0);
 int C2GO_MLIB_NAME(fputs)(const char *__restrict,
     C2GO_MLIB_NAME(FILE) *__restrict)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fputs", C2GO_GOABI0);
+int C2GO_MLIB_NAME(puts)(const char *)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_puts", C2GO_GOABI0);
 
+int C2GO_MLIB_NAME(vprintf)(const char *__restrict, va_list)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vprintf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(printf)(const char *__restrict, ...)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_printf", C2GO_GOABI0);
 int C2GO_MLIB_NAME(vfprintf)(C2GO_MLIB_NAME(FILE) *__restrict,
     const char *__restrict, va_list)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vfprintf", C2GO_GOABI0);

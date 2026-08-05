@@ -3397,168 +3397,6 @@ _Ltmp177:
 	MOVL $20, AX
 	JMP _LBB12_44
 _Lfunc_end12:
-DATA _L_str<>+0(SB)/1, $0x2e
-DATA _L_str<>+1(SB)/1, $0x00
-GLOBL _L_str<>(SB), RODATA, $2
-
-DATA _L_str_1<>+0(SB)/1, $0x2e
-DATA _L_str_1<>+1(SB)/1, $0x2e
-DATA _L_str_1<>+2(SB)/1, $0x00
-GLOBL _L_str_1<>(SB), RODATA, $3
-
-GLOBL ·force_gc_in_compare(SB), NOPTR, $1
-
-DATA _L_str_2<>+0(SB)/1, $0x54
-DATA _L_str_2<>+1(SB)/1, $0x4d
-DATA _L_str_2<>+2(SB)/1, $0x50
-DATA _L_str_2<>+3(SB)/1, $0x44
-DATA _L_str_2<>+4(SB)/1, $0x49
-DATA _L_str_2<>+5(SB)/1, $0x52
-DATA _L_str_2<>+6(SB)/1, $0x00
-GLOBL _L_str_2<>(SB), RODATA, $7
-
-DATA _L_str_1_3<>+0(SB)/1, $0x54
-DATA _L_str_1_3<>+1(SB)/1, $0x45
-DATA _L_str_1_3<>+2(SB)/1, $0x4d
-DATA _L_str_1_3<>+3(SB)/1, $0x50
-DATA _L_str_1_3<>+4(SB)/1, $0x00
-GLOBL _L_str_1_3<>(SB), RODATA, $5
-
-DATA _L_str_2_4<>+0(SB)/1, $0x2e
-DATA _L_str_2_4<>+1(SB)/1, $0x00
-GLOBL _L_str_2_4<>(SB), RODATA, $2
-
-DATA _L_str_3<>+0(SB)/8, $0x696c6d5f6f673263
-DATA _L_str_3<>+8(SB)/8, $0x585f626f6c675f62
-DATA _L_str_3<>+16(SB)/1, $0x58
-DATA _L_str_3<>+17(SB)/1, $0x58
-DATA _L_str_3<>+18(SB)/1, $0x58
-DATA _L_str_3<>+19(SB)/1, $0x58
-DATA _L_str_3<>+20(SB)/1, $0x58
-DATA _L_str_3<>+21(SB)/1, $0x00
-GLOBL _L_str_3<>(SB), RODATA, $22
-
-DATA _L_str_4<>+0(SB)/1, $0x62
-DATA _L_str_4<>+1(SB)/1, $0x2e
-DATA _L_str_4<>+2(SB)/1, $0x63
-DATA _L_str_4<>+3(SB)/1, $0x00
-GLOBL _L_str_4<>(SB), RODATA, $4
-
-DATA _L_str_5<>+0(SB)/1, $0x61
-DATA _L_str_5<>+1(SB)/1, $0x2e
-DATA _L_str_5<>+2(SB)/1, $0x63
-DATA _L_str_5<>+3(SB)/1, $0x00
-GLOBL _L_str_5<>(SB), RODATA, $4
-
-DATA _L_str_6<>+0(SB)/1, $0x63
-DATA _L_str_6<>+1(SB)/1, $0x2e
-DATA _L_str_6<>+2(SB)/1, $0x68
-DATA _L_str_6<>+3(SB)/1, $0x00
-GLOBL _L_str_6<>(SB), RODATA, $4
-
-DATA _L_str_7<>+0(SB)/1, $0x73
-DATA _L_str_7<>+1(SB)/1, $0x75
-DATA _L_str_7<>+2(SB)/1, $0x62
-DATA _L_str_7<>+3(SB)/1, $0x00
-GLOBL _L_str_7<>(SB), RODATA, $4
-
-DATA _L_str_8<>+0(SB)/1, $0x2a
-DATA _L_str_8<>+1(SB)/1, $0x2e
-DATA _L_str_8<>+2(SB)/1, $0x63
-DATA _L_str_8<>+3(SB)/1, $0x00
-GLOBL _L_str_8<>(SB), RODATA, $4
-
-DATA _L_str_9<>+0(SB)/1, $0x2a
-DATA _L_str_9<>+1(SB)/1, $0x2e
-DATA _L_str_9<>+2(SB)/1, $0x68
-DATA _L_str_9<>+3(SB)/1, $0x00
-GLOBL _L_str_9<>(SB), RODATA, $4
-
-DATA _L_str_10<>+0(SB)/8, $0x2d676e697373696d
-DATA _L_str_10<>+8(SB)/1, $0x2a
-DATA _L_str_10<>+9(SB)/1, $0x2e
-DATA _L_str_10<>+10(SB)/1, $0x7a
-DATA _L_str_10<>+11(SB)/1, $0x7a
-DATA _L_str_10<>+12(SB)/1, $0x00
-GLOBL _L_str_10<>(SB), RODATA, $13
-
-DATA _L_str_11<>+0(SB)/1, $0x2a
-DATA _L_str_11<>+1(SB)/1, $0x00
-GLOBL _L_str_11<>(SB), RODATA, $2
-
-GLOBL ·unprefixed_once(SB), NOPTR, $16
-
-GLOBL ·unprefixed_once_count(SB), NOPTR, $4
-
-DATA c2go_global_gcmask·unprefixed_global_mutex+0(SB)/1, $0x01
-GLOBL c2go_global_gcmask·unprefixed_global_mutex(SB), RODATA, $1
-
-DATA c2go_global_gcmask·unprefixed_global_sem+0(SB)/1, $0x01
-GLOBL c2go_global_gcmask·unprefixed_global_sem(SB), RODATA, $1
-
-DATA _L_str_12<>+0(SB)/1, $0x54
-DATA _L_str_12<>+1(SB)/1, $0x4d
-DATA _L_str_12<>+2(SB)/1, $0x50
-DATA _L_str_12<>+3(SB)/1, $0x44
-DATA _L_str_12<>+4(SB)/1, $0x49
-DATA _L_str_12<>+5(SB)/1, $0x52
-DATA _L_str_12<>+6(SB)/1, $0x00
-GLOBL _L_str_12<>(SB), RODATA, $7
-
-DATA _L__const_mlib_stdio_unprefixed_selftest_expected<>+0(SB)/8, $0x32343d65756c6176
-DATA _L__const_mlib_stdio_unprefixed_selftest_expected<>+8(SB)/1, $0x21
-DATA _L__const_mlib_stdio_unprefixed_selftest_expected<>+9(SB)/1, $0x00
-GLOBL _L__const_mlib_stdio_unprefixed_selftest_expected<>(SB), RODATA, $10
-
-DATA _L_str_1_13<>+0(SB)/8, $0x64253d65756c6176
-DATA _L_str_1_13<>+8(SB)/1, $0x00
-GLOBL _L_str_1_13<>(SB), RODATA, $9
-
-DATA _L_str_2_14<>+0(SB)/8, $0x32343d65756c6176
-DATA _L_str_2_14<>+8(SB)/1, $0x00
-GLOBL _L_str_2_14<>(SB), RODATA, $9
-
-DATA _L_str_3_15<>+0(SB)/1, $0x54
-DATA _L_str_3_15<>+1(SB)/1, $0x45
-DATA _L_str_3_15<>+2(SB)/1, $0x4d
-DATA _L_str_3_15<>+3(SB)/1, $0x50
-DATA _L_str_3_15<>+4(SB)/1, $0x00
-GLOBL _L_str_3_15<>(SB), RODATA, $5
-
-DATA _L_str_4_16<>+0(SB)/1, $0x2e
-DATA _L_str_4_16<>+1(SB)/1, $0x00
-GLOBL _L_str_4_16<>(SB), RODATA, $2
-
-DATA _L_str_5_17<>+0(SB)/8, $0x696c6d5f6f673263
-DATA _L_str_5_17<>+8(SB)/8, $0x5f6f696474735f62
-DATA _L_str_5_17<>+16(SB)/1, $0x58
-DATA _L_str_5_17<>+17(SB)/1, $0x58
-DATA _L_str_5_17<>+18(SB)/1, $0x58
-DATA _L_str_5_17<>+19(SB)/1, $0x58
-DATA _L_str_5_17<>+20(SB)/1, $0x58
-DATA _L_str_5_17<>+21(SB)/1, $0x58
-DATA _L_str_5_17<>+22(SB)/1, $0x00
-GLOBL _L_str_5_17<>(SB), RODATA, $23
-
-DATA _L_str_6_18<>+0(SB)/8, $0x742e6d6165727473
-DATA _L_str_6_18<>+8(SB)/1, $0x78
-DATA _L_str_6_18<>+9(SB)/1, $0x74
-DATA _L_str_6_18<>+10(SB)/1, $0x00
-GLOBL _L_str_6_18<>(SB), RODATA, $11
-
-DATA _L_str_7_19<>+0(SB)/1, $0x77
-DATA _L_str_7_19<>+1(SB)/1, $0x2b
-DATA _L_str_7_19<>+2(SB)/1, $0x00
-GLOBL _L_str_7_19<>(SB), RODATA, $3
-
-DATA _L_str_8_20<>+0(SB)/1, $0x78
-DATA _L_str_8_20<>+1(SB)/1, $0x00
-GLOBL _L_str_8_20<>(SB), RODATA, $2
-
-DATA _L_str_9_21<>+0(SB)/1, $0x72
-DATA _L_str_9_21<>+1(SB)/1, $0x00
-GLOBL _L_str_9_21<>(SB), RODATA, $2
-
 	FUNCDATA $0, gclocals·05ce8345184b6987(SB)
 DATA gclocals·05ce8345184b6987+0(SB)/4, $9
 DATA gclocals·05ce8345184b6987+4(SB)/4, $1
@@ -3766,3 +3604,271 @@ DATA gclocals·99070d0b67290b54+194(SB)/1, $0x00
 DATA gclocals·99070d0b67290b54+195(SB)/1, $0x00
 DATA gclocals·99070d0b67290b54+196(SB)/1, $0x40
 GLOBL gclocals·99070d0b67290b54(SB), DUPOK|RODATA, $197
+
+TEXT ·mlib_stdio_unprefixed_stdout_selftest(SB), $56-8
+	PCDATA $1, $-1
+	LONG $0xf045c748
+	LONG $0x00000000
+	LONG $0x2afc45c7
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ -4(BP), AX
+	MOVQ AX, -24(BP)
+	MOVQ SP, AX
+	LEAQ -24(BP), CX
+	MOVQ CX, 8(AX)
+	LEAQ _L_str_10_22<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_printf(SB)
+_Ltmp178:
+	MOVQ SP, AX
+	MOVL $1, CX
+	LONG $0x10107883
+	MOVL CX, AX
+	JNE _LBB13_4
+	PCDATA $1, $0
+	CALL ·ForceGC(SB)
+_Ltmp179:
+	MOVQ SP, AX
+	LEAQ _L_str_11_23<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_puts(SB)
+_Ltmp180:
+	MOVQ SP, AX
+	MOVL $2, CX
+	LONG $0x00087883
+	MOVL CX, AX
+	JNE _LBB13_4
+	MOVQ SP, AX
+	LONG $0x002100c7
+	BYTE $0x00
+	BYTE $0x00
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_putchar(SB)
+_Ltmp181:
+	MOVQ SP, AX
+	MOVL $3, CX
+	LONG $0x21087883
+	MOVL CX, AX
+	JNE _LBB13_4
+	MOVQ SP, AX
+	LONG $0x000100c7
+	BYTE $0x00
+	BYTE $0x00
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_stdfile(SB)
+_Ltmp182:
+	MOVQ SP, AX
+	XORL CX, CX
+	LONG $0x08788348
+	BYTE $0x00
+	BYTE $0x0f
+	BYTE $0x94
+	BYTE $0xc0
+	MOVB AL, CL
+	SHLL $2, CX
+	MOVL CX, AX
+_LBB13_4:
+	MOVL AX, 16(BP)
+	RET
+_Lfunc_end13:
+	FUNCDATA $0, gclocals·be86e5a039a56de6(SB)
+	FUNCDATA $1, gclocals·93005c6ea5fa7700(SB)
+DATA gclocals·93005c6ea5fa7700+0(SB)/4, $2
+DATA gclocals·93005c6ea5fa7700+4(SB)/4, $7
+DATA gclocals·93005c6ea5fa7700+8(SB)/1, $0x00
+DATA gclocals·93005c6ea5fa7700+9(SB)/1, $0x30
+GLOBL gclocals·93005c6ea5fa7700(SB), DUPOK|RODATA, $10
+
+TEXT ·mlib_stdio_unprefixed_stdin_selftest(SB), $24-8
+	PCDATA $1, $-1
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getchar(SB)
+	MOVQ SP, AX
+	MOVL 0(AX), AX
+	MOVL AX, 16(BP)
+	RET
+_Lfunc_end14:
+DATA _L_str<>+0(SB)/1, $0x2e
+DATA _L_str<>+1(SB)/1, $0x00
+GLOBL _L_str<>(SB), RODATA, $2
+
+DATA _L_str_1<>+0(SB)/1, $0x2e
+DATA _L_str_1<>+1(SB)/1, $0x2e
+DATA _L_str_1<>+2(SB)/1, $0x00
+GLOBL _L_str_1<>(SB), RODATA, $3
+
+GLOBL ·force_gc_in_compare(SB), NOPTR, $1
+
+DATA _L_str_2<>+0(SB)/1, $0x54
+DATA _L_str_2<>+1(SB)/1, $0x4d
+DATA _L_str_2<>+2(SB)/1, $0x50
+DATA _L_str_2<>+3(SB)/1, $0x44
+DATA _L_str_2<>+4(SB)/1, $0x49
+DATA _L_str_2<>+5(SB)/1, $0x52
+DATA _L_str_2<>+6(SB)/1, $0x00
+GLOBL _L_str_2<>(SB), RODATA, $7
+
+DATA _L_str_1_3<>+0(SB)/1, $0x54
+DATA _L_str_1_3<>+1(SB)/1, $0x45
+DATA _L_str_1_3<>+2(SB)/1, $0x4d
+DATA _L_str_1_3<>+3(SB)/1, $0x50
+DATA _L_str_1_3<>+4(SB)/1, $0x00
+GLOBL _L_str_1_3<>(SB), RODATA, $5
+
+DATA _L_str_2_4<>+0(SB)/1, $0x2e
+DATA _L_str_2_4<>+1(SB)/1, $0x00
+GLOBL _L_str_2_4<>(SB), RODATA, $2
+
+DATA _L_str_3<>+0(SB)/8, $0x696c6d5f6f673263
+DATA _L_str_3<>+8(SB)/8, $0x585f626f6c675f62
+DATA _L_str_3<>+16(SB)/1, $0x58
+DATA _L_str_3<>+17(SB)/1, $0x58
+DATA _L_str_3<>+18(SB)/1, $0x58
+DATA _L_str_3<>+19(SB)/1, $0x58
+DATA _L_str_3<>+20(SB)/1, $0x58
+DATA _L_str_3<>+21(SB)/1, $0x00
+GLOBL _L_str_3<>(SB), RODATA, $22
+
+DATA _L_str_4<>+0(SB)/1, $0x62
+DATA _L_str_4<>+1(SB)/1, $0x2e
+DATA _L_str_4<>+2(SB)/1, $0x63
+DATA _L_str_4<>+3(SB)/1, $0x00
+GLOBL _L_str_4<>(SB), RODATA, $4
+
+DATA _L_str_5<>+0(SB)/1, $0x61
+DATA _L_str_5<>+1(SB)/1, $0x2e
+DATA _L_str_5<>+2(SB)/1, $0x63
+DATA _L_str_5<>+3(SB)/1, $0x00
+GLOBL _L_str_5<>(SB), RODATA, $4
+
+DATA _L_str_6<>+0(SB)/1, $0x63
+DATA _L_str_6<>+1(SB)/1, $0x2e
+DATA _L_str_6<>+2(SB)/1, $0x68
+DATA _L_str_6<>+3(SB)/1, $0x00
+GLOBL _L_str_6<>(SB), RODATA, $4
+
+DATA _L_str_7<>+0(SB)/1, $0x73
+DATA _L_str_7<>+1(SB)/1, $0x75
+DATA _L_str_7<>+2(SB)/1, $0x62
+DATA _L_str_7<>+3(SB)/1, $0x00
+GLOBL _L_str_7<>(SB), RODATA, $4
+
+DATA _L_str_8<>+0(SB)/1, $0x2a
+DATA _L_str_8<>+1(SB)/1, $0x2e
+DATA _L_str_8<>+2(SB)/1, $0x63
+DATA _L_str_8<>+3(SB)/1, $0x00
+GLOBL _L_str_8<>(SB), RODATA, $4
+
+DATA _L_str_9<>+0(SB)/1, $0x2a
+DATA _L_str_9<>+1(SB)/1, $0x2e
+DATA _L_str_9<>+2(SB)/1, $0x68
+DATA _L_str_9<>+3(SB)/1, $0x00
+GLOBL _L_str_9<>(SB), RODATA, $4
+
+DATA _L_str_10<>+0(SB)/8, $0x2d676e697373696d
+DATA _L_str_10<>+8(SB)/1, $0x2a
+DATA _L_str_10<>+9(SB)/1, $0x2e
+DATA _L_str_10<>+10(SB)/1, $0x7a
+DATA _L_str_10<>+11(SB)/1, $0x7a
+DATA _L_str_10<>+12(SB)/1, $0x00
+GLOBL _L_str_10<>(SB), RODATA, $13
+
+DATA _L_str_11<>+0(SB)/1, $0x2a
+DATA _L_str_11<>+1(SB)/1, $0x00
+GLOBL _L_str_11<>(SB), RODATA, $2
+
+GLOBL ·unprefixed_once(SB), NOPTR, $16
+
+GLOBL ·unprefixed_once_count(SB), NOPTR, $4
+
+DATA c2go_global_gcmask·unprefixed_global_mutex+0(SB)/1, $0x01
+GLOBL c2go_global_gcmask·unprefixed_global_mutex(SB), RODATA, $1
+
+DATA c2go_global_gcmask·unprefixed_global_sem+0(SB)/1, $0x01
+GLOBL c2go_global_gcmask·unprefixed_global_sem(SB), RODATA, $1
+
+DATA _L_str_12<>+0(SB)/1, $0x54
+DATA _L_str_12<>+1(SB)/1, $0x4d
+DATA _L_str_12<>+2(SB)/1, $0x50
+DATA _L_str_12<>+3(SB)/1, $0x44
+DATA _L_str_12<>+4(SB)/1, $0x49
+DATA _L_str_12<>+5(SB)/1, $0x52
+DATA _L_str_12<>+6(SB)/1, $0x00
+GLOBL _L_str_12<>(SB), RODATA, $7
+
+DATA _L__const_mlib_stdio_unprefixed_selftest_expected<>+0(SB)/8, $0x32343d65756c6176
+DATA _L__const_mlib_stdio_unprefixed_selftest_expected<>+8(SB)/1, $0x21
+DATA _L__const_mlib_stdio_unprefixed_selftest_expected<>+9(SB)/1, $0x00
+GLOBL _L__const_mlib_stdio_unprefixed_selftest_expected<>(SB), RODATA, $10
+
+DATA _L_str_1_13<>+0(SB)/8, $0x64253d65756c6176
+DATA _L_str_1_13<>+8(SB)/1, $0x00
+GLOBL _L_str_1_13<>(SB), RODATA, $9
+
+DATA _L_str_2_14<>+0(SB)/8, $0x32343d65756c6176
+DATA _L_str_2_14<>+8(SB)/1, $0x00
+GLOBL _L_str_2_14<>(SB), RODATA, $9
+
+DATA _L_str_3_15<>+0(SB)/1, $0x54
+DATA _L_str_3_15<>+1(SB)/1, $0x45
+DATA _L_str_3_15<>+2(SB)/1, $0x4d
+DATA _L_str_3_15<>+3(SB)/1, $0x50
+DATA _L_str_3_15<>+4(SB)/1, $0x00
+GLOBL _L_str_3_15<>(SB), RODATA, $5
+
+DATA _L_str_4_16<>+0(SB)/1, $0x2e
+DATA _L_str_4_16<>+1(SB)/1, $0x00
+GLOBL _L_str_4_16<>(SB), RODATA, $2
+
+DATA _L_str_5_17<>+0(SB)/8, $0x696c6d5f6f673263
+DATA _L_str_5_17<>+8(SB)/8, $0x5f6f696474735f62
+DATA _L_str_5_17<>+16(SB)/1, $0x58
+DATA _L_str_5_17<>+17(SB)/1, $0x58
+DATA _L_str_5_17<>+18(SB)/1, $0x58
+DATA _L_str_5_17<>+19(SB)/1, $0x58
+DATA _L_str_5_17<>+20(SB)/1, $0x58
+DATA _L_str_5_17<>+21(SB)/1, $0x58
+DATA _L_str_5_17<>+22(SB)/1, $0x00
+GLOBL _L_str_5_17<>(SB), RODATA, $23
+
+DATA _L_str_6_18<>+0(SB)/8, $0x742e6d6165727473
+DATA _L_str_6_18<>+8(SB)/1, $0x78
+DATA _L_str_6_18<>+9(SB)/1, $0x74
+DATA _L_str_6_18<>+10(SB)/1, $0x00
+GLOBL _L_str_6_18<>(SB), RODATA, $11
+
+DATA _L_str_7_19<>+0(SB)/1, $0x77
+DATA _L_str_7_19<>+1(SB)/1, $0x2b
+DATA _L_str_7_19<>+2(SB)/1, $0x00
+GLOBL _L_str_7_19<>(SB), RODATA, $3
+
+DATA _L_str_8_20<>+0(SB)/1, $0x78
+DATA _L_str_8_20<>+1(SB)/1, $0x00
+GLOBL _L_str_8_20<>(SB), RODATA, $2
+
+DATA _L_str_9_21<>+0(SB)/1, $0x72
+DATA _L_str_9_21<>+1(SB)/1, $0x00
+GLOBL _L_str_9_21<>(SB), RODATA, $2
+
+DATA _L_str_10_22<>+0(SB)/8, $0x2d646567616e616d
+DATA _L_str_10_22<>+8(SB)/8, $0x64253a6f69647473
+DATA _L_str_10_22<>+16(SB)/1, $0x00
+GLOBL _L_str_10_22<>(SB), RODATA, $17
+
+DATA _L_str_11_23<>+0(SB)/1, $0x7c
+DATA _L_str_11_23<>+1(SB)/1, $0x6c
+DATA _L_str_11_23<>+2(SB)/1, $0x69
+DATA _L_str_11_23<>+3(SB)/1, $0x6e
+DATA _L_str_11_23<>+4(SB)/1, $0x65
+DATA _L_str_11_23<>+5(SB)/1, $0x00
+GLOBL _L_str_11_23<>(SB), RODATA, $6
+
+	FUNCDATA $0, gclocals·5f4910070d449e0f(SB)
+	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
+DATA gclocals·78a6d65c07e372d5+0(SB)/4, $1
+DATA gclocals·78a6d65c07e372d5+4(SB)/4, $3
+DATA gclocals·78a6d65c07e372d5+8(SB)/1, $0x00
+GLOBL gclocals·78a6d65c07e372d5(SB), DUPOK|RODATA, $9

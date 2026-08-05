@@ -12,6 +12,27 @@
 #ifndef C2GO_MLIB_TEST_FORCE_GC
 #error "C2GO_MLIB_TEST_FORCE_GC must trigger a Go collection"
 #endif
+#ifndef C2GO_MLIB_TEST_STDOUT
+#error "C2GO_MLIB_TEST_STDOUT must name the managed standard output stream"
+#endif
+#ifndef C2GO_MLIB_TEST_PRINTF
+#error "C2GO_MLIB_TEST_PRINTF must name the managed printf"
+#endif
+#ifndef C2GO_MLIB_TEST_PUTCHAR
+#error "C2GO_MLIB_TEST_PUTCHAR must name the managed putchar"
+#endif
+#ifndef C2GO_MLIB_TEST_PUTS
+#error "C2GO_MLIB_TEST_PUTS must name the managed puts"
+#endif
+#ifndef C2GO_MLIB_TEST_GETCHAR
+#error "C2GO_MLIB_TEST_GETCHAR must name the managed getchar"
+#endif
+#ifndef C2GO_MLIB_TEST_STDOUT_EXPORT
+#error "C2GO_MLIB_TEST_STDOUT_EXPORT must name the standard-output selftest"
+#endif
+#ifndef C2GO_MLIB_TEST_STDIN_EXPORT
+#error "C2GO_MLIB_TEST_STDIN_EXPORT must name the standard-input selftest"
+#endif
 
 #include <stdlib.h>
 #include <string.h>
@@ -94,6 +115,34 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     return 0;
 }
 
+/* Deliberately leave stdout buffered. The Go test calls C2goFinalize and
+ * verifies that mlib's internal finalize hook flushes this separate FILE
+ * world. The forced collection also proves the global standard-stream slot is
+ * emitted as a GC root. */
+c2go_extern int C2GO_MLIB_TEST_STDOUT_EXPORT(void)
+{
+    if (C2GO_MLIB_TEST_PRINTF("managed-stdio:%d", 42) != 16) return 1;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (C2GO_MLIB_TEST_PUTS("|line") != 0) return 2;
+    /* The pipe probe above makes stdout fully buffered; this final byte is the
+     * part that must be emitted by the finalize hook. */
+    if (C2GO_MLIB_TEST_PUTCHAR('!') != '!') return 3;
+    if (!C2GO_MLIB_TEST_STDOUT) return 4;
+    return 0;
+}
+
+c2go_extern int C2GO_MLIB_TEST_STDIN_EXPORT(void)
+{
+    return C2GO_MLIB_TEST_GETCHAR();
+}
+
+#undef C2GO_MLIB_TEST_STDIN_EXPORT
+#undef C2GO_MLIB_TEST_STDOUT_EXPORT
+#undef C2GO_MLIB_TEST_GETCHAR
+#undef C2GO_MLIB_TEST_PUTS
+#undef C2GO_MLIB_TEST_PUTCHAR
+#undef C2GO_MLIB_TEST_PRINTF
+#undef C2GO_MLIB_TEST_STDOUT
 #undef C2GO_MLIB_TEST_FORCE_GC
 #undef C2GO_MLIB_TEST_EXPORT
 #undef C2GO_MLIB_TEST_FUNLOCKFILE

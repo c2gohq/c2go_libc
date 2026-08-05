@@ -32,7 +32,14 @@ void c2go_mlib_stdio_test_gc(void);
 #define C2GO_MLIB_TEST_FPRINTF fprintf
 #define C2GO_MLIB_TEST_FLOCKFILE flockfile
 #define C2GO_MLIB_TEST_FUNLOCKFILE funlockfile
+#define C2GO_MLIB_TEST_STDOUT stdout
+#define C2GO_MLIB_TEST_PRINTF printf
+#define C2GO_MLIB_TEST_PUTCHAR putchar
+#define C2GO_MLIB_TEST_PUTS puts
+#define C2GO_MLIB_TEST_GETCHAR getchar
 #define C2GO_MLIB_TEST_EXPORT mlib_stdio_unprefixed_selftest
+#define C2GO_MLIB_TEST_STDOUT_EXPORT mlib_stdio_unprefixed_stdout_selftest
+#define C2GO_MLIB_TEST_STDIN_EXPORT mlib_stdio_unprefixed_stdin_selftest
 #define C2GO_MLIB_TEST_FORCE_GC() c2go_mlib_stdio_test_gc()
 #include "../../source/stdio_fixture.inc"
 

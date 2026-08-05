@@ -64,6 +64,9 @@ func C2goFileRawFdopen(f *FILE, fd int32, mode *byte, storage *byte, storage_siz
 //go:linkname C2goFileRawOpen github.com/c2gohq/c2go_libc.__c2go_file_raw_open
 func C2goFileRawOpen(f *FILE, filename *byte, mode *byte, storage *byte, storage_size uint64) int32
 
+//go:linkname C2goFileRawStdinit github.com/c2gohq/c2go_libc.__c2go_file_raw_stdinit
+func C2goFileRawStdinit(f *FILE, which int32, storage *byte, storage_size uint64) int32
+
 //go:linkname C2goFinalize github.com/c2gohq/c2go_libc.__c2go_finalize
 func C2goFinalize()
 

@@ -46,6 +46,8 @@ c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_fdopen", C2GO_GOABI0)
 int __c2go_file_raw_fdopen(FILE *, int, const char *, unsigned char *, size_t);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_close", C2GO_GOABI0)
 int __c2go_file_raw_close(FILE *);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_stdinit", C2GO_GOABI0)
+int __c2go_file_raw_stdinit(FILE *, int, unsigned char *, size_t);
 
 c2go_linkname("github.com/c2gohq/c2go_libc/mlib.FileLock", C2GO_GOABI0)
 void __c2go_mlib_file_lock(mlib_state_pointer *);
@@ -59,6 +61,7 @@ c2go_linkname("github.com/c2gohq/c2go_libc/mlib.OpenFileListUnlock", C2GO_GOABI0
 void __c2go_mlib_ofl_unlock(void);
 
 static mlib_managed_file_pointer mlib_ofl_head;
+static mlib_managed_file_pointer mlib_std_files[3];
 
 static FILE *mlib_raw(mlib_file_pointer f)
 {
@@ -82,6 +85,38 @@ static mlib_file_pointer mlib_file_allocate(void)
         return (void *)0;
     }
     f->_buffer_root = buffer;
+    return (mlib_FILE *)f;
+}
+
+__attribute__((noinline))
+static void mlib_stdfile_store(int which, mlib_file_pointer f)
+{
+    mlib_std_files[which] = (mlib_managed_file_pointer)f;
+}
+
+c2go_extern mlib_FILE *mlib_stdfile(int which)
+{
+    mlib_file_pointer f;
+    if ((unsigned)which > 2) {
+        errno = EINVAL;
+        return (void *)0;
+    }
+
+    __c2go_mlib_ofl_lock();
+    f = (mlib_file_pointer)mlib_std_files[which];
+    if (!f) {
+        f = mlib_file_allocate();
+        if (f && __c2go_file_raw_stdinit(mlib_raw(f), which,
+                (unsigned char *)(void *)f->_buffer_root,
+                MLIB_FILE_BUFFER_SIZE) == 0) {
+            f->_active = 1;
+            mlib_stdfile_store(which, f);
+        } else {
+            if (f) f->_buffer_root = (void *)0;
+            f = (void *)0;
+        }
+    }
+    __c2go_mlib_ofl_unlock();
     return (mlib_FILE *)f;
 }
 
@@ -202,7 +237,7 @@ c2go_extern int mlib_fflush(mlib_FILE *stream)
 {
     mlib_file_pointer f = stream;
     FILE *raw;
-    int result;
+    int result, which;
     if (f) {
         raw = mlib_file_acquire(f);
         if (!raw) return EOF;
@@ -213,6 +248,15 @@ c2go_extern int mlib_fflush(mlib_FILE *stream)
 
     result = 0;
     __c2go_mlib_ofl_lock();
+    for (which = 0; which < 3; ++which) {
+        f = (mlib_file_pointer)mlib_std_files[which];
+        if (!f) continue;
+        raw = mlib_file_acquire(f);
+        if (raw) {
+            result |= fflush(raw);
+            mlib_file_release(f);
+        }
+    }
     for (f = (mlib_file_pointer)mlib_ofl_head; f;
          f = (mlib_file_pointer)f->_next) {
         raw = mlib_file_acquire(f);
@@ -380,6 +424,18 @@ c2go_extern int mlib_putc(int character, mlib_FILE *stream)
     return mlib_fputc(character, stream);
 }
 
+c2go_extern int mlib_getchar(void)
+{
+    mlib_FILE *stream = mlib_stdfile(0);
+    return stream ? mlib_fgetc(stream) : EOF;
+}
+
+c2go_extern int mlib_putchar(int character)
+{
+    mlib_FILE *stream = mlib_stdfile(1);
+    return stream ? mlib_fputc(character, stream) : EOF;
+}
+
 c2go_extern char *mlib_fgets(char *restrict destination, int count,
                               mlib_FILE *restrict stream)
 {
@@ -404,6 +460,20 @@ c2go_extern int mlib_fputs(const char *restrict text,
     return result;
 }
 
+c2go_extern int mlib_puts(const char *text)
+{
+    mlib_file_pointer f = mlib_stdfile(1);
+    FILE *raw;
+    int result;
+    if (!f) return EOF;
+    raw = mlib_file_acquire(f);
+    if (!raw) return EOF;
+    result = fputs(text, raw);
+    if (result >= 0 && fputc('\n', raw) == EOF) result = EOF;
+    mlib_file_release(f);
+    return result;
+}
+
 c2go_extern int mlib_vfprintf(mlib_FILE *restrict stream,
                                const char *restrict format, va_list arguments)
 {
@@ -423,6 +493,22 @@ c2go_extern int mlib_fprintf(mlib_FILE *restrict stream,
     va_list arguments;
     va_start(arguments, format);
     result = mlib_vfprintf(stream, format, arguments);
+    va_end(arguments);
+    return result;
+}
+
+c2go_extern int mlib_vprintf(const char *restrict format, va_list arguments)
+{
+    mlib_FILE *stream = mlib_stdfile(1);
+    return stream ? mlib_vfprintf(stream, format, arguments) : -1;
+}
+
+c2go_extern int mlib_printf(const char *restrict format, ...)
+{
+    int result;
+    va_list arguments;
+    va_start(arguments, format);
+    result = mlib_vprintf(format, arguments);
     va_end(arguments);
     return result;
 }

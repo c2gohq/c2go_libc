@@ -1741,6 +1741,40 @@ c2go_extern int __c2go_file_raw_open(FILE *f, const char *filename,
 	return -1;
 }
 
+/* Initialize a caller-owned standard-stream engine. It has the same live
+ * os.Stdin/os.Stdout/os.Stderr routing and buffering policy as root libc's
+ * static FILE objects, but no root FILE lock or open-list membership. */
+c2go_extern int __c2go_file_raw_stdinit(FILE *f, int which,
+	unsigned char *storage, size_t storage_size)
+{
+	const char *mode;
+	if ((unsigned)which > 2) {
+		errno = EINVAL;
+		return -1;
+	}
+	mode = which == 0 ? "r" : "w";
+	if (__file_init_fd(f, which, mode, storage, storage_size, -1) != 0)
+		return -1;
+
+	f->flags = F_PERM | (which == 0 ? F_NOWR : F_NORD);
+	f->close = __std_go_close;
+	if (which == 0) {
+		f->write = 0;
+		f->lbf = EOF;
+	} else {
+		f->read = 0;
+		if (which == 1) {
+			f->write = __stdout_write;
+			f->lbf = '\n';
+		} else {
+			f->write = __std_go_write;
+			f->buf_size = 0;
+			f->lbf = EOF;
+		}
+	}
+	return 0;
+}
+
 /* musl fopen.c, minus the redundant post-open CLOEXEC fcntl. (fopen is a clang
  * LibFunc, so clang emits a benign "goabi0 CC not supported on builtin function"
  * warning here — the emitted symbol is still a correct goabi0cc ·fopen. No

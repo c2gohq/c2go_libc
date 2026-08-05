@@ -160,6 +160,9 @@ func MlibFwrite(source unsafe.Pointer, size uint64, count uint64, stream *_c2go_
 //go:linkname MlibGetc github.com/c2gohq/c2go_libc/mlib.mlib_getc
 func MlibGetc(stream *_c2go_mlib_FILE) int32
 
+//go:linkname MlibGetchar github.com/c2gohq/c2go_libc/mlib.mlib_getchar
+func MlibGetchar() int32
+
 //go:linkname MlibGlob github.com/c2gohq/c2go_libc/mlib.mlib_glob
 func MlibGlob(pattern *byte, flags int32, error_function uintptr, result *mlib_glob_t) int32
 
@@ -169,8 +172,17 @@ func MlibGlobfree(result *mlib_glob_t)
 //go:linkname MlibOpendir github.com/c2gohq/c2go_libc/mlib.mlib_opendir
 func MlibOpendir(name *byte) *mlib_DIR
 
+//go:linkname MlibPrintf github.com/c2gohq/c2go_libc/mlib.mlib_printf
+func MlibPrintf(format *byte, argptrs unsafe.Pointer) int32
+
 //go:linkname MlibPutc github.com/c2gohq/c2go_libc/mlib.mlib_putc
 func MlibPutc(character int32, stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibPutchar github.com/c2gohq/c2go_libc/mlib.mlib_putchar
+func MlibPutchar(character int32) int32
+
+//go:linkname MlibPuts github.com/c2gohq/c2go_libc/mlib.mlib_puts
+func MlibPuts(text *byte) int32
 
 //go:linkname MlibReaddir github.com/c2gohq/c2go_libc/mlib.mlib_readdir
 func MlibReaddir(dir *mlib_DIR) *dirent
@@ -187,11 +199,17 @@ func MlibRewinddir(dir *mlib_DIR)
 //go:linkname MlibScandir github.com/c2gohq/c2go_libc/mlib.mlib_scandir
 func MlibScandir(path *byte, result ***dirent, select_entry uintptr, compare_entry uintptr) int32
 
+//go:linkname MlibStdfile github.com/c2gohq/c2go_libc/mlib.mlib_stdfile
+func MlibStdfile(which int32) *_c2go_mlib_FILE
+
 //go:linkname MlibUngetc github.com/c2gohq/c2go_libc/mlib.mlib_ungetc
 func MlibUngetc(character int32, stream *_c2go_mlib_FILE) int32
 
 //go:linkname MlibVfprintf github.com/c2gohq/c2go_libc/mlib.mlib_vfprintf
 func MlibVfprintf(stream *_c2go_mlib_FILE, format *byte, arguments *byte) int32
+
+//go:linkname MlibVprintf github.com/c2gohq/c2go_libc/mlib.mlib_vprintf
+func MlibVprintf(format *byte, arguments *byte) int32
 
 // ─── §B4 Go-owned global storage ────────────────────────────
 // Pointer-carrying file-scope C globals whose storage is owned
@@ -201,6 +219,7 @@ func MlibVfprintf(stream *_c2go_mlib_FILE, format *byte, arguments *byte) int32
 // scans every pointer slot as a root. Clang's .s output
 // suppresses the matching GLOBL trailer for each name below.
 var mlib_ofl_head unsafe.Pointer
+var mlib_std_files [3]unsafe.Pointer
 
 // ─── Embedded runtime-support helpers ───────────────────────
 

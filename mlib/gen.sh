@@ -95,6 +95,8 @@ verify_managed_write_barriers() {
 		"managed glob carrier updates"
 	verify_function_write_barrier "$asm_path" mlib_file_allocate \
 		"managed FILE buffer ownership"
+	verify_function_write_barrier "$asm_path" mlib_stdfile_store \
+		"managed standard-stream rooting"
 	verify_function_write_barrier "$asm_path" mlib_ofl_add \
 		"managed FILE open-list insertion"
 	verify_function_write_barrier "$asm_path" mlib_ofl_remove \

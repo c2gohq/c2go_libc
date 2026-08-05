@@ -26,6 +26,8 @@ c2go_linkname("github.com/c2gohq/c2go_libc._c2go_atexit_lock", C2GO_GOABI0)
 void _c2go_atexit_lock(void);
 c2go_linkname("github.com/c2gohq/c2go_libc._c2go_atexit_unlock", C2GO_GOABI0)
 void _c2go_atexit_unlock(void);
+c2go_linkname("github.com/c2gohq/c2go_libc._c2go_run_finalize_hooks", C2GO_GOABI0)
+void _c2go_run_finalize_hooks(void);
 
 #define ATEXIT_MAX 32
 static void (*__atexit_funcs[ATEXIT_MAX])(void);
@@ -67,7 +69,12 @@ c2go_extern void __c2go_finalize(void) {
         if (!f) break;
         f();
     }
-    fflush(NULL);                        /* flush every open stream */
+    /* Subpackages flush first, then root libc's own FILE world. Hooks are Go
+     * functions rather than C atexit slots, so they do not consume the C99
+     * minimum registry capacity and cannot be missed when that registry is
+     * full. */
+    _c2go_run_finalize_hooks();
+    fflush(NULL);                        /* flush every root-libc stream */
 }
 
 c2go_extern _Noreturn void exit(int code) {

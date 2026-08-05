@@ -12,15 +12,19 @@ import (
 	"runtime"
 	"sync"
 	"unsafe" // unsafe.Slice for the environ snapshot; also //go:linkname
+
+	"github.com/c2gohq/c2go_libc/internal/finalize"
 )
 
 // __c2go_exit terminates the process after C's exit() has run the atexit handlers
 // and flushed stdio. os.Exit does not run Go defers, matching C exit semantics.
+//
 //go:linkname __c2go_exit
 func __c2go_exit(code int32) { os.Exit(int(code)) }
 
 // __c2go_abort implements abort(). The Go runtime offers no SIGABRT/core path, so
 // terminate with the conventional 128+SIGABRT(6) status to signal abnormal exit.
+//
 //go:linkname __c2go_abort
 func __c2go_abort() { os.Exit(134) }
 
@@ -37,8 +41,16 @@ func _c2go_atexit_lock() { atexitMu.Lock() }
 //go:linkname _c2go_atexit_unlock
 func _c2go_atexit_unlock() { atexitMu.Unlock() }
 
+// _c2go_run_finalize_hooks lets separately built libc subpackages participate
+// in C exit without making root libc import those packages. The registry lives
+// in an internal Go package shared by root and its subpackages.
+//
+//go:linkname _c2go_run_finalize_hooks
+func _c2go_run_finalize_hooks() { finalize.Run() }
+
 // Getpid implements getpid() (pid_t == int32). os.Getpid is cross-platform, so it
 // lives here rather than in the Unix-only process_unix.go.
+//
 //go:linkname Getpid
 func Getpid() int32 { return int32(os.Getpid()) }
 
@@ -135,6 +147,7 @@ func Unsetenv(name *byte) int32 {
 // of the os environment. The snapshot bridge below builds a NULL-terminated
 // char** whose array and strings are all libc-malloc'd (unmanaged C heap);
 // env.c's __environ_sync (Go name EnvironSync) frees the previous one.
+//
 //go:linkname __c2go_environ_snapshot
 func __c2go_environ_snapshot() **byte {
 	env := os.Environ()
@@ -167,6 +180,7 @@ func __c2go_os_clearenv() {
 
 // sched_yield (#675, <sched.h>): cooperative reschedule is the only
 // meaningful yield under the Go scheduler; always succeeds.
+//
 //go:linkname sched_yield github.com/c2gohq/c2go_libc.sched_yield
 func sched_yield() int32 { runtime.Gosched(); return 0 }
 

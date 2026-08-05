@@ -7,8 +7,13 @@ import (
 	"sync/atomic"
 	"unsafe"
 
+	"github.com/c2gohq/c2go_libc/internal/finalize"
 	"github.com/c2gohq/c2go_libc/internal/posixstdio"
 )
+
+func init() {
+	finalize.Register(func() { _ = MlibFflush(nil) })
+}
 
 func fileLockSlot(slot unsafe.Pointer) *atomic.Pointer[posixstdio.Lock] {
 	return (*atomic.Pointer[posixstdio.Lock])(slot)
