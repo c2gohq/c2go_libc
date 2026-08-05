@@ -513,6 +513,131 @@ c2go_extern int mlib_printf(const char *restrict format, ...)
     return result;
 }
 
+/* The shared root scanner is safe for scalar and byte/wide-character output,
+ * but its POSIX %m path uses ordinary malloc/realloc and its %p path publishes
+ * a pointer without a managed write barrier. Reject both before touching the
+ * input stream. This parser only identifies those policy-bearing conversion
+ * parts; the root scanner remains authoritative for full format validation. */
+static int mlib_scan_format_is_plain(const char *format)
+{
+    const unsigned char *p = (const unsigned char *)format;
+
+    while (*p) {
+        const unsigned char *q;
+        unsigned char conversion;
+
+        if (*p++ != '%') continue;
+        if (*p == '%') {
+            ++p;
+            continue;
+        }
+
+        if (*p == '*') {
+            ++p;
+        } else {
+            /* Accept the whole POSIX positional spelling for policy scanning,
+             * even though the current root parser only accepts one digit. */
+            q = p;
+            while (*q >= '0' && *q <= '9') ++q;
+            if (q != p && *q == '$') p = q + 1;
+        }
+        while (*p >= '0' && *p <= '9') ++p;
+
+        if (*p == 'm') return 0;
+
+        if (*p == 'h' || *p == 'l') {
+            conversion = *p++;
+            if (*p == conversion) ++p;
+        } else if (*p == 'j' || *p == 'z' || *p == 't' || *p == 'L') {
+            ++p;
+        }
+
+        conversion = *p;
+        if (conversion == 'p') return 0;
+        if (!conversion) break;
+        ++p;
+
+        /* A scanset may itself contain '%'/'m'/'p'; skip through its real
+         * closing bracket so those ordinary characters are never classified
+         * as another conversion. */
+        if (conversion == '[') {
+            if (*p == '^') ++p;
+            if (*p == ']') ++p;
+            while (*p && *p != ']') ++p;
+            if (*p == ']') ++p;
+        }
+    }
+    return 1;
+}
+
+static int mlib_scan_format_check(const char *format)
+{
+    if (mlib_scan_format_is_plain(format)) return 0;
+    errno = ENOTSUP;
+    return -1;
+}
+
+c2go_extern int mlib_vfscanf(mlib_FILE *restrict stream,
+                              const char *restrict format, va_list arguments)
+{
+    mlib_file_pointer f = stream;
+    FILE *raw;
+    int result;
+    if (mlib_scan_format_check(format)) return EOF;
+    raw = mlib_file_acquire(f);
+    if (!raw) return EOF;
+    result = vfscanf(raw, format, arguments);
+    mlib_file_release(f);
+    return result;
+}
+
+c2go_extern int mlib_fscanf(mlib_FILE *restrict stream,
+                             const char *restrict format, ...)
+{
+    int result;
+    va_list arguments;
+    va_start(arguments, format);
+    result = mlib_vfscanf(stream, format, arguments);
+    va_end(arguments);
+    return result;
+}
+
+c2go_extern int mlib_vscanf(const char *restrict format, va_list arguments)
+{
+    mlib_FILE *stream;
+    if (mlib_scan_format_check(format)) return EOF;
+    stream = mlib_stdfile(0);
+    return stream ? mlib_vfscanf(stream, format, arguments) : EOF;
+}
+
+c2go_extern int mlib_scanf(const char *restrict format, ...)
+{
+    int result;
+    va_list arguments;
+    va_start(arguments, format);
+    result = mlib_vscanf(format, arguments);
+    va_end(arguments);
+    return result;
+}
+
+c2go_extern int mlib_vsscanf(const char *restrict input,
+                              const char *restrict format, va_list arguments)
+{
+    if (mlib_scan_format_check(format)) return EOF;
+    return vsscanf(input, format, arguments);
+}
+
+c2go_extern int mlib_sscanf(const char *restrict input,
+                             const char *restrict format, ...)
+{
+    int result;
+    va_list arguments;
+    va_start(arguments, format);
+    result = mlib_vsscanf(input, format, arguments);
+    va_end(arguments);
+    return result;
+}
+
 c2go_extern void mlib_flockfile(mlib_FILE *stream)
 {
     mlib_file_pointer f = stream;

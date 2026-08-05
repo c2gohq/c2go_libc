@@ -147,6 +147,9 @@ func MlibFputs(text *byte, stream *_c2go_mlib_FILE) int32
 //go:linkname MlibFread github.com/c2gohq/c2go_libc/mlib.mlib_fread
 func MlibFread(destination unsafe.Pointer, size uint64, count uint64, stream *_c2go_mlib_FILE) uint64
 
+//go:linkname MlibFscanf github.com/c2gohq/c2go_libc/mlib.mlib_fscanf
+func MlibFscanf(stream *_c2go_mlib_FILE, format *byte, argptrs unsafe.Pointer) int32
+
 //go:linkname MlibFseek github.com/c2gohq/c2go_libc/mlib.mlib_fseek
 func MlibFseek(stream *_c2go_mlib_FILE, offset int64, whence int32) int32
 
@@ -219,6 +222,12 @@ func MlibRewinddir(dir *mlib_DIR)
 //go:linkname MlibScandir github.com/c2gohq/c2go_libc/mlib.mlib_scandir
 func MlibScandir(path *byte, result ***dirent, select_entry uintptr, compare_entry uintptr) int32
 
+//go:linkname MlibScanf github.com/c2gohq/c2go_libc/mlib.mlib_scanf
+func MlibScanf(format *byte, argptrs unsafe.Pointer) int32
+
+//go:linkname MlibSscanf github.com/c2gohq/c2go_libc/mlib.mlib_sscanf
+func MlibSscanf(input *byte, format *byte, argptrs unsafe.Pointer) int32
+
 //go:linkname MlibStdfile github.com/c2gohq/c2go_libc/mlib.mlib_stdfile
 func MlibStdfile(which int32) *_c2go_mlib_FILE
 
@@ -228,8 +237,17 @@ func MlibUngetc(character int32, stream *_c2go_mlib_FILE) int32
 //go:linkname MlibVfprintf github.com/c2gohq/c2go_libc/mlib.mlib_vfprintf
 func MlibVfprintf(stream *_c2go_mlib_FILE, format *byte, arguments __va_list) int32
 
+//go:linkname MlibVfscanf github.com/c2gohq/c2go_libc/mlib.mlib_vfscanf
+func MlibVfscanf(stream *_c2go_mlib_FILE, format *byte, arguments __va_list) int32
+
 //go:linkname MlibVprintf github.com/c2gohq/c2go_libc/mlib.mlib_vprintf
 func MlibVprintf(format *byte, arguments __va_list) int32
+
+//go:linkname MlibVscanf github.com/c2gohq/c2go_libc/mlib.mlib_vscanf
+func MlibVscanf(format *byte, arguments __va_list) int32
+
+//go:linkname MlibVsscanf github.com/c2gohq/c2go_libc/mlib.mlib_vsscanf
+func MlibVsscanf(input *byte, format *byte, arguments __va_list) int32
 
 // ─── §B4 Go-owned global storage ────────────────────────────
 // Pointer-carrying file-scope C globals whose storage is owned

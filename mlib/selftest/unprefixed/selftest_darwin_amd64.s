@@ -3747,6 +3747,9 @@ _Ltmp182:
 _LBB18_8:
 	RET
 _Lfunc_end18:
+DATA _LCPI19_0<>+0(SB)/8, $0x4004000000000000
+GLOBL _LCPI19_0<>(SB), RODATA, $8
+
 	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
 	FUNCDATA $1, gclocals·1617295a1dc6485e(SB)
 DATA gclocals·1617295a1dc6485e+0(SB)/4, $2
@@ -3757,14 +3760,46 @@ DATA gclocals·1617295a1dc6485e+10(SB)/1, $0x80
 DATA gclocals·1617295a1dc6485e+11(SB)/1, $0x00
 GLOBL gclocals·1617295a1dc6485e(SB), DUPOK|RODATA, $12
 
-TEXT ·mlib_stdio_unprefixed_selftest(SB), $1336-8
+TEXT ·mlib_stdio_unprefixed_selftest(SB), $1624-8
 	PCDATA $1, $-1
-	BYTE $0x0f
-	BYTE $0x57
-	BYTE $0xc0
-	MOVUPS X0, -152(BP)
-	MOVUPS X0, -64(BP)
-	LONG $0xf045c748
+	LONG $0xc0570f66
+	MOVUPD X0, -224(BP)
+	MOVUPD X0, -248(BP)
+	MOVUPD X0, -296(BP)
+	LONG $0x9045c748
+	LONG $0x00000000
+	LONG $0xe045c748
+	LONG $0x00000000
+	MOVUPD X0, -440(BP)
+	MOVUPD X0, -352(BP)
+	LONG $0x8045c748
+	LONG $0x00000000
+	MOVUPD X0, -208(BP)
+	LONG $0x8845c748
+	LONG $0x00000000
+	MOVUPD X0, -280(BP)
+	LONG $0xf885c748
+	LONG $0x00fffffe
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	LONG $0x9845c748
+	LONG $0x00000000
+	LONG $0xa045c748
+	LONG $0x00000000
+	MOVUPD X0, -336(BP)
+	MOVUPD X0, -320(BP)
+	LONG $0xa845c748
+	LONG $0x00000000
+	LONG $0xb045c748
+	LONG $0x00000000
+	LONG $0xb845c748
+	LONG $0x00000000
+	MOVUPD X0, -176(BP)
+	LONG $0xd045c748
+	LONG $0x00000000
+	MOVUPD X0, -160(BP)
+	LONG $0xd845c748
 	LONG $0x00000000
 	MOVQ SP, AX
 	LEAQ _L_str_20<>(SB), CX
@@ -3775,33 +3810,48 @@ _Ltmp183:
 	MOVQ SP, AX
 	MOVQ 8(AX), AX
 	MOVQ $3617583906656379254, CX
-	MOVQ CX, -48(BP)
-	LONG $0xd845c766
-	BYTE $0x21
+	MOVQ CX, -192(BP)
+	LONG $0x4885c766
+	LONG $0x21ffffff
 	BYTE $0x00
-	BYTE $0x0f
-	BYTE $0x57
-	BYTE $0xc0
-	MOVUPS X0, -96(BP)
-	MOVUPS X0, -112(BP)
-	LONG $0x2a8c45c7
-	BYTE $0x00
-	BYTE $0x00
-	BYTE $0x00
-	LEAQ -116(BP), CX
-	MOVQ CX, -152(BP)
-	LONG $0x7085c748
-	LONG $0x00ffffff
+	LONG $0xc0570f66
+	MOVUPD X0, -384(BP)
+	MOVUPD X0, -400(BP)
+	LONG $0xc845c748
+	LONG $0x00000000
+	LONG $0x00f445c7
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	MOVQ AX, -8(BP)
+	LONG $0x00ff45c6
+	LONG $0x9045c748
+	LONG $0x00000000
+	LONG $0xe045c748
+	LONG $0x00000000
+	LONG $0xc045c748
+	LONG $0x00000000
+	LONG $0x00f845c7
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	LONG $0xfe6c85c7
+	LONG $0x002affff
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ -404(BP), CX
+	MOVQ CX, -440(BP)
+	LONG $0x5085c748
+	LONG $0x00fffffe
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ AX, -24(BP)
 	MOVQ SP, AX
-	LEAQ -152(BP), CX
+	LEAQ -440(BP), CX
 	MOVQ CX, 24(AX)
 	LEAQ _L_str_1_21<>(SB), CX
 	MOVQ CX, 16(AX)
-	LEAQ -168(BP), CX
+	LEAQ -456(BP), CX
 	MOVQ CX, 0(AX)
 	LONG $0x0840c748
 	LONG $0x00000010
@@ -3811,11 +3861,11 @@ _Ltmp184:
 	MOVQ SP, AX
 	MOVL $26, CX
 	LONG $0x08207883
-	JNE _LBB19_43
+	JNE _LBB19_8
 	MOVQ SP, AX
 	LEAQ _L_str_2_22<>(SB), CX
 	MOVQ CX, 8(AX)
-	LEAQ -168(BP), CX
+	LEAQ -456(BP), CX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $3
 	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
@@ -3823,8 +3873,8 @@ _Ltmp185:
 	MOVQ SP, AX
 	LONG $0x00107883
 	MOVL $26, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), CX
+	JNE _LBB19_9
+	MOVQ -24(BP), CX
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc9
@@ -3856,8 +3906,8 @@ _LBB19_6:
 	LEAQ _L_str_4_24<>(SB), CX
 	XORL AX, AX
 _LBB19_7:
-	MOVQ AX, -136(BP)
-	MOVQ CX, -8(BP)
+	MOVQ AX, -424(BP)
+	MOVQ CX, -24(BP)
 	MOVQ SP, AX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $5
@@ -3865,7 +3915,7 @@ _LBB19_7:
 _Ltmp187:
 	MOVQ SP, AX
 	MOVQ 8(AX), AX
-	MOVQ AX, -72(BP)
+	MOVQ AX, -360(BP)
 	MOVQ SP, AX
 	LEAQ _L_str_5_25<>(SB), CX
 	MOVQ CX, 0(AX)
@@ -3874,7 +3924,7 @@ _Ltmp187:
 _Ltmp188:
 	MOVQ SP, AX
 	MOVQ 8(AX), SI
-	MOVQ -72(BP), AX
+	MOVQ -360(BP), AX
 	MOVQ AX, DX
 	ADDQ SI, AX
 	ADDQ $2, AX
@@ -3882,31 +3932,31 @@ _Ltmp188:
 	LONG $0x02003d48
 	BYTE $0x00
 	BYTE $0x00
-	JLS _LBB19_8
-_LBB19_43:
+	JLS _LBB19_10
+_LBB19_8:
 	MOVL CX, AX
-_LBB19_44:
+_LBB19_9:
 	MOVL AX, 16(BP)
 	RET
-_LBB19_8:
-	MOVQ -8(BP), AX
+_LBB19_10:
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ DX, 16(CX)
 	MOVQ AX, 8(CX)
-	LEAQ -680(BP), AX
+	LEAQ -968(BP), AX
 	MOVQ AX, 0(CX)
-	MOVQ SI, -128(BP)
+	MOVQ SI, -416(BP)
 	PCDATA $1, $5
 	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
 _Ltmp189:
-	MOVQ -72(BP), AX
-	LONG $0x580584c6
-	LONG $0x2ffffffd
+	MOVQ -360(BP), AX
+	LONG $0x380584c6
+	LONG $0x2ffffffc
 	ADDQ BP, AX
-	LONG $0xfd590548
+	LONG $0xfc390548
 	BYTE $0xff
 	BYTE $0xff
-	MOVQ -128(BP), CX
+	MOVQ -416(BP), CX
 	BYTE $0x48
 	BYTE $0xff
 	BYTE $0xc1
@@ -3919,7 +3969,7 @@ _Ltmp189:
 	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
 _Ltmp190:
 	MOVQ SP, AX
-	LEAQ -680(BP), CX
+	LEAQ -968(BP), CX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $4
 	CALL github·com∕c2gohq∕c2go_libc·mkdtemp(SB)
@@ -3928,16 +3978,16 @@ _Ltmp191:
 	LONG $0x08788348
 	BYTE $0x00
 	MOVL $1, AX
-	JEQ _LBB19_44
+	JEQ _LBB19_9
 	MOVQ SP, AX
-	LEAQ -680(BP), CX
+	LEAQ -968(BP), CX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $4
 	CALL github·com∕c2gohq∕c2go_libc·strlen(SB)
 _Ltmp192:
 	MOVQ SP, AX
 	MOVQ 8(AX), AX
-	MOVQ AX, -72(BP)
+	MOVQ AX, -360(BP)
 	MOVQ SP, AX
 	LEAQ _L_str_6_26<>(SB), CX
 	MOVQ CX, 0(AX)
@@ -3946,7 +3996,7 @@ _Ltmp192:
 _Ltmp193:
 	MOVQ SP, AX
 	MOVQ 8(AX), SI
-	MOVQ -72(BP), AX
+	MOVQ -360(BP), AX
 	MOVQ AX, DX
 	LEAQ 0(AX)(SI*1), CX
 	ADDQ $2, CX
@@ -3955,25 +4005,25 @@ _Ltmp193:
 	BYTE $0x02
 	BYTE $0x00
 	BYTE $0x00
-	JHI _LBB19_44
+	JHI _LBB19_9
 	MOVQ SP, AX
 	MOVQ DX, 16(AX)
-	LEAQ -680(BP), CX
+	LEAQ -968(BP), CX
 	MOVQ CX, 8(AX)
-	LEAQ -1280(BP), CX
+	LEAQ -1568(BP), CX
 	MOVQ CX, 0(AX)
-	MOVQ SI, -128(BP)
+	MOVQ SI, -416(BP)
 	PCDATA $1, $4
 	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
 _Ltmp194:
-	MOVQ -72(BP), AX
-	LONG $0x000584c6
-	LONG $0x2ffffffb
+	MOVQ -360(BP), AX
+	LONG $0xe00584c6
+	LONG $0x2ffffff9
 	ADDQ BP, AX
-	LONG $0xfb010548
+	LONG $0xf9e10548
 	BYTE $0xff
 	BYTE $0xff
-	MOVQ -128(BP), CX
+	MOVQ -416(BP), CX
 	BYTE $0x48
 	BYTE $0xff
 	BYTE $0xc1
@@ -3988,7 +4038,7 @@ _Ltmp195:
 	MOVQ SP, AX
 	LEAQ _L_str_7_27<>(SB), CX
 	MOVQ CX, 8(AX)
-	LEAQ -1280(BP), CX
+	LEAQ -1568(BP), CX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $4
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fopen(SB)
@@ -3998,8 +4048,8 @@ _Ltmp196:
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB19_11
-	MOVQ AX, -8(BP)
+	JEQ _LBB19_27
+	MOVQ AX, -24(BP)
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $3
@@ -4007,24 +4057,27 @@ _Ltmp196:
 _Ltmp197:
 	MOVQ SP, AX
 	LONG $0x00087883
-	JMI _LBB19_13
-	MOVQ -8(BP), AX
+	JMI _LBB19_28
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $3
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_flockfile(SB)
 _Ltmp198:
-	MOVQ -8(BP), AX
-	LONG $0x2aec45c7
+	MOVQ -24(BP), AX
+	LONG $0xff7c85c7
+	LONG $0x002affff
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ -132(BP), CX
+	MOVQ CX, -352(BP)
+	LONG $0xa885c748
+	LONG $0x00fffffe
 	BYTE $0x00
 	BYTE $0x00
 	BYTE $0x00
-	LEAQ -20(BP), CX
-	MOVQ CX, -64(BP)
-	LONG $0xc845c748
-	LONG $0x00000000
 	MOVQ SP, CX
-	LEAQ -64(BP), DX
+	LEAQ -352(BP), DX
 	MOVQ DX, 16(CX)
 	LEAQ _L_str_1_21<>(SB), DX
 	MOVQ DX, 8(CX)
@@ -4036,8 +4089,8 @@ _Ltmp199:
 	MOVL $5, CX
 	LONG $0x08187883
 	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 8(CX)
 	LONG $0x002101c7
@@ -4050,8 +4103,8 @@ _Ltmp200:
 	MOVL $6, CX
 	LONG $0x21107883
 	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $6
@@ -4072,8 +4125,8 @@ _Ltmp203:
 	MOVL $7, CX
 	LONG $0x00087883
 	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $6
@@ -4084,10 +4137,10 @@ _Ltmp204:
 	LONG $0x08788348
 	BYTE $0x09
 	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
-	LEAQ -32(BP), DX
+	LEAQ -144(BP), DX
 	MOVQ DX, 8(CX)
 	MOVQ AX, 0(CX)
 	PCDATA $1, $6
@@ -4097,8 +4150,8 @@ _Ltmp205:
 	MOVL $9, CX
 	LONG $0x00107883
 	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	LONG $0x001041c7
@@ -4114,11 +4167,11 @@ _Ltmp206:
 	MOVL $10, CX
 	LONG $0x00187883
 	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 24(CX)
-	LEAQ -112(BP), AX
+	LEAQ -400(BP), AX
 	MOVQ AX, 0(CX)
 	LONG $0x1041c748
 	LONG $0x00000009
@@ -4132,11 +4185,11 @@ _Ltmp207:
 	LONG $0x20788348
 	BYTE $0x09
 	MOVL CX, AX
-	JNE _LBB19_44
+	JNE _LBB19_9
 	MOVQ SP, AX
-	LEAQ -48(BP), CX
+	LEAQ -192(BP), CX
 	MOVQ CX, 8(AX)
-	LEAQ -112(BP), CX
+	LEAQ -400(BP), CX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $6
 	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
@@ -4145,8 +4198,8 @@ _Ltmp208:
 	MOVL $12, CX
 	LONG $0x00107883
 	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $6
@@ -4156,8 +4209,8 @@ _Ltmp209:
 	MOVL $13, CX
 	LONG $0xff087883
 	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $6
@@ -4165,8 +4218,8 @@ _Ltmp209:
 _Ltmp210:
 	MOVQ SP, AX
 	LONG $0x00087883
-	JEQ _LBB19_24
-	MOVQ -8(BP), AX
+	JEQ _LBB19_29
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $6
@@ -4175,14 +4228,14 @@ _Ltmp211:
 	MOVQ SP, AX
 	LONG $0x00087883
 	MOVL $14, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $6
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_clearerr(SB)
 _Ltmp212:
-	MOVQ -8(BP), AX
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $6
@@ -4190,20 +4243,20 @@ _Ltmp212:
 _Ltmp213:
 	MOVQ SP, AX
 	LONG $0x00087883
-	JEQ _LBB19_28
+	JEQ _LBB19_30
 	MOVL $15, AX
-	JMP _LBB19_44
-_LBB19_11:
+	JMP _LBB19_9
+_LBB19_27:
 	MOVL $3, AX
-	JMP _LBB19_44
-_LBB19_13:
-	MOVL $4, AX
-	JMP _LBB19_44
-_LBB19_24:
-	MOVL $14, AX
-	JMP _LBB19_44
+	JMP _LBB19_9
 _LBB19_28:
-	MOVQ -8(BP), AX
+	MOVL $4, AX
+	JMP _LBB19_9
+_LBB19_29:
+	MOVL $14, AX
+	JMP _LBB19_9
+_LBB19_30:
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $6
@@ -4212,10 +4265,10 @@ _Ltmp214:
 	MOVQ SP, AX
 	LONG $0x00087883
 	MOVL $15, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
-	LEAQ -32(BP), DX
+	LEAQ -144(BP), DX
 	MOVQ DX, 8(CX)
 	MOVQ AX, 0(CX)
 	PCDATA $1, $6
@@ -4225,8 +4278,8 @@ _Ltmp215:
 	MOVL $16, CX
 	LONG $0x00107883
 	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 8(CX)
 	LEAQ _L_str_8_28<>(SB), AX
@@ -4236,8 +4289,8 @@ _Ltmp215:
 _Ltmp216:
 	MOVQ SP, AX
 	LONG $0x00107883
-	JMI _LBB19_31
-	MOVQ -8(BP), AX
+	JMI _LBB19_38
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
 	PCDATA $1, $6
@@ -4247,13 +4300,13 @@ _Ltmp217:
 	MOVL $18, CX
 	LONG $0x00087883
 	MOVL CX, AX
-	JNE _LBB19_44
-	LONG $0xf045c748
+	JNE _LBB19_9
+	LONG $0x8045c748
 	LONG $0x00000000
 	MOVQ SP, AX
-	LEAQ -16(BP), CX
+	LEAQ -128(BP), CX
 	MOVQ CX, 16(AX)
-	LEAQ -1280(BP), CX
+	LEAQ -1568(BP), CX
 	MOVQ CX, 0(AX)
 	LONG $0x000840c7
 	BYTE $0x00
@@ -4264,16 +4317,16 @@ _Ltmp217:
 _Ltmp218:
 	MOVQ SP, AX
 	MOVL 24(AX), AX
-	MOVL AX, -72(BP)
+	MOVL AX, -360(BP)
 	BYTE $0x85
 	BYTE $0xc0
-	JMI _LBB19_34
+	JMI _LBB19_39
 	MOVQ SP, AX
 	LEAQ _L_str_9_29<>(SB), CX
 	MOVQ CX, 8(AX)
-	MOVL -72(BP), CX
+	MOVL -360(BP), CX
 	MOVL CX, 0(AX)
-	PCDATA $1, $0
+	PCDATA $1, $8
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fdopen(SB)
 _Ltmp219:
 	MOVQ SP, AX
@@ -4281,307 +4334,920 @@ _Ltmp219:
 	BYTE $0x48
 	BYTE $0x85
 	BYTE $0xc0
-	JEQ _LBB19_36
-	MOVQ AX, -8(BP)
-	PCDATA $1, $8
+	JEQ _LBB19_40
+	MOVQ AX, -24(BP)
+	PCDATA $1, $9
 	CALL ·ForceGC(SB)
 _Ltmp220:
-	MOVQ -8(BP), AX
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $8
-	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getc(SB)
+	PCDATA $1, $9
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
 _Ltmp221:
 	MOVQ SP, AX
-	MOVL $21, CX
+	MOVQ 0(AX), AX
+	MOVQ -24(BP), CX
+	LONG $0x000000c7
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ -112(BP), AX
+	MOVQ AX, -120(BP)
+	LEAQ -120(BP), AX
+	MOVQ AX, -208(BP)
+	LONG $0x3885c748
+	LONG $0x00ffffff
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ SP, AX
+	LEAQ -208(BP), DX
+	MOVQ DX, 16(AX)
+	LEAQ _L_str_10_30<>(SB), DX
+	MOVQ DX, 8(AX)
+	MOVQ CX, 0(AX)
+	PCDATA $1, $10
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fscanf(SB)
+_Ltmp222:
+	MOVQ SP, AX
+	LONG $0xff187883
+	JEQ _LBB19_41
+_LBB19_37:
+	MOVL $21, AX
+	JMP _LBB19_9
+_LBB19_38:
+	MOVL $17, AX
+	JMP _LBB19_9
+_LBB19_39:
+	MOVL $19, AX
+	JMP _LBB19_9
+_LBB19_40:
+	MOVQ SP, AX
+	MOVL -360(BP), CX
+	MOVL CX, 0(AX)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·close(SB)
+_Ltmp223:
+	MOVL $20, AX
+	JMP _LBB19_9
+_LBB19_41:
+	PCDATA $1, $11
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp224:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	BYTE $0x83
+	BYTE $0x38
+	BYTE $0x2d
+	JNE _LBB19_37
+	LONG $0x907d8348
+	BYTE $0x00
+	MOVL $21, AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $12
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getc(SB)
+_Ltmp225:
+	MOVQ SP, AX
+	MOVL $22, CX
 	LONG $0x76087883
 	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 8(CX)
 	LONG $0x005601c7
 	BYTE $0x00
 	BYTE $0x00
-	PCDATA $1, $8
+	PCDATA $1, $12
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_ungetc(SB)
-_Ltmp222:
-	MOVQ SP, AX
-	MOVL $22, CX
-	LONG $0x56107883
-	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
-	MOVQ SP, CX
-	MOVQ AX, 0(CX)
-	PCDATA $1, $8
-	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getc(SB)
-_Ltmp223:
+_Ltmp226:
 	MOVQ SP, AX
 	MOVL $23, CX
-	LONG $0x56087883
+	LONG $0x56107883
 	MOVL CX, AX
-	JNE _LBB19_44
-	MOVQ -8(BP), AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
 	MOVQ SP, CX
 	MOVQ AX, 0(CX)
-	PCDATA $1, $8
-	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fclose(SB)
-_Ltmp224:
+	PCDATA $1, $12
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getc(SB)
+_Ltmp227:
 	MOVQ SP, AX
 	MOVL $24, CX
+	LONG $0x56087883
+	MOVL CX, AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	LONG $0x001041c7
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	LONG $0x0841c748
+	LONG $0x00000000
+	PCDATA $1, $12
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fseek(SB)
+_Ltmp228:
+	MOVQ SP, AX
+	MOVL $25, CX
+	LONG $0x00187883
+	MOVL CX, AX
+	JNE _LBB19_9
+	MOVQ -24(BP), AX
+	LEAQ -8(BP), CX
+	MOVQ CX, -104(BP)
+	LEAQ -104(BP), CX
+	MOVQ CX, -280(BP)
+	LEAQ -1(BP), CX
+	MOVQ CX, -96(BP)
+	LEAQ -96(BP), CX
+	MOVQ CX, -272(BP)
+	LONG $0xf885c748
+	LONG $0x00fffffe
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ -280(BP), CX
+	MOVQ CX, -304(BP)
+	MOVQ SP, CX
+	LEAQ -304(BP), DX
+	MOVQ DX, 16(CX)
+	LEAQ _L_str_11_31<>(SB), DX
+	MOVQ DX, 8(CX)
+	MOVQ AX, 0(CX)
+	PCDATA $1, $13
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_vfscanf(SB)
+_Ltmp229:
+	MOVQ SP, AX
+	LONG $0x02187883
+	MOVL $27, AX
+	JNE _LBB19_9
+	LONG $0x2af87d83
+	JNE _LBB19_9
+	LONG $0x21ff7d80
+	JNE _LBB19_9
+	LONG $0x00f845c7
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ -8(BP), AX
+	MOVQ AX, -88(BP)
+	LEAQ -88(BP), AX
+	MOVQ AX, -336(BP)
+	LEAQ -64(BP), AX
+	MOVQ AX, -80(BP)
+	LEAQ -80(BP), AX
+	MOVQ AX, -328(BP)
+	LEAQ -56(BP), AX
+	MOVQ AX, -72(BP)
+	LEAQ -72(BP), AX
+	MOVQ AX, -320(BP)
+	LONG $0xc885c748
+	LONG $0x00fffffe
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ SP, AX
+	LEAQ -336(BP), CX
+	MOVQ CX, 16(AX)
+	LEAQ _L_str_13<>(SB), CX
+	MOVQ CX, 8(AX)
+	LEAQ _L_str_12<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $14
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_sscanf(SB)
+_Ltmp230:
+	MOVQ SP, AX
+	LONG $0x03187883
+	JNE _LBB19_60
+	LONG $0x11f87d83
+	JNE _LBB19_60
+	LONG $0x45100ff2
+	BYTE $0xc0
+	UCOMISD _LCPI19_0<>(SB), X0
+	JNE _LBB19_60
+	JPS _LBB19_60
+	MOVQ SP, AX
+	LEAQ _L_str_14<>(SB), CX
+	MOVQ CX, 8(AX)
+	LEAQ -56(BP), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $15
+	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
+_Ltmp231:
+	MOVQ SP, AX
+	LONG $0x00107883
+	MOVL $28, AX
+	JNE _LBB19_9
+	LEAQ -12(BP), AX
+	MOVQ AX, -48(BP)
+	LEAQ -48(BP), AX
+	MOVQ AX, -176(BP)
+	LONG $0x5885c748
+	LONG $0x00ffffff
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ -176(BP), AX
+	MOVQ AX, -256(BP)
+	MOVQ SP, AX
+	LEAQ -256(BP), CX
+	MOVQ CX, 16(AX)
+	LEAQ _L_str_16<>(SB), CX
+	MOVQ CX, 8(AX)
+	LEAQ _L_str_15<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $16
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_vsscanf(SB)
+_Ltmp232:
+	MOVQ SP, AX
+	LONG $0x01187883
+	JNE _LBB19_62
+	MOVQ SP, AX
+	LEAQ _L_str_17<>(SB), CX
+	MOVQ CX, 8(AX)
+	LEAQ -12(BP), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $17
+	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
+_Ltmp233:
+	MOVQ SP, AX
+	LONG $0x00107883
+	MOVL $29, AX
+	JNE _LBB19_9
+	PCDATA $1, $17
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp234:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	LONG $0x000000c7
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ -32(BP), AX
+	MOVQ AX, -40(BP)
+	LEAQ -40(BP), AX
+	MOVQ AX, -160(BP)
+	LONG $0x6885c748
+	LONG $0x00ffffff
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ -160(BP), AX
+	MOVQ AX, -232(BP)
+	MOVQ SP, AX
+	LEAQ -232(BP), CX
+	MOVQ CX, 16(AX)
+	LEAQ _L_str_19<>(SB), CX
+	MOVQ CX, 8(AX)
+	LEAQ _L_str_18<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $18
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_vsscanf(SB)
+_Ltmp235:
+	MOVQ SP, AX
+	LONG $0xff187883
+	JEQ _LBB19_63
+_LBB19_57:
+	MOVL $30, AX
+	JMP _LBB19_9
+_LBB19_60:
+	MOVL $28, AX
+	JMP _LBB19_9
+_LBB19_62:
+	MOVL $29, AX
+	JMP _LBB19_9
+_LBB19_63:
+	PCDATA $1, $19
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp236:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	BYTE $0x83
+	BYTE $0x38
+	BYTE $0x2d
+	JNE _LBB19_57
+	LONG $0xe07d8348
+	BYTE $0x00
+	MOVL $30, AX
+	JNE _LBB19_9
+	PCDATA $1, $20
+	CALL ·ForceGC(SB)
+_Ltmp237:
+	MOVQ -24(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $20
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fclose(SB)
+_Ltmp238:
+	MOVQ SP, AX
+	MOVL $31, CX
 	LONG $0x00087883
 	MOVL CX, AX
-	JNE _LBB19_44
+	JNE _LBB19_9
 	MOVQ SP, AX
-	LEAQ -1280(BP), CX
+	LEAQ -1568(BP), CX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·unlink(SB)
-_Ltmp225:
+_Ltmp239:
 	MOVQ SP, AX
-	MOVL $25, CX
+	MOVL $32, CX
 	LONG $0x00087883
 	MOVL CX, AX
-	JNE _LBB19_44
+	JNE _LBB19_9
 	MOVQ SP, AX
-	LEAQ -680(BP), CX
+	LEAQ -968(BP), CX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·rmdir(SB)
-_Ltmp226:
+_Ltmp240:
 	MOVQ SP, AX
-	MOVL 8(AX), AX
-	BYTE $0x85
-	BYTE $0xc0
-	MOVL $25, CX
+	XORL CX, CX
+	LONG $0x00087883
 	BYTE $0x0f
-	BYTE $0x44
-	BYTE $0xc8
-	JMP _LBB19_43
-_LBB19_31:
-	MOVL $17, AX
-	JMP _LBB19_44
-_LBB19_34:
-	MOVL $19, AX
-	JMP _LBB19_44
-_LBB19_36:
-	MOVQ SP, AX
-	MOVL -72(BP), CX
-	MOVL CX, 0(AX)
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·close(SB)
-_Ltmp227:
-	MOVL $20, AX
-	JMP _LBB19_44
+	BYTE $0x95
+	BYTE $0xc0
+	MOVB AL, CL
+	SHLL $5, CX
+	JMP _LBB19_8
 _Lfunc_end19:
-	FUNCDATA $0, gclocals·05ce8345184b6987(SB)
-DATA gclocals·05ce8345184b6987+0(SB)/4, $9
-DATA gclocals·05ce8345184b6987+4(SB)/4, $1
-DATA gclocals·05ce8345184b6987+8(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+9(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+10(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+11(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+12(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+13(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+14(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+15(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+16(SB)/1, $0x00
-GLOBL gclocals·05ce8345184b6987(SB), DUPOK|RODATA, $17
+	FUNCDATA $0, gclocals·23fa3b89db9eb463(SB)
+DATA gclocals·23fa3b89db9eb463+0(SB)/4, $21
+DATA gclocals·23fa3b89db9eb463+4(SB)/4, $1
+DATA gclocals·23fa3b89db9eb463+8(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+9(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+10(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+11(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+12(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+13(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+14(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+15(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+16(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+17(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+18(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+19(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+20(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+21(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+22(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+23(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+24(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+25(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+26(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+27(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+28(SB)/1, $0x00
+GLOBL gclocals·23fa3b89db9eb463(SB), DUPOK|RODATA, $29
 
-	FUNCDATA $1, gclocals·99070d0b67290b54(SB)
-DATA gclocals·99070d0b67290b54+0(SB)/4, $9
-DATA gclocals·99070d0b67290b54+4(SB)/4, $167
-DATA gclocals·99070d0b67290b54+8(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+9(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+10(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+11(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+12(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+13(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+14(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+15(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+16(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+17(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+18(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+19(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+20(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+21(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+22(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+23(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+24(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+25(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+26(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+27(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+28(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+29(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+30(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+31(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+32(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+33(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+34(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+35(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+36(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+37(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+38(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+39(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+40(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+41(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+42(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+43(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+44(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+45(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+46(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+47(SB)/1, $0x30
-DATA gclocals·99070d0b67290b54+48(SB)/1, $0x80
-DATA gclocals·99070d0b67290b54+49(SB)/1, $0x21
-DATA gclocals·99070d0b67290b54+50(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+51(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+52(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+53(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+54(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+55(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+56(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+57(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+58(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+59(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+60(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+61(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+62(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+63(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+64(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+65(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+66(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+67(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+68(SB)/1, $0x30
-DATA gclocals·99070d0b67290b54+69(SB)/1, $0x80
-DATA gclocals·99070d0b67290b54+70(SB)/1, $0x61
-DATA gclocals·99070d0b67290b54+71(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+72(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+73(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+74(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+75(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+76(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+77(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+78(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+79(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+80(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+81(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+82(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+83(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+84(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+85(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+86(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+87(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+88(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+89(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+90(SB)/1, $0x80
-DATA gclocals·99070d0b67290b54+91(SB)/1, $0x61
-DATA gclocals·99070d0b67290b54+92(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+93(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+94(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+95(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+96(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+97(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+98(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+99(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+100(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+101(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+102(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+103(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+104(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+105(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+106(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+107(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+108(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+109(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+110(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+111(SB)/1, $0x80
-DATA gclocals·99070d0b67290b54+112(SB)/1, $0x21
-DATA gclocals·99070d0b67290b54+113(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+114(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+115(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+116(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+117(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+118(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+119(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+120(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+121(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+122(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+123(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+124(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+125(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+126(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+127(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+128(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+129(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+130(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+131(SB)/1, $0x40
-DATA gclocals·99070d0b67290b54+132(SB)/1, $0x80
-DATA gclocals·99070d0b67290b54+133(SB)/1, $0x61
-DATA gclocals·99070d0b67290b54+134(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+135(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+136(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+137(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+138(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+139(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+140(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+141(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+142(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+143(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+144(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+145(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+146(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+147(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+148(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+149(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+150(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+151(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+152(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+153(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+154(SB)/1, $0x60
-DATA gclocals·99070d0b67290b54+155(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+156(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+157(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+158(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+159(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+160(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+161(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+162(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+163(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+164(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+165(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+166(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+167(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+168(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+169(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+170(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+171(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+172(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+173(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+174(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+175(SB)/1, $0x20
-DATA gclocals·99070d0b67290b54+176(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+177(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+178(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+179(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+180(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+181(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+182(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+183(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+184(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+185(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+186(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+187(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+188(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+189(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+190(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+191(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+192(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+193(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+194(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+195(SB)/1, $0x00
-DATA gclocals·99070d0b67290b54+196(SB)/1, $0x40
-GLOBL gclocals·99070d0b67290b54(SB), DUPOK|RODATA, $197
+	FUNCDATA $1, gclocals·9c65b80f29bea71a(SB)
+DATA gclocals·9c65b80f29bea71a+0(SB)/4, $21
+DATA gclocals·9c65b80f29bea71a+4(SB)/4, $203
+DATA gclocals·9c65b80f29bea71a+8(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+9(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+10(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+11(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+12(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+13(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+14(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+15(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+16(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+17(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+18(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+19(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+20(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+21(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+22(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+23(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+24(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+25(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+26(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+27(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+28(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+29(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+30(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+31(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+32(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+33(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+34(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+35(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+36(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+37(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+38(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+39(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+40(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+41(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+42(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+43(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+44(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+45(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+46(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+47(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+48(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+49(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+50(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+51(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+52(SB)/1, $0x30
+DATA gclocals·9c65b80f29bea71a+53(SB)/1, $0x80
+DATA gclocals·9c65b80f29bea71a+54(SB)/1, $0xdf
+DATA gclocals·9c65b80f29bea71a+55(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+56(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+57(SB)/1, $0xf9
+DATA gclocals·9c65b80f29bea71a+58(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+59(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+60(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+61(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+62(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+63(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+64(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+65(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+66(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+67(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+68(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+69(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+70(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+71(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+72(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+73(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+74(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+75(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+76(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+77(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+78(SB)/1, $0x30
+DATA gclocals·9c65b80f29bea71a+79(SB)/1, $0x80
+DATA gclocals·9c65b80f29bea71a+80(SB)/1, $0xdf
+DATA gclocals·9c65b80f29bea71a+81(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+82(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+83(SB)/1, $0xf9
+DATA gclocals·9c65b80f29bea71a+84(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+85(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+86(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+87(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+88(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+89(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+90(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+91(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+92(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+93(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+94(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+95(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+96(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+97(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+98(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+99(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+100(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+101(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+102(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+103(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+104(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+105(SB)/1, $0x80
+DATA gclocals·9c65b80f29bea71a+106(SB)/1, $0xdf
+DATA gclocals·9c65b80f29bea71a+107(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+108(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+109(SB)/1, $0xf9
+DATA gclocals·9c65b80f29bea71a+110(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+111(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+112(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+113(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+114(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+115(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+116(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+117(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+118(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+119(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+120(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+121(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+122(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+123(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+124(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+125(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+126(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+127(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+128(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+129(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+130(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+131(SB)/1, $0x80
+DATA gclocals·9c65b80f29bea71a+132(SB)/1, $0xdf
+DATA gclocals·9c65b80f29bea71a+133(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+134(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+135(SB)/1, $0xf9
+DATA gclocals·9c65b80f29bea71a+136(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+137(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+138(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+139(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+140(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+141(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+142(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+143(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+144(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+145(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+146(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+147(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+148(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+149(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+150(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+151(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+152(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+153(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+154(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+155(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+156(SB)/1, $0x40
+DATA gclocals·9c65b80f29bea71a+157(SB)/1, $0x80
+DATA gclocals·9c65b80f29bea71a+158(SB)/1, $0xdf
+DATA gclocals·9c65b80f29bea71a+159(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+160(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+161(SB)/1, $0xf9
+DATA gclocals·9c65b80f29bea71a+162(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+163(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+164(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+165(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+166(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+167(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+168(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+169(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+170(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+171(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+172(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+173(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+174(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+175(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+176(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+177(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+178(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+179(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+180(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+181(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+182(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+183(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+184(SB)/1, $0xde
+DATA gclocals·9c65b80f29bea71a+185(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+186(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+187(SB)/1, $0xf9
+DATA gclocals·9c65b80f29bea71a+188(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+189(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+190(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+191(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+192(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+193(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+194(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+195(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+196(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+197(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+198(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+199(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+200(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+201(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+202(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+203(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+204(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+205(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+206(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+207(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+208(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+209(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+210(SB)/1, $0xde
+DATA gclocals·9c65b80f29bea71a+211(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+212(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+213(SB)/1, $0xf9
+DATA gclocals·9c65b80f29bea71a+214(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+215(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+216(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+217(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+218(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+219(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+220(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+221(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+222(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+223(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+224(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+225(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+226(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+227(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+228(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+229(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+230(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+231(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+232(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+233(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+234(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+235(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+236(SB)/1, $0xde
+DATA gclocals·9c65b80f29bea71a+237(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+238(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+239(SB)/1, $0xf1
+DATA gclocals·9c65b80f29bea71a+240(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+241(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+242(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+243(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+244(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+245(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+246(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+247(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+248(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+249(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+250(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+251(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+252(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+253(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+254(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+255(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+256(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+257(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+258(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+259(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+260(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+261(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+262(SB)/1, $0xde
+DATA gclocals·9c65b80f29bea71a+263(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+264(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+265(SB)/1, $0xf1
+DATA gclocals·9c65b80f29bea71a+266(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+267(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+268(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+269(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+270(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+271(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+272(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+273(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+274(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+275(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+276(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+277(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+278(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+279(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+280(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+281(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+282(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+283(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+284(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+285(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+286(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+287(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+288(SB)/1, $0xde
+DATA gclocals·9c65b80f29bea71a+289(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+290(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+291(SB)/1, $0xe1
+DATA gclocals·9c65b80f29bea71a+292(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+293(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+294(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+295(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+296(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+297(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+298(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+299(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+300(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+301(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+302(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+303(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+304(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+305(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+306(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+307(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+308(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+309(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+310(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+311(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+312(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+313(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+314(SB)/1, $0xde
+DATA gclocals·9c65b80f29bea71a+315(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+316(SB)/1, $0xe1
+DATA gclocals·9c65b80f29bea71a+317(SB)/1, $0xe1
+DATA gclocals·9c65b80f29bea71a+318(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+319(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+320(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+321(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+322(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+323(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+324(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+325(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+326(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+327(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+328(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+329(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+330(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+331(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+332(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+333(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+334(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+335(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+336(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+337(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+338(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+339(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+340(SB)/1, $0xde
+DATA gclocals·9c65b80f29bea71a+341(SB)/1, $0xb7
+DATA gclocals·9c65b80f29bea71a+342(SB)/1, $0xe1
+DATA gclocals·9c65b80f29bea71a+343(SB)/1, $0xc1
+DATA gclocals·9c65b80f29bea71a+344(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+345(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+346(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+347(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+348(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+349(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+350(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+351(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+352(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+353(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+354(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+355(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+356(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+357(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+358(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+359(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+360(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+361(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+362(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+363(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+364(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+365(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+366(SB)/1, $0xde
+DATA gclocals·9c65b80f29bea71a+367(SB)/1, $0xb0
+DATA gclocals·9c65b80f29bea71a+368(SB)/1, $0xe1
+DATA gclocals·9c65b80f29bea71a+369(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+370(SB)/1, $0xe7
+DATA gclocals·9c65b80f29bea71a+371(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+372(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+373(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+374(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+375(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+376(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+377(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+378(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+379(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+380(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+381(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+382(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+383(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+384(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+385(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+386(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+387(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+388(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+389(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+390(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+391(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+392(SB)/1, $0x1e
+DATA gclocals·9c65b80f29bea71a+393(SB)/1, $0xb0
+DATA gclocals·9c65b80f29bea71a+394(SB)/1, $0xe1
+DATA gclocals·9c65b80f29bea71a+395(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+396(SB)/1, $0xe0
+DATA gclocals·9c65b80f29bea71a+397(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+398(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+399(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+400(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+401(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+402(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+403(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+404(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+405(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+406(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+407(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+408(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+409(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+410(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+411(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+412(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+413(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+414(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+415(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+416(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+417(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+418(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+419(SB)/1, $0xb0
+DATA gclocals·9c65b80f29bea71a+420(SB)/1, $0xe1
+DATA gclocals·9c65b80f29bea71a+421(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+422(SB)/1, $0xe0
+DATA gclocals·9c65b80f29bea71a+423(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+424(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+425(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+426(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+427(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+428(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+429(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+430(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+431(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+432(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+433(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+434(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+435(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+436(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+437(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+438(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+439(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+440(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+441(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+442(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+443(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+444(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+445(SB)/1, $0xb0
+DATA gclocals·9c65b80f29bea71a+446(SB)/1, $0x81
+DATA gclocals·9c65b80f29bea71a+447(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+448(SB)/1, $0xc0
+DATA gclocals·9c65b80f29bea71a+449(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+450(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+451(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+452(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+453(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+454(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+455(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+456(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+457(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+458(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+459(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+460(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+461(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+462(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+463(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+464(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+465(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+466(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+467(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+468(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+469(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+470(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+471(SB)/1, $0x80
+DATA gclocals·9c65b80f29bea71a+472(SB)/1, $0x81
+DATA gclocals·9c65b80f29bea71a+473(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+474(SB)/1, $0xc0
+DATA gclocals·9c65b80f29bea71a+475(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+476(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+477(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+478(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+479(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+480(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+481(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+482(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+483(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+484(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+485(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+486(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+487(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+488(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+489(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+490(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+491(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+492(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+493(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+494(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+495(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+496(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+497(SB)/1, $0x80
+DATA gclocals·9c65b80f29bea71a+498(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+499(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+500(SB)/1, $0x80
+DATA gclocals·9c65b80f29bea71a+501(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+502(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+503(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+504(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+505(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+506(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+507(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+508(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+509(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+510(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+511(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+512(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+513(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+514(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+515(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+516(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+517(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+518(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+519(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+520(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+521(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+522(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+523(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+524(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+525(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+526(SB)/1, $0x80
+DATA gclocals·9c65b80f29bea71a+527(SB)/1, $0x01
+DATA gclocals·9c65b80f29bea71a+528(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+529(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+530(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+531(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+532(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+533(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+534(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+535(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+536(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+537(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+538(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+539(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+540(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+541(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+542(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+543(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+544(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+545(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+546(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+547(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+548(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+549(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+550(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+551(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+552(SB)/1, $0x00
+DATA gclocals·9c65b80f29bea71a+553(SB)/1, $0x01
+GLOBL gclocals·9c65b80f29bea71a(SB), DUPOK|RODATA, $554
 
 TEXT ·mlib_stdio_unprefixed_stdout_selftest(SB), $56-8
 	PCDATA $1, $-1
@@ -4596,11 +5262,11 @@ TEXT ·mlib_stdio_unprefixed_stdout_selftest(SB), $56-8
 	MOVQ SP, AX
 	LEAQ -24(BP), CX
 	MOVQ CX, 8(AX)
-	LEAQ _L_str_10_30<>(SB), CX
+	LEAQ _L_str_20_32<>(SB), CX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_printf(SB)
-_Ltmp228:
+_Ltmp241:
 	MOVQ SP, AX
 	MOVL $1, CX
 	LONG $0x10107883
@@ -4608,13 +5274,13 @@ _Ltmp228:
 	JNE _LBB20_4
 	PCDATA $1, $0
 	CALL ·ForceGC(SB)
-_Ltmp229:
+_Ltmp242:
 	MOVQ SP, AX
-	LEAQ _L_str_11_31<>(SB), CX
+	LEAQ _L_str_21<>(SB), CX
 	MOVQ CX, 0(AX)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_puts(SB)
-_Ltmp230:
+_Ltmp243:
 	MOVQ SP, AX
 	MOVL $2, CX
 	LONG $0x00087883
@@ -4626,7 +5292,7 @@ _Ltmp230:
 	BYTE $0x00
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_putchar(SB)
-_Ltmp231:
+_Ltmp244:
 	MOVQ SP, AX
 	MOVL $3, CX
 	LONG $0x21087883
@@ -4638,7 +5304,7 @@ _Ltmp231:
 	BYTE $0x00
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_stdfile(SB)
-_Ltmp232:
+_Ltmp245:
 	MOVQ SP, AX
 	XORL CX, CX
 	LONG $0x08788348
@@ -4661,11 +5327,96 @@ DATA gclocals·93005c6ea5fa7700+8(SB)/1, $0x00
 DATA gclocals·93005c6ea5fa7700+9(SB)/1, $0x30
 GLOBL gclocals·93005c6ea5fa7700(SB), DUPOK|RODATA, $10
 
-TEXT ·mlib_stdio_unprefixed_stdin_selftest(SB), $24-8
+TEXT ·mlib_stdio_unprefixed_stdin_selftest(SB), $120-8
 	PCDATA $1, $-1
-	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getchar(SB)
+	BYTE $0x0f
+	BYTE $0x57
+	BYTE $0xc0
+	MOVUPS X0, -72(BP)
+	MOVUPS X0, -56(BP)
+	LONG $0xe845c748
+	LONG $0x00000000
+	MOVUPS X0, -40(BP)
+	LONG $0xf045c748
+	LONG $0x00000000
+	LONG $0x00f845c7
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	LONG $0x00fc45c7
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
 	MOVQ SP, AX
-	MOVL 0(AX), AX
+	LONG $0x000000c7
+	BYTE $0x00
+	BYTE $0x00
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_stdfile(SB)
+_Ltmp246:
+	MOVQ SP, AX
+	MOVQ 8(AX), AX
+	MOVQ AX, -88(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_clearerr(SB)
+_Ltmp247:
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getchar(SB)
+_Ltmp248:
+	MOVQ SP, AX
+	MOVL $-1, CX
+	BYTE $0x83
+	BYTE $0x38
+	BYTE $0x51
+	MOVL CX, AX
+	JNE _LBB21_4
+	LEAQ -8(BP), AX
+	MOVQ AX, -24(BP)
+	LEAQ -24(BP), AX
+	MOVQ AX, -56(BP)
+	LONG $0xd045c748
+	LONG $0x00000000
+	LEAQ -56(BP), AX
+	MOVQ AX, -80(BP)
+	MOVQ SP, AX
+	LEAQ -80(BP), CX
+	MOVQ CX, 8(AX)
+	LEAQ _L_str_22<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_vscanf(SB)
+_Ltmp249:
+	MOVQ SP, AX
+	MOVL $-2, CX
+	LONG $0x01107883
+	MOVL CX, AX
+	JNE _LBB21_4
+	LEAQ -4(BP), AX
+	MOVQ AX, -16(BP)
+	LEAQ -16(BP), AX
+	MOVQ AX, -40(BP)
+	LONG $0xe045c748
+	LONG $0x00000000
+	MOVQ SP, AX
+	LEAQ -40(BP), CX
+	MOVQ CX, 8(AX)
+	LEAQ _L_str_22<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_scanf(SB)
+_Ltmp250:
+	MOVQ SP, AX
+	MOVL $-3, CX
+	LONG $0x01107883
+	MOVL CX, AX
+	JNE _LBB21_4
+	MOVL -4(BP), AX
+	BYTE $0x03
+	BYTE $0x45
+	BYTE $0xf8
+_LBB21_4:
 	MOVL AX, 16(BP)
 	RET
 _Lfunc_end21:
@@ -4909,22 +5660,103 @@ DATA _L_str_9_29<>+0(SB)/1, $0x72
 DATA _L_str_9_29<>+1(SB)/1, $0x00
 GLOBL _L_str_9_29<>(SB), RODATA, $2
 
-DATA _L_str_10_30<>+0(SB)/8, $0x2d646567616e616d
-DATA _L_str_10_30<>+8(SB)/8, $0x64253a6f69647473
-DATA _L_str_10_30<>+16(SB)/1, $0x00
-GLOBL _L_str_10_30<>(SB), RODATA, $17
+DATA _L_str_10_30<>+0(SB)/1, $0x25
+DATA _L_str_10_30<>+1(SB)/1, $0x6d
+DATA _L_str_10_30<>+2(SB)/1, $0x73
+DATA _L_str_10_30<>+3(SB)/1, $0x00
+GLOBL _L_str_10_30<>(SB), RODATA, $4
 
-DATA _L_str_11_31<>+0(SB)/1, $0x7c
-DATA _L_str_11_31<>+1(SB)/1, $0x6c
-DATA _L_str_11_31<>+2(SB)/1, $0x69
-DATA _L_str_11_31<>+3(SB)/1, $0x6e
-DATA _L_str_11_31<>+4(SB)/1, $0x65
-DATA _L_str_11_31<>+5(SB)/1, $0x00
-GLOBL _L_str_11_31<>(SB), RODATA, $6
+DATA _L_str_11_31<>+0(SB)/8, $0x64253d65756c6176
+DATA _L_str_11_31<>+8(SB)/1, $0x25
+DATA _L_str_11_31<>+9(SB)/1, $0x63
+DATA _L_str_11_31<>+10(SB)/1, $0x00
+GLOBL _L_str_11_31<>(SB), RODATA, $11
 
-	FUNCDATA $0, gclocals·5f4910070d449e0f(SB)
-	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
-DATA gclocals·78a6d65c07e372d5+0(SB)/4, $1
-DATA gclocals·78a6d65c07e372d5+4(SB)/4, $3
-DATA gclocals·78a6d65c07e372d5+8(SB)/1, $0x00
-GLOBL gclocals·78a6d65c07e372d5(SB), DUPOK|RODATA, $9
+DATA _L_str_12<>+0(SB)/8, $0x7320352e32203731
+DATA _L_str_12<>+8(SB)/1, $0x61
+DATA _L_str_12<>+9(SB)/1, $0x6d
+DATA _L_str_12<>+10(SB)/1, $0x70
+DATA _L_str_12<>+11(SB)/1, $0x6c
+DATA _L_str_12<>+12(SB)/1, $0x65
+DATA _L_str_12<>+13(SB)/1, $0x00
+GLOBL _L_str_12<>(SB), RODATA, $14
+
+DATA _L_str_13<>+0(SB)/8, $0x2520666c25206425
+DATA _L_str_13<>+8(SB)/1, $0x37
+DATA _L_str_13<>+9(SB)/1, $0x73
+DATA _L_str_13<>+10(SB)/1, $0x00
+GLOBL _L_str_13<>(SB), RODATA, $11
+
+DATA _L_str_14<>+0(SB)/1, $0x73
+DATA _L_str_14<>+1(SB)/1, $0x61
+DATA _L_str_14<>+2(SB)/1, $0x6d
+DATA _L_str_14<>+3(SB)/1, $0x70
+DATA _L_str_14<>+4(SB)/1, $0x6c
+DATA _L_str_14<>+5(SB)/1, $0x65
+DATA _L_str_14<>+6(SB)/1, $0x00
+GLOBL _L_str_14<>(SB), RODATA, $7
+
+DATA _L_str_15<>+0(SB)/1, $0x25
+DATA _L_str_15<>+1(SB)/1, $0x6d
+DATA _L_str_15<>+2(SB)/1, $0x20
+DATA _L_str_15<>+3(SB)/1, $0x6d
+DATA _L_str_15<>+4(SB)/1, $0x70
+DATA _L_str_15<>+5(SB)/1, $0x00
+GLOBL _L_str_15<>(SB), RODATA, $6
+
+DATA _L_str_16<>+0(SB)/8, $0x6d5b3225206d2525
+DATA _L_str_16<>+8(SB)/1, $0x70
+DATA _L_str_16<>+9(SB)/1, $0x5d
+DATA _L_str_16<>+10(SB)/1, $0x00
+GLOBL _L_str_16<>(SB), RODATA, $11
+
+DATA _L_str_17<>+0(SB)/1, $0x6d
+DATA _L_str_17<>+1(SB)/1, $0x70
+DATA _L_str_17<>+2(SB)/1, $0x00
+GLOBL _L_str_17<>(SB), RODATA, $3
+
+DATA _L_str_18<>+0(SB)/1, $0x30
+DATA _L_str_18<>+1(SB)/1, $0x78
+DATA _L_str_18<>+2(SB)/1, $0x31
+DATA _L_str_18<>+3(SB)/1, $0x00
+GLOBL _L_str_18<>(SB), RODATA, $4
+
+DATA _L_str_19<>+0(SB)/1, $0x25
+DATA _L_str_19<>+1(SB)/1, $0x70
+DATA _L_str_19<>+2(SB)/1, $0x00
+GLOBL _L_str_19<>(SB), RODATA, $3
+
+DATA _L_str_20_32<>+0(SB)/8, $0x2d646567616e616d
+DATA _L_str_20_32<>+8(SB)/8, $0x64253a6f69647473
+DATA _L_str_20_32<>+16(SB)/1, $0x00
+GLOBL _L_str_20_32<>(SB), RODATA, $17
+
+DATA _L_str_21<>+0(SB)/1, $0x7c
+DATA _L_str_21<>+1(SB)/1, $0x6c
+DATA _L_str_21<>+2(SB)/1, $0x69
+DATA _L_str_21<>+3(SB)/1, $0x6e
+DATA _L_str_21<>+4(SB)/1, $0x65
+DATA _L_str_21<>+5(SB)/1, $0x00
+GLOBL _L_str_21<>(SB), RODATA, $6
+
+DATA _L_str_22<>+0(SB)/1, $0x20
+DATA _L_str_22<>+1(SB)/1, $0x25
+DATA _L_str_22<>+2(SB)/1, $0x64
+DATA _L_str_22<>+3(SB)/1, $0x00
+GLOBL _L_str_22<>(SB), RODATA, $4
+
+	FUNCDATA $0, gclocals·4049a89979623773(SB)
+	FUNCDATA $1, gclocals·606023def47423af(SB)
+DATA gclocals·606023def47423af+0(SB)/4, $5
+DATA gclocals·606023def47423af+4(SB)/4, $15
+DATA gclocals·606023def47423af+8(SB)/1, $0x00
+DATA gclocals·606023def47423af+9(SB)/1, $0x00
+DATA gclocals·606023def47423af+10(SB)/1, $0xc0
+DATA gclocals·606023def47423af+11(SB)/1, $0x3f
+DATA gclocals·606023def47423af+12(SB)/1, $0xd0
+DATA gclocals·606023def47423af+13(SB)/1, $0x3f
+DATA gclocals·606023def47423af+14(SB)/1, $0xc0
+DATA gclocals·606023def47423af+15(SB)/1, $0x2c
+DATA gclocals·606023def47423af+16(SB)/1, $0x00
+DATA gclocals·606023def47423af+17(SB)/1, $0x0c
+GLOBL gclocals·606023def47423af(SB), DUPOK|RODATA, $18

@@ -3660,41 +3660,62 @@ DATA gclocals·175d695a1edb77be+10(SB)/1, $0x20
 DATA gclocals·175d695a1edb77be+11(SB)/1, $0x00
 GLOBL gclocals·175d695a1edb77be(SB), DUPOK|RODATA, $12
 
-TEXT ·mlib_stdio_prefixed_selftest(SB), $1328-8
+TEXT ·mlib_stdio_prefixed_selftest(SB), $1584-8
 	PCDATA $1, $-1
-	MOVD RSP, R8
+	WORD $0x6f00e400
+	ADD $232, RSP, R8
 	MOVD $_L_str_20<>(SB), R9
-	MOVD ZR, 64(RSP)
-	STP (ZR, ZR), 128(RSP)
-	STP (ZR, ZR), 104(RSP)
 	MOVD ZR, 88(RSP)
+	STP (ZR, ZR), 360(RSP)
+	FMOVQ F0, 64(R8)
+	FMOVQ F0, 32(R8)
+	FMOVQ F0, 0(R8)
+	MOVD RSP, R8
+	MOVD ZR, 280(RSP)
+	FMOVQ F0, 320(RSP)
+	STP (ZR, ZR), 248(RSP)
+	STP (ZR, ZR), 216(RSP)
+	FMOVQ F0, 184(RSP)
+	FMOVQ F0, 200(RSP)
+	STP (ZR, ZR), 168(RSP)
+	STP (ZR, ZR), 152(RSP)
+	STP (ZR, ZR), 136(RSP)
+	STP (ZR, ZR), 120(RSP)
+	MOVD ZR, 112(RSP)
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·Getenv(SB)
 _Ltmp202:
-	MOVW $33, R9
-	MOVD $_L__const_mlib_stdio_prefixed_selftest_expected<>(SB), R10
-	MOVH R9, 1320(RSP)
-	MOVD 0(R10), R9
-	MOVD RSP, R8
 	WORD $0x6f00e400
-	MOVD 16(R8), R8
-	MOVW $42, R10
-	MOVD R9, 1312(RSP)
-	ADD $124, RSP, R9
-	MOVD R9, 128(RSP)
-	MOVD 64(RSP), R9
-	MOVW R10, 124(RSP)
-	MOVD $_L_str_1_21<>(SB), R10
-	MOVD R9, 136(RSP)
-	ADD $128, RSP, R9
-	MOVD R8, 80(RSP)
+	MOVW $33, R10
 	MOVD RSP, R8
+	MOVH R10, 1568(RSP)
+	ADD $232, RSP, R10
+	MOVW $42, R9
+	MOVD 16(R8), R8
+	MOVD $_L__const_mlib_stdio_prefixed_selftest_expected<>(SB), R11
+	MOVW R9, 316(RSP)
+	ADD $316, RSP, R9
+	MOVD 0(R11), R11
+	FMOVQ F0, 192(R10)
+	ADD $232, RSP, R10
+	FMOVQ F0, 176(R10)
+	MOVD 88(RSP), R10
+	MOVD R8, 104(RSP)
+	MOVD RSP, R8
+	MOVD R10, 384(RSP)
+	STP (R10, R10), 360(RSP)
+	MOVD R10, 344(RSP)
+	STP (R9, R10), 320(RSP)
+	ADD $320, RSP, R9
+	MOVD $_L_str_1_21<>(SB), R10
+	MOVD R11, 1560(RSP)
 	STP (R10, R9), 24(R8)
 	MOVW $16, R9
-	ADD $152, RSP, R10
-	FMOVQ F0, 184(RSP)
-	FMOVQ F0, 168(RSP)
+	ADD $392, RSP, R10
+	MOVW ZR, 380(RSP)
+	MOVB ZR, 376(RSP)
+	MOVW ZR, 340(RSP)
 	STP (R10, R9), 8(R8)
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·snprintf(SB)
@@ -3705,7 +3726,7 @@ _Ltmp203:
 	BNE _LBB19_2
 	MOVD RSP, R8
 	MOVD $_L_str_2_22<>(SB), R9
-	ADD $152, RSP, R10
+	ADD $392, RSP, R10
 	STP (R10, R9), 8(R8)
 	PCDATA $1, $3
 	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
@@ -3716,10 +3737,10 @@ _Ltmp204:
 _LBB19_2:
 	MOVW $26, R8
 _LBB19_3:
-	MOVW R8, 1352(RSP)
+	MOVW R8, 1608(RSP)
 	RET
 _LBB19_4:
-	MOVD 80(RSP), R9
+	MOVD 104(RSP), R9
 	CBZ R9, _LBB19_6
 	MOVBU 0(R9), R10
 	MOVD R9, R8
@@ -3741,7 +3762,7 @@ _LBB19_8:
 	MOVD $_L_str_4_24<>(SB), R9
 	MOVD ZR, R8
 _LBB19_9:
-	STP (R8, R9), 72(RSP)
+	STP (R8, R9), 96(RSP)
 	MOVD RSP, R8
 	MOVD R9, 8(R8)
 	PCDATA $1, $5
@@ -3750,7 +3771,7 @@ _Ltmp206:
 	MOVD RSP, R8
 	MOVD $_L_str_5_25<>(SB), R9
 	MOVD 16(R8), R8
-	MOVD R8, 64(RSP)
+	MOVD R8, 88(RSP)
 	MOVD RSP, R8
 	MOVD R9, 8(R8)
 	PCDATA $1, $5
@@ -3758,28 +3779,28 @@ _Ltmp206:
 _Ltmp207:
 	MOVD RSP, R8
 	MOVD 16(R8), R10
-	MOVD 64(RSP), R8
+	MOVD 88(RSP), R8
 	MOVD R8, R9
 	ADD R10, R8, R8
 	ADD $2, R8, R8
 	CMP $512, R8
 	BHI _LBB19_13
-	MOVD 80(RSP), R8
-	MOVD R10, 56(RSP)
+	MOVD 104(RSP), R8
+	MOVD R10, 80(RSP)
 	MOVD RSP, R10
-	ADD $800, RSP, R11
+	ADD $1048, RSP, R11
 	STP (R8, R9), 16(R10)
 	MOVD R11, 8(R10)
 	PCDATA $1, $5
 	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
 _Ltmp208:
-	MOVD 64(RSP), R9
-	ADD $800, RSP, R8
+	MOVD 88(RSP), R9
+	ADD $1048, RSP, R8
 	MOVD RSP, R10
 	ADD R9, R8, R8
 	MOVW $47, R9
 	WORD $0x38001509
-	MOVD 56(RSP), R9
+	MOVD 80(RSP), R9
 	MOVD R8, 8(R10)
 	ADD $1, R9, R11
 	MOVD $_L_str_5_25<>(SB), R9
@@ -3788,7 +3809,7 @@ _Ltmp208:
 	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
 _Ltmp209:
 	MOVD RSP, R8
-	ADD $800, RSP, R9
+	ADD $1048, RSP, R9
 	MOVD R9, 8(R8)
 	PCDATA $1, $4
 	CALL github·com∕c2gohq∕c2go_libc·mkdtemp(SB)
@@ -3797,7 +3818,7 @@ _Ltmp210:
 	MOVD 16(R8), R8
 	CBZ R8, _LBB19_13
 	MOVD RSP, R8
-	ADD $800, RSP, R9
+	ADD $1048, RSP, R9
 	MOVD R9, 8(R8)
 	PCDATA $1, $4
 	CALL github·com∕c2gohq∕c2go_libc·strlen(SB)
@@ -3805,7 +3826,7 @@ _Ltmp211:
 	MOVD RSP, R8
 	MOVD $_L_str_6_26<>(SB), R9
 	MOVD 16(R8), R8
-	MOVD R8, 64(RSP)
+	MOVD R8, 88(RSP)
 	MOVD RSP, R8
 	MOVD R9, 8(R8)
 	PCDATA $1, $4
@@ -3813,7 +3834,7 @@ _Ltmp211:
 _Ltmp212:
 	MOVD RSP, R8
 	MOVD 16(R8), R10
-	MOVD 64(RSP), R8
+	MOVD 88(RSP), R8
 	MOVD R8, R9
 	ADD R10, R8, R8
 	ADD $2, R8, R8
@@ -3827,21 +3848,21 @@ _LBB19_13:
 _LBB19_14:
 	MOVD R9, R8
 	MOVD RSP, R9
-	MOVD R10, 56(RSP)
-	ADD $800, RSP, R10
+	MOVD R10, 80(RSP)
+	ADD $1048, RSP, R10
 	STP (R10, R8), 16(R9)
-	ADD $200, RSP, R8
+	ADD $448, RSP, R8
 	MOVD R8, 8(R9)
 	PCDATA $1, $4
 	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
 _Ltmp213:
-	MOVD 64(RSP), R9
-	ADD $200, RSP, R8
+	MOVD 88(RSP), R9
+	ADD $448, RSP, R8
 	MOVD RSP, R10
 	ADD R9, R8, R8
 	MOVW $47, R9
 	WORD $0x38001509
-	MOVD 56(RSP), R9
+	MOVD 80(RSP), R9
 	MOVD R8, 8(R10)
 	ADD $1, R9, R11
 	MOVD $_L_str_6_26<>(SB), R9
@@ -3851,7 +3872,7 @@ _Ltmp213:
 _Ltmp214:
 	MOVD RSP, R8
 	MOVD $_L_str_7_27<>(SB), R9
-	ADD $200, RSP, R10
+	ADD $448, RSP, R10
 	STP (R10, R9), 8(R8)
 	PCDATA $1, $4
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fopen(SB)
@@ -3860,7 +3881,7 @@ _Ltmp215:
 	MOVD 24(R8), R8
 	CBZ R8, _LBB19_20
 	MOVD RSP, R9
-	MOVD R8, 80(RSP)
+	MOVD R8, 104(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $3
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fileno(SB)
@@ -3868,21 +3889,21 @@ _Ltmp216:
 	MOVD RSP, R8
 	MOVWU 16(R8), R8
 	TBNZ $31, R8, _LBB19_21
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $3
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_flockfile(SB)
 _Ltmp217:
 	MOVW $42, R9
-	MOVD 80(RSP), R10
+	MOVD 104(RSP), R10
 	MOVD RSP, R8
-	MOVW R9, 100(RSP)
-	ADD $104, RSP, R9
-	ADD $100, RSP, R11
+	MOVW R9, 292(RSP)
+	ADD $296, RSP, R9
+	ADD $292, RSP, R11
 	MOVD R9, 24(R8)
 	MOVD $_L_str_1_21<>(SB), R9
-	STP (R11, ZR), 104(RSP)
+	STP (R11, ZR), 296(RSP)
 	STP (R10, R9), 8(R8)
 	PCDATA $1, $3
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fprintf(SB)
@@ -3891,7 +3912,7 @@ _Ltmp218:
 	MOVWU 32(R8), R8
 	CMPW $8, R8
 	BNE _LBB19_22
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVW $33, R10
 	MOVW R10, 8(R9)
@@ -3903,7 +3924,7 @@ _Ltmp219:
 	MOVWU 24(R8), R8
 	CMPW $33, R8
 	BNE _LBB19_23
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $6
@@ -3935,7 +3956,7 @@ _LBB19_23:
 	MOVW $6, R8
 	JMP _LBB19_3
 _LBB19_24:
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $6
@@ -3945,9 +3966,9 @@ _Ltmp223:
 	MOVD 16(R8), R8
 	CMP $9, R8
 	BNE _LBB19_27
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
-	ADD $144, RSP, R10
+	ADD $352, RSP, R10
 	STP (R8, R10), 8(R9)
 	PCDATA $1, $6
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fgetpos(SB)
@@ -3961,7 +3982,7 @@ _LBB19_27:
 	MOVW $8, R8
 	JMP _LBB19_3
 _LBB19_28:
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVW ZR, 24(R9)
 	STP (R8, ZR), 8(R9)
@@ -3974,12 +3995,12 @@ _Ltmp225:
 	MOVW $10, R8
 	JMP _LBB19_3
 _LBB19_30:
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVW $9, R10
 	MOVD RSP, R9
 	STP (R10, R8), 24(R9)
 	MOVW $1, R8
-	ADD $168, RSP, R10
+	ADD $408, RSP, R10
 	STP (R10, R8), 8(R9)
 	PCDATA $1, $6
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fread(SB)
@@ -3989,8 +4010,8 @@ _Ltmp226:
 	CMP $9, R8
 	BNE _LBB19_33
 	MOVD RSP, R8
-	ADD $1312, RSP, R9
-	ADD $168, RSP, R10
+	ADD $1560, RSP, R9
+	ADD $408, RSP, R10
 	STP (R10, R9), 8(R8)
 	PCDATA $1, $6
 	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
@@ -4004,7 +4025,7 @@ _LBB19_33:
 	MOVW $11, R8
 	JMP _LBB19_3
 _LBB19_34:
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $6
@@ -4017,7 +4038,7 @@ _Ltmp228:
 	MOVW $13, R8
 	JMP _LBB19_3
 _LBB19_36:
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $6
@@ -4026,7 +4047,7 @@ _Ltmp229:
 	MOVD RSP, R8
 	MOVWU 16(R8), R8
 	CBZW R8, _LBB19_38
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $6
@@ -4039,13 +4060,13 @@ _LBB19_38:
 	MOVW $14, R8
 	JMP _LBB19_3
 _LBB19_39:
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $6
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_clearerr(SB)
 _Ltmp231:
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $6
@@ -4054,7 +4075,7 @@ _Ltmp232:
 	MOVD RSP, R8
 	MOVWU 16(R8), R8
 	CBNZW R8, _LBB19_41
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $6
@@ -4067,9 +4088,9 @@ _LBB19_41:
 	MOVW $15, R8
 	JMP _LBB19_3
 _LBB19_42:
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
-	ADD $144, RSP, R10
+	ADD $352, RSP, R10
 	STP (R8, R10), 8(R9)
 	PCDATA $1, $6
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fsetpos(SB)
@@ -4080,7 +4101,7 @@ _Ltmp234:
 	MOVW $16, R8
 	JMP _LBB19_3
 _LBB19_44:
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVD $_L_str_8_28<>(SB), R10
 	STP (R10, R8), 8(R9)
@@ -4090,7 +4111,7 @@ _Ltmp235:
 	MOVD RSP, R8
 	MOVWU 24(R8), R8
 	TBNZ $31, R8, _LBB19_47
-	MOVD 80(RSP), R8
+	MOVD 104(RSP), R8
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $6
@@ -4106,10 +4127,10 @@ _LBB19_47:
 	JMP _LBB19_3
 _LBB19_48:
 	MOVD RSP, R8
-	ADD $88, RSP, R10
-	MOVD ZR, 88(RSP)
+	ADD $280, RSP, R10
+	MOVD ZR, 280(RSP)
 	MOVD R10, 24(R8)
-	ADD $200, RSP, R10
+	ADD $448, RSP, R10
 	MOVW ZR, 16(R8)
 	MOVD R10, 8(R8)
 	PCDATA $1, $7
@@ -4117,319 +4138,864 @@ _LBB19_48:
 _Ltmp237:
 	MOVD RSP, R8
 	MOVWU 32(R8), R8
-	TBNZ $31, R8, _LBB19_55
+	TBNZ $31, R8, _LBB19_52
 	MOVWU R8, R10
 	MOVD RSP, R8
 	MOVD $_L_str_9_29<>(SB), R9
-	MOVW R10, 64(RSP)
+	MOVW R10, 88(RSP)
 	MOVD R9, 16(R8)
 	MOVW R10, 8(R8)
-	PCDATA $1, $0
+	PCDATA $1, $8
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fdopen(SB)
 _Ltmp238:
 	MOVD RSP, R8
 	MOVD 24(R8), R8
-	CBZ R8, _LBB19_56
-	MOVD R8, 80(RSP)
-	PCDATA $1, $8
+	CBZ R8, _LBB19_53
+	MOVD R8, 104(RSP)
+	PCDATA $1, $9
 	CALL ·ForceGC(SB)
 _Ltmp239:
-	MOVD 80(RSP), R8
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $8
-	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getc(SB)
+	PCDATA $1, $9
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
 _Ltmp240:
 	MOVD RSP, R8
-	MOVWU 16(R8), R8
-	CMPW $118, R8
-	BNE _LBB19_57
-	MOVD 80(RSP), R8
-	MOVD RSP, R9
-	MOVW $86, R10
-	MOVW R10, 8(R9)
-	MOVD R8, 16(R9)
-	PCDATA $1, $8
-	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_ungetc(SB)
+	ADD $368, RSP, R11
+	MOVD 104(RSP), R12
+	MOVD 8(R8), R8
+	ADD $264, RSP, R9
+	MOVD R11, 256(RSP)
+	ADD $256, RSP, R11
+	MOVW ZR, 0(R8)
+	MOVD RSP, R8
+	MOVD R9, 24(R8)
+	MOVD $_L_str_10_30<>(SB), R9
+	STP (R11, ZR), 264(RSP)
+	STP (R12, R9), 8(R8)
+	PCDATA $1, $10
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fscanf(SB)
 _Ltmp241:
 	MOVD RSP, R8
-	MOVWU 24(R8), R8
-	CMPW $86, R8
-	BNE _LBB19_58
-	MOVD 80(RSP), R8
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $8
-	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getc(SB)
-_Ltmp242:
-	MOVD RSP, R8
-	MOVWU 16(R8), R8
-	CMPW $86, R8
-	BNE _LBB19_59
-	MOVD 80(RSP), R8
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $8
-	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fclose(SB)
-_Ltmp243:
-	MOVD RSP, R8
-	MOVWU 16(R8), R8
-	CBZW R8, _LBB19_60
-	MOVW $24, R8
+	MOVWU 32(R8), R8
+	CMNW $1, R8
+	BEQ _LBB19_54
+	MOVW $21, R8
 	JMP _LBB19_3
-_LBB19_55:
+_LBB19_52:
 	MOVW $19, R8
 	JMP _LBB19_3
-_LBB19_56:
-	MOVWU 64(RSP), R9
+_LBB19_53:
+	MOVWU 88(RSP), R9
 	MOVD RSP, R8
 	MOVW R9, 8(R8)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·close(SB)
-_Ltmp244:
+_Ltmp242:
 	MOVW $20, R8
 	JMP _LBB19_3
-_LBB19_57:
-	MOVW $21, R8
+_LBB19_54:
+	PCDATA $1, $11
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp243:
+	MOVD RSP, R8
+	MOVW $21, R9
+	MOVD 8(R8), R8
+	MOVWU 0(R8), R8
+	CMPW $95, R8
+	MOVWU R9, R8
+	BNE _LBB19_3
+	MOVD 368(RSP), R9
+	CBNZ R9, _LBB19_3
+	MOVD 104(RSP), R8
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $12
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getc(SB)
+_Ltmp244:
+	MOVD RSP, R8
+	MOVWU 16(R8), R8
+	CMPW $118, R8
+	BNE _LBB19_61
+	MOVD 104(RSP), R8
+	MOVD RSP, R9
+	MOVW $86, R10
+	MOVW R10, 8(R9)
+	MOVD R8, 16(R9)
+	PCDATA $1, $12
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_ungetc(SB)
+_Ltmp245:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	CMPW $86, R8
+	BNE _LBB19_62
+	MOVD 104(RSP), R8
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $12
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getc(SB)
+_Ltmp246:
+	MOVD RSP, R8
+	MOVWU 16(R8), R8
+	CMPW $86, R8
+	BNE _LBB19_63
+	MOVD 104(RSP), R8
+	MOVD RSP, R9
+	MOVW ZR, 24(R9)
+	STP (R8, ZR), 8(R9)
+	PCDATA $1, $12
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fseek(SB)
+_Ltmp247:
+	MOVD RSP, R8
+	MOVWU 32(R8), R8
+	CBZW R8, _LBB19_64
+	MOVW $25, R8
 	JMP _LBB19_3
-_LBB19_58:
+_LBB19_61:
 	MOVW $22, R8
 	JMP _LBB19_3
-_LBB19_59:
+_LBB19_62:
 	MOVW $23, R8
 	JMP _LBB19_3
-_LBB19_60:
+_LBB19_63:
+	MOVW $24, R8
+	JMP _LBB19_3
+_LBB19_64:
+	ADD $340, RSP, R9
+	ADD $376, RSP, R11
+	MOVD 104(RSP), R10
+	STP (R11, R9), 216(RSP)
+	ADD $224, RSP, R9
+	ADD $216, RSP, R11
+	STP (R9, R11), 232(RSP)
 	MOVD RSP, R8
-	ADD $200, RSP, R9
+	ADD $232, RSP, R9
+	MOVD R9, 24(R8)
+	MOVD $_L_str_11_31<>(SB), R9
+	MOVD ZR, 248(RSP)
+	STP (R10, R9), 8(R8)
+	PCDATA $1, $13
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_vfscanf(SB)
+_Ltmp248:
+	MOVD RSP, R8
+	MOVW $27, R9
+	MOVWU 56(R8), R8
+	CMPW $2, R8
+	MOVWU R9, R8
+	BNE _LBB19_3
+	MOVWU 340(RSP), R9
+	CMPW $42, R9
+	BNE _LBB19_3
+	MOVBU 376(RSP), R9
+	CMPW $33, R9
+	BNE _LBB19_3
+	ADD $340, RSP, R10
+	ADD $344, RSP, R8
+	ADD $184, RSP, R9
+	STP (R8, R10), 168(RSP)
+	ADD $176, RSP, R10
+	ADD $168, RSP, R8
+	STP (R10, R8), 184(RSP)
+	ADD $384, RSP, R8
+	MOVD $_L_str_13<>(SB), R10
+	MOVD R8, 160(RSP)
+	ADD $160, RSP, R8
+	STP (R8, ZR), 200(RSP)
+	MOVD RSP, R8
+	STP (R10, R9), 16(R8)
+	MOVD $_L_str_12<>(SB), R9
+	MOVW ZR, 340(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $14
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_sscanf(SB)
+_Ltmp249:
+	MOVD RSP, R8
+	MOVW $28, R9
+	MOVWU 32(R8), R8
+	CMPW $3, R8
+	MOVWU R9, R8
+	BNE _LBB19_3
+	MOVWU 340(RSP), R9
+	CMPW $17, R9
+	BNE _LBB19_3
+	WORD $0x1e609000
+	FMOVD 344(RSP), F1
+	WORD $0x1e602020
+	BNE _LBB19_3
+	MOVD RSP, R8
+	MOVD $_L_str_14<>(SB), R9
+	ADD $384, RSP, R10
+	STP (R10, R9), 8(R8)
+	PCDATA $1, $15
+	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
+_Ltmp250:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	CBZW R8, _LBB19_72
+	MOVW $28, R8
+	JMP _LBB19_3
+_LBB19_72:
+	ADD $380, RSP, R9
+	ADD $136, RSP, R10
+	MOVD RSP, R8
+	STP (R9, R10), 136(RSP)
+	ADD $144, RSP, R9
+	MOVD $_L_str_16<>(SB), R10
+	MOVD ZR, 152(RSP)
+	STP (R10, R9), 16(R8)
+	MOVD $_L_str_15<>(SB), R9
+	MOVD R9, 8(R8)
+	PCDATA $1, $16
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_vsscanf(SB)
+_Ltmp251:
+	MOVD RSP, R8
+	MOVWU 56(R8), R8
+	CMPW $1, R8
+	BNE _LBB19_74
+	MOVD RSP, R8
+	MOVD $_L_str_17<>(SB), R9
+	ADD $380, RSP, R10
+	STP (R10, R9), 8(R8)
+	PCDATA $1, $17
+	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
+_Ltmp252:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	CBZW R8, _LBB19_75
+_LBB19_74:
+	MOVW $29, R8
+	JMP _LBB19_3
+_LBB19_75:
+	PCDATA $1, $17
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp253:
+	MOVD RSP, R8
+	ADD $360, RSP, R11
+	ADD $120, RSP, R9
+	MOVD 8(R8), R8
+	MOVD $_L_str_19<>(SB), R10
+	MOVD R11, 112(RSP)
+	ADD $112, RSP, R11
+	MOVW ZR, 0(R8)
+	MOVD RSP, R8
+	STP (R10, R9), 16(R8)
+	MOVD $_L_str_18<>(SB), R9
+	STP (R11, ZR), 120(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $18
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_vsscanf(SB)
+_Ltmp254:
+	MOVD RSP, R8
+	MOVWU 56(R8), R8
+	CMNW $1, R8
+	BEQ _LBB19_77
+	MOVW $30, R8
+	JMP _LBB19_3
+_LBB19_77:
+	PCDATA $1, $19
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp255:
+	MOVD RSP, R8
+	MOVW $30, R9
+	MOVD 8(R8), R8
+	MOVWU 0(R8), R8
+	CMPW $95, R8
+	MOVWU R9, R8
+	BNE _LBB19_3
+	MOVD 360(RSP), R9
+	CBNZ R9, _LBB19_3
+	PCDATA $1, $20
+	CALL ·ForceGC(SB)
+_Ltmp256:
+	MOVD 104(RSP), R8
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $20
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fclose(SB)
+_Ltmp257:
+	MOVD RSP, R8
+	MOVWU 16(R8), R8
+	CBZW R8, _LBB19_81
+	MOVW $31, R8
+	JMP _LBB19_3
+_LBB19_81:
+	MOVD RSP, R8
+	ADD $448, RSP, R9
 	MOVD R9, 8(R8)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·unlink(SB)
-_Ltmp245:
+_Ltmp258:
 	MOVD RSP, R8
-	MOVW $25, R10
+	MOVW $32, R10
 	MOVWU 16(R8), R9
 	MOVWU R10, R8
 	CBNZW R9, _LBB19_3
 	MOVD RSP, R8
-	ADD $800, RSP, R9
+	ADD $1048, RSP, R9
 	MOVD R9, 8(R8)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·rmdir(SB)
-_Ltmp246:
+_Ltmp259:
 	MOVD RSP, R8
 	MOVWU 16(R8), R8
 	CMPW $0, R8
-	MOVW $25, R8
+	MOVW $32, R8
 	CSELW EQ, ZR, R8, R8
 	JMP _LBB19_3
 _Lfunc_end19:
-	FUNCDATA $0, gclocals·05ce8345184b6987(SB)
-DATA gclocals·05ce8345184b6987+0(SB)/4, $9
-DATA gclocals·05ce8345184b6987+4(SB)/4, $1
-DATA gclocals·05ce8345184b6987+8(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+9(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+10(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+11(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+12(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+13(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+14(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+15(SB)/1, $0x00
-DATA gclocals·05ce8345184b6987+16(SB)/1, $0x00
-GLOBL gclocals·05ce8345184b6987(SB), DUPOK|RODATA, $17
+	FUNCDATA $0, gclocals·23fa3b89db9eb463(SB)
+DATA gclocals·23fa3b89db9eb463+0(SB)/4, $21
+DATA gclocals·23fa3b89db9eb463+4(SB)/4, $1
+DATA gclocals·23fa3b89db9eb463+8(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+9(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+10(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+11(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+12(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+13(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+14(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+15(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+16(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+17(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+18(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+19(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+20(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+21(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+22(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+23(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+24(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+25(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+26(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+27(SB)/1, $0x00
+DATA gclocals·23fa3b89db9eb463+28(SB)/1, $0x00
+GLOBL gclocals·23fa3b89db9eb463(SB), DUPOK|RODATA, $29
 
-	FUNCDATA $1, gclocals·5b090ef2b520a289(SB)
-DATA gclocals·5b090ef2b520a289+0(SB)/4, $9
-DATA gclocals·5b090ef2b520a289+4(SB)/4, $167
-DATA gclocals·5b090ef2b520a289+8(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+9(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+10(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+11(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+12(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+13(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+14(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+15(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+16(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+17(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+18(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+19(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+20(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+21(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+22(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+23(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+24(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+25(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+26(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+27(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+28(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+29(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+30(SB)/1, $0x68
-DATA gclocals·5b090ef2b520a289+31(SB)/1, $0x03
-DATA gclocals·5b090ef2b520a289+32(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+33(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+34(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+35(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+36(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+37(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+38(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+39(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+40(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+41(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+42(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+43(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+44(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+45(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+46(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+47(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+48(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+49(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+50(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+51(SB)/1, $0x6c
-DATA gclocals·5b090ef2b520a289+52(SB)/1, $0x03
-DATA gclocals·5b090ef2b520a289+53(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+54(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+55(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+56(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+57(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+58(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+59(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+60(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+61(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+62(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+63(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+64(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+65(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+66(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+67(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+68(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+69(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+70(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+71(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+72(SB)/1, $0x6c
-DATA gclocals·5b090ef2b520a289+73(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+74(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+75(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+76(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+77(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+78(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+79(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+80(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+81(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+82(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+83(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+84(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+85(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+86(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+87(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+88(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+89(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+90(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+91(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+92(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+93(SB)/1, $0x68
-DATA gclocals·5b090ef2b520a289+94(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+95(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+96(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+97(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+98(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+99(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+100(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+101(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+102(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+103(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+104(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+105(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+106(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+107(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+108(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+109(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+110(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+111(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+112(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+113(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+114(SB)/1, $0x6e
-DATA gclocals·5b090ef2b520a289+115(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+116(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+117(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+118(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+119(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+120(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+121(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+122(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+123(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+124(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+125(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+126(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+127(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+128(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+129(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+130(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+131(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+132(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+133(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+134(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+135(SB)/1, $0x0c
-DATA gclocals·5b090ef2b520a289+136(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+137(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+138(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+139(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+140(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+141(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+142(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+143(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+144(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+145(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+146(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+147(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+148(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+149(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+150(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+151(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+152(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+153(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+154(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+155(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+156(SB)/1, $0x08
-DATA gclocals·5b090ef2b520a289+157(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+158(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+159(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+160(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+161(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+162(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+163(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+164(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+165(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+166(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+167(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+168(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+169(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+170(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+171(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+172(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+173(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+174(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+175(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+176(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+177(SB)/1, $0x04
-DATA gclocals·5b090ef2b520a289+178(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+179(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+180(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+181(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+182(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+183(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+184(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+185(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+186(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+187(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+188(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+189(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+190(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+191(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+192(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+193(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+194(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+195(SB)/1, $0x00
-DATA gclocals·5b090ef2b520a289+196(SB)/1, $0x00
-GLOBL gclocals·5b090ef2b520a289(SB), DUPOK|RODATA, $197
+	FUNCDATA $1, gclocals·91866fbb610c8dec(SB)
+DATA gclocals·91866fbb610c8dec+0(SB)/4, $21
+DATA gclocals·91866fbb610c8dec+4(SB)/4, $199
+DATA gclocals·91866fbb610c8dec+8(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+9(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+10(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+11(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+12(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+13(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+14(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+15(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+16(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+17(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+18(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+19(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+20(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+21(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+22(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+23(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+24(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+25(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+26(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+27(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+28(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+29(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+30(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+31(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+32(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+33(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+34(SB)/1, $0xc0
+DATA gclocals·91866fbb610c8dec+35(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+36(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+37(SB)/1, $0x6f
+DATA gclocals·91866fbb610c8dec+38(SB)/1, $0x63
+DATA gclocals·91866fbb610c8dec+39(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+40(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+41(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+42(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+43(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+44(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+45(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+46(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+47(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+48(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+49(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+50(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+51(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+52(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+53(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+54(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+55(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+56(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+57(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+58(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+59(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+60(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+61(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+62(SB)/1, $0x6f
+DATA gclocals·91866fbb610c8dec+63(SB)/1, $0x63
+DATA gclocals·91866fbb610c8dec+64(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+65(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+66(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+67(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+68(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+69(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+70(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+71(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+72(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+73(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+74(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+75(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+76(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+77(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+78(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+79(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+80(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+81(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+82(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+83(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+84(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+85(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+86(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+87(SB)/1, $0x6f
+DATA gclocals·91866fbb610c8dec+88(SB)/1, $0x60
+DATA gclocals·91866fbb610c8dec+89(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+90(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+91(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+92(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+93(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+94(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+95(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+96(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+97(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+98(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+99(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+100(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+101(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+102(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+103(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+104(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+105(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+106(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+107(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+108(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+109(SB)/1, $0xc0
+DATA gclocals·91866fbb610c8dec+110(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+111(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+112(SB)/1, $0x6f
+DATA gclocals·91866fbb610c8dec+113(SB)/1, $0x60
+DATA gclocals·91866fbb610c8dec+114(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+115(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+116(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+117(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+118(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+119(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+120(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+121(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+122(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+123(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+124(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+125(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+126(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+127(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+128(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+129(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+130(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+131(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+132(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+133(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+134(SB)/1, $0xf0
+DATA gclocals·91866fbb610c8dec+135(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+136(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+137(SB)/1, $0x6f
+DATA gclocals·91866fbb610c8dec+138(SB)/1, $0x60
+DATA gclocals·91866fbb610c8dec+139(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+140(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+141(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+142(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+143(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+144(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+145(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+146(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+147(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+148(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+149(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+150(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+151(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+152(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+153(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+154(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+155(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+156(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+157(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+158(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+159(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+160(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+161(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+162(SB)/1, $0x0f
+DATA gclocals·91866fbb610c8dec+163(SB)/1, $0x60
+DATA gclocals·91866fbb610c8dec+164(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+165(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+166(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+167(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+168(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+169(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+170(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+171(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+172(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+173(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+174(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+175(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+176(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+177(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+178(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+179(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+180(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+181(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+182(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+183(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+184(SB)/1, $0xc0
+DATA gclocals·91866fbb610c8dec+185(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+186(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+187(SB)/1, $0x0f
+DATA gclocals·91866fbb610c8dec+188(SB)/1, $0x60
+DATA gclocals·91866fbb610c8dec+189(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+190(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+191(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+192(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+193(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+194(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+195(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+196(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+197(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+198(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+199(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+200(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+201(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+202(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+203(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+204(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+205(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+206(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+207(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+208(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+209(SB)/1, $0xc0
+DATA gclocals·91866fbb610c8dec+210(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+211(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+212(SB)/1, $0x07
+DATA gclocals·91866fbb610c8dec+213(SB)/1, $0x60
+DATA gclocals·91866fbb610c8dec+214(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+215(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+216(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+217(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+218(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+219(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+220(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+221(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+222(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+223(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+224(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+225(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+226(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+227(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+228(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+229(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+230(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+231(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+232(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+233(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+234(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+235(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+236(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+237(SB)/1, $0x07
+DATA gclocals·91866fbb610c8dec+238(SB)/1, $0x60
+DATA gclocals·91866fbb610c8dec+239(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+240(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+241(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+242(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+243(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+244(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+245(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+246(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+247(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+248(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+249(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+250(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+251(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+252(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+253(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+254(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+255(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+256(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+257(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+258(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+259(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+260(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+261(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+262(SB)/1, $0x06
+DATA gclocals·91866fbb610c8dec+263(SB)/1, $0x60
+DATA gclocals·91866fbb610c8dec+264(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+265(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+266(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+267(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+268(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+269(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+270(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+271(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+272(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+273(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+274(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+275(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+276(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+277(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+278(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+279(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+280(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+281(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+282(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+283(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+284(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+285(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+286(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+287(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+288(SB)/1, $0x60
+DATA gclocals·91866fbb610c8dec+289(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+290(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+291(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+292(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+293(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+294(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+295(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+296(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+297(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+298(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+299(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+300(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+301(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+302(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+303(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+304(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+305(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+306(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+307(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+308(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+309(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+310(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+311(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+312(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+313(SB)/1, $0x20
+DATA gclocals·91866fbb610c8dec+314(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+315(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+316(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+317(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+318(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+319(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+320(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+321(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+322(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+323(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+324(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+325(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+326(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+327(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+328(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+329(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+330(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+331(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+332(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+333(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+334(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+335(SB)/1, $0xff
+DATA gclocals·91866fbb610c8dec+336(SB)/1, $0xe7
+DATA gclocals·91866fbb610c8dec+337(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+338(SB)/1, $0x20
+DATA gclocals·91866fbb610c8dec+339(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+340(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+341(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+342(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+343(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+344(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+345(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+346(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+347(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+348(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+349(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+350(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+351(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+352(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+353(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+354(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+355(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+356(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+357(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+358(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+359(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+360(SB)/1, $0x8f
+DATA gclocals·91866fbb610c8dec+361(SB)/1, $0x07
+DATA gclocals·91866fbb610c8dec+362(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+363(SB)/1, $0x20
+DATA gclocals·91866fbb610c8dec+364(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+365(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+366(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+367(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+368(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+369(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+370(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+371(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+372(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+373(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+374(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+375(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+376(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+377(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+378(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+379(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+380(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+381(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+382(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+383(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+384(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+385(SB)/1, $0x0f
+DATA gclocals·91866fbb610c8dec+386(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+387(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+388(SB)/1, $0x20
+DATA gclocals·91866fbb610c8dec+389(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+390(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+391(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+392(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+393(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+394(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+395(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+396(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+397(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+398(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+399(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+400(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+401(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+402(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+403(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+404(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+405(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+406(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+407(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+408(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+409(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+410(SB)/1, $0x0d
+DATA gclocals·91866fbb610c8dec+411(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+412(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+413(SB)/1, $0x20
+DATA gclocals·91866fbb610c8dec+414(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+415(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+416(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+417(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+418(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+419(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+420(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+421(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+422(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+423(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+424(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+425(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+426(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+427(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+428(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+429(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+430(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+431(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+432(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+433(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+434(SB)/1, $0xe0
+DATA gclocals·91866fbb610c8dec+435(SB)/1, $0x01
+DATA gclocals·91866fbb610c8dec+436(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+437(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+438(SB)/1, $0x20
+DATA gclocals·91866fbb610c8dec+439(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+440(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+441(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+442(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+443(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+444(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+445(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+446(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+447(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+448(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+449(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+450(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+451(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+452(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+453(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+454(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+455(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+456(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+457(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+458(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+459(SB)/1, $0xa0
+DATA gclocals·91866fbb610c8dec+460(SB)/1, $0x01
+DATA gclocals·91866fbb610c8dec+461(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+462(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+463(SB)/1, $0x20
+DATA gclocals·91866fbb610c8dec+464(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+465(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+466(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+467(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+468(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+469(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+470(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+471(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+472(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+473(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+474(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+475(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+476(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+477(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+478(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+479(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+480(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+481(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+482(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+483(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+484(SB)/1, $0x20
+DATA gclocals·91866fbb610c8dec+485(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+486(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+487(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+488(SB)/1, $0x20
+DATA gclocals·91866fbb610c8dec+489(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+490(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+491(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+492(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+493(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+494(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+495(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+496(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+497(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+498(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+499(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+500(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+501(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+502(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+503(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+504(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+505(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+506(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+507(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+508(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+509(SB)/1, $0x20
+DATA gclocals·91866fbb610c8dec+510(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+511(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+512(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+513(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+514(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+515(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+516(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+517(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+518(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+519(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+520(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+521(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+522(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+523(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+524(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+525(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+526(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+527(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+528(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+529(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+530(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+531(SB)/1, $0x00
+DATA gclocals·91866fbb610c8dec+532(SB)/1, $0x00
+GLOBL gclocals·91866fbb610c8dec(SB), DUPOK|RODATA, $533
 
 TEXT ·mlib_stdio_prefixed_stdout_selftest(SB), $48-8
 	PCDATA $1, $-1
@@ -4437,26 +5003,26 @@ TEXT ·mlib_stdio_prefixed_stdout_selftest(SB), $48-8
 	MOVD RSP, R8
 	MOVW R9, 36(RSP)
 	ADD $36, RSP, R9
-	MOVD $_L_str_10_30<>(SB), R10
+	MOVD $_L_str_20_32<>(SB), R10
 	STP (R9, ZR), 40(RSP)
 	ADD $40, RSP, R9
 	STP (R10, R9), 8(R8)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_printf(SB)
-_Ltmp247:
+_Ltmp260:
 	MOVD RSP, R8
 	MOVWU 24(R8), R8
 	CMPW $16, R8
 	BNE _LBB20_3
 	PCDATA $1, $0
 	CALL ·ForceGC(SB)
-_Ltmp248:
+_Ltmp261:
 	MOVD RSP, R8
-	MOVD $_L_str_11_31<>(SB), R9
+	MOVD $_L_str_21<>(SB), R9
 	MOVD R9, 8(R8)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_puts(SB)
-_Ltmp249:
+_Ltmp262:
 	MOVD RSP, R8
 	MOVWU 16(R8), R8
 	CBZW R8, _LBB20_5
@@ -4473,7 +5039,7 @@ _LBB20_5:
 	MOVW R9, 8(R8)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_putchar(SB)
-_Ltmp250:
+_Ltmp263:
 	MOVD RSP, R8
 	MOVWU 16(R8), R8
 	CMPW $33, R8
@@ -4483,7 +5049,7 @@ _Ltmp250:
 	MOVW R9, 8(R8)
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_stdfile(SB)
-_Ltmp251:
+_Ltmp264:
 	MOVD RSP, R8
 	MOVW $4, R10
 	MOVD 16(R8), R8
@@ -4496,12 +5062,76 @@ _LBB20_7:
 _Lfunc_end20:
 	FUNCDATA $0, gclocals·be86e5a039a56de6(SB)
 	FUNCDATA $1, gclocals·9300ac6ea5fafef0(SB)
-TEXT ·mlib_stdio_prefixed_stdin_selftest(SB), $16-8
+TEXT ·mlib_stdio_prefixed_stdin_selftest(SB), $128-8
 	PCDATA $1, $-1
+	MOVD RSP, R8
+	STP (ZR, ZR), 112(RSP)
+	STP (ZR, ZR), 96(RSP)
+	STP (ZR, ZR), 80(RSP)
+	MOVD ZR, 128(RSP)
+	MOVW ZR, 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_stdfile(SB)
+_Ltmp265:
+	MOVD RSP, R8
+	MOVD RSP, R9
+	MOVD 16(R8), R8
+	MOVD R8, 72(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_clearerr(SB)
+_Ltmp266:
+	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getchar(SB)
+_Ltmp267:
 	MOVD RSP, R8
 	MOVWU 8(R8), R8
-	MOVW R8, 40(RSP)
+	CMPW $81, R8
+	BNE _LBB21_4
+	ADD $132, RSP, R9
+	ADD $104, RSP, R10
+	MOVD RSP, R8
+	STP (R9, R10), 104(RSP)
+	ADD $112, RSP, R9
+	MOVD $_L_str_22<>(SB), R10
+	MOVD ZR, 120(RSP)
+	STP (R10, R9), 8(R8)
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_vscanf(SB)
+_Ltmp268:
+	MOVD RSP, R8
+	MOVWU 48(R8), R8
+	CMPW $1, R8
+	BNE _LBB21_5
+	ADD $128, RSP, R9
+	ADD $80, RSP, R10
+	MOVD RSP, R8
+	STP (R9, R10), 80(RSP)
+	ADD $88, RSP, R9
+	MOVD R9, 16(R8)
+	MOVD $_L_str_22<>(SB), R9
+	MOVD ZR, 96(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_scanf(SB)
+_Ltmp269:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	CMPW $1, R8
+	BNE _LBB21_6
+	WORD $0x295023e9
+	ADDW R8, R9, R8
+	JMP _LBB21_7
+_LBB21_4:
+	MOVW $-1, R8
+	JMP _LBB21_7
+_LBB21_5:
+	MOVW $-2, R8
+	JMP _LBB21_7
+_LBB21_6:
+	MOVW $-3, R8
+_LBB21_7:
+	MOVW R8, 152(RSP)
 	RET
 _Lfunc_end21:
 DATA _L_str<>+0(SB)/1, $0x2e
@@ -4740,23 +5370,117 @@ DATA _L_str_9_29<>+0(SB)/1, $0x72
 DATA _L_str_9_29<>+1(SB)/1, $0x00
 GLOBL _L_str_9_29<>(SB), RODATA, $2
 
-DATA _L_str_10_30<>+0(SB)/8, $0x2d646567616e616d
-DATA _L_str_10_30<>+8(SB)/8, $0x64253a6f69647473
-DATA _L_str_10_30<>+16(SB)/1, $0x00
-GLOBL _L_str_10_30<>(SB), RODATA, $17
+DATA _L_str_10_30<>+0(SB)/1, $0x25
+DATA _L_str_10_30<>+1(SB)/1, $0x6d
+DATA _L_str_10_30<>+2(SB)/1, $0x73
+DATA _L_str_10_30<>+3(SB)/1, $0x00
+GLOBL _L_str_10_30<>(SB), RODATA, $4
 
-DATA _L_str_11_31<>+0(SB)/1, $0x7c
-DATA _L_str_11_31<>+1(SB)/1, $0x6c
-DATA _L_str_11_31<>+2(SB)/1, $0x69
-DATA _L_str_11_31<>+3(SB)/1, $0x6e
-DATA _L_str_11_31<>+4(SB)/1, $0x65
-DATA _L_str_11_31<>+5(SB)/1, $0x00
-GLOBL _L_str_11_31<>(SB), RODATA, $6
+DATA _L_str_11_31<>+0(SB)/8, $0x64253d65756c6176
+DATA _L_str_11_31<>+8(SB)/1, $0x25
+DATA _L_str_11_31<>+9(SB)/1, $0x63
+DATA _L_str_11_31<>+10(SB)/1, $0x00
+GLOBL _L_str_11_31<>(SB), RODATA, $11
 
-	FUNCDATA $0, gclocals·5f4910070d449e0f(SB)
-DATA gclocals·5f4910070d449e0f+0(SB)/4, $1
-DATA gclocals·5f4910070d449e0f+4(SB)/4, $1
-DATA gclocals·5f4910070d449e0f+8(SB)/1, $0x00
-GLOBL gclocals·5f4910070d449e0f(SB), DUPOK|RODATA, $9
+DATA _L_str_12<>+0(SB)/8, $0x7320352e32203731
+DATA _L_str_12<>+8(SB)/1, $0x61
+DATA _L_str_12<>+9(SB)/1, $0x6d
+DATA _L_str_12<>+10(SB)/1, $0x70
+DATA _L_str_12<>+11(SB)/1, $0x6c
+DATA _L_str_12<>+12(SB)/1, $0x65
+DATA _L_str_12<>+13(SB)/1, $0x00
+GLOBL _L_str_12<>(SB), RODATA, $14
 
-	FUNCDATA $1, gclocals·78a6d65c07e372d5(SB)
+DATA _L_str_13<>+0(SB)/8, $0x2520666c25206425
+DATA _L_str_13<>+8(SB)/1, $0x37
+DATA _L_str_13<>+9(SB)/1, $0x73
+DATA _L_str_13<>+10(SB)/1, $0x00
+GLOBL _L_str_13<>(SB), RODATA, $11
+
+DATA _L_str_14<>+0(SB)/1, $0x73
+DATA _L_str_14<>+1(SB)/1, $0x61
+DATA _L_str_14<>+2(SB)/1, $0x6d
+DATA _L_str_14<>+3(SB)/1, $0x70
+DATA _L_str_14<>+4(SB)/1, $0x6c
+DATA _L_str_14<>+5(SB)/1, $0x65
+DATA _L_str_14<>+6(SB)/1, $0x00
+GLOBL _L_str_14<>(SB), RODATA, $7
+
+DATA _L_str_15<>+0(SB)/1, $0x25
+DATA _L_str_15<>+1(SB)/1, $0x6d
+DATA _L_str_15<>+2(SB)/1, $0x20
+DATA _L_str_15<>+3(SB)/1, $0x6d
+DATA _L_str_15<>+4(SB)/1, $0x70
+DATA _L_str_15<>+5(SB)/1, $0x00
+GLOBL _L_str_15<>(SB), RODATA, $6
+
+DATA _L_str_16<>+0(SB)/8, $0x6d5b3225206d2525
+DATA _L_str_16<>+8(SB)/1, $0x70
+DATA _L_str_16<>+9(SB)/1, $0x5d
+DATA _L_str_16<>+10(SB)/1, $0x00
+GLOBL _L_str_16<>(SB), RODATA, $11
+
+DATA _L_str_17<>+0(SB)/1, $0x6d
+DATA _L_str_17<>+1(SB)/1, $0x70
+DATA _L_str_17<>+2(SB)/1, $0x00
+GLOBL _L_str_17<>(SB), RODATA, $3
+
+DATA _L_str_18<>+0(SB)/1, $0x30
+DATA _L_str_18<>+1(SB)/1, $0x78
+DATA _L_str_18<>+2(SB)/1, $0x31
+DATA _L_str_18<>+3(SB)/1, $0x00
+GLOBL _L_str_18<>(SB), RODATA, $4
+
+DATA _L_str_19<>+0(SB)/1, $0x25
+DATA _L_str_19<>+1(SB)/1, $0x70
+DATA _L_str_19<>+2(SB)/1, $0x00
+GLOBL _L_str_19<>(SB), RODATA, $3
+
+DATA _L_str_20_32<>+0(SB)/8, $0x2d646567616e616d
+DATA _L_str_20_32<>+8(SB)/8, $0x64253a6f69647473
+DATA _L_str_20_32<>+16(SB)/1, $0x00
+GLOBL _L_str_20_32<>(SB), RODATA, $17
+
+DATA _L_str_21<>+0(SB)/1, $0x7c
+DATA _L_str_21<>+1(SB)/1, $0x6c
+DATA _L_str_21<>+2(SB)/1, $0x69
+DATA _L_str_21<>+3(SB)/1, $0x6e
+DATA _L_str_21<>+4(SB)/1, $0x65
+DATA _L_str_21<>+5(SB)/1, $0x00
+GLOBL _L_str_21<>(SB), RODATA, $6
+
+DATA _L_str_22<>+0(SB)/1, $0x20
+DATA _L_str_22<>+1(SB)/1, $0x25
+DATA _L_str_22<>+2(SB)/1, $0x64
+DATA _L_str_22<>+3(SB)/1, $0x00
+GLOBL _L_str_22<>(SB), RODATA, $4
+
+	FUNCDATA $0, gclocals·4049a89979623773(SB)
+DATA gclocals·4049a89979623773+0(SB)/4, $5
+DATA gclocals·4049a89979623773+4(SB)/4, $1
+DATA gclocals·4049a89979623773+8(SB)/1, $0x00
+DATA gclocals·4049a89979623773+9(SB)/1, $0x00
+DATA gclocals·4049a89979623773+10(SB)/1, $0x00
+DATA gclocals·4049a89979623773+11(SB)/1, $0x00
+DATA gclocals·4049a89979623773+12(SB)/1, $0x00
+GLOBL gclocals·4049a89979623773(SB), DUPOK|RODATA, $13
+
+	FUNCDATA $1, gclocals·2bf7ad903f1c9add(SB)
+DATA gclocals·2bf7ad903f1c9add+0(SB)/4, $5
+DATA gclocals·2bf7ad903f1c9add+4(SB)/4, $17
+DATA gclocals·2bf7ad903f1c9add+8(SB)/1, $0x00
+DATA gclocals·2bf7ad903f1c9add+9(SB)/1, $0x00
+DATA gclocals·2bf7ad903f1c9add+10(SB)/1, $0x00
+DATA gclocals·2bf7ad903f1c9add+11(SB)/1, $0x00
+DATA gclocals·2bf7ad903f1c9add+12(SB)/1, $0xfc
+DATA gclocals·2bf7ad903f1c9add+13(SB)/1, $0x00
+DATA gclocals·2bf7ad903f1c9add+14(SB)/1, $0x00
+DATA gclocals·2bf7ad903f1c9add+15(SB)/1, $0xfe
+DATA gclocals·2bf7ad903f1c9add+16(SB)/1, $0x00
+DATA gclocals·2bf7ad903f1c9add+17(SB)/1, $0x00
+DATA gclocals·2bf7ad903f1c9add+18(SB)/1, $0xdc
+DATA gclocals·2bf7ad903f1c9add+19(SB)/1, $0x00
+DATA gclocals·2bf7ad903f1c9add+20(SB)/1, $0x00
+DATA gclocals·2bf7ad903f1c9add+21(SB)/1, $0x18
+DATA gclocals·2bf7ad903f1c9add+22(SB)/1, $0x00
+GLOBL gclocals·2bf7ad903f1c9add(SB), DUPOK|RODATA, $23

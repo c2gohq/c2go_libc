@@ -8,5 +8,5 @@
 // c2go/mlib; managed C allocation must use gc_malloc with c2go_typeinfo, never
 // ordinary malloc. The current surface covers unnamed semaphores; pthread
 // mutex, condition-variable, and rwlock synchronization; managed directory
-// graphs; and managed explicit/standard FILE streams with formatted output.
+// graphs; and managed explicit/standard FILE streams with plain formatted I/O.
 package mlib

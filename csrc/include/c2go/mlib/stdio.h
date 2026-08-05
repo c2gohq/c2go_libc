@@ -46,8 +46,9 @@ typedef struct _c2go_mlib_FILE mlib_FILE;
 
 /* Keep FILE-independent stdio utilities available in replacement mode. They
  * use root libc internally but neither accept nor return a FILE carrier and do
- * not create managed ownership graphs. Allocation-returning asprintf and the
- * scanf family are intentionally excluded from this bridge. */
+ * not create managed ownership graphs. Allocation-returning asprintf remains
+ * intentionally excluded; the scanf family below adds its own managed-policy
+ * validation before it reuses root libc's scalar scanner. */
 int remove(const char *)
     c2go_linkname("github.com/c2gohq/c2go_libc.remove", C2GO_GOABI0);
 int rename(const char *, const char *)
@@ -163,6 +164,27 @@ int C2GO_MLIB_NAME(vfprintf)(C2GO_MLIB_NAME(FILE) *__restrict,
 int C2GO_MLIB_NAME(fprintf)(C2GO_MLIB_NAME(FILE) *__restrict,
     const char *__restrict, ...)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fprintf", C2GO_GOABI0);
+
+/* Formatted input reuses root libc's scanner only for scalar and byte/wide-
+ * character destinations. POSIX `%m` allocation and `%p` pointer publication
+ * require managed allocation/write-barrier policy and are rejected with
+ * ENOTSUP before any input is consumed. */
+int C2GO_MLIB_NAME(vscanf)(const char *__restrict, va_list)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vscanf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(scanf)(const char *__restrict, ...)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_scanf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(vfscanf)(C2GO_MLIB_NAME(FILE) *__restrict,
+    const char *__restrict, va_list)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vfscanf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(fscanf)(C2GO_MLIB_NAME(FILE) *__restrict,
+    const char *__restrict, ...)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fscanf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(vsscanf)(const char *__restrict,
+    const char *__restrict, va_list)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vsscanf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(sscanf)(const char *__restrict,
+    const char *__restrict, ...)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_sscanf", C2GO_GOABI0);
 
 int C2GO_MLIB_NAME(fileno)(C2GO_MLIB_NAME(FILE) *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fileno", C2GO_GOABI0);

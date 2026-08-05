@@ -137,11 +137,14 @@ engine. Their buffer, recursive lock, and open-file-list links are direct
 managed roots; `fopen` and `fdopen` never allocate with ordinary `malloc`, and
 `fclose` retires those roots instead of freeing the carrier. The surface covers
 explicit streams plus managed `stdin`/`stdout`/`stderr`: open/close, `fflush`
-(including `NULL`), block and character I/O, seek/status, formatted output,
-`fileno`, and `flockfile`. A package-level finalize hook flushes this separate
-FILE world before root libc flushes its own streams. `popen`, allocation-
-returning stdio, custom/memory streams, wide stdio, and formatted input are not
-yet part of mlib; do not pass an `mlib_FILE *` to their root-libc counterparts.
+(including `NULL`), block and character I/O, seek/status, formatted input and
+output, `fileno`, and `flockfile`. A package-level finalize hook flushes this
+separate FILE world before root libc flushes its own streams. Formatted input
+supports scalar, string, character, and scanset conversions; `%m` and `%p` are
+rejected with `ENOTSUP` before consuming input until managed allocation and
+pointer-publication paths are available. `popen`, allocation-returning stdio,
+custom/memory streams, and wide stdio are not yet part of mlib; do not pass an
+`mlib_FILE *` to their root-libc counterparts.
 
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
@@ -278,10 +281,12 @@ managed `FILE` 使用 typed GC carrier 包住共用的 raw musl stdio engine；�
 递归锁和打开文件链表都由明确的 managed 字段直接持有。`fopen`/`fdopen` 不会调用
 普通 `malloc`，`fclose` 清除这些根并由 GC 回收 carrier。当前同时支持显式文件流
 和 managed `stdin`/`stdout`/`stderr`：打开/关闭、`fflush`（包括 `NULL`）、块与
-字符 I/O、定位与状态、格式化输出、`fileno` 和 `flockfile`。包级 finalize hook
-会先刷新这一套独立的 FILE world，再由 root libc 刷新自己的流。`popen`、返回新
-分配内存的 stdio、memory/custom stream、wide stdio 和 formatted input 尚未进入
-mlib；不能把 `mlib_FILE *` 传给这些根 libc 接口。
+字符 I/O、定位与状态、格式化输入输出、`fileno` 和 `flockfile`。包级 finalize
+hook 会先刷新这一套独立的 FILE world，再由 root libc 刷新自己的流。格式化输入
+支持标量、字符串、字符和 scanset 转换；在 managed 分配和指针发布路径完成前，
+`%m` 与 `%p` 会在消费输入前以 `ENOTSUP` 明确拒绝。`popen`、返回新分配内存的
+stdio、memory/custom stream 和 wide stdio 尚未进入 mlib；不能把 `mlib_FILE *`
+传给这些根 libc 接口。
 
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、
 `pthread_once` 和 `pthread_atfork` 仍由根 pthread 接口提供。

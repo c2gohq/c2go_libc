@@ -15,6 +15,9 @@
 #ifndef C2GO_MLIB_TEST_STDOUT
 #error "C2GO_MLIB_TEST_STDOUT must name the managed standard output stream"
 #endif
+#ifndef C2GO_MLIB_TEST_STDIN
+#error "C2GO_MLIB_TEST_STDIN must name the managed standard input stream"
+#endif
 #ifndef C2GO_MLIB_TEST_PRINTF
 #error "C2GO_MLIB_TEST_PRINTF must name the managed printf"
 #endif
@@ -27,6 +30,24 @@
 #ifndef C2GO_MLIB_TEST_GETCHAR
 #error "C2GO_MLIB_TEST_GETCHAR must name the managed getchar"
 #endif
+#ifndef C2GO_MLIB_TEST_SCANF
+#error "C2GO_MLIB_TEST_SCANF must name the managed scanf"
+#endif
+#ifndef C2GO_MLIB_TEST_VSCANF
+#error "C2GO_MLIB_TEST_VSCANF must name the managed vscanf"
+#endif
+#ifndef C2GO_MLIB_TEST_FSCANF
+#error "C2GO_MLIB_TEST_FSCANF must name the managed fscanf"
+#endif
+#ifndef C2GO_MLIB_TEST_VFSCANF
+#error "C2GO_MLIB_TEST_VFSCANF must name the managed vfscanf"
+#endif
+#ifndef C2GO_MLIB_TEST_SSCANF
+#error "C2GO_MLIB_TEST_SSCANF must name the managed sscanf"
+#endif
+#ifndef C2GO_MLIB_TEST_VSSCANF
+#error "C2GO_MLIB_TEST_VSSCANF must name the managed vsscanf"
+#endif
 #ifndef C2GO_MLIB_TEST_STDOUT_EXPORT
 #error "C2GO_MLIB_TEST_STDOUT_EXPORT must name the standard-output selftest"
 #endif
@@ -36,8 +57,42 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
+
+static int c2go_mlib_test_vscanf(const char *format, ...)
+{
+    int result;
+    va_list arguments;
+    va_start(arguments, format);
+    result = C2GO_MLIB_TEST_VSCANF(format, arguments);
+    va_end(arguments);
+    return result;
+}
+
+static int c2go_mlib_test_vfscanf(C2GO_MLIB_TEST_FILE *stream,
+                                  const char *format, ...)
+{
+    int result;
+    va_list arguments;
+    va_start(arguments, format);
+    result = C2GO_MLIB_TEST_VFSCANF(stream, format, arguments);
+    va_end(arguments);
+    return result;
+}
+
+static int c2go_mlib_test_vsscanf(const char *input,
+                                  const char *format, ...)
+{
+    int result;
+    va_list arguments;
+    va_start(arguments, format);
+    result = C2GO_MLIB_TEST_VSSCANF(input, format, arguments);
+    va_end(arguments);
+    return result;
+}
 
 static int c2go_mlib_stdio_path(char *out, size_t capacity,
                                 const char *base, const char *relative)
@@ -56,9 +111,13 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     const char *tmp = getenv("TMPDIR");
     const char expected[] = "value=42!";
     char root[512], path[600], input[32] = {0}, formatted[16];
+    char word[8] = {0}, set[4] = {0}, mark = 0;
+    char *allocated = (void *)0;
+    void *parsed_pointer = (void *)0;
     C2GO_MLIB_TEST_FILE *stream;
     C2GO_MLIB_TEST_FPOS position;
-    int fd;
+    double fraction = 0;
+    int fd, number = 0;
 
     /* Replacement mode retains FILE-independent root stdio utilities. */
     if (snprintf(formatted, sizeof(formatted), "value=%d", 42) != 8 ||
@@ -106,12 +165,31 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
         return 20;
     }
     C2GO_MLIB_TEST_FORCE_GC();
-    if (C2GO_MLIB_TEST_GETC(stream) != 'v') return 21;
-    if (C2GO_MLIB_TEST_UNGETC('V', stream) != 'V') return 22;
-    if (C2GO_MLIB_TEST_GETC(stream) != 'V') return 23;
-    if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 24;
+    errno = 0;
+    if (C2GO_MLIB_TEST_FSCANF(stream, "%ms", &allocated) != EOF ||
+        errno != ENOTSUP || allocated) return 21;
+    /* Rejection is a policy check, not a partial conversion: no input moved. */
+    if (C2GO_MLIB_TEST_GETC(stream) != 'v') return 22;
+    if (C2GO_MLIB_TEST_UNGETC('V', stream) != 'V') return 23;
+    if (C2GO_MLIB_TEST_GETC(stream) != 'V') return 24;
+    if (C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0) return 25;
+    if (c2go_mlib_test_vfscanf(stream, "value=%d%c", &number, &mark) != 2 ||
+        number != 42 || mark != '!') return 27;
 
-    if (unlink(path) || rmdir(root)) return 25;
+    number = 0;
+    if (C2GO_MLIB_TEST_SSCANF("17 2.5 sample", "%d %lf %7s",
+                              &number, &fraction, word) != 3 ||
+        number != 17 || fraction != 2.5 || strcmp(word, "sample")) return 28;
+    if (c2go_mlib_test_vsscanf("%m mp", "%%m %2[mp]", set) != 1 ||
+        strcmp(set, "mp")) return 29;
+
+    errno = 0;
+    if (c2go_mlib_test_vsscanf("0x1", "%p", &parsed_pointer) != EOF ||
+        errno != ENOTSUP || parsed_pointer) return 30;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 31;
+
+    if (unlink(path) || rmdir(root)) return 32;
     return 0;
 }
 
@@ -133,12 +211,27 @@ c2go_extern int C2GO_MLIB_TEST_STDOUT_EXPORT(void)
 
 c2go_extern int C2GO_MLIB_TEST_STDIN_EXPORT(void)
 {
-    return C2GO_MLIB_TEST_GETCHAR();
+    int first = 0, second = 0;
+    /* The Go test deliberately swaps os.Stdin between repeated invocations;
+     * clear the prior C stream's sticky EOF status before reading the new
+     * live endpoint. Ordinary C code needs the same clearerr after EOF. */
+    C2GO_MLIB_TEST_CLEARERR(C2GO_MLIB_TEST_STDIN);
+    if (C2GO_MLIB_TEST_GETCHAR() != 'Q') return -1;
+    if (c2go_mlib_test_vscanf(" %d", &first) != 1) return -2;
+    if (C2GO_MLIB_TEST_SCANF(" %d", &second) != 1) return -3;
+    return first + second;
 }
 
 #undef C2GO_MLIB_TEST_STDIN_EXPORT
 #undef C2GO_MLIB_TEST_STDOUT_EXPORT
+#undef C2GO_MLIB_TEST_VSSCANF
+#undef C2GO_MLIB_TEST_SSCANF
+#undef C2GO_MLIB_TEST_VFSCANF
+#undef C2GO_MLIB_TEST_FSCANF
+#undef C2GO_MLIB_TEST_VSCANF
+#undef C2GO_MLIB_TEST_SCANF
 #undef C2GO_MLIB_TEST_GETCHAR
+#undef C2GO_MLIB_TEST_STDIN
 #undef C2GO_MLIB_TEST_PUTS
 #undef C2GO_MLIB_TEST_PUTCHAR
 #undef C2GO_MLIB_TEST_PRINTF

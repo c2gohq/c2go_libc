@@ -37,7 +37,7 @@ func TestManagedStandardStreams(t *testing.T) {
 		outputWriter.Close()
 	})
 
-	if _, err := inputWriter.Write([]byte{'Q'}); err != nil {
+	if _, err := inputWriter.Write([]byte("Q 73 74")); err != nil {
 		t.Fatal(err)
 	}
 	if err := inputWriter.Close(); err != nil {
@@ -46,8 +46,8 @@ func TestManagedStandardStreams(t *testing.T) {
 	if got := MlibStdioUnprefixedStdoutSelftest(); got != 0 {
 		t.Fatalf("C unprefixed standard-output selftest = %d", got)
 	}
-	if got := MlibStdioUnprefixedStdinSelftest(); got != 'Q' {
-		t.Fatalf("C unprefixed getchar = %q, want Q", got)
+	if got := MlibStdioUnprefixedStdinSelftest(); got != 147 {
+		t.Fatalf("C unprefixed standard-input selftest = %d, want 147", got)
 	}
 
 	libc.C2goFinalize()
