@@ -56,6 +56,8 @@ void c2go_mlib_stdio_test_gc(void);
 #define C2GO_MLIB_TEST_FPUTWS mlib_fputws
 #define C2GO_MLIB_TEST_FGETWS mlib_fgetws
 #define C2GO_MLIB_TEST_UNGETWC mlib_ungetwc
+#define C2GO_MLIB_TEST_VFWPRINTF mlib_vfwprintf
+#define C2GO_MLIB_TEST_FWPRINTF mlib_fwprintf
 #define C2GO_MLIB_TEST_EXPORT mlib_stdio_prefixed_selftest
 #define C2GO_MLIB_TEST_STDOUT_EXPORT mlib_stdio_prefixed_stdout_selftest
 #define C2GO_MLIB_TEST_STDIN_EXPORT mlib_stdio_prefixed_stdin_selftest

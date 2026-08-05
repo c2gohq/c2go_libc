@@ -7165,10 +7165,352 @@ _LBB48_5:
 _Lfunc_end48:
 	FUNCDATA $0, gclocals·0560e73a5dc7a460(SB)
 	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
+TEXT ·mlib_vfwprintf(SB), $112-56
+	PCDATA $1, $-1
+	MOVD 136(RSP), R8
+	CBZ R8, _LBB49_4
+	LDP 160(RSP), (R9, R10)
+	STP (R9, R10), 104(RSP)
+	LDP 144(RSP), (R11, R9)
+	STP (R11, R9), 88(RSP)
+	MOVD R8, R9
+	ADD $352, R8, R8
+	MOVD R9, 80(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp265:
+	MOVD 80(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB49_3
+	WORD $0x295627ea
+	LDP 88(RSP), (R11, R12)
+	MOVD RSP, R15
+	LDP 104(RSP), (R13, R14)
+	MOVD R8, 8(R15)
+	STPW (R10, R9), 48(R15)
+	STP (R11, R12), 16(R15)
+	STP (R13, R14), 32(R15)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfwprintf(SB)
+_Ltmp266:
+	MOVD RSP, R8
+	MOVD 80(RSP), R9
+	MOVWU 56(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 76(RSP)
+	MOVD RSP, R8
+	MOVD R9, 112(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp267:
+	MOVWU 76(RSP), R8
+	JMP _LBB49_5
+_LBB49_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 112(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp268:
+_LBB49_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp269:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+_LBB49_5:
+	MOVW R8, 184(RSP)
+	RET
+_Lfunc_end49:
+	FUNCDATA $0, gclocals·2748d720908546c4(SB)
+DATA gclocals·2748d720908546c4+0(SB)/4, $3
+DATA gclocals·2748d720908546c4+4(SB)/4, $7
+DATA gclocals·2748d720908546c4+8(SB)/1, $0x03
+DATA gclocals·2748d720908546c4+9(SB)/1, $0x03
+DATA gclocals·2748d720908546c4+10(SB)/1, $0x03
+GLOBL gclocals·2748d720908546c4(SB), DUPOK|RODATA, $11
+
+	FUNCDATA $1, gclocals·cbddeaafe5f8f085(SB)
+DATA gclocals·cbddeaafe5f8f085+0(SB)/4, $3
+DATA gclocals·cbddeaafe5f8f085+4(SB)/4, $15
+DATA gclocals·cbddeaafe5f8f085+8(SB)/1, $0x00
+DATA gclocals·cbddeaafe5f8f085+9(SB)/1, $0x00
+DATA gclocals·cbddeaafe5f8f085+10(SB)/1, $0x00
+DATA gclocals·cbddeaafe5f8f085+11(SB)/1, $0x7c
+DATA gclocals·cbddeaafe5f8f085+12(SB)/1, $0x00
+DATA gclocals·cbddeaafe5f8f085+13(SB)/1, $0x40
+GLOBL gclocals·cbddeaafe5f8f085(SB), DUPOK|RODATA, $14
+
+TEXT ·mlib_fwprintf(SB), $96-24
+	PCDATA $1, $-1
+	MOVD 120(RSP), R8
+	CBZ R8, _LBB50_4
+	LDP 128(RSP), (R9, R10)
+	STP (R9, R10), 88(RSP)
+	MOVD R8, R9
+	ADD $352, R8, R8
+	MOVD R9, 80(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp270:
+	MOVD 80(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB50_3
+	LDP 88(RSP), (R9, R10)
+	MOVD RSP, R11
+	MOVD R8, 8(R11)
+	STP (R9, R10), 16(R11)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfwprintf(SB)
+_Ltmp271:
+	MOVD RSP, R8
+	MOVD 80(RSP), R9
+	MOVWU 56(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 76(RSP)
+	MOVD RSP, R8
+	MOVD R9, 96(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp272:
+	MOVWU 76(RSP), R8
+	JMP _LBB50_5
+_LBB50_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 96(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp273:
+_LBB50_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp274:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+_LBB50_5:
+	MOVW R8, 144(RSP)
+	RET
+_Lfunc_end50:
+	FUNCDATA $0, gclocals·19df4549c42911ac(SB)
+DATA gclocals·19df4549c42911ac+0(SB)/4, $3
+DATA gclocals·19df4549c42911ac+4(SB)/4, $3
+DATA gclocals·19df4549c42911ac+8(SB)/1, $0x07
+DATA gclocals·19df4549c42911ac+9(SB)/1, $0x07
+DATA gclocals·19df4549c42911ac+10(SB)/1, $0x07
+GLOBL gclocals·19df4549c42911ac(SB), DUPOK|RODATA, $11
+
+	FUNCDATA $1, gclocals·72902cb69e18c277(SB)
+DATA gclocals·72902cb69e18c277+0(SB)/4, $3
+DATA gclocals·72902cb69e18c277+4(SB)/4, $13
+DATA gclocals·72902cb69e18c277+8(SB)/1, $0x00
+DATA gclocals·72902cb69e18c277+9(SB)/1, $0x00
+DATA gclocals·72902cb69e18c277+10(SB)/1, $0x00
+DATA gclocals·72902cb69e18c277+11(SB)/1, $0x1c
+DATA gclocals·72902cb69e18c277+12(SB)/1, $0x00
+DATA gclocals·72902cb69e18c277+13(SB)/1, $0x10
+GLOBL gclocals·72902cb69e18c277(SB), DUPOK|RODATA, $14
+
+TEXT ·mlib_vwprintf(SB), $112-48
+	PCDATA $1, $-1
+	LDP 152(RSP), (R8, R9)
+	STP (R8, R9), 104(RSP)
+	LDP 136(RSP), (R10, R8)
+	STP (R10, R8), 88(RSP)
+	PCDATA $1, $1
+	CALL ·OpenFileListLock(SB)
+_Ltmp275:
+	MOVD ·mlib_std_files+8(SB), R9
+	MOVD R9, R8
+	CBZ R9, _LBB51_3
+_LBB51_1:
+	MOVD R8, 80(RSP)
+	PCDATA $1, $2
+	CALL ·OpenFileListUnlock(SB)
+_Ltmp276:
+	MOVD 80(RSP), R8
+	MOVD RSP, R9
+	ADD $352, R8, R8
+	MOVD R8, 8(R9)
+	PCDATA $1, $2
+	CALL ·FileLock(SB)
+_Ltmp277:
+	MOVD 80(RSP), R8
+	MOVWU 400(R8), R10
+	MOVD R8, R9
+	CBZW R10, _LBB51_7
+	WORD $0x29552beb
+	LDP 88(RSP), (R12, R13)
+	MOVD R9, 72(RSP)
+	LDP 104(RSP), (R14, R15)
+	MOVD RSP, R9
+	STPW (R11, R10), 48(R9)
+	STP (R12, R13), 16(R9)
+	STP (R14, R15), 32(R9)
+	MOVD R8, 8(R9)
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfwprintf(SB)
+_Ltmp278:
+	MOVD RSP, R8
+	MOVD 72(RSP), R9
+	MOVWU 56(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 68(RSP)
+	MOVD RSP, R8
+	MOVD R9, 112(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $4
+	CALL ·FileUnlock(SB)
+_Ltmp279:
+	MOVWU 68(RSP), R8
+	JMP _LBB51_12
+_LBB51_3:
+	PCDATA $1, $1
+	CALL ·mlib_file_allocate(SB)
+_Ltmp280:
+	CBZ R0, _LBB51_10
+	MOVD 320(R0), R8
+	MOVW $1032, R10
+	MOVD RSP, R9
+	STP (R0, R8), 72(RSP)
+	STP (R8, R10), 24(R9)
+	MOVW $1, R10
+	MOVW R10, 16(R9)
+	MOVD R0, 8(R9)
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
+_Ltmp281:
+	MOVD RSP, R8
+	MOVWU 40(R8), R9
+	MOVD 72(RSP), R8
+	CBZW R9, _LBB51_8
+	MOVD $runtime·writeBarrier(SB), R9
+	ADD $320, R8, R8
+	MOVD runtime·writeBarrier(SB), R9
+	MOVWU 0(R9), R9
+	CBZW R9, _LBB51_9
+	MOVD RSP, R9
+	STP (R8, ZR), 8(R9)
+	CALL ·_c2go_writePtr(SB)
+	JMP _LBB51_10
+_LBB51_7:
+	MOVD 352(R9), R8
+	MOVD RSP, R9
+	MOVD R8, 112(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $4
+	CALL ·FileUnlock(SB)
+_Ltmp282:
+	JMP _LBB51_11
+_LBB51_8:
+	MOVW $1, R10
+	MOVD RSP, R9
+	MOVW R10, 400(R8)
+	MOVD R8, 16(R9)
+	MOVW R10, 8(R9)
+	PCDATA $1, $5
+	CALL ·mlib_stdfile_store(SB)
+_Ltmp283:
+	MOVD 72(RSP), R8
+	JMP _LBB51_1
+_LBB51_9:
+	MOVD ZR, 0(R8)
+_LBB51_10:
+	PCDATA $1, $0
+	CALL ·OpenFileListUnlock(SB)
+_Ltmp284:
+_LBB51_11:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp285:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+_LBB51_12:
+	MOVW R8, 176(RSP)
+	RET
+_Lfunc_end51:
+	FUNCDATA $0, gclocals·551e7c2b8d4b758b(SB)
+DATA gclocals·551e7c2b8d4b758b+0(SB)/4, $6
+DATA gclocals·551e7c2b8d4b758b+4(SB)/4, $6
+DATA gclocals·551e7c2b8d4b758b+8(SB)/1, $0x01
+DATA gclocals·551e7c2b8d4b758b+9(SB)/1, $0x01
+DATA gclocals·551e7c2b8d4b758b+10(SB)/1, $0x01
+DATA gclocals·551e7c2b8d4b758b+11(SB)/1, $0x01
+DATA gclocals·551e7c2b8d4b758b+12(SB)/1, $0x01
+DATA gclocals·551e7c2b8d4b758b+13(SB)/1, $0x01
+GLOBL gclocals·551e7c2b8d4b758b(SB), DUPOK|RODATA, $14
+
+	FUNCDATA $1, gclocals·a913a1d5225eb25c(SB)
+DATA gclocals·a913a1d5225eb25c+0(SB)/4, $6
+DATA gclocals·a913a1d5225eb25c+4(SB)/4, $15
+DATA gclocals·a913a1d5225eb25c+8(SB)/1, $0x00
+DATA gclocals·a913a1d5225eb25c+9(SB)/1, $0x00
+DATA gclocals·a913a1d5225eb25c+10(SB)/1, $0x00
+DATA gclocals·a913a1d5225eb25c+11(SB)/1, $0x78
+DATA gclocals·a913a1d5225eb25c+12(SB)/1, $0x00
+DATA gclocals·a913a1d5225eb25c+13(SB)/1, $0x7c
+DATA gclocals·a913a1d5225eb25c+14(SB)/1, $0x00
+DATA gclocals·a913a1d5225eb25c+15(SB)/1, $0x7e
+DATA gclocals·a913a1d5225eb25c+16(SB)/1, $0x00
+DATA gclocals·a913a1d5225eb25c+17(SB)/1, $0x40
+DATA gclocals·a913a1d5225eb25c+18(SB)/1, $0x00
+DATA gclocals·a913a1d5225eb25c+19(SB)/1, $0x7a
+GLOBL gclocals·a913a1d5225eb25c(SB), DUPOK|RODATA, $20
+
+TEXT ·mlib_wprintf(SB), $80-16
+	PCDATA $1, $-1
+	LDP 104(RSP), (R8, R9)
+	MOVD RSP, R10
+	STP (R8, R9), 72(RSP)
+	STP (R8, R9), 8(R10)
+	PCDATA $1, $1
+	CALL ·mlib_vwprintf(SB)
+_Ltmp286:
+	MOVD RSP, R8
+	MOVWU 48(R8), R8
+	MOVW R8, 120(RSP)
+	RET
+_Lfunc_end52:
+	FUNCDATA $0, gclocals·e1f3e66d4bb68923(SB)
+DATA gclocals·e1f3e66d4bb68923+0(SB)/4, $2
+DATA gclocals·e1f3e66d4bb68923+4(SB)/4, $2
+DATA gclocals·e1f3e66d4bb68923+8(SB)/1, $0x03
+DATA gclocals·e1f3e66d4bb68923+9(SB)/1, $0x03
+GLOBL gclocals·e1f3e66d4bb68923(SB), DUPOK|RODATA, $10
+
+	FUNCDATA $1, gclocals·d9d4994809594536(SB)
+DATA gclocals·d9d4994809594536+0(SB)/4, $2
+DATA gclocals·d9d4994809594536+4(SB)/4, $11
+DATA gclocals·d9d4994809594536+8(SB)/1, $0x00
+DATA gclocals·d9d4994809594536+9(SB)/1, $0x00
+DATA gclocals·d9d4994809594536+10(SB)/1, $0x00
+DATA gclocals·d9d4994809594536+11(SB)/1, $0x06
+GLOBL gclocals·d9d4994809594536(SB), DUPOK|RODATA, $12
+
 TEXT ·mlib_fclose(SB), $64-16
 	PCDATA $1, $-1
 	MOVD 88(RSP), R8
-	CBZ R8, _LBB49_4
+	CBZ R8, _LBB53_4
 	MOVD R8, R9
 	ADD $352, R8, R8
 	MOVD R9, 64(RSP)
@@ -7176,17 +7518,17 @@ TEXT ·mlib_fclose(SB), $64-16
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp265:
+_Ltmp287:
 	MOVD 64(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB49_3
+	CBZW R9, _LBB53_3
 	MOVD RSP, R9
 	MOVW ZR, 48(RSP)
 	MOVW ZR, 400(R8)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_close(SB)
-_Ltmp266:
+_Ltmp288:
 	MOVD RSP, R8
 	MOVW $256, R10
 	MOVD 64(RSP), R9
@@ -7199,7 +7541,7 @@ _Ltmp266:
 	MOVW R10, 16(R8)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·memset(SB)
-_Ltmp267:
+_Ltmp289:
 	WORD $0x6f00e400
 	MOVD 64(RSP), R8
 	MOVD RSP, R9
@@ -7209,28 +7551,28 @@ _Ltmp267:
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·mlib_clear_state_pointer(SB)
-_Ltmp268:
+_Ltmp290:
 	MOVD 64(RSP), R8
 	MOVD RSP, R9
 	ADD $336, R8, R8
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·mlib_clear_state_pointer(SB)
-_Ltmp269:
+_Ltmp291:
 	MOVD 64(RSP), R8
 	MOVD RSP, R9
 	ADD $344, R8, R8
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·mlib_clear_state_pointer(SB)
-_Ltmp270:
+_Ltmp292:
 	MOVD 64(RSP), R8
 	MOVD RSP, R9
 	ADD $320, R8, R8
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·mlib_clear_buffer_pointer(SB)
-_Ltmp271:
+_Ltmp293:
 	MOVD 64(RSP), R8
 	MOVD RSP, R9
 	MOVD 352(R8), R8
@@ -7238,37 +7580,37 @@ _Ltmp271:
 	MOVD R8, 8(R9)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp272:
+_Ltmp294:
 	MOVD 64(RSP), R8
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·mlib_ofl_remove(SB)
-_Ltmp273:
+_Ltmp295:
 	MOVWU 52(RSP), R8
-	JMP _LBB49_5
-_LBB49_3:
+	JMP _LBB53_5
+_LBB53_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 64(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp274:
-_LBB49_4:
+_Ltmp296:
+_LBB53_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp275:
+_Ltmp297:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
-_LBB49_5:
+_LBB53_5:
 	MOVW R8, 96(RSP)
 	RET
-_Lfunc_end49:
+_Lfunc_end53:
 	FUNCDATA $0, gclocals·77404dbf8600c621(SB)
 DATA gclocals·77404dbf8600c621+0(SB)/4, $3
 DATA gclocals·77404dbf8600c621+4(SB)/4, $2
@@ -7294,19 +7636,19 @@ TEXT ·mlib_ofl_remove(SB), $80-8
 	MOVD R8, 80(RSP)
 	PCDATA $1, $1
 	CALL ·OpenFileListLock(SB)
-_Ltmp276:
+_Ltmp298:
 	MOVD 80(RSP), R12
 	MOVWU 404(R12), R8
-	CBZW R8, _LBB50_14
+	CBZW R8, _LBB54_14
 	LDP 384(R12), (R14, R15)
 	MOVD $runtime·writeBarrier(SB), R13
 	MOVD R12, 72(RSP)
 	MOVD runtime·writeBarrier(SB), R13
 	MOVD R15, R11
-	CBZ R14, _LBB50_4
+	CBZ R14, _LBB54_4
 	MOVWU 0(R13), R9
 	ADD $392, R14, R8
-	CBZW R9, _LBB50_7
+	CBZW R9, _LBB54_7
 	MOVD RSP, R9
 	STP (R12, R11), 56(RSP)
 	STP (R8, R11), 8(R9)
@@ -7316,54 +7658,54 @@ _Ltmp276:
 	LDP 40(RSP), (R15, R14)
 	MOVD runtime·writeBarrier(SB), R13
 	LDP 56(RSP), (R12, R11)
-_LBB50_4:
-	CBZ R11, _LBB50_9
-_LBB50_5:
+_LBB54_4:
+	CBZ R11, _LBB54_9
+_LBB54_5:
 	MOVWU 0(R13), R10
 	ADD $384, R15, R9
 	MOVD R14, R8
-	CBZW R10, _LBB50_8
+	CBZW R10, _LBB54_8
 	MOVD RSP, R10
 	STP (R12, R11), 56(RSP)
 	STP (R9, R8), 8(R10)
 	CALL ·_c2go_writePtr(SB)
 	MOVD $runtime·writeBarrier(SB), R13
 	LDP 56(RSP), (R12, R11)
-	JMP _LBB50_9
-_LBB50_7:
+	JMP _LBB54_9
+_LBB54_7:
 	MOVD R11, 0(R8)
-	CBNZ R11, _LBB50_5
-	JMP _LBB50_9
-_LBB50_8:
+	CBNZ R11, _LBB54_5
+	JMP _LBB54_9
+_LBB54_8:
 	MOVD R8, 0(R9)
-_LBB50_9:
+_LBB54_9:
 	MOVD ·mlib_ofl_head(SB), R9
 	CMP R12, R9
-	BNE _LBB50_13
+	BNE _LBB54_13
 	MOVWU 0(R13), R9
-	CBZW R9, _LBB50_12
+	CBZW R9, _LBB54_12
 	MOVD RSP, R8
 	MOVD $·mlib_ofl_head(SB), R9
 	STP (R9, R11), 8(R8)
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB50_13
-_LBB50_12:
+	JMP _LBB54_13
+_LBB54_12:
 	MOVD R11, ·mlib_ofl_head(SB)
-_LBB50_13:
+_LBB54_13:
 	MOVD 72(RSP), R9
 	MOVD RSP, R8
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·mlib_file_clear_links(SB)
-_Ltmp277:
+_Ltmp299:
 	MOVD 80(RSP), R8
 	MOVW ZR, 404(R8)
-_LBB50_14:
+_LBB54_14:
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp278:
+_Ltmp300:
 	RET
-_Lfunc_end50:
+_Lfunc_end54:
 	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
 	FUNCDATA $1, gclocals·d9d49748095941d0(SB)
 DATA gclocals·d9d49748095941d0+0(SB)/4, $2
@@ -7383,16 +7725,16 @@ TEXT ·mlib_file_clear_links(SB), $32-8
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·mlib_clear_file_pointer(SB)
-_Ltmp279:
+_Ltmp301:
 	MOVD 32(RSP), R8
 	MOVD RSP, R9
 	ADD $392, R8, R8
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·mlib_clear_file_pointer(SB)
-_Ltmp280:
+_Ltmp302:
 	RET
-_Lfunc_end51:
+_Lfunc_end55:
 	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
 	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
 TEXT ·mlib_clear_file_pointer(SB), $32-8
@@ -7402,22 +7744,22 @@ TEXT ·mlib_clear_file_pointer(SB), $32-8
 	MOVD runtime·writeBarrier(SB), R8
 	MOVWU 0(R8), R10
 	MOVD R9, R8
-	CBZW R10, _LBB52_2
+	CBZW R10, _LBB56_2
 	MOVD RSP, R9
 	STP (R8, ZR), 8(R9)
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB52_3
-_LBB52_2:
+	JMP _LBB56_3
+_LBB56_2:
 	MOVD ZR, 0(R8)
-_LBB52_3:
+_LBB56_3:
 	RET
-_Lfunc_end52:
+_Lfunc_end56:
 	FUNCDATA $0, gclocals·5f490f070d449c5c(SB)
 	FUNCDATA $1, gclocals·2c8d835d1806f483(SB)
 TEXT ·mlib_fflush(SB), $48-16
 	PCDATA $1, $-1
 	MOVD 72(RSP), R8
-	CBZ R8, _LBB53_3
+	CBZ R8, _LBB57_3
 	MOVD R8, R9
 	ADD $352, R8, R8
 	MOVD R9, 48(RSP)
@@ -7425,15 +7767,15 @@ TEXT ·mlib_fflush(SB), $48-16
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp281:
+_Ltmp303:
 	MOVD 48(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB53_6
+	CBZW R9, _LBB57_6
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
-_Ltmp282:
+_Ltmp304:
 	MOVD RSP, R8
 	MOVD 48(RSP), R9
 	MOVWU 16(R8), R8
@@ -7444,14 +7786,14 @@ _Ltmp282:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp283:
-	JMP _LBB53_22
-_LBB53_3:
+_Ltmp305:
+	JMP _LBB57_22
+_LBB57_3:
 	PCDATA $1, $0
 	CALL ·OpenFileListLock(SB)
-_Ltmp284:
+_Ltmp306:
 	MOVD ·mlib_std_files(SB), R8
-	CBZ R8, _LBB53_8
+	CBZ R8, _LBB57_8
 	MOVD R8, R9
 	ADD $352, R8, R8
 	MOVD R9, 48(RSP)
@@ -7459,15 +7801,15 @@ _Ltmp284:
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp285:
+_Ltmp307:
 	MOVD 48(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB53_7
+	CBZW R9, _LBB57_7
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
-_Ltmp286:
+_Ltmp308:
 	MOVD RSP, R8
 	MOVD 48(RSP), R9
 	MOVWU 16(R8), R8
@@ -7478,46 +7820,46 @@ _Ltmp286:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp287:
+_Ltmp309:
 	MOVWU 28(RSP), R8
-	JMP _LBB53_8
-_LBB53_6:
+	JMP _LBB57_8
+_LBB57_6:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 48(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp288:
+_Ltmp310:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp289:
+_Ltmp311:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
-	JMP _LBB53_23
-_LBB53_7:
+	JMP _LBB57_23
+_LBB57_7:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 48(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp290:
+_Ltmp312:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp291:
+_Ltmp313:
 	MOVD RSP, R8
 	MOVW $9, R9
 	MOVD 8(R8), R8
 	MOVW R9, 0(R8)
 	MOVWU ZR, R8
-_LBB53_8:
+_LBB57_8:
 	MOVD ·mlib_std_files+8(SB), R9
-	CBZ R9, _LBB53_13
+	CBZ R9, _LBB57_13
 	MOVW R8, 28(RSP)
 	MOVD R9, R8
 	ADD $352, R9, R9
@@ -7526,15 +7868,15 @@ _LBB53_8:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp292:
+_Ltmp314:
 	MOVD 48(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB53_11
+	CBZW R9, _LBB57_11
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
-_Ltmp293:
+_Ltmp315:
 	MOVD RSP, R8
 	MOVD 48(RSP), R9
 	MOVWU 28(RSP), R10
@@ -7547,28 +7889,28 @@ _Ltmp293:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp294:
-	JMP _LBB53_12
-_LBB53_11:
+_Ltmp316:
+	JMP _LBB57_12
+_LBB57_11:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 48(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp295:
+_Ltmp317:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp296:
+_Ltmp318:
 	MOVD RSP, R8
 	MOVW $9, R9
 	MOVD 8(R8), R8
 	MOVW R9, 0(R8)
-_LBB53_12:
+_LBB57_12:
 	MOVWU 28(RSP), R8
-_LBB53_13:
+_LBB57_13:
 	MOVD ·mlib_std_files+16(SB), R9
-	CBZ R9, _LBB53_16
+	CBZ R9, _LBB57_16
 	MOVW R8, 28(RSP)
 	MOVD R9, R8
 	ADD $352, R9, R9
@@ -7577,15 +7919,15 @@ _LBB53_13:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp297:
+_Ltmp319:
 	MOVD 48(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB53_17
+	CBZW R9, _LBB57_17
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
-_Ltmp298:
+_Ltmp320:
 	MOVD RSP, R8
 	MOVD 48(RSP), R9
 	MOVWU 28(RSP), R10
@@ -7598,49 +7940,49 @@ _Ltmp298:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp299:
-	JMP _LBB53_18
-_LBB53_16:
+_Ltmp321:
+	JMP _LBB57_18
+_LBB57_16:
 	MOVWU R8, R0
-	JMP _LBB53_19
-_LBB53_17:
+	JMP _LBB57_19
+_LBB57_17:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 48(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp300:
+_Ltmp322:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp301:
+_Ltmp323:
 	MOVD RSP, R8
 	MOVW $9, R9
 	MOVD 8(R8), R8
 	MOVW R9, 0(R8)
-_LBB53_18:
+_LBB57_18:
 	MOVWU 28(RSP), R0
-_LBB53_19:
+_LBB57_19:
 	MOVD ·mlib_ofl_head(SB), R8
-	CBNZ R8, _LBB53_26
+	CBNZ R8, _LBB57_26
 	MOVWU R0, R1
-_LBB53_21:
+_LBB57_21:
 	MOVW R1, 28(RSP)
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp302:
-_LBB53_22:
+_Ltmp324:
+_LBB57_22:
 	MOVWU 28(RSP), R8
-_LBB53_23:
+_LBB57_23:
 	MOVW R8, 80(RSP)
 	RET
-_LBB53_24:
+_LBB57_24:
 	MOVD RSP, R9
 	MOVD R8, 40(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·fflush(SB)
-_Ltmp303:
+_Ltmp325:
 	MOVD RSP, R8
 	MOVD 48(RSP), R9
 	MOVWU 28(RSP), R10
@@ -7653,15 +7995,15 @@ _Ltmp303:
 	MOVD R9, 8(R8)
 	PCDATA $1, $3
 	CALL ·FileUnlock(SB)
-_Ltmp304:
+_Ltmp326:
 	MOVD 40(RSP), R8
-_LBB53_25:
+_LBB57_25:
 	MOVWU 28(RSP), R0
 	MOVD 392(R8), R9
 	MOVD R9, R8
 	MOVWU R0, R1
-	CBZ R9, _LBB53_21
-_LBB53_26:
+	CBZ R9, _LBB57_21
+_LBB57_26:
 	ADD $352, R8, R9
 	MOVD R8, 48(RSP)
 	MOVD RSP, R8
@@ -7669,29 +8011,29 @@ _LBB53_26:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp305:
+_Ltmp327:
 	MOVD 48(RSP), R9
 	MOVWU 400(R9), R10
 	MOVD R9, R8
-	CBNZW R10, _LBB53_24
+	CBNZW R10, _LBB57_24
 	MOVD 352(R9), R9
 	STP (R8, R9), 32(RSP)
 	MOVD RSP, R8
 	MOVD R9, 8(R8)
 	PCDATA $1, $3
 	CALL ·FileUnlock(SB)
-_Ltmp306:
+_Ltmp328:
 	PCDATA $1, $4
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp307:
+_Ltmp329:
 	MOVD RSP, R8
 	MOVD 32(RSP), R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVD R9, R8
-	JMP _LBB53_25
-_Lfunc_end53:
+	JMP _LBB57_25
+_Lfunc_end57:
 	FUNCDATA $0, gclocals·490e4b1939fbf88d(SB)
 DATA gclocals·490e4b1939fbf88d+0(SB)/4, $5
 DATA gclocals·490e4b1939fbf88d+4(SB)/4, $2
@@ -7715,234 +8057,6 @@ GLOBL gclocals·72681adeaa308fa5(SB), DUPOK|RODATA, $13
 TEXT ·mlib_feof(SB), $32-16
 	PCDATA $1, $-1
 	MOVD 56(RSP), R8
-	CBZ R8, _LBB54_4
-	MOVD R8, R9
-	ADD $352, R8, R8
-	MOVD R9, 32(RSP)
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp308:
-	MOVD 32(RSP), R8
-	MOVWU 400(R8), R9
-	CBZW R9, _LBB54_3
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·feof(SB)
-_Ltmp309:
-	MOVD RSP, R8
-	MOVD 32(RSP), R9
-	MOVWU 16(R8), R8
-	MOVD 352(R9), R9
-	MOVW R8, 28(RSP)
-	MOVD RSP, R8
-	MOVD R9, 32(RSP)
-	MOVD R9, 8(R8)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp310:
-	MOVWU 28(RSP), R8
-	JMP _LBB54_5
-_LBB54_3:
-	MOVD 352(R8), R8
-	MOVD RSP, R9
-	MOVD R8, 32(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp311:
-_LBB54_4:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp312:
-	MOVD RSP, R8
-	MOVW $-1, R9
-	MOVW $9, R10
-	MOVD 8(R8), R8
-	MOVW R10, 0(R8)
-	MOVWU R9, R8
-_LBB54_5:
-	MOVW R8, 64(RSP)
-	RET
-_Lfunc_end54:
-	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_ferror(SB), $32-16
-	PCDATA $1, $-1
-	MOVD 56(RSP), R8
-	CBZ R8, _LBB55_4
-	MOVD R8, R9
-	ADD $352, R8, R8
-	MOVD R9, 32(RSP)
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp313:
-	MOVD 32(RSP), R8
-	MOVWU 400(R8), R9
-	CBZW R9, _LBB55_3
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·ferror(SB)
-_Ltmp314:
-	MOVD RSP, R8
-	MOVD 32(RSP), R9
-	MOVWU 16(R8), R8
-	MOVD 352(R9), R9
-	MOVW R8, 28(RSP)
-	MOVD RSP, R8
-	MOVD R9, 32(RSP)
-	MOVD R9, 8(R8)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp315:
-	MOVWU 28(RSP), R8
-	JMP _LBB55_5
-_LBB55_3:
-	MOVD 352(R8), R8
-	MOVD RSP, R9
-	MOVD R8, 32(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp316:
-_LBB55_4:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp317:
-	MOVD RSP, R8
-	MOVW $-1, R9
-	MOVW $9, R10
-	MOVD 8(R8), R8
-	MOVW R10, 0(R8)
-	MOVWU R9, R8
-_LBB55_5:
-	MOVW R8, 64(RSP)
-	RET
-_Lfunc_end55:
-	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_fgetc(SB), $32-16
-	PCDATA $1, $-1
-	MOVD 56(RSP), R8
-	CBZ R8, _LBB56_4
-	MOVD R8, R9
-	ADD $352, R8, R8
-	MOVD R9, 32(RSP)
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp318:
-	MOVD 32(RSP), R8
-	MOVWU 400(R8), R9
-	CBZW R9, _LBB56_3
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fgetc(SB)
-_Ltmp319:
-	MOVD RSP, R8
-	MOVD 32(RSP), R9
-	MOVWU 16(R8), R8
-	MOVD 352(R9), R9
-	MOVW R8, 28(RSP)
-	MOVD RSP, R8
-	MOVD R9, 32(RSP)
-	MOVD R9, 8(R8)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp320:
-	MOVWU 28(RSP), R8
-	JMP _LBB56_5
-_LBB56_3:
-	MOVD 352(R8), R8
-	MOVD RSP, R9
-	MOVD R8, 32(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp321:
-_LBB56_4:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp322:
-	MOVD RSP, R8
-	MOVW $-1, R9
-	MOVW $9, R10
-	MOVD 8(R8), R8
-	MOVW R10, 0(R8)
-	MOVWU R9, R8
-_LBB56_5:
-	MOVW R8, 64(RSP)
-	RET
-_Lfunc_end56:
-	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_getc(SB), $32-16
-	PCDATA $1, $-1
-	MOVD 56(RSP), R8
-	CBZ R8, _LBB57_4
-	MOVD R8, R9
-	ADD $352, R8, R8
-	MOVD R9, 32(RSP)
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp323:
-	MOVD 32(RSP), R8
-	MOVWU 400(R8), R9
-	CBZW R9, _LBB57_3
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·getc(SB)
-_Ltmp324:
-	MOVD RSP, R8
-	MOVD 32(RSP), R9
-	MOVWU 16(R8), R8
-	MOVD 352(R9), R9
-	MOVW R8, 28(RSP)
-	MOVD RSP, R8
-	MOVD R9, 32(RSP)
-	MOVD R9, 8(R8)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp325:
-	MOVWU 28(RSP), R8
-	JMP _LBB57_5
-_LBB57_3:
-	MOVD 352(R8), R8
-	MOVD RSP, R9
-	MOVD R8, 32(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp326:
-_LBB57_4:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp327:
-	MOVD RSP, R8
-	MOVW $-1, R9
-	MOVW $9, R10
-	MOVD 8(R8), R8
-	MOVW R10, 0(R8)
-	MOVWU R9, R8
-_LBB57_5:
-	MOVW R8, 64(RSP)
-	RET
-_Lfunc_end57:
-	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_fileno(SB), $32-16
-	PCDATA $1, $-1
-	MOVD 56(RSP), R8
 	CBZ R8, _LBB58_4
 	MOVD R8, R9
 	ADD $352, R8, R8
@@ -7951,15 +8065,15 @@ TEXT ·mlib_fileno(SB), $32-16
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp328:
+_Ltmp330:
 	MOVD 32(RSP), R8
 	MOVWU 400(R8), R9
 	CBZW R9, _LBB58_3
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fileno(SB)
-_Ltmp329:
+	CALL github·com∕c2gohq∕c2go_libc·feof(SB)
+_Ltmp331:
 	MOVD RSP, R8
 	MOVD 32(RSP), R9
 	MOVWU 16(R8), R8
@@ -7970,7 +8084,7 @@ _Ltmp329:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp330:
+_Ltmp332:
 	MOVWU 28(RSP), R8
 	JMP _LBB58_5
 _LBB58_3:
@@ -7980,11 +8094,11 @@ _LBB58_3:
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp331:
+_Ltmp333:
 _LBB58_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp332:
+_Ltmp334:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
@@ -7997,7 +8111,7 @@ _LBB58_5:
 _Lfunc_end58:
 	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
 	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_clearerr(SB), $32-8
+TEXT ·mlib_ferror(SB), $32-16
 	PCDATA $1, $-1
 	MOVD 56(RSP), R8
 	CBZ R8, _LBB59_4
@@ -8008,23 +8122,27 @@ TEXT ·mlib_clearerr(SB), $32-8
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp333:
+_Ltmp335:
 	MOVD 32(RSP), R8
 	MOVWU 400(R8), R9
 	CBZW R9, _LBB59_3
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·clearerr(SB)
-_Ltmp334:
-	MOVD 32(RSP), R8
-	MOVD RSP, R9
-	MOVD 352(R8), R8
-	MOVD R8, 32(RSP)
-	MOVD R8, 8(R9)
+	CALL github·com∕c2gohq∕c2go_libc·ferror(SB)
+_Ltmp336:
+	MOVD RSP, R8
+	MOVD 32(RSP), R9
+	MOVWU 16(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 28(RSP)
+	MOVD RSP, R8
+	MOVD R9, 32(RSP)
+	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp335:
+_Ltmp337:
+	MOVWU 28(RSP), R8
 	JMP _LBB59_5
 _LBB59_3:
 	MOVD 352(R8), R8
@@ -8033,256 +8151,27 @@ _LBB59_3:
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp336:
+_Ltmp338:
 _LBB59_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp337:
-	MOVD RSP, R8
-	MOVW $9, R9
-	MOVD 8(R8), R8
-	MOVW R9, 0(R8)
-_LBB59_5:
-	RET
-_Lfunc_end59:
-	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_fseek(SB), $48-32
-	PCDATA $1, $-1
-	MOVD 72(RSP), R8
-	CBZ R8, _LBB60_4
-	MOVD R8, R9
-	ADD $352, R8, R8
-	MOVD R9, 48(RSP)
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp338:
-	MOVD 48(RSP), R8
-	MOVWU 400(R8), R9
-	CBZW R9, _LBB60_3
-	MOVWU 88(RSP), R9
-	MOVD 80(RSP), R10
-	MOVD RSP, R11
-	MOVW R9, 24(R11)
-	STP (R8, R10), 8(R11)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fseek(SB)
 _Ltmp339:
 	MOVD RSP, R8
-	MOVD 48(RSP), R9
-	MOVWU 32(R8), R8
-	MOVD 352(R9), R9
-	MOVW R8, 44(RSP)
-	MOVD RSP, R8
-	MOVD R9, 48(RSP)
-	MOVD R9, 8(R8)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp340:
-	MOVWU 44(RSP), R8
-	JMP _LBB60_5
-_LBB60_3:
-	MOVD 352(R8), R8
-	MOVD RSP, R9
-	MOVD R8, 48(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp341:
-_LBB60_4:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp342:
-	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
-_LBB60_5:
-	MOVW R8, 96(RSP)
+_LBB59_5:
+	MOVW R8, 64(RSP)
 	RET
-_Lfunc_end60:
-	FUNCDATA $0, gclocals·28c054076fcd39c5(SB)
-	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
-TEXT ·mlib_fseeko(SB), $48-32
-	PCDATA $1, $-1
-	MOVD 72(RSP), R8
-	CBZ R8, _LBB61_4
-	MOVD R8, R9
-	ADD $352, R8, R8
-	MOVD R9, 48(RSP)
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp343:
-	MOVD 48(RSP), R8
-	MOVWU 400(R8), R9
-	CBZW R9, _LBB61_3
-	MOVWU 88(RSP), R9
-	MOVD 80(RSP), R10
-	MOVD RSP, R11
-	MOVW R9, 24(R11)
-	STP (R8, R10), 8(R11)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fseeko(SB)
-_Ltmp344:
-	MOVD RSP, R8
-	MOVD 48(RSP), R9
-	MOVWU 32(R8), R8
-	MOVD 352(R9), R9
-	MOVW R8, 44(RSP)
-	MOVD RSP, R8
-	MOVD R9, 48(RSP)
-	MOVD R9, 8(R8)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp345:
-	MOVWU 44(RSP), R8
-	JMP _LBB61_5
-_LBB61_3:
-	MOVD 352(R8), R8
-	MOVD RSP, R9
-	MOVD R8, 48(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp346:
-_LBB61_4:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp347:
-	MOVD RSP, R8
-	MOVW $-1, R9
-	MOVW $9, R10
-	MOVD 8(R8), R8
-	MOVW R10, 0(R8)
-	MOVWU R9, R8
-_LBB61_5:
-	MOVW R8, 96(RSP)
-	RET
-_Lfunc_end61:
-	FUNCDATA $0, gclocals·28c054076fcd39c5(SB)
-	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
-TEXT ·mlib_ftell(SB), $48-16
-	PCDATA $1, $-1
-	MOVD 72(RSP), R8
-	CBZ R8, _LBB62_4
-	MOVD R8, R9
-	ADD $352, R8, R8
-	MOVD R9, 48(RSP)
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp348:
-	MOVD 48(RSP), R8
-	MOVWU 400(R8), R9
-	CBZW R9, _LBB62_3
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·ftell(SB)
-_Ltmp349:
-	MOVD 48(RSP), R9
-	MOVD RSP, R8
-	MOVD 16(R8), R8
-	MOVD 352(R9), R9
-	STP (R8, R9), 40(RSP)
-	MOVD RSP, R8
-	MOVD R9, 8(R8)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp350:
-	MOVD 40(RSP), R8
-	JMP _LBB62_5
-_LBB62_3:
-	MOVD 352(R8), R8
-	MOVD RSP, R9
-	MOVD R8, 48(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp351:
-_LBB62_4:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp352:
-	MOVD RSP, R8
-	MOVD $-1, R9
-	MOVW $9, R10
-	MOVD 8(R8), R8
-	MOVW R10, 0(R8)
-	MOVD R9, R8
-_LBB62_5:
-	MOVD R8, 80(RSP)
-	RET
-_Lfunc_end62:
+_Lfunc_end59:
 	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
-	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
-TEXT ·mlib_ftello(SB), $48-16
-	PCDATA $1, $-1
-	MOVD 72(RSP), R8
-	CBZ R8, _LBB63_4
-	MOVD R8, R9
-	ADD $352, R8, R8
-	MOVD R9, 48(RSP)
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp353:
-	MOVD 48(RSP), R8
-	MOVWU 400(R8), R9
-	CBZW R9, _LBB63_3
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·ftello(SB)
-_Ltmp354:
-	MOVD 48(RSP), R9
-	MOVD RSP, R8
-	MOVD 16(R8), R8
-	MOVD 352(R9), R9
-	STP (R8, R9), 40(RSP)
-	MOVD RSP, R8
-	MOVD R9, 8(R8)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp355:
-	MOVD 40(RSP), R8
-	JMP _LBB63_5
-_LBB63_3:
-	MOVD 352(R8), R8
-	MOVD RSP, R9
-	MOVD R8, 48(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp356:
-_LBB63_4:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp357:
-	MOVD RSP, R8
-	MOVD $-1, R9
-	MOVW $9, R10
-	MOVD 8(R8), R8
-	MOVW R10, 0(R8)
-	MOVD R9, R8
-_LBB63_5:
-	MOVD R8, 80(RSP)
-	RET
-_Lfunc_end63:
-	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
-	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
-TEXT ·mlib_rewind(SB), $32-8
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_fgetc(SB), $32-16
 	PCDATA $1, $-1
 	MOVD 56(RSP), R8
-	CBZ R8, _LBB64_4
+	CBZ R8, _LBB60_4
 	MOVD R8, R9
 	ADD $352, R8, R8
 	MOVD R9, 32(RSP)
@@ -8290,91 +8179,324 @@ TEXT ·mlib_rewind(SB), $32-8
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp358:
+_Ltmp340:
 	MOVD 32(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB64_3
+	CBZW R9, _LBB60_3
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·rewind(SB)
-_Ltmp359:
-	MOVD 32(RSP), R8
-	MOVD RSP, R9
+	CALL github·com∕c2gohq∕c2go_libc·fgetc(SB)
+_Ltmp341:
+	MOVD RSP, R8
+	MOVD 32(RSP), R9
+	MOVWU 16(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 28(RSP)
+	MOVD RSP, R8
+	MOVD R9, 32(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp342:
+	MOVWU 28(RSP), R8
+	JMP _LBB60_5
+_LBB60_3:
 	MOVD 352(R8), R8
+	MOVD RSP, R9
 	MOVD R8, 32(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp360:
-	JMP _LBB64_5
-_LBB64_3:
-	MOVD 352(R8), R8
-	MOVD RSP, R9
-	MOVD R8, 32(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileUnlock(SB)
-_Ltmp361:
-_LBB64_4:
+_Ltmp343:
+_LBB60_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp362:
+_Ltmp344:
 	MOVD RSP, R8
-	MOVW $9, R9
+	MOVW $-1, R9
+	MOVW $9, R10
 	MOVD 8(R8), R8
-	MOVW R9, 0(R8)
-_LBB64_5:
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+_LBB60_5:
+	MOVW R8, 64(RSP)
 	RET
-_Lfunc_end64:
-	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
+_Lfunc_end60:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
 	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
-TEXT ·mlib_fgetpos(SB), $48-24
+TEXT ·mlib_getc(SB), $32-16
 	PCDATA $1, $-1
-	MOVD 72(RSP), R8
-	CBZ R8, _LBB65_4
-	MOVD 80(RSP), R9
-	STP (R8, R9), 40(RSP)
+	MOVD 56(RSP), R8
+	CBZ R8, _LBB61_4
+	MOVD R8, R9
 	ADD $352, R8, R8
+	MOVD R9, 32(RSP)
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp363:
-	MOVD 40(RSP), R8
+_Ltmp345:
+	MOVD 32(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB65_3
-	MOVD 48(RSP), R9
-	MOVD RSP, R10
-	STP (R8, R9), 8(R10)
+	CBZW R9, _LBB61_3
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fgetpos(SB)
-_Ltmp364:
+	CALL github·com∕c2gohq∕c2go_libc·getc(SB)
+_Ltmp346:
 	MOVD RSP, R8
-	MOVD 40(RSP), R9
-	MOVWU 24(R8), R8
+	MOVD 32(RSP), R9
+	MOVWU 16(R8), R8
 	MOVD 352(R9), R9
-	MOVW R8, 36(RSP)
+	MOVW R8, 28(RSP)
+	MOVD RSP, R8
+	MOVD R9, 32(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp347:
+	MOVWU 28(RSP), R8
+	JMP _LBB61_5
+_LBB61_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 32(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp348:
+_LBB61_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp349:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+_LBB61_5:
+	MOVW R8, 64(RSP)
+	RET
+_Lfunc_end61:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_fileno(SB), $32-16
+	PCDATA $1, $-1
+	MOVD 56(RSP), R8
+	CBZ R8, _LBB62_4
+	MOVD R8, R9
+	ADD $352, R8, R8
+	MOVD R9, 32(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp350:
+	MOVD 32(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB62_3
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·fileno(SB)
+_Ltmp351:
+	MOVD RSP, R8
+	MOVD 32(RSP), R9
+	MOVWU 16(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 28(RSP)
+	MOVD RSP, R8
+	MOVD R9, 32(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp352:
+	MOVWU 28(RSP), R8
+	JMP _LBB62_5
+_LBB62_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 32(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp353:
+_LBB62_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp354:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+_LBB62_5:
+	MOVW R8, 64(RSP)
+	RET
+_Lfunc_end62:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_clearerr(SB), $32-8
+	PCDATA $1, $-1
+	MOVD 56(RSP), R8
+	CBZ R8, _LBB63_4
+	MOVD R8, R9
+	ADD $352, R8, R8
+	MOVD R9, 32(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp355:
+	MOVD 32(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB63_3
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·clearerr(SB)
+_Ltmp356:
+	MOVD 32(RSP), R8
+	MOVD RSP, R9
+	MOVD 352(R8), R8
+	MOVD R8, 32(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp357:
+	JMP _LBB63_5
+_LBB63_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 32(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp358:
+_LBB63_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp359:
+	MOVD RSP, R8
+	MOVW $9, R9
+	MOVD 8(R8), R8
+	MOVW R9, 0(R8)
+_LBB63_5:
+	RET
+_Lfunc_end63:
+	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_fseek(SB), $48-32
+	PCDATA $1, $-1
+	MOVD 72(RSP), R8
+	CBZ R8, _LBB64_4
+	MOVD R8, R9
+	ADD $352, R8, R8
+	MOVD R9, 48(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp360:
+	MOVD 48(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB64_3
+	MOVWU 88(RSP), R9
+	MOVD 80(RSP), R10
+	MOVD RSP, R11
+	MOVW R9, 24(R11)
+	STP (R8, R10), 8(R11)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·fseek(SB)
+_Ltmp361:
+	MOVD RSP, R8
+	MOVD 48(RSP), R9
+	MOVWU 32(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 44(RSP)
 	MOVD RSP, R8
 	MOVD R9, 48(RSP)
 	MOVD R9, 8(R8)
-	PCDATA $1, $2
+	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
+_Ltmp362:
+	MOVWU 44(RSP), R8
+	JMP _LBB64_5
+_LBB64_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 48(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp363:
+_LBB64_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp364:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+_LBB64_5:
+	MOVW R8, 96(RSP)
+	RET
+_Lfunc_end64:
+	FUNCDATA $0, gclocals·28c054076fcd39c5(SB)
+	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
+TEXT ·mlib_fseeko(SB), $48-32
+	PCDATA $1, $-1
+	MOVD 72(RSP), R8
+	CBZ R8, _LBB65_4
+	MOVD R8, R9
+	ADD $352, R8, R8
+	MOVD R9, 48(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
 _Ltmp365:
-	MOVWU 36(RSP), R8
+	MOVD 48(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB65_3
+	MOVWU 88(RSP), R9
+	MOVD 80(RSP), R10
+	MOVD RSP, R11
+	MOVW R9, 24(R11)
+	STP (R8, R10), 8(R11)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·fseeko(SB)
+_Ltmp366:
+	MOVD RSP, R8
+	MOVD 48(RSP), R9
+	MOVWU 32(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 44(RSP)
+	MOVD RSP, R8
+	MOVD R9, 48(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp367:
+	MOVWU 44(RSP), R8
 	JMP _LBB65_5
 _LBB65_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 48(RSP)
 	MOVD R8, 8(R9)
-	PCDATA $1, $2
+	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp366:
+_Ltmp368:
 _LBB65_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp367:
+_Ltmp369:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
@@ -8382,15 +8504,177 @@ _Ltmp367:
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
 _LBB65_5:
-	MOVW R8, 88(RSP)
+	MOVW R8, 96(RSP)
 	RET
 _Lfunc_end65:
-	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
-	FUNCDATA $1, gclocals·1d5cc5208a8b6dbb(SB)
-TEXT ·mlib_fsetpos(SB), $48-24
+	FUNCDATA $0, gclocals·28c054076fcd39c5(SB)
+	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
+TEXT ·mlib_ftell(SB), $48-16
 	PCDATA $1, $-1
 	MOVD 72(RSP), R8
 	CBZ R8, _LBB66_4
+	MOVD R8, R9
+	ADD $352, R8, R8
+	MOVD R9, 48(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp370:
+	MOVD 48(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB66_3
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·ftell(SB)
+_Ltmp371:
+	MOVD 48(RSP), R9
+	MOVD RSP, R8
+	MOVD 16(R8), R8
+	MOVD 352(R9), R9
+	STP (R8, R9), 40(RSP)
+	MOVD RSP, R8
+	MOVD R9, 8(R8)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp372:
+	MOVD 40(RSP), R8
+	JMP _LBB66_5
+_LBB66_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 48(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp373:
+_LBB66_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp374:
+	MOVD RSP, R8
+	MOVD $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVD R9, R8
+_LBB66_5:
+	MOVD R8, 80(RSP)
+	RET
+_Lfunc_end66:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
+TEXT ·mlib_ftello(SB), $48-16
+	PCDATA $1, $-1
+	MOVD 72(RSP), R8
+	CBZ R8, _LBB67_4
+	MOVD R8, R9
+	ADD $352, R8, R8
+	MOVD R9, 48(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp375:
+	MOVD 48(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB67_3
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·ftello(SB)
+_Ltmp376:
+	MOVD 48(RSP), R9
+	MOVD RSP, R8
+	MOVD 16(R8), R8
+	MOVD 352(R9), R9
+	STP (R8, R9), 40(RSP)
+	MOVD RSP, R8
+	MOVD R9, 8(R8)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp377:
+	MOVD 40(RSP), R8
+	JMP _LBB67_5
+_LBB67_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 48(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp378:
+_LBB67_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp379:
+	MOVD RSP, R8
+	MOVD $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVD R9, R8
+_LBB67_5:
+	MOVD R8, 80(RSP)
+	RET
+_Lfunc_end67:
+	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
+	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
+TEXT ·mlib_rewind(SB), $32-8
+	PCDATA $1, $-1
+	MOVD 56(RSP), R8
+	CBZ R8, _LBB68_4
+	MOVD R8, R9
+	ADD $352, R8, R8
+	MOVD R9, 32(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp380:
+	MOVD 32(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB68_3
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·rewind(SB)
+_Ltmp381:
+	MOVD 32(RSP), R8
+	MOVD RSP, R9
+	MOVD 352(R8), R8
+	MOVD R8, 32(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp382:
+	JMP _LBB68_5
+_LBB68_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 32(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileUnlock(SB)
+_Ltmp383:
+_LBB68_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp384:
+	MOVD RSP, R8
+	MOVW $9, R9
+	MOVD 8(R8), R8
+	MOVW R9, 0(R8)
+_LBB68_5:
+	RET
+_Lfunc_end68:
+	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_fgetpos(SB), $48-24
+	PCDATA $1, $-1
+	MOVD 72(RSP), R8
+	CBZ R8, _LBB69_4
 	MOVD 80(RSP), R9
 	STP (R8, R9), 40(RSP)
 	ADD $352, R8, R8
@@ -8398,16 +8682,16 @@ TEXT ·mlib_fsetpos(SB), $48-24
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp368:
+_Ltmp385:
 	MOVD 40(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB66_3
+	CBZW R9, _LBB69_3
 	MOVD 48(RSP), R9
 	MOVD RSP, R10
 	STP (R8, R9), 8(R10)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·fsetpos(SB)
-_Ltmp369:
+	CALL github·com∕c2gohq∕c2go_libc·fgetpos(SB)
+_Ltmp386:
 	MOVD RSP, R8
 	MOVD 40(RSP), R9
 	MOVWU 24(R8), R8
@@ -8418,37 +8702,95 @@ _Ltmp369:
 	MOVD R9, 8(R8)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp370:
+_Ltmp387:
 	MOVWU 36(RSP), R8
-	JMP _LBB66_5
-_LBB66_3:
+	JMP _LBB69_5
+_LBB69_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 48(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp371:
-_LBB66_4:
+_Ltmp388:
+_LBB69_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp372:
+_Ltmp389:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
-_LBB66_5:
+_LBB69_5:
 	MOVW R8, 88(RSP)
 	RET
-_Lfunc_end66:
+_Lfunc_end69:
+	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
+	FUNCDATA $1, gclocals·1d5cc5208a8b6dbb(SB)
+TEXT ·mlib_fsetpos(SB), $48-24
+	PCDATA $1, $-1
+	MOVD 72(RSP), R8
+	CBZ R8, _LBB70_4
+	MOVD 80(RSP), R9
+	STP (R8, R9), 40(RSP)
+	ADD $352, R8, R8
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp390:
+	MOVD 40(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB70_3
+	MOVD 48(RSP), R9
+	MOVD RSP, R10
+	STP (R8, R9), 8(R10)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·fsetpos(SB)
+_Ltmp391:
+	MOVD RSP, R8
+	MOVD 40(RSP), R9
+	MOVWU 24(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 36(RSP)
+	MOVD RSP, R8
+	MOVD R9, 48(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp392:
+	MOVWU 36(RSP), R8
+	JMP _LBB70_5
+_LBB70_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 48(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp393:
+_LBB70_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp394:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+_LBB70_5:
+	MOVW R8, 88(RSP)
+	RET
+_Lfunc_end70:
 	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
 	FUNCDATA $1, gclocals·1d5cc5208a8b6dbb(SB)
 TEXT ·mlib_fread(SB), $80-40
 	PCDATA $1, $-1
 	MOVD 128(RSP), R8
-	CBZ R8, _LBB67_4
+	CBZ R8, _LBB71_4
 	MOVD 104(RSP), R10
 	MOVD RSP, R9
 	STP (R8, R10), 72(RSP)
@@ -8456,10 +8798,10 @@ TEXT ·mlib_fread(SB), $80-40
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp373:
+_Ltmp395:
 	MOVD 72(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB67_3
+	CBZW R9, _LBB71_3
 	LDP 112(RSP), (R10, R9)
 	MOVD RSP, R12
 	MOVD 80(RSP), R11
@@ -8467,7 +8809,7 @@ _Ltmp373:
 	STP (R11, R10), 8(R12)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fread(SB)
-_Ltmp374:
+_Ltmp396:
 	MOVD RSP, R8
 	MOVD 72(RSP), R9
 	MOVD 40(R8), R8
@@ -8478,30 +8820,30 @@ _Ltmp374:
 	MOVD R9, 8(R8)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp375:
+_Ltmp397:
 	MOVD 64(RSP), R8
-	JMP _LBB67_5
-_LBB67_3:
+	JMP _LBB71_5
+_LBB71_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 80(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp376:
-_LBB67_4:
+_Ltmp398:
+_LBB71_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp377:
+_Ltmp399:
 	MOVD RSP, R8
 	MOVW $9, R9
 	MOVD 8(R8), R8
 	MOVW R9, 0(R8)
 	MOVD ZR, R8
-_LBB67_5:
+_LBB71_5:
 	MOVD R8, 136(RSP)
 	RET
-_Lfunc_end67:
+_Lfunc_end71:
 	FUNCDATA $0, gclocals·e5d25635518ba284(SB)
 DATA gclocals·e5d25635518ba284+0(SB)/4, $3
 DATA gclocals·e5d25635518ba284+4(SB)/4, $5
@@ -8524,7 +8866,7 @@ GLOBL gclocals·07efdcbd4c6940ff(SB), DUPOK|RODATA, $14
 TEXT ·mlib_fwrite(SB), $80-40
 	PCDATA $1, $-1
 	MOVD 128(RSP), R8
-	CBZ R8, _LBB68_4
+	CBZ R8, _LBB72_4
 	MOVD 104(RSP), R10
 	MOVD RSP, R9
 	STP (R8, R10), 72(RSP)
@@ -8532,10 +8874,10 @@ TEXT ·mlib_fwrite(SB), $80-40
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp378:
+_Ltmp400:
 	MOVD 72(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB68_3
+	CBZW R9, _LBB72_3
 	LDP 112(RSP), (R10, R9)
 	MOVD RSP, R12
 	MOVD 80(RSP), R11
@@ -8543,7 +8885,7 @@ _Ltmp378:
 	STP (R11, R10), 8(R12)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fwrite(SB)
-_Ltmp379:
+_Ltmp401:
 	MOVD RSP, R8
 	MOVD 72(RSP), R9
 	MOVD 40(R8), R8
@@ -8554,36 +8896,36 @@ _Ltmp379:
 	MOVD R9, 8(R8)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp380:
+_Ltmp402:
 	MOVD 64(RSP), R8
-	JMP _LBB68_5
-_LBB68_3:
+	JMP _LBB72_5
+_LBB72_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 80(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp381:
-_LBB68_4:
+_Ltmp403:
+_LBB72_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp382:
+_Ltmp404:
 	MOVD RSP, R8
 	MOVW $9, R9
 	MOVD 8(R8), R8
 	MOVW R9, 0(R8)
 	MOVD ZR, R8
-_LBB68_5:
+_LBB72_5:
 	MOVD R8, 136(RSP)
 	RET
-_Lfunc_end68:
+_Lfunc_end72:
 	FUNCDATA $0, gclocals·e5d25635518ba284(SB)
 	FUNCDATA $1, gclocals·07efdcbd4c6940ff(SB)
 TEXT ·mlib_ungetc(SB), $48-24
 	PCDATA $1, $-1
 	MOVD 80(RSP), R8
-	CBZ R8, _LBB69_4
+	CBZ R8, _LBB73_4
 	MOVD R8, R9
 	ADD $352, R8, R8
 	MOVD R9, 48(RSP)
@@ -8591,17 +8933,17 @@ TEXT ·mlib_ungetc(SB), $48-24
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp383:
+_Ltmp405:
 	MOVD 48(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB69_3
+	CBZW R9, _LBB73_3
 	MOVWU 72(RSP), R9
 	MOVD RSP, R10
 	MOVD R8, 16(R10)
 	MOVW R9, 8(R10)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·ungetc(SB)
-_Ltmp384:
+_Ltmp406:
 	MOVD RSP, R8
 	MOVD 48(RSP), R9
 	MOVWU 24(R8), R8
@@ -8612,37 +8954,37 @@ _Ltmp384:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp385:
+_Ltmp407:
 	MOVWU 44(RSP), R8
-	JMP _LBB69_5
-_LBB69_3:
+	JMP _LBB73_5
+_LBB73_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 48(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp386:
-_LBB69_4:
+_Ltmp408:
+_LBB73_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp387:
+_Ltmp409:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
-_LBB69_5:
+_LBB73_5:
 	MOVW R8, 88(RSP)
 	RET
-_Lfunc_end69:
+_Lfunc_end73:
 	FUNCDATA $0, gclocals·0560e73a5dc7a460(SB)
 	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
 TEXT ·mlib_fputc(SB), $48-24
 	PCDATA $1, $-1
 	MOVD 80(RSP), R8
-	CBZ R8, _LBB70_4
+	CBZ R8, _LBB74_4
 	MOVD R8, R9
 	ADD $352, R8, R8
 	MOVD R9, 48(RSP)
@@ -8650,17 +8992,17 @@ TEXT ·mlib_fputc(SB), $48-24
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp388:
+_Ltmp410:
 	MOVD 48(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB70_3
+	CBZW R9, _LBB74_3
 	MOVWU 72(RSP), R9
 	MOVD RSP, R10
 	MOVD R8, 16(R10)
 	MOVW R9, 8(R10)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fputc(SB)
-_Ltmp389:
+_Ltmp411:
 	MOVD RSP, R8
 	MOVD 48(RSP), R9
 	MOVWU 24(R8), R8
@@ -8671,37 +9013,37 @@ _Ltmp389:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp390:
+_Ltmp412:
 	MOVWU 44(RSP), R8
-	JMP _LBB70_5
-_LBB70_3:
+	JMP _LBB74_5
+_LBB74_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 48(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp391:
-_LBB70_4:
+_Ltmp413:
+_LBB74_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp392:
+_Ltmp414:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
-_LBB70_5:
+_LBB74_5:
 	MOVW R8, 88(RSP)
 	RET
-_Lfunc_end70:
+_Lfunc_end74:
 	FUNCDATA $0, gclocals·0560e73a5dc7a460(SB)
 	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
 TEXT ·mlib_putc(SB), $48-24
 	PCDATA $1, $-1
 	MOVD 80(RSP), R8
-	CBZ R8, _LBB71_4
+	CBZ R8, _LBB75_4
 	MOVD R8, R9
 	ADD $352, R8, R8
 	MOVD R9, 48(RSP)
@@ -8709,17 +9051,17 @@ TEXT ·mlib_putc(SB), $48-24
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp393:
+_Ltmp415:
 	MOVD 48(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB71_3
+	CBZW R9, _LBB75_3
 	MOVWU 72(RSP), R9
 	MOVD RSP, R10
 	MOVD R8, 16(R10)
 	MOVW R9, 8(R10)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fputc(SB)
-_Ltmp394:
+_Ltmp416:
 	MOVD RSP, R8
 	MOVD 48(RSP), R9
 	MOVWU 24(R8), R8
@@ -8730,63 +9072,63 @@ _Ltmp394:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp395:
+_Ltmp417:
 	MOVWU 44(RSP), R8
-	JMP _LBB71_5
-_LBB71_3:
+	JMP _LBB75_5
+_LBB75_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 48(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp396:
-_LBB71_4:
+_Ltmp418:
+_LBB75_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp397:
+_Ltmp419:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
-_LBB71_5:
+_LBB75_5:
 	MOVW R8, 88(RSP)
 	RET
-_Lfunc_end71:
+_Lfunc_end75:
 	FUNCDATA $0, gclocals·0560e73a5dc7a460(SB)
 	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
 TEXT ·mlib_getchar(SB), $64-8
 	PCDATA $1, $-1
 	PCDATA $1, $0
 	CALL ·OpenFileListLock(SB)
-_Ltmp398:
+_Ltmp420:
 	MOVD ·mlib_std_files(SB), R9
 	MOVD R9, R8
-	CBZ R9, _LBB72_3
-_LBB72_1:
+	CBZ R9, _LBB76_3
+_LBB76_1:
 	MOVD R8, 64(RSP)
 	PCDATA $1, $1
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp399:
+_Ltmp421:
 	MOVD 64(RSP), R8
 	MOVD RSP, R9
 	ADD $352, R8, R8
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp400:
+_Ltmp422:
 	MOVD 64(RSP), R8
 	MOVWU 400(R8), R10
 	MOVD R8, R9
-	CBZW R10, _LBB72_7
+	CBZW R10, _LBB76_7
 	MOVD R9, 56(RSP)
 	MOVD RSP, R9
 	MOVD R8, 8(R9)
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·fgetc(SB)
-_Ltmp401:
+_Ltmp423:
 	MOVD RSP, R8
 	MOVD 56(RSP), R9
 	MOVWU 16(R8), R8
@@ -8797,14 +9139,14 @@ _Ltmp401:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp402:
+_Ltmp424:
 	MOVWU 52(RSP), R8
-	JMP _LBB72_11
-_LBB72_3:
+	JMP _LBB76_11
+_LBB76_3:
 	PCDATA $1, $0
 	CALL ·mlib_file_allocate(SB)
-_Ltmp403:
-	CBZ R0, _LBB72_10
+_Ltmp425:
+	CBZ R0, _LBB76_10
 	MOVD 320(R0), R8
 	MOVD RSP, R9
 	MOVW $1032, R11
@@ -8814,39 +9156,39 @@ _Ltmp403:
 	MOVD R0, 8(R9)
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
-_Ltmp404:
+_Ltmp426:
 	MOVD RSP, R8
 	MOVWU 40(R8), R9
 	MOVD 56(RSP), R8
-	CBZW R9, _LBB72_8
+	CBZW R9, _LBB76_8
 	MOVD $runtime·writeBarrier(SB), R9
 	ADD $320, R8, R8
 	MOVD runtime·writeBarrier(SB), R9
 	MOVWU 0(R9), R9
-	CBZW R9, _LBB72_9
+	CBZW R9, _LBB76_9
 	MOVD RSP, R9
 	STP (R8, ZR), 8(R9)
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB72_10
-_LBB72_7:
+	JMP _LBB76_10
+_LBB76_7:
 	MOVD 352(R9), R8
 	MOVD RSP, R9
 	MOVD R8, 64(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp405:
+_Ltmp427:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp406:
+_Ltmp428:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
-	JMP _LBB72_11
-_LBB72_8:
+	JMP _LBB76_11
+_LBB76_8:
 	MOVW $1, R9
 	MOVW R9, 400(R8)
 	MOVD RSP, R9
@@ -8854,46 +9196,46 @@ _LBB72_8:
 	MOVW ZR, 8(R9)
 	PCDATA $1, $3
 	CALL ·mlib_stdfile_store(SB)
-_Ltmp407:
+_Ltmp429:
 	MOVD 56(RSP), R8
-	JMP _LBB72_1
-_LBB72_9:
+	JMP _LBB76_1
+_LBB76_9:
 	MOVD ZR, 0(R8)
-_LBB72_10:
+_LBB76_10:
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp408:
+_Ltmp430:
 	MOVW $-1, R8
-_LBB72_11:
+_LBB76_11:
 	MOVW R8, 88(RSP)
 	RET
-_Lfunc_end72:
+_Lfunc_end76:
 	FUNCDATA $0, gclocals·605edb4fa6e837b0(SB)
 	FUNCDATA $1, gclocals·00a8ce512222aff0(SB)
 TEXT ·mlib_putchar(SB), $64-16
 	PCDATA $1, $-1
 	PCDATA $1, $0
 	CALL ·OpenFileListLock(SB)
-_Ltmp409:
+_Ltmp431:
 	MOVD ·mlib_std_files+8(SB), R9
 	MOVD R9, R8
-	CBZ R9, _LBB73_3
-_LBB73_1:
+	CBZ R9, _LBB77_3
+_LBB77_1:
 	MOVD R8, 64(RSP)
 	PCDATA $1, $1
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp410:
+_Ltmp432:
 	MOVD 64(RSP), R8
 	MOVD RSP, R9
 	ADD $352, R8, R8
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp411:
+_Ltmp433:
 	MOVD 64(RSP), R8
 	MOVWU 400(R8), R10
 	MOVD R8, R9
-	CBZW R10, _LBB73_7
+	CBZW R10, _LBB77_7
 	MOVWU 88(RSP), R10
 	MOVD R9, 56(RSP)
 	MOVD RSP, R9
@@ -8901,7 +9243,7 @@ _Ltmp411:
 	MOVW R10, 8(R9)
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·fputc(SB)
-_Ltmp412:
+_Ltmp434:
 	MOVD RSP, R8
 	MOVD 56(RSP), R9
 	MOVWU 24(R8), R8
@@ -8912,14 +9254,14 @@ _Ltmp412:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp413:
+_Ltmp435:
 	MOVWU 52(RSP), R8
-	JMP _LBB73_11
-_LBB73_3:
+	JMP _LBB77_11
+_LBB77_3:
 	PCDATA $1, $0
 	CALL ·mlib_file_allocate(SB)
-_Ltmp414:
-	CBZ R0, _LBB73_10
+_Ltmp436:
+	CBZ R0, _LBB77_10
 	MOVD 320(R0), R8
 	MOVW $1032, R10
 	MOVD RSP, R9
@@ -8930,39 +9272,39 @@ _Ltmp414:
 	MOVD R0, 8(R9)
 	PCDATA $1, $2
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
-_Ltmp415:
+_Ltmp437:
 	MOVD RSP, R8
 	MOVWU 40(R8), R9
 	MOVD 56(RSP), R8
-	CBZW R9, _LBB73_8
+	CBZW R9, _LBB77_8
 	MOVD $runtime·writeBarrier(SB), R9
 	ADD $320, R8, R8
 	MOVD runtime·writeBarrier(SB), R9
 	MOVWU 0(R9), R9
-	CBZW R9, _LBB73_9
+	CBZW R9, _LBB77_9
 	MOVD RSP, R9
 	STP (R8, ZR), 8(R9)
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB73_10
-_LBB73_7:
+	JMP _LBB77_10
+_LBB77_7:
 	MOVD 352(R9), R8
 	MOVD RSP, R9
 	MOVD R8, 64(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp416:
+_Ltmp438:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp417:
+_Ltmp439:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
-	JMP _LBB73_11
-_LBB73_8:
+	JMP _LBB77_11
+_LBB77_8:
 	MOVW $1, R10
 	MOVD RSP, R9
 	MOVW R10, 400(R8)
@@ -8970,26 +9312,26 @@ _LBB73_8:
 	MOVW R10, 8(R9)
 	PCDATA $1, $3
 	CALL ·mlib_stdfile_store(SB)
-_Ltmp418:
+_Ltmp440:
 	MOVD 56(RSP), R8
-	JMP _LBB73_1
-_LBB73_9:
+	JMP _LBB77_1
+_LBB77_9:
 	MOVD ZR, 0(R8)
-_LBB73_10:
+_LBB77_10:
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp419:
+_Ltmp441:
 	MOVW $-1, R8
-_LBB73_11:
+_LBB77_11:
 	MOVW R8, 96(RSP)
 	RET
-_Lfunc_end73:
+_Lfunc_end77:
 	FUNCDATA $0, gclocals·bd4f306ac7b61613(SB)
 	FUNCDATA $1, gclocals·00a8ce512222aff0(SB)
 TEXT ·mlib_fgets(SB), $64-32
 	PCDATA $1, $-1
 	MOVD 104(RSP), R8
-	CBZ R8, _LBB74_4
+	CBZ R8, _LBB78_4
 	MOVD 88(RSP), R10
 	MOVD RSP, R9
 	STP (R8, R10), 56(RSP)
@@ -8997,10 +9339,10 @@ TEXT ·mlib_fgets(SB), $64-32
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp420:
+_Ltmp442:
 	MOVD 56(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB74_3
+	CBZW R9, _LBB78_3
 	MOVWU 96(RSP), R9
 	MOVD 64(RSP), R10
 	MOVD RSP, R11
@@ -9009,7 +9351,7 @@ _Ltmp420:
 	MOVD R10, 8(R11)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fgets(SB)
-_Ltmp421:
+_Ltmp443:
 	MOVD 56(RSP), R9
 	MOVD RSP, R8
 	MOVD 32(R8), R8
@@ -9019,36 +9361,36 @@ _Ltmp421:
 	MOVD R9, 8(R8)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp422:
+_Ltmp444:
 	MOVD 56(RSP), R8
-	JMP _LBB74_5
-_LBB74_3:
+	JMP _LBB78_5
+_LBB78_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 64(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp423:
-_LBB74_4:
+_Ltmp445:
+_LBB78_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp424:
+_Ltmp446:
 	MOVD RSP, R8
 	MOVW $9, R9
 	MOVD 8(R8), R8
 	MOVW R9, 0(R8)
 	MOVD ZR, R8
-_LBB74_5:
+_LBB78_5:
 	MOVD R8, 112(RSP)
 	RET
-_Lfunc_end74:
+_Lfunc_end78:
 	FUNCDATA $0, gclocals·0f33aeaaf5ed953f(SB)
 	FUNCDATA $1, gclocals·67337e9950b3314f(SB)
 TEXT ·mlib_getdelim(SB), $80-40
 	PCDATA $1, $-1
 	MOVD 128(RSP), R8
-	CBZ R8, _LBB75_4
+	CBZ R8, _LBB79_4
 	LDP 104(RSP), (R10, R9)
 	STP (R9, R10), 72(RSP)
 	MOVD R8, R9
@@ -9058,10 +9400,10 @@ TEXT ·mlib_getdelim(SB), $80-40
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp425:
+_Ltmp447:
 	MOVD 64(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB75_3
+	CBZW R9, _LBB79_3
 	LDP 72(RSP), (R10, R9)
 	MOVD RSP, R12
 	MOVWU 120(RSP), R11
@@ -9071,7 +9413,7 @@ _Ltmp425:
 	STP (R9, R10), 8(R12)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_getdelim_managed(SB)
-_Ltmp426:
+_Ltmp448:
 	MOVD RSP, R8
 	MOVD 64(RSP), R9
 	MOVD 40(R8), R8
@@ -9082,31 +9424,31 @@ _Ltmp426:
 	MOVD R9, 8(R8)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp427:
+_Ltmp449:
 	MOVD 56(RSP), R8
-	JMP _LBB75_5
-_LBB75_3:
+	JMP _LBB79_5
+_LBB79_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 80(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp428:
-_LBB75_4:
+_Ltmp450:
+_LBB79_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp429:
+_Ltmp451:
 	MOVD RSP, R8
 	MOVD $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVD R9, R8
-_LBB75_5:
+_LBB79_5:
 	MOVD R8, 136(RSP)
 	RET
-_Lfunc_end75:
+_Lfunc_end79:
 	FUNCDATA $0, gclocals·d4861e3547c153b6(SB)
 DATA gclocals·d4861e3547c153b6+0(SB)/4, $3
 DATA gclocals·d4861e3547c153b6+4(SB)/4, $5
@@ -9129,7 +9471,7 @@ GLOBL gclocals·ff4661bd47814254(SB), DUPOK|RODATA, $14
 TEXT ·mlib_getline(SB), $80-32
 	PCDATA $1, $-1
 	MOVD 120(RSP), R8
-	CBZ R8, _LBB76_4
+	CBZ R8, _LBB80_4
 	LDP 104(RSP), (R10, R9)
 	STP (R9, R10), 72(RSP)
 	MOVD R8, R9
@@ -9139,10 +9481,10 @@ TEXT ·mlib_getline(SB), $80-32
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp430:
+_Ltmp452:
 	MOVD 64(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB76_3
+	CBZW R9, _LBB80_3
 	LDP 72(RSP), (R10, R9)
 	MOVD RSP, R11
 	MOVW $10, R12
@@ -9152,7 +9494,7 @@ _Ltmp430:
 	STP (R9, R10), 8(R11)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_getdelim_managed(SB)
-_Ltmp431:
+_Ltmp453:
 	MOVD RSP, R8
 	MOVD 64(RSP), R9
 	MOVD 40(R8), R8
@@ -9163,31 +9505,31 @@ _Ltmp431:
 	MOVD R9, 8(R8)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp432:
+_Ltmp454:
 	MOVD 56(RSP), R8
-	JMP _LBB76_5
-_LBB76_3:
+	JMP _LBB80_5
+_LBB80_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 80(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp433:
-_LBB76_4:
+_Ltmp455:
+_LBB80_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp434:
+_Ltmp456:
 	MOVD RSP, R8
 	MOVD $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVD R9, R8
-_LBB76_5:
+_LBB80_5:
 	MOVD R8, 128(RSP)
 	RET
-_Lfunc_end76:
+_Lfunc_end80:
 	FUNCDATA $0, gclocals·fdd9eeaaec17d4fd(SB)
 DATA gclocals·fdd9eeaaec17d4fd+0(SB)/4, $3
 DATA gclocals·fdd9eeaaec17d4fd+4(SB)/4, $4
@@ -9200,7 +9542,7 @@ GLOBL gclocals·fdd9eeaaec17d4fd(SB), DUPOK|RODATA, $11
 TEXT ·mlib_fputs(SB), $48-24
 	PCDATA $1, $-1
 	MOVD 80(RSP), R8
-	CBZ R8, _LBB77_4
+	CBZ R8, _LBB81_4
 	MOVD 72(RSP), R10
 	MOVD RSP, R9
 	STP (R8, R10), 40(RSP)
@@ -9208,16 +9550,16 @@ TEXT ·mlib_fputs(SB), $48-24
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp435:
+_Ltmp457:
 	MOVD 40(RSP), R8
 	MOVWU 400(R8), R9
-	CBZW R9, _LBB77_3
+	CBZW R9, _LBB81_3
 	MOVD 48(RSP), R9
 	MOVD RSP, R10
 	STP (R9, R8), 8(R10)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·fputs(SB)
-_Ltmp436:
+_Ltmp458:
 	MOVD RSP, R8
 	MOVD 40(RSP), R9
 	MOVWU 24(R8), R8
@@ -9228,31 +9570,31 @@ _Ltmp436:
 	MOVD R9, 8(R8)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp437:
+_Ltmp459:
 	MOVWU 36(RSP), R8
-	JMP _LBB77_5
-_LBB77_3:
+	JMP _LBB81_5
+_LBB81_3:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVD R8, 48(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $2
 	CALL ·FileUnlock(SB)
-_Ltmp438:
-_LBB77_4:
+_Ltmp460:
+_LBB81_4:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp439:
+_Ltmp461:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
-_LBB77_5:
+_LBB81_5:
 	MOVW R8, 88(RSP)
 	RET
-_Lfunc_end77:
+_Lfunc_end81:
 	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
 	FUNCDATA $1, gclocals·1d5cc5208a8b6dbb(SB)
 TEXT ·mlib_puts(SB), $80-16
@@ -9261,36 +9603,36 @@ TEXT ·mlib_puts(SB), $80-16
 	MOVD R8, 80(RSP)
 	PCDATA $1, $1
 	CALL ·OpenFileListLock(SB)
-_Ltmp440:
+_Ltmp462:
 	MOVD ·mlib_std_files+8(SB), R9
 	MOVD R9, R8
-	CBZ R9, _LBB78_4
-_LBB78_1:
+	CBZ R9, _LBB82_4
+_LBB82_1:
 	MOVD R8, 72(RSP)
 	PCDATA $1, $2
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp441:
+_Ltmp463:
 	MOVD 72(RSP), R8
 	MOVD RSP, R9
 	ADD $352, R8, R8
 	MOVD R8, 8(R9)
 	PCDATA $1, $2
 	CALL ·FileLock(SB)
-_Ltmp442:
+_Ltmp464:
 	MOVD 72(RSP), R8
 	MOVWU 400(R8), R10
 	MOVD R8, R9
-	CBZW R10, _LBB78_8
+	CBZW R10, _LBB82_8
 	MOVD 80(RSP), R10
 	MOVD R9, 64(RSP)
 	MOVD RSP, R9
 	STP (R10, R8), 8(R9)
 	PCDATA $1, $3
 	CALL github·com∕c2gohq∕c2go_libc·fputs(SB)
-_Ltmp443:
+_Ltmp465:
 	MOVD RSP, R8
 	MOVWU 24(R8), R0
-	TBNZ $31, R0, _LBB78_9
+	TBNZ $31, R0, _LBB82_9
 	MOVD 72(RSP), R8
 	MOVD RSP, R9
 	MOVW $10, R10
@@ -9299,7 +9641,7 @@ _Ltmp443:
 	MOVW R0, 60(RSP)
 	PCDATA $1, $4
 	CALL github·com∕c2gohq∕c2go_libc·fputc(SB)
-_Ltmp444:
+_Ltmp466:
 	MOVD RSP, R8
 	MOVD 64(RSP), R9
 	MOVWU 24(R8), R8
@@ -9307,12 +9649,12 @@ _Ltmp444:
 	MOVWU 60(RSP), R8
 	WORD $0x5a9f1100
 	MOVD R9, R8
-	JMP _LBB78_10
-_LBB78_4:
+	JMP _LBB82_10
+_LBB82_4:
 	PCDATA $1, $1
 	CALL ·mlib_file_allocate(SB)
-_Ltmp445:
-	CBZ R0, _LBB78_13
+_Ltmp467:
+	CBZ R0, _LBB82_13
 	MOVD 320(R0), R8
 	MOVW $1032, R10
 	MOVD RSP, R9
@@ -9323,41 +9665,41 @@ _Ltmp445:
 	MOVD R0, 8(R9)
 	PCDATA $1, $3
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
-_Ltmp446:
+_Ltmp468:
 	MOVD RSP, R8
 	MOVWU 40(R8), R9
 	MOVD 64(RSP), R8
-	CBZW R9, _LBB78_11
+	CBZW R9, _LBB82_11
 	MOVD $runtime·writeBarrier(SB), R9
 	ADD $320, R8, R8
 	MOVD runtime·writeBarrier(SB), R9
 	MOVWU 0(R9), R9
-	CBZW R9, _LBB78_12
+	CBZW R9, _LBB82_12
 	MOVD RSP, R9
 	STP (R8, ZR), 8(R9)
 	CALL ·_c2go_writePtr(SB)
-	JMP _LBB78_13
-_LBB78_8:
+	JMP _LBB82_13
+_LBB82_8:
 	MOVD 352(R9), R8
 	MOVD RSP, R9
 	MOVD R8, 80(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp447:
+_Ltmp469:
 	PCDATA $1, $0
 	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp448:
+_Ltmp470:
 	MOVD RSP, R8
 	MOVW $-1, R9
 	MOVW $9, R10
 	MOVD 8(R8), R8
 	MOVW R10, 0(R8)
 	MOVWU R9, R8
-	JMP _LBB78_14
-_LBB78_9:
+	JMP _LBB82_14
+_LBB82_9:
 	MOVD 64(RSP), R8
-_LBB78_10:
+_LBB82_10:
 	MOVD 352(R8), R8
 	MOVD RSP, R9
 	MOVW R0, 60(RSP)
@@ -9365,10 +9707,10 @@ _LBB78_10:
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp449:
+_Ltmp471:
 	MOVWU 60(RSP), R8
-	JMP _LBB78_14
-_LBB78_11:
+	JMP _LBB82_14
+_LBB82_11:
 	MOVW $1, R10
 	MOVD RSP, R9
 	MOVW R10, 400(R8)
@@ -9376,20 +9718,20 @@ _LBB78_11:
 	MOVW R10, 8(R9)
 	PCDATA $1, $5
 	CALL ·mlib_stdfile_store(SB)
-_Ltmp450:
+_Ltmp472:
 	MOVD 64(RSP), R8
-	JMP _LBB78_1
-_LBB78_12:
+	JMP _LBB82_1
+_LBB82_12:
 	MOVD ZR, 0(R8)
-_LBB78_13:
+_LBB82_13:
 	PCDATA $1, $0
 	CALL ·OpenFileListUnlock(SB)
-_Ltmp451:
+_Ltmp473:
 	MOVW $-1, R8
-_LBB78_14:
+_LBB82_14:
 	MOVW R8, 112(RSP)
 	RET
-_Lfunc_end78:
+_Lfunc_end82:
 	FUNCDATA $0, gclocals·f289f81d800aec67(SB)
 DATA gclocals·f289f81d800aec67+0(SB)/4, $6
 DATA gclocals·f289f81d800aec67+4(SB)/4, $2
@@ -9421,348 +9763,6 @@ GLOBL gclocals·a6dd70026fdffc29(SB), DUPOK|RODATA, $20
 TEXT ·mlib_vfprintf(SB), $112-56
 	PCDATA $1, $-1
 	MOVD 136(RSP), R8
-	CBZ R8, _LBB79_4
-	LDP 160(RSP), (R9, R10)
-	STP (R9, R10), 104(RSP)
-	LDP 144(RSP), (R11, R9)
-	STP (R11, R9), 88(RSP)
-	MOVD R8, R9
-	ADD $352, R8, R8
-	MOVD R9, 80(RSP)
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp452:
-	MOVD 80(RSP), R8
-	MOVWU 400(R8), R9
-	CBZW R9, _LBB79_3
-	WORD $0x295627ea
-	LDP 88(RSP), (R11, R12)
-	MOVD RSP, R15
-	LDP 104(RSP), (R13, R14)
-	MOVD R8, 8(R15)
-	STPW (R10, R9), 48(R15)
-	STP (R11, R12), 16(R15)
-	STP (R13, R14), 32(R15)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·vfprintf(SB)
-_Ltmp453:
-	MOVD RSP, R8
-	MOVD 80(RSP), R9
-	MOVWU 56(R8), R8
-	MOVD 352(R9), R9
-	MOVW R8, 76(RSP)
-	MOVD RSP, R8
-	MOVD R9, 112(RSP)
-	MOVD R9, 8(R8)
-	PCDATA $1, $2
-	CALL ·FileUnlock(SB)
-_Ltmp454:
-	MOVWU 76(RSP), R8
-	JMP _LBB79_5
-_LBB79_3:
-	MOVD 352(R8), R8
-	MOVD RSP, R9
-	MOVD R8, 112(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $2
-	CALL ·FileUnlock(SB)
-_Ltmp455:
-_LBB79_4:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp456:
-	MOVD RSP, R8
-	MOVW $-1, R9
-	MOVW $9, R10
-	MOVD 8(R8), R8
-	MOVW R10, 0(R8)
-	MOVWU R9, R8
-_LBB79_5:
-	MOVW R8, 184(RSP)
-	RET
-_Lfunc_end79:
-	FUNCDATA $0, gclocals·2748d720908546c4(SB)
-DATA gclocals·2748d720908546c4+0(SB)/4, $3
-DATA gclocals·2748d720908546c4+4(SB)/4, $7
-DATA gclocals·2748d720908546c4+8(SB)/1, $0x03
-DATA gclocals·2748d720908546c4+9(SB)/1, $0x03
-DATA gclocals·2748d720908546c4+10(SB)/1, $0x03
-GLOBL gclocals·2748d720908546c4(SB), DUPOK|RODATA, $11
-
-	FUNCDATA $1, gclocals·cbddeaafe5f8f085(SB)
-DATA gclocals·cbddeaafe5f8f085+0(SB)/4, $3
-DATA gclocals·cbddeaafe5f8f085+4(SB)/4, $15
-DATA gclocals·cbddeaafe5f8f085+8(SB)/1, $0x00
-DATA gclocals·cbddeaafe5f8f085+9(SB)/1, $0x00
-DATA gclocals·cbddeaafe5f8f085+10(SB)/1, $0x00
-DATA gclocals·cbddeaafe5f8f085+11(SB)/1, $0x7c
-DATA gclocals·cbddeaafe5f8f085+12(SB)/1, $0x00
-DATA gclocals·cbddeaafe5f8f085+13(SB)/1, $0x40
-GLOBL gclocals·cbddeaafe5f8f085(SB), DUPOK|RODATA, $14
-
-TEXT ·mlib_fprintf(SB), $96-24
-	PCDATA $1, $-1
-	MOVD 120(RSP), R8
-	CBZ R8, _LBB80_4
-	LDP 128(RSP), (R9, R10)
-	STP (R9, R10), 88(RSP)
-	MOVD R8, R9
-	ADD $352, R8, R8
-	MOVD R9, 80(RSP)
-	MOVD RSP, R9
-	MOVD R8, 8(R9)
-	PCDATA $1, $1
-	CALL ·FileLock(SB)
-_Ltmp457:
-	MOVD 80(RSP), R8
-	MOVWU 400(R8), R9
-	CBZW R9, _LBB80_3
-	LDP 88(RSP), (R9, R10)
-	MOVD RSP, R11
-	MOVD R8, 8(R11)
-	STP (R9, R10), 16(R11)
-	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·vfprintf(SB)
-_Ltmp458:
-	MOVD RSP, R8
-	MOVD 80(RSP), R9
-	MOVWU 56(R8), R8
-	MOVD 352(R9), R9
-	MOVW R8, 76(RSP)
-	MOVD RSP, R8
-	MOVD R9, 96(RSP)
-	MOVD R9, 8(R8)
-	PCDATA $1, $2
-	CALL ·FileUnlock(SB)
-_Ltmp459:
-	MOVWU 76(RSP), R8
-	JMP _LBB80_5
-_LBB80_3:
-	MOVD 352(R8), R8
-	MOVD RSP, R9
-	MOVD R8, 96(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $2
-	CALL ·FileUnlock(SB)
-_Ltmp460:
-_LBB80_4:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp461:
-	MOVD RSP, R8
-	MOVW $-1, R9
-	MOVW $9, R10
-	MOVD 8(R8), R8
-	MOVW R10, 0(R8)
-	MOVWU R9, R8
-_LBB80_5:
-	MOVW R8, 144(RSP)
-	RET
-_Lfunc_end80:
-	FUNCDATA $0, gclocals·19df4549c42911ac(SB)
-DATA gclocals·19df4549c42911ac+0(SB)/4, $3
-DATA gclocals·19df4549c42911ac+4(SB)/4, $3
-DATA gclocals·19df4549c42911ac+8(SB)/1, $0x07
-DATA gclocals·19df4549c42911ac+9(SB)/1, $0x07
-DATA gclocals·19df4549c42911ac+10(SB)/1, $0x07
-GLOBL gclocals·19df4549c42911ac(SB), DUPOK|RODATA, $11
-
-	FUNCDATA $1, gclocals·72902cb69e18c277(SB)
-DATA gclocals·72902cb69e18c277+0(SB)/4, $3
-DATA gclocals·72902cb69e18c277+4(SB)/4, $13
-DATA gclocals·72902cb69e18c277+8(SB)/1, $0x00
-DATA gclocals·72902cb69e18c277+9(SB)/1, $0x00
-DATA gclocals·72902cb69e18c277+10(SB)/1, $0x00
-DATA gclocals·72902cb69e18c277+11(SB)/1, $0x1c
-DATA gclocals·72902cb69e18c277+12(SB)/1, $0x00
-DATA gclocals·72902cb69e18c277+13(SB)/1, $0x10
-GLOBL gclocals·72902cb69e18c277(SB), DUPOK|RODATA, $14
-
-TEXT ·mlib_vprintf(SB), $112-48
-	PCDATA $1, $-1
-	LDP 152(RSP), (R8, R9)
-	STP (R8, R9), 104(RSP)
-	LDP 136(RSP), (R10, R8)
-	STP (R10, R8), 88(RSP)
-	PCDATA $1, $1
-	CALL ·OpenFileListLock(SB)
-_Ltmp462:
-	MOVD ·mlib_std_files+8(SB), R9
-	MOVD R9, R8
-	CBZ R9, _LBB81_3
-_LBB81_1:
-	MOVD R8, 80(RSP)
-	PCDATA $1, $2
-	CALL ·OpenFileListUnlock(SB)
-_Ltmp463:
-	MOVD 80(RSP), R8
-	MOVD RSP, R9
-	ADD $352, R8, R8
-	MOVD R8, 8(R9)
-	PCDATA $1, $2
-	CALL ·FileLock(SB)
-_Ltmp464:
-	MOVD 80(RSP), R8
-	MOVWU 400(R8), R10
-	MOVD R8, R9
-	CBZW R10, _LBB81_7
-	WORD $0x29552beb
-	LDP 88(RSP), (R12, R13)
-	MOVD R9, 72(RSP)
-	LDP 104(RSP), (R14, R15)
-	MOVD RSP, R9
-	STPW (R11, R10), 48(R9)
-	STP (R12, R13), 16(R9)
-	STP (R14, R15), 32(R9)
-	MOVD R8, 8(R9)
-	PCDATA $1, $3
-	CALL github·com∕c2gohq∕c2go_libc·vfprintf(SB)
-_Ltmp465:
-	MOVD RSP, R8
-	MOVD 72(RSP), R9
-	MOVWU 56(R8), R8
-	MOVD 352(R9), R9
-	MOVW R8, 68(RSP)
-	MOVD RSP, R8
-	MOVD R9, 112(RSP)
-	MOVD R9, 8(R8)
-	PCDATA $1, $4
-	CALL ·FileUnlock(SB)
-_Ltmp466:
-	MOVWU 68(RSP), R8
-	JMP _LBB81_11
-_LBB81_3:
-	PCDATA $1, $1
-	CALL ·mlib_file_allocate(SB)
-_Ltmp467:
-	CBZ R0, _LBB81_10
-	MOVD 320(R0), R8
-	MOVW $1032, R10
-	MOVD RSP, R9
-	STP (R0, R8), 72(RSP)
-	STP (R8, R10), 24(R9)
-	MOVW $1, R10
-	MOVW R10, 16(R9)
-	MOVD R0, 8(R9)
-	PCDATA $1, $3
-	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
-_Ltmp468:
-	MOVD RSP, R8
-	MOVWU 40(R8), R9
-	MOVD 72(RSP), R8
-	CBZW R9, _LBB81_8
-	MOVD $runtime·writeBarrier(SB), R9
-	ADD $320, R8, R8
-	MOVD runtime·writeBarrier(SB), R9
-	MOVWU 0(R9), R9
-	CBZW R9, _LBB81_9
-	MOVD RSP, R9
-	STP (R8, ZR), 8(R9)
-	CALL ·_c2go_writePtr(SB)
-	JMP _LBB81_10
-_LBB81_7:
-	MOVD 352(R9), R8
-	MOVD RSP, R9
-	MOVD R8, 112(RSP)
-	MOVD R8, 8(R9)
-	PCDATA $1, $4
-	CALL ·FileUnlock(SB)
-_Ltmp469:
-	PCDATA $1, $0
-	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
-_Ltmp470:
-	MOVD RSP, R8
-	MOVW $-1, R9
-	MOVW $9, R10
-	MOVD 8(R8), R8
-	MOVW R10, 0(R8)
-	MOVWU R9, R8
-	JMP _LBB81_11
-_LBB81_8:
-	MOVW $1, R10
-	MOVD RSP, R9
-	MOVW R10, 400(R8)
-	MOVD R8, 16(R9)
-	MOVW R10, 8(R9)
-	PCDATA $1, $5
-	CALL ·mlib_stdfile_store(SB)
-_Ltmp471:
-	MOVD 72(RSP), R8
-	JMP _LBB81_1
-_LBB81_9:
-	MOVD ZR, 0(R8)
-_LBB81_10:
-	PCDATA $1, $0
-	CALL ·OpenFileListUnlock(SB)
-_Ltmp472:
-	MOVW $-1, R8
-_LBB81_11:
-	MOVW R8, 176(RSP)
-	RET
-_Lfunc_end81:
-	FUNCDATA $0, gclocals·551e7c2b8d4b758b(SB)
-DATA gclocals·551e7c2b8d4b758b+0(SB)/4, $6
-DATA gclocals·551e7c2b8d4b758b+4(SB)/4, $6
-DATA gclocals·551e7c2b8d4b758b+8(SB)/1, $0x01
-DATA gclocals·551e7c2b8d4b758b+9(SB)/1, $0x01
-DATA gclocals·551e7c2b8d4b758b+10(SB)/1, $0x01
-DATA gclocals·551e7c2b8d4b758b+11(SB)/1, $0x01
-DATA gclocals·551e7c2b8d4b758b+12(SB)/1, $0x01
-DATA gclocals·551e7c2b8d4b758b+13(SB)/1, $0x01
-GLOBL gclocals·551e7c2b8d4b758b(SB), DUPOK|RODATA, $14
-
-	FUNCDATA $1, gclocals·a913a1d5225eb25c(SB)
-DATA gclocals·a913a1d5225eb25c+0(SB)/4, $6
-DATA gclocals·a913a1d5225eb25c+4(SB)/4, $15
-DATA gclocals·a913a1d5225eb25c+8(SB)/1, $0x00
-DATA gclocals·a913a1d5225eb25c+9(SB)/1, $0x00
-DATA gclocals·a913a1d5225eb25c+10(SB)/1, $0x00
-DATA gclocals·a913a1d5225eb25c+11(SB)/1, $0x78
-DATA gclocals·a913a1d5225eb25c+12(SB)/1, $0x00
-DATA gclocals·a913a1d5225eb25c+13(SB)/1, $0x7c
-DATA gclocals·a913a1d5225eb25c+14(SB)/1, $0x00
-DATA gclocals·a913a1d5225eb25c+15(SB)/1, $0x7e
-DATA gclocals·a913a1d5225eb25c+16(SB)/1, $0x00
-DATA gclocals·a913a1d5225eb25c+17(SB)/1, $0x40
-DATA gclocals·a913a1d5225eb25c+18(SB)/1, $0x00
-DATA gclocals·a913a1d5225eb25c+19(SB)/1, $0x7a
-GLOBL gclocals·a913a1d5225eb25c(SB), DUPOK|RODATA, $20
-
-TEXT ·mlib_printf(SB), $80-16
-	PCDATA $1, $-1
-	LDP 104(RSP), (R8, R9)
-	MOVD RSP, R10
-	STP (R8, R9), 72(RSP)
-	STP (R8, R9), 8(R10)
-	PCDATA $1, $1
-	CALL ·mlib_vprintf(SB)
-_Ltmp473:
-	MOVD RSP, R8
-	MOVWU 48(R8), R8
-	MOVW R8, 120(RSP)
-	RET
-_Lfunc_end82:
-	FUNCDATA $0, gclocals·e1f3e66d4bb68923(SB)
-DATA gclocals·e1f3e66d4bb68923+0(SB)/4, $2
-DATA gclocals·e1f3e66d4bb68923+4(SB)/4, $2
-DATA gclocals·e1f3e66d4bb68923+8(SB)/1, $0x03
-DATA gclocals·e1f3e66d4bb68923+9(SB)/1, $0x03
-GLOBL gclocals·e1f3e66d4bb68923(SB), DUPOK|RODATA, $10
-
-	FUNCDATA $1, gclocals·d9d4994809594536(SB)
-DATA gclocals·d9d4994809594536+0(SB)/4, $2
-DATA gclocals·d9d4994809594536+4(SB)/4, $11
-DATA gclocals·d9d4994809594536+8(SB)/1, $0x00
-DATA gclocals·d9d4994809594536+9(SB)/1, $0x00
-DATA gclocals·d9d4994809594536+10(SB)/1, $0x00
-DATA gclocals·d9d4994809594536+11(SB)/1, $0x06
-GLOBL gclocals·d9d4994809594536(SB), DUPOK|RODATA, $12
-
-TEXT ·mlib_vfscanf(SB), $112-56
-	PCDATA $1, $-1
-	MOVD 136(RSP), R8
 	CBZ R8, _LBB83_4
 	LDP 160(RSP), (R9, R10)
 	STP (R9, R10), 104(RSP)
@@ -9788,7 +9788,7 @@ _Ltmp474:
 	STP (R11, R12), 16(R15)
 	STP (R13, R14), 32(R15)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfscanf_managed(SB)
+	CALL github·com∕c2gohq∕c2go_libc·vfprintf(SB)
 _Ltmp475:
 	MOVD RSP, R8
 	MOVD 80(RSP), R9
@@ -9827,7 +9827,7 @@ _LBB83_5:
 _Lfunc_end83:
 	FUNCDATA $0, gclocals·2748d720908546c4(SB)
 	FUNCDATA $1, gclocals·cbddeaafe5f8f085(SB)
-TEXT ·mlib_fscanf(SB), $96-24
+TEXT ·mlib_fprintf(SB), $96-24
 	PCDATA $1, $-1
 	MOVD 120(RSP), R8
 	CBZ R8, _LBB84_4
@@ -9849,7 +9849,7 @@ _Ltmp479:
 	MOVD R8, 8(R11)
 	STP (R9, R10), 16(R11)
 	PCDATA $1, $1
-	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfscanf_managed(SB)
+	CALL github·com∕c2gohq∕c2go_libc·vfprintf(SB)
 _Ltmp480:
 	MOVD RSP, R8
 	MOVD 80(RSP), R9
@@ -9888,7 +9888,7 @@ _LBB84_5:
 _Lfunc_end84:
 	FUNCDATA $0, gclocals·19df4549c42911ac(SB)
 	FUNCDATA $1, gclocals·72902cb69e18c277(SB)
-TEXT ·mlib_vscanf(SB), $112-48
+TEXT ·mlib_vprintf(SB), $112-48
 	PCDATA $1, $-1
 	LDP 152(RSP), (R8, R9)
 	STP (R8, R9), 104(RSP)
@@ -9897,7 +9897,7 @@ TEXT ·mlib_vscanf(SB), $112-48
 	PCDATA $1, $1
 	CALL ·OpenFileListLock(SB)
 _Ltmp484:
-	MOVD ·mlib_std_files(SB), R9
+	MOVD ·mlib_std_files+8(SB), R9
 	MOVD R9, R8
 	CBZ R9, _LBB85_3
 _LBB85_1:
@@ -9926,7 +9926,7 @@ _Ltmp486:
 	STP (R14, R15), 32(R9)
 	MOVD R8, 8(R9)
 	PCDATA $1, $3
-	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfscanf_managed(SB)
+	CALL github·com∕c2gohq∕c2go_libc·vfprintf(SB)
 _Ltmp487:
 	MOVD RSP, R8
 	MOVD 72(RSP), R9
@@ -9947,11 +9947,12 @@ _LBB85_3:
 _Ltmp489:
 	CBZ R0, _LBB85_10
 	MOVD 320(R0), R8
+	MOVW $1032, R10
 	MOVD RSP, R9
-	MOVW $1032, R11
 	STP (R0, R8), 72(RSP)
-	STP (R8, R11), 24(R9)
-	MOVW ZR, 16(R9)
+	STP (R8, R10), 24(R9)
+	MOVW $1, R10
+	MOVW R10, 16(R9)
 	MOVD R0, 8(R9)
 	PCDATA $1, $3
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
@@ -9988,11 +9989,11 @@ _Ltmp492:
 	MOVWU R9, R8
 	JMP _LBB85_11
 _LBB85_8:
-	MOVW $1, R9
-	MOVW R9, 400(R8)
+	MOVW $1, R10
 	MOVD RSP, R9
+	MOVW R10, 400(R8)
 	MOVD R8, 16(R9)
-	MOVW ZR, 8(R9)
+	MOVW R10, 8(R9)
 	PCDATA $1, $5
 	CALL ·mlib_stdfile_store(SB)
 _Ltmp493:
@@ -10011,6 +10012,273 @@ _LBB85_11:
 _Lfunc_end85:
 	FUNCDATA $0, gclocals·551e7c2b8d4b758b(SB)
 	FUNCDATA $1, gclocals·a913a1d5225eb25c(SB)
+TEXT ·mlib_printf(SB), $80-16
+	PCDATA $1, $-1
+	LDP 104(RSP), (R8, R9)
+	MOVD RSP, R10
+	STP (R8, R9), 72(RSP)
+	STP (R8, R9), 8(R10)
+	PCDATA $1, $1
+	CALL ·mlib_vprintf(SB)
+_Ltmp495:
+	MOVD RSP, R8
+	MOVWU 48(R8), R8
+	MOVW R8, 120(RSP)
+	RET
+_Lfunc_end86:
+	FUNCDATA $0, gclocals·e1f3e66d4bb68923(SB)
+	FUNCDATA $1, gclocals·d9d4994809594536(SB)
+TEXT ·mlib_vfscanf(SB), $112-56
+	PCDATA $1, $-1
+	MOVD 136(RSP), R8
+	CBZ R8, _LBB87_4
+	LDP 160(RSP), (R9, R10)
+	STP (R9, R10), 104(RSP)
+	LDP 144(RSP), (R11, R9)
+	STP (R11, R9), 88(RSP)
+	MOVD R8, R9
+	ADD $352, R8, R8
+	MOVD R9, 80(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp496:
+	MOVD 80(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB87_3
+	WORD $0x295627ea
+	LDP 88(RSP), (R11, R12)
+	MOVD RSP, R15
+	LDP 104(RSP), (R13, R14)
+	MOVD R8, 8(R15)
+	STPW (R10, R9), 48(R15)
+	STP (R11, R12), 16(R15)
+	STP (R13, R14), 32(R15)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfscanf_managed(SB)
+_Ltmp497:
+	MOVD RSP, R8
+	MOVD 80(RSP), R9
+	MOVWU 56(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 76(RSP)
+	MOVD RSP, R8
+	MOVD R9, 112(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp498:
+	MOVWU 76(RSP), R8
+	JMP _LBB87_5
+_LBB87_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 112(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp499:
+_LBB87_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp500:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+_LBB87_5:
+	MOVW R8, 184(RSP)
+	RET
+_Lfunc_end87:
+	FUNCDATA $0, gclocals·2748d720908546c4(SB)
+	FUNCDATA $1, gclocals·cbddeaafe5f8f085(SB)
+TEXT ·mlib_fscanf(SB), $96-24
+	PCDATA $1, $-1
+	MOVD 120(RSP), R8
+	CBZ R8, _LBB88_4
+	LDP 128(RSP), (R9, R10)
+	STP (R9, R10), 88(RSP)
+	MOVD R8, R9
+	ADD $352, R8, R8
+	MOVD R9, 80(RSP)
+	MOVD RSP, R9
+	MOVD R8, 8(R9)
+	PCDATA $1, $1
+	CALL ·FileLock(SB)
+_Ltmp501:
+	MOVD 80(RSP), R8
+	MOVWU 400(R8), R9
+	CBZW R9, _LBB88_3
+	LDP 88(RSP), (R9, R10)
+	MOVD RSP, R11
+	MOVD R8, 8(R11)
+	STP (R9, R10), 16(R11)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfscanf_managed(SB)
+_Ltmp502:
+	MOVD RSP, R8
+	MOVD 80(RSP), R9
+	MOVWU 56(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 76(RSP)
+	MOVD RSP, R8
+	MOVD R9, 96(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp503:
+	MOVWU 76(RSP), R8
+	JMP _LBB88_5
+_LBB88_3:
+	MOVD 352(R8), R8
+	MOVD RSP, R9
+	MOVD R8, 96(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $2
+	CALL ·FileUnlock(SB)
+_Ltmp504:
+_LBB88_4:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp505:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+_LBB88_5:
+	MOVW R8, 144(RSP)
+	RET
+_Lfunc_end88:
+	FUNCDATA $0, gclocals·19df4549c42911ac(SB)
+	FUNCDATA $1, gclocals·72902cb69e18c277(SB)
+TEXT ·mlib_vscanf(SB), $112-48
+	PCDATA $1, $-1
+	LDP 152(RSP), (R8, R9)
+	STP (R8, R9), 104(RSP)
+	LDP 136(RSP), (R10, R8)
+	STP (R10, R8), 88(RSP)
+	PCDATA $1, $1
+	CALL ·OpenFileListLock(SB)
+_Ltmp506:
+	MOVD ·mlib_std_files(SB), R9
+	MOVD R9, R8
+	CBZ R9, _LBB89_3
+_LBB89_1:
+	MOVD R8, 80(RSP)
+	PCDATA $1, $2
+	CALL ·OpenFileListUnlock(SB)
+_Ltmp507:
+	MOVD 80(RSP), R8
+	MOVD RSP, R9
+	ADD $352, R8, R8
+	MOVD R8, 8(R9)
+	PCDATA $1, $2
+	CALL ·FileLock(SB)
+_Ltmp508:
+	MOVD 80(RSP), R8
+	MOVWU 400(R8), R10
+	MOVD R8, R9
+	CBZW R10, _LBB89_7
+	WORD $0x29552beb
+	LDP 88(RSP), (R12, R13)
+	MOVD R9, 72(RSP)
+	LDP 104(RSP), (R14, R15)
+	MOVD RSP, R9
+	STPW (R11, R10), 48(R9)
+	STP (R12, R13), 16(R9)
+	STP (R14, R15), 32(R9)
+	MOVD R8, 8(R9)
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_vfscanf_managed(SB)
+_Ltmp509:
+	MOVD RSP, R8
+	MOVD 72(RSP), R9
+	MOVWU 56(R8), R8
+	MOVD 352(R9), R9
+	MOVW R8, 68(RSP)
+	MOVD RSP, R8
+	MOVD R9, 112(RSP)
+	MOVD R9, 8(R8)
+	PCDATA $1, $4
+	CALL ·FileUnlock(SB)
+_Ltmp510:
+	MOVWU 68(RSP), R8
+	JMP _LBB89_11
+_LBB89_3:
+	PCDATA $1, $1
+	CALL ·mlib_file_allocate(SB)
+_Ltmp511:
+	CBZ R0, _LBB89_10
+	MOVD 320(R0), R8
+	MOVD RSP, R9
+	MOVW $1032, R11
+	STP (R0, R8), 72(RSP)
+	STP (R8, R11), 24(R9)
+	MOVW ZR, 16(R9)
+	MOVD R0, 8(R9)
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_file_raw_stdinit(SB)
+_Ltmp512:
+	MOVD RSP, R8
+	MOVWU 40(R8), R9
+	MOVD 72(RSP), R8
+	CBZW R9, _LBB89_8
+	MOVD $runtime·writeBarrier(SB), R9
+	ADD $320, R8, R8
+	MOVD runtime·writeBarrier(SB), R9
+	MOVWU 0(R9), R9
+	CBZW R9, _LBB89_9
+	MOVD RSP, R9
+	STP (R8, ZR), 8(R9)
+	CALL ·_c2go_writePtr(SB)
+	JMP _LBB89_10
+_LBB89_7:
+	MOVD 352(R9), R8
+	MOVD RSP, R9
+	MOVD R8, 112(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $4
+	CALL ·FileUnlock(SB)
+_Ltmp513:
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp514:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $9, R10
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+	JMP _LBB89_11
+_LBB89_8:
+	MOVW $1, R9
+	MOVW R9, 400(R8)
+	MOVD RSP, R9
+	MOVD R8, 16(R9)
+	MOVW ZR, 8(R9)
+	PCDATA $1, $5
+	CALL ·mlib_stdfile_store(SB)
+_Ltmp515:
+	MOVD 72(RSP), R8
+	JMP _LBB89_1
+_LBB89_9:
+	MOVD ZR, 0(R8)
+_LBB89_10:
+	PCDATA $1, $0
+	CALL ·OpenFileListUnlock(SB)
+_Ltmp516:
+	MOVW $-1, R8
+_LBB89_11:
+	MOVW R8, 176(RSP)
+	RET
+_Lfunc_end89:
+	FUNCDATA $0, gclocals·551e7c2b8d4b758b(SB)
+	FUNCDATA $1, gclocals·a913a1d5225eb25c(SB)
 TEXT ·mlib_scanf(SB), $80-16
 	PCDATA $1, $-1
 	LDP 104(RSP), (R8, R9)
@@ -10019,12 +10287,12 @@ TEXT ·mlib_scanf(SB), $80-16
 	STP (R8, R9), 8(R10)
 	PCDATA $1, $1
 	CALL ·mlib_vscanf(SB)
-_Ltmp495:
+_Ltmp517:
 	MOVD RSP, R8
 	MOVWU 48(R8), R8
 	MOVW R8, 120(RSP)
 	RET
-_Lfunc_end86:
+_Lfunc_end90:
 	FUNCDATA $0, gclocals·e1f3e66d4bb68923(SB)
 	FUNCDATA $1, gclocals·d9d4994809594536(SB)
 TEXT ·mlib_vsscanf(SB), $112-56
@@ -10043,12 +10311,12 @@ TEXT ·mlib_vsscanf(SB), $112-56
 	MOVD R12, 8(R15)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_vsscanf_managed(SB)
-_Ltmp496:
+_Ltmp518:
 	MOVD RSP, R8
 	MOVWU 56(R8), R8
 	MOVW R8, 184(RSP)
 	RET
-_Lfunc_end87:
+_Lfunc_end91:
 	FUNCDATA $0, gclocals·930abf6ea60373be(SB)
 DATA gclocals·930abf6ea60373be+0(SB)/4, $2
 DATA gclocals·930abf6ea60373be+4(SB)/4, $7
@@ -10076,12 +10344,12 @@ TEXT ·mlib_sscanf(SB), $96-24
 	MOVD R10, 8(R11)
 	PCDATA $1, $1
 	CALL github·com∕c2gohq∕c2go_libc·__c2go_vsscanf_managed(SB)
-_Ltmp497:
+_Ltmp519:
 	MOVD RSP, R8
 	MOVWU 56(R8), R8
 	MOVW R8, 144(RSP)
 	RET
-_Lfunc_end88:
+_Lfunc_end92:
 	FUNCDATA $0, gclocals·0556bc3a5dbf06ca(SB)
 DATA gclocals·0556bc3a5dbf06ca+0(SB)/4, $2
 DATA gclocals·0556bc3a5dbf06ca+4(SB)/4, $3
@@ -10101,7 +10369,7 @@ GLOBL gclocals·9bdef135f37a84c6(SB), DUPOK|RODATA, $12
 TEXT ·mlib_flockfile(SB), $32-8
 	PCDATA $1, $-1
 	MOVD 56(RSP), R8
-	CBZ R8, _LBB89_2
+	CBZ R8, _LBB93_2
 	MOVD R8, R9
 	ADD $352, R8, R8
 	MOVD R9, 32(RSP)
@@ -10109,16 +10377,16 @@ TEXT ·mlib_flockfile(SB), $32-8
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileLock(SB)
-_Ltmp498:
-_LBB89_2:
+_Ltmp520:
+_LBB93_2:
 	RET
-_Lfunc_end89:
+_Lfunc_end93:
 	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
 	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
 TEXT ·mlib_ftrylockfile(SB), $32-16
 	PCDATA $1, $-1
 	MOVD 56(RSP), R8
-	CBZ R8, _LBB90_2
+	CBZ R8, _LBB94_2
 	MOVD R8, R9
 	ADD $352, R8, R8
 	MOVD R9, 32(RSP)
@@ -10126,30 +10394,30 @@ TEXT ·mlib_ftrylockfile(SB), $32-16
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileTryLock(SB)
-_Ltmp499:
+_Ltmp521:
 	MOVD RSP, R8
 	MOVWU 16(R8), R8
-_LBB90_2:
+_LBB94_2:
 	MOVW R8, 64(RSP)
 	RET
-_Lfunc_end90:
+_Lfunc_end94:
 	FUNCDATA $0, gclocals·e1ed1c6d4bb0c637(SB)
 	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
 TEXT ·mlib_funlockfile(SB), $32-8
 	PCDATA $1, $-1
 	MOVD 56(RSP), R8
-	CBZ R8, _LBB91_3
+	CBZ R8, _LBB95_3
 	MOVD 352(R8), R8
-	CBZ R8, _LBB91_3
+	CBZ R8, _LBB95_3
 	MOVD RSP, R9
 	MOVD R8, 32(RSP)
 	MOVD R8, 8(R9)
 	PCDATA $1, $1
 	CALL ·FileUnlock(SB)
-_Ltmp500:
-_LBB91_3:
+_Ltmp522:
+_LBB95_3:
 	RET
-_Lfunc_end91:
+_Lfunc_end95:
 DATA _L_str<>+0(SB)/1, $0x48
 DATA _L_str<>+1(SB)/1, $0x4f
 DATA _L_str<>+2(SB)/1, $0x4d

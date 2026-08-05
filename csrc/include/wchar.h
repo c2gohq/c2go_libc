@@ -212,7 +212,10 @@ wint_t ungetwc(wint_t, FILE *)
  * shared printf state machine / union arg / pop_arg are reused from the narrow
  * printf_core (same TU); the per-thread locale switching is dropped (c2go is
  * UTF-8-only) and the non-reentrant FILE lock forces the *_unlocked wide-output
- * path. Each c2go_extern definition needs its matching linkname here. */
+ * path. Each c2go_extern definition needs its matching linkname here. Managed
+ * FILE replacement mode hides the root stream family; <c2go/mlib/wchar.h>
+ * supplies managed vfwprintf/fwprintf/vwprintf/wprintf wrappers while the
+ * FILE-independent swprintf/vswprintf functions remain shared. */
 
 #ifndef C2GO_MLIB_FILE_REPLACEMENT
 int vfwprintf(FILE *__restrict, const wchar_t *__restrict, va_list)

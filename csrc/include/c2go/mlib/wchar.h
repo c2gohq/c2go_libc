@@ -37,6 +37,17 @@ wchar_t *C2GO_MLIB_NAME(fgetws)(wchar_t *__restrict, int,
 wint_t C2GO_MLIB_NAME(ungetwc)(wint_t, C2GO_MLIB_NAME(FILE) *)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_ungetwc", C2GO_GOABI0);
 
+int C2GO_MLIB_NAME(vfwprintf)(C2GO_MLIB_NAME(FILE) *__restrict,
+    const wchar_t *__restrict, va_list)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vfwprintf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(fwprintf)(C2GO_MLIB_NAME(FILE) *__restrict,
+    const wchar_t *__restrict, ...)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fwprintf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(vwprintf)(const wchar_t *__restrict, va_list)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vwprintf", C2GO_GOABI0);
+int C2GO_MLIB_NAME(wprintf)(const wchar_t *__restrict, ...)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_wprintf", C2GO_GOABI0);
+
 #pragma c2go pop
 
 #endif /* C2GO_MLIB_WCHAR_H */

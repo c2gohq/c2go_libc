@@ -93,6 +93,9 @@ func C2goFileRawUngetwc(c uint32, f *FILE) uint32
 //go:linkname C2goFileRawVfscanfManaged github.com/c2gohq/c2go_libc.__c2go_file_raw_vfscanf_managed
 func C2goFileRawVfscanfManaged(f *FILE, fmt *byte, ap unsafe.Pointer) int32
 
+//go:linkname C2goFileRawVfwprintf github.com/c2gohq/c2go_libc.__c2go_file_raw_vfwprintf
+func C2goFileRawVfwprintf(f *FILE, fmt *int32, ap unsafe.Pointer) int32
+
 //go:linkname C2goFinalize github.com/c2gohq/c2go_libc.__c2go_finalize
 func C2goFinalize()
 

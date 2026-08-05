@@ -33,6 +33,12 @@
 #ifndef C2GO_MLIB_TEST_UNGETWC
 #error "C2GO_MLIB_TEST_UNGETWC must name the managed ungetwc"
 #endif
+#ifndef C2GO_MLIB_TEST_VFWPRINTF
+#error "C2GO_MLIB_TEST_VFWPRINTF must name the managed vfwprintf"
+#endif
+#ifndef C2GO_MLIB_TEST_FWPRINTF
+#error "C2GO_MLIB_TEST_FWPRINTF must name the managed fwprintf"
+#endif
 #ifndef C2GO_MLIB_TEST_FPOS
 #error "C2GO_MLIB_TEST_FPOS must name the managed fpos type"
 #endif
@@ -207,6 +213,17 @@ static int c2go_mlib_test_vfscanf(C2GO_MLIB_TEST_FILE *stream,
     return result;
 }
 
+static int c2go_mlib_test_vfwprintf(C2GO_MLIB_TEST_FILE *stream,
+                                    const wchar_t *format, ...)
+{
+    int result;
+    va_list arguments;
+    va_start(arguments, format);
+    result = C2GO_MLIB_TEST_VFWPRINTF(stream, format, arguments);
+    va_end(arguments);
+    return result;
+}
+
 static int c2go_mlib_test_vsscanf(const char *input,
                                   const char *format, ...)
 {
@@ -238,7 +255,7 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-long";
     const char memory_text[] = "managed-memory";
     const char cookie_text[] = "managed-cookie";
-    const wchar_t wide_text[] = L"wide-stream";
+    const wchar_t wide_text[] = L"wide-stream:42!";
     char root[512], path[600], input[32] = {0}, formatted[16];
     char word[8] = {0}, set[4] = {0}, mark = 0;
     char pointer_text[32], *target, *line_before, *memory, *output_initial;
@@ -456,6 +473,8 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     if (C2GO_MLIB_TEST_FPUTWS(L"wide", stream) < 0 ||
         C2GO_MLIB_TEST_FPUTWC(L'-', stream) == WEOF ||
         C2GO_MLIB_TEST_FPUTWS(L"stream", stream) < 0 ||
+        C2GO_MLIB_TEST_FWPRINTF(stream, L":%d", 42) != 3 ||
+        c2go_mlib_test_vfwprintf(stream, L"%lc", L'!') != 1 ||
         C2GO_MLIB_TEST_FFLUSH(stream) != 0) return 67;
     if (C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0 ||
         C2GO_MLIB_TEST_FGETWC(stream) != L'w' ||
@@ -510,6 +529,8 @@ c2go_extern int C2GO_MLIB_TEST_STDIN_EXPORT(void)
 #undef C2GO_MLIB_TEST_SCANF
 #undef C2GO_MLIB_TEST_GETLINE
 #undef C2GO_MLIB_TEST_GETDELIM
+#undef C2GO_MLIB_TEST_FWPRINTF
+#undef C2GO_MLIB_TEST_VFWPRINTF
 #undef C2GO_MLIB_TEST_UNGETWC
 #undef C2GO_MLIB_TEST_FGETWS
 #undef C2GO_MLIB_TEST_FPUTWS

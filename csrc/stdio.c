@@ -4734,7 +4734,8 @@ overflow:
 }
 
 c2go_extern
-int vfwprintf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
+int __c2go_file_raw_vfwprintf(FILE *restrict f,
+	const wchar_t *restrict fmt, va_list ap)
 {
 	va_list ap2;
 	int nl_type[NL_ARGMAX+1] = {0};
@@ -4749,16 +4750,24 @@ int vfwprintf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
 		return -1;
 	}
 
-	FLOCK(f);
 	__fwide_wide(f);            /* musl fwide(f,1); non-locking under the FLOCK */
 	olderr = f->flags & F_ERR;
 	f->flags &= ~F_ERR;
 	ret = wprintf_core(f, fmt, &ap2, nl_arg, nl_type);
 	if (f->flags & F_ERR) ret = -1;   /* musl ferror(f); the non-locking test */
 	f->flags |= olderr;
-	FUNLOCK(f);
 	va_end(ap2);
 	return ret;
+}
+
+c2go_extern
+int vfwprintf(FILE *restrict f, const wchar_t *restrict fmt, va_list ap)
+{
+	int result;
+	FLOCK(f);
+	result = __c2go_file_raw_vfwprintf(f, fmt, ap);
+	FUNLOCK(f);
+	return result;
 }
 
 /* ── swprintf / vswprintf (wide string sink, musl src/stdio/vswprintf.c) ──

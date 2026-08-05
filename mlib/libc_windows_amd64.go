@@ -191,6 +191,9 @@ func MlibFunlockfile(stream *_c2go_mlib_FILE)
 //go:linkname MlibFwide github.com/c2gohq/c2go_libc/mlib.mlib_fwide
 func MlibFwide(stream *_c2go_mlib_FILE, mode int32) int32
 
+//go:linkname MlibFwprintf github.com/c2gohq/c2go_libc/mlib.mlib_fwprintf
+func MlibFwprintf(stream *_c2go_mlib_FILE, format *uint16, argptrs unsafe.Pointer) int32
+
 //go:linkname MlibFwrite github.com/c2gohq/c2go_libc/mlib.mlib_fwrite
 func MlibFwrite(source unsafe.Pointer, size uint64, count uint64, stream *_c2go_mlib_FILE) uint64
 
@@ -278,6 +281,9 @@ func MlibVfprintf(stream *_c2go_mlib_FILE, format *byte, arguments *byte) int32
 //go:linkname MlibVfscanf github.com/c2gohq/c2go_libc/mlib.mlib_vfscanf
 func MlibVfscanf(stream *_c2go_mlib_FILE, format *byte, arguments *byte) int32
 
+//go:linkname MlibVfwprintf github.com/c2gohq/c2go_libc/mlib.mlib_vfwprintf
+func MlibVfwprintf(stream *_c2go_mlib_FILE, format *uint16, arguments *byte) int32
+
 //go:linkname MlibVprintf github.com/c2gohq/c2go_libc/mlib.mlib_vprintf
 func MlibVprintf(format *byte, arguments *byte) int32
 
@@ -286,6 +292,12 @@ func MlibVscanf(format *byte, arguments *byte) int32
 
 //go:linkname MlibVsscanf github.com/c2gohq/c2go_libc/mlib.mlib_vsscanf
 func MlibVsscanf(input *byte, format *byte, arguments *byte) int32
+
+//go:linkname MlibVwprintf github.com/c2gohq/c2go_libc/mlib.mlib_vwprintf
+func MlibVwprintf(format *uint16, arguments *byte) int32
+
+//go:linkname MlibWprintf github.com/c2gohq/c2go_libc/mlib.mlib_wprintf
+func MlibWprintf(format *uint16, argptrs unsafe.Pointer) int32
 
 // ─── §B4 Go-owned global storage ────────────────────────────
 // Pointer-carrying file-scope C globals whose storage is owned
