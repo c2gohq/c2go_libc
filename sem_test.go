@@ -116,3 +116,28 @@ func TestSemUninitialized(t *testing.T) {
 		t.Fatalf("post on uninitialized = %d, want EINVAL(%d)", r, syscall.EINVAL)
 	}
 }
+
+func TestSemValueRange(t *testing.T) {
+	const max = uint32(1<<31 - 1)
+	s := new(cSem)
+	if r := SemInit(sptr(s), 0, max+1); r != int32(syscall.EINVAL) {
+		t.Fatalf("sem_init(SEM_VALUE_MAX+1) = %d, want EINVAL(%d)", r, syscall.EINVAL)
+	}
+	if s[0] != 0 {
+		t.Fatalf("failed sem_init published handle %#x", s[0])
+	}
+	if r := SemInit(sptr(s), 0, max); r != 0 {
+		t.Fatalf("sem_init(SEM_VALUE_MAX) = %d", r)
+	}
+	var value int32
+	if r := SemGetvalue(sptr(s), unsafe.Pointer(&value)); r != 0 || value != int32(max) {
+		t.Fatalf("sem_getvalue = (%d, %d), want (0, %d)", r, value, max)
+	}
+	if r := SemPost(sptr(s)); r != int32(syscall.EOVERFLOW) {
+		t.Fatalf("sem_post at SEM_VALUE_MAX = %d, want EOVERFLOW(%d)", r, syscall.EOVERFLOW)
+	}
+	if r := SemGetvalue(sptr(s), unsafe.Pointer(&value)); r != 0 || value != int32(max) {
+		t.Fatalf("sem_getvalue after overflow = (%d, %d), want (0, %d)", r, value, max)
+	}
+	SemDestroy(sptr(s))
+}

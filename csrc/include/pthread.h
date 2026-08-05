@@ -9,9 +9,8 @@
  * C struct. sem_t (<semaphore.h>) uses the same _id/handle-table shape. No field
  * is a managed pointer, so these are ordinary unmanaged C memory under the
  * default world — no `#pragma c2go unmanaged` is needed (verified: the c2go
- * artifact is byte-identical with or without one). See ../IMPL_STRATEGY.md
- * (pthread = C-calls-Go over Go sync + goroutines) and
- * project_pthread_sem_handle_table. */
+ * artifact is byte-identical with or without one). The managed carrier is
+ * declared separately by <c2go/mlib/pthread.h>; see mlib/DESIGN.md. */
 #ifndef _PTHREAD_H
 #define _PTHREAD_H
 
@@ -34,6 +33,8 @@ typedef struct {
 
 #define PTHREAD_CREATE_JOINABLE 0
 #define PTHREAD_CREATE_DETACHED 1
+
+#ifndef C2GO_PTHREAD_OMIT_SYNC
 
 typedef struct {                        /* _id -> Go-side mutex state (handle.go) */
     size_t        _id;                  /* 0 = uninitialized; 64-bit on every target */
@@ -72,6 +73,8 @@ typedef struct {
     int _reserved;
     int _pad[5];
 } pthread_rwlockattr_t;
+
+#endif /* !C2GO_PTHREAD_OMIT_SYNC */
 
 /* pthread_key_t is opaque (POSIX); c2go represents it as a pointer to the key's
  * heap descriptor (destructor + deleted flag), so a key carries its own
@@ -112,7 +115,8 @@ c2go_linkname("github.com/c2gohq/c2go_libc.PthreadAttrSetDetachState", C2GO_GOAB
 int pthread_attr_setdetachstate(pthread_attr_t *, int);
 c2go_linkname("github.com/c2gohq/c2go_libc.PthreadAttrSetStackSize", C2GO_GOABI0)
 int pthread_attr_setstacksize(pthread_attr_t *, size_t);
-c2go_linkname("github.com/c2gohq/c2go_libc.PthreadMutexAttrSetType", C2GO_GOABI0)
+
+#ifndef C2GO_PTHREAD_OMIT_SYNC
 int pthread_mutex_timedlock(pthread_mutex_t *, const struct timespec *)
     c2go_linkname("github.com/c2gohq/c2go_libc.pthread_mutex_timedlock", C2GO_GOABI0);
 int pthread_rwlock_tryrdlock(pthread_rwlock_t *)
@@ -131,13 +135,16 @@ int pthread_rwlockattr_init(pthread_rwlockattr_t *)
     c2go_linkname("github.com/c2gohq/c2go_libc.pthread_rwlockattr_init", C2GO_GOABI0);
 int pthread_rwlockattr_destroy(pthread_rwlockattr_t *)
     c2go_linkname("github.com/c2gohq/c2go_libc.pthread_rwlockattr_destroy", C2GO_GOABI0);
-int pthread_atfork(void (*)(void), void (*)(void), void (*)(void))
-    c2go_linkname("github.com/c2gohq/c2go_libc.pthread_atfork", C2GO_GOABI0);
 int pthread_mutexattr_settype(pthread_mutexattr_t *, int)
     c2go_linkname("github.com/c2gohq/c2go_libc.pthread_mutexattr_settype", C2GO_GOABI0);
 int pthread_mutexattr_gettype(const pthread_mutexattr_t *, int *)
     c2go_linkname("github.com/c2gohq/c2go_libc.pthread_mutexattr_gettype", C2GO_GOABI0);
+#endif /* !C2GO_PTHREAD_OMIT_SYNC */
 
+int pthread_atfork(void (*)(void), void (*)(void), void (*)(void))
+    c2go_linkname("github.com/c2gohq/c2go_libc.pthread_atfork", C2GO_GOABI0);
+
+#ifndef C2GO_PTHREAD_OMIT_SYNC
 /* ── mutex ── */
 c2go_linkname("github.com/c2gohq/c2go_libc.PthreadMutexInit", C2GO_GOABI0)
 int pthread_mutex_init(pthread_mutex_t *, const pthread_mutexattr_t *);
@@ -175,6 +182,7 @@ c2go_linkname("github.com/c2gohq/c2go_libc.PthreadRWLockWrlock", C2GO_GOABI0)
 int pthread_rwlock_wrlock(pthread_rwlock_t *);
 c2go_linkname("github.com/c2gohq/c2go_libc.PthreadRWLockUnlock", C2GO_GOABI0)
 int pthread_rwlock_unlock(pthread_rwlock_t *);
+#endif /* !C2GO_PTHREAD_OMIT_SYNC */
 
 /* ── thread-specific data (GLS-backed) ── */
 c2go_linkname("github.com/c2gohq/c2go_libc.PthreadKeyCreate", C2GO_GOABI0)

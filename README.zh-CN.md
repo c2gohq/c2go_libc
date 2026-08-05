@@ -51,6 +51,20 @@ github.com/c2gohq/c2go_libc
 其中下划线已经写入现有 linkname，与面向用户的仓库名 `c2go-libc`
 不同，不能仅为了外观而修改。
 
+## Managed libc 变体（`mlib`）
+
+根包继续保留基于 unmanaged handle ID 的兼容接口。新的 `mlib` 子包用于提供
+有状态 API 的 managed 版本：C 对象直接保存 Go GC 可见的状态指针，因此不再
+需要全局 ID 到指针的注册表。目前已经实现无名信号量，以及 pthread 的
+mutex、condition variable、rwlock 同步簇。
+
+默认名称显式带 `mlib_` 前缀，例如 `mlib_sem_t`、`mlib_sem_init`、
+`mlib_pthread_mutex_t`、`mlib_pthread_mutex_lock`。如果在第一次包含 mlib
+头文件前定义 `C2GO_MLIB_UNPREFIXED`，则会改为对应的标准名称。这个开关作用于
+整个 C2Go/LTO 包，不能在同一包里混用两套路由。managed C 堆对象必须使用带类型信息的
+`gc_malloc(c2go_typeinfo(T), sizeof(T))`，不能使用普通 `malloc`。示例和约束
+见 [mlib/README.md](mlib/README.md)。
+
 ## 当前目标清单
 
 生成器目前包含以下目标：
@@ -83,6 +97,8 @@ epoch 范围为 `1..1`。
 ├── sjlj_<arch>.s                  手写 setjmp/longjmp 支持
 ├── musl/                          固定 commit 的 c2go musl fork submodule
 ├── csrc/                          C 适配、原创 C 和头文件
+├── internal/posixsync/            libc 与 mlib 共用的状态算法
+├── mlib/                          managed libc 包、头文件和自测试
 ├── selftest/                      C 内部回调/比较器测试
 ├── CMakeLists.txt                 供 gen.sh 读取的源码清单
 ├── gen.sh                         实际再生成驱动

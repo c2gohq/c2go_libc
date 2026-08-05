@@ -1,21 +1,18 @@
 // handle.go — a dense id->object handle table: the shared rooting + identity
-// substrate for the goroutine-backed POSIX sync objects (pthread mutex / cond /
-// rwlock and the semaphore).
+// substrate for Go state referenced by unmanaged C carriers. Current users
+// include POSIX synchronization objects, threads, directory streams, FILE
+// locks, popen processes, and iconv descriptor lifetimes.
 //
-// Each such object is plain unmanaged C memory whose only meaningful field is a
-// 64-bit `_id` (0 = not yet initialized, so PTHREAD_MUTEX_INITIALIZER's all-zero
-// bytes mean "uninitialized"). The Go-side state that actually parks goroutines
-// (a sync.Mutex / sync.Cond / channel) lives HERE, rooted by the registry so the
-// GC keeps it alive as long as the C object references it. This is the same
-// rooting idea as malloc.go's handle table, specialized to one *T per id rather
-// than one []byte per allocation — and it lets the C struct hold no managed
-// pointer at all (fully unmanaged, memcpy-tolerant, statically initializable).
+// Most users place a 64-bit `_id` in plain unmanaged C memory. Some APIs expose
+// the id as a scalar handle, while iconv returns the real Go pointer and uses
+// the table only as its C-lifetime root. The table is specialized to one *T per
+// id rather than malloc.go's one []byte per allocation.
 //
 // id = generation<<32 | (registry index + 1), so id 0 stays reserved for
 // "uninitialized" and a recycled slot retires every stale copy of its old id
 // (#658 M6). A freelist recycles indices, bounding the registry to the
-// high-water count of concurrently-live objects. Approach (a): every operation is under one global
-// RWMutex — the hot lock/unlock path only RESOLVES (get), so it takes the read
+// high-water count of concurrently-live objects. Every operation is under one
+// global RWMutex — the hot lookup path only resolves (get), so it takes the read
 // lock and resolves in parallel, while init/destroy take the write lock. A
 // RWMutex (not the plain Mutex malloc.go uses) is the right fit precisely
 // because this table — unlike malloc's write-only one — is read-dominated in
@@ -37,8 +34,7 @@ import (
 )
 
 // handleTable is a dense id->*T registry with index recycling. The zero value
-// is ready to use. Each POSIX-sync primitive instantiates its own table over
-// its own state type.
+// is ready to use; each state family instantiates its own table.
 type handleTable[T any] struct {
 	mu       sync.RWMutex
 	registry []*T     // index -> live state (nil = free slot)

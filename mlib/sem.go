@@ -1,12 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-// sem.go — POSIX unnamed semaphores (<semaphore.h>) over an unmanaged carrier.
-//
-// The C sem_t stores a generation-stamped ID. This file resolves that ID via
-// the compatibility handle table, while internal/posixsync owns the shared
-// semaphore behavior also used by mlib's direct-pointer carrier.
-
-package libc
+package mlib
 
 import (
 	"sync/atomic"
@@ -15,9 +9,12 @@ import (
 	"github.com/c2gohq/c2go_libc/internal/posixsync"
 )
 
-var semTab handleTable[posixsync.Semaphore]
-
-func semID(p unsafe.Pointer) *uint64 { return (*uint64)(p) }
+// semSlot views the managed C carrier's first word as a direct Go pointer.
+// Store uses Go's pointer write barrier; C2Go's managed metadata makes the same
+// word visible to stack, global, and gc_malloc heap scanning.
+func semSlot(p unsafe.Pointer) *atomic.Pointer[posixsync.Semaphore] {
+	return (*atomic.Pointer[posixsync.Semaphore])(p)
+}
 
 func semResultCode(result posixsync.SemResult) int32 {
 	switch result {
@@ -36,19 +33,17 @@ func semResultCode(result posixsync.SemResult) int32 {
 
 //go:linkname SemInit
 func SemInit(s unsafe.Pointer, pshared int32, value uint32) int32 {
-	// A nonzero pshared cannot be honored across processes by Go state; the
-	// object remains process-local, matching the existing compatibility API.
 	st, result := posixsync.NewSemaphore(value)
 	if result != posixsync.SemOK {
 		return semResultCode(result)
 	}
-	atomic.StoreUint64(semID(s), semTab.alloc(st))
+	semSlot(s).Store(st)
 	return 0
 }
 
 //go:linkname SemDestroy
 func SemDestroy(s unsafe.Pointer) int32 {
-	semTab.free(atomic.SwapUint64(semID(s), 0))
+	semSlot(s).Store(nil)
 	return 0
 }
 
@@ -62,7 +57,7 @@ func semWait(s, abstime unsafe.Pointer) int32 {
 	if abstime != nil && !posixsync.TimespecValid(abstime) {
 		return errEINVAL
 	}
-	st := semTab.get(atomic.LoadUint64(semID(s)))
+	st := semSlot(s).Load()
 	if st == nil {
 		return errEINVAL
 	}
@@ -71,7 +66,7 @@ func semWait(s, abstime unsafe.Pointer) int32 {
 
 //go:linkname SemTrywait
 func SemTrywait(s unsafe.Pointer) int32 {
-	st := semTab.get(atomic.LoadUint64(semID(s)))
+	st := semSlot(s).Load()
 	if st == nil {
 		return errEINVAL
 	}
@@ -80,7 +75,7 @@ func SemTrywait(s unsafe.Pointer) int32 {
 
 //go:linkname SemPost
 func SemPost(s unsafe.Pointer) int32 {
-	st := semTab.get(atomic.LoadUint64(semID(s)))
+	st := semSlot(s).Load()
 	if st == nil {
 		return errEINVAL
 	}
@@ -89,7 +84,7 @@ func SemPost(s unsafe.Pointer) int32 {
 
 //go:linkname SemGetvalue
 func SemGetvalue(s, out unsafe.Pointer) int32 {
-	st := semTab.get(atomic.LoadUint64(semID(s)))
+	st := semSlot(s).Load()
 	if st == nil {
 		return errEINVAL
 	}

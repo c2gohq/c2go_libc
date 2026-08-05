@@ -193,4 +193,7 @@ for t in "${SELFTEST_TARGETS[@]}"; do
 	"$GOFMT" -w "$ROOT/selftest/c2go_abi_anchor.go"
 	echo "  -> selftest/selftest_${goos}_${arch}.{go,s}"
 done
+
+CLANG="$CLANG" C2GOLTO="$C2GOLTO" C2GOBIND="$C2GOBIND" GOFMT="$GOFMT" \
+	"$ROOT/mlib/gen.sh"
 echo "gen.sh: done."

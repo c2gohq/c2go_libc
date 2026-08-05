@@ -19,6 +19,7 @@ const (
 	errETIMEDOUT int32 = 138
 	errEDEADLK   int32 = 36
 	errESRCH     int32 = 3
+	errEOVERFLOW int32 = 132
 )
 
 // File-system errno values (same MinGW-w64 <bits/errno.h> source), used by

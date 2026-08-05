@@ -21,4 +21,5 @@ const (
 	errEILSEQ    = int32(syscall.EILSEQ) // iconv: invalid/unmappable sequence
 	errEBADF     = int32(syscall.EBADF)  // iconv_close(nil) (#648)
 	errENOMEM    = int32(syscall.ENOMEM) // malloc beyond the runtime's limits (#651)
+	errEOVERFLOW = int32(syscall.EOVERFLOW)
 )
