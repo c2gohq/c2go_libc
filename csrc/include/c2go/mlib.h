@@ -7,5 +7,8 @@
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/semaphore.h>
+#if !defined(_WIN32)
+#include <c2go/mlib/ftw.h>
+#endif
 
 #endif /* C2GO_MLIB_H */

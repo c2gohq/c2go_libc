@@ -15,6 +15,13 @@ import (
 )
 
 // ─── Types ──────────────────────────────────────────────────
+type history struct {
+	chain *history
+	dev   uint64
+	ino   uint64
+	level int32
+	base  int32
+}
 type mlib_DIR struct {
 	_state unsafe.Pointer
 	_entry [280]int8
@@ -61,6 +68,12 @@ func MlibDirfd(dir *mlib_DIR) int32
 
 //go:linkname MlibFdopendir github.com/c2gohq/c2go_libc/mlib.mlib_fdopendir
 func MlibFdopendir(fd int32) *mlib_DIR
+
+//go:linkname MlibFtw github.com/c2gohq/c2go_libc/mlib.mlib_ftw
+func MlibFtw(path *byte, fn uintptr, fd_limit int32) int32
+
+//go:linkname MlibNftw github.com/c2gohq/c2go_libc/mlib.mlib_nftw
+func MlibNftw(path *byte, fn uintptr, fd_limit int32, flags int32) int32
 
 //go:linkname MlibOpendir github.com/c2gohq/c2go_libc/mlib.mlib_opendir
 func MlibOpendir(name *byte) *mlib_DIR

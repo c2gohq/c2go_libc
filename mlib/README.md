@@ -84,11 +84,11 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 
 `mlib` does not provide or use `malloc`, `realloc`, or `free`. It currently
 implements unnamed semaphores; pthread mutexes, condition variables, and
-rwlocks; the directory-stream lifecycle; and `scandir`. Their state algorithms
-are shared with root libc; only state resolution differs (direct managed
-pointer versus unmanaged handle ID). Managed `opendir` and `fdopendir`
-allocate the carrier internally with typed `gc_malloc`; `closedir` clears its
-state pointer and lets the GC reclaim the carrier. Managed `scandir` allocates
+rwlocks; the directory-stream lifecycle; `scandir`; and Unix `nftw`/`ftw`.
+Their state algorithms are shared with root libc; only state resolution differs
+(direct managed pointer versus unmanaged handle ID). Managed `opendir` and
+`fdopendir` allocate the carrier internally with typed `gc_malloc`; `closedir`
+clears its state pointer and lets the GC reclaim the carrier. Managed `scandir` allocates
 both its result array and each `dirent` on the Go heap. They must remain in
 managed storage and are reclaimed by dropping references, not by calling
 `free`. Its sort uses typed pointer stores instead of bytewise `qsort`.
@@ -96,13 +96,17 @@ The caller must keep the returned pointer graph in managed locals, fields, or
 globals; the examples use a managed pragma around the owning code for that
 reason.
 
+Managed `nftw` and `ftw` selectively instantiate musl's stateless walk
+algorithm over mlib's `DIR` operations; they do not allocate a second state
+model. Callback arguments are borrowed views into the active walk frames and
+must not be retained after the callback returns.
+
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
 `pthread_atfork` remain available from the root pthread surface.
 
-Managed `glob`, `nftw`, and `ftw` are not implemented yet. The unprefixed mlib
-headers deliberately do not fall back to root unmanaged versions for these
-managed object graphs.
+Managed `glob` is not implemented yet. The future unprefixed mlib glob header
+must not fall back to the root unmanaged result graph.
 
 ## 简体中文
 
@@ -183,9 +187,9 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 ```
 
 `mlib` 不提供、也不使用 `malloc`、`realloc` 或 `free`。当前已经实现无名
-信号量、pthread 的 mutex/condition variable/rwlock、目录流生命周期，以及
-`scandir`。它们的行为核心与根 libc 共用，只有状态解析方式不同：`mlib` 直接读取
-managed pointer，根 libc 仍通过 unmanaged handle ID 查表。managed `opendir`
+信号量、pthread 的 mutex/condition variable/rwlock、目录流生命周期、
+`scandir`，以及 Unix `nftw`/`ftw`。它们的行为核心与根 libc 共用，只有状态解析
+方式不同：`mlib` 直接读取 managed pointer，根 libc 仍通过 unmanaged handle ID 查表。managed `opendir`
 和 `fdopendir` 在内部使用 typed `gc_malloc` 分配 carrier；`closedir` 清空状态
 指针，由 GC 回收 carrier。managed `scandir` 的结果数组及每个 `dirent` 都位于
 Go heap，必须保存在 managed storage 中，使用完只需丢弃引用，不能调用 `free`；
@@ -193,8 +197,12 @@ Go heap，必须保存在 managed storage 中，使用完只需丢弃引用，�
 的 pointer graph 保存在 managed 局部变量、字段或全局变量中，因此示例在持有这些
 对象的代码外使用了 managed pragma。
 
+managed `nftw` 和 `ftw` 在 mlib 的 `DIR` 操作之上选择性实例化 musl 的无状态
+遍历算法，不会引入第二套状态模型。回调参数只是当前遍历栈帧的借用视图，回调返回后
+不得继续持有。
+
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、
 `pthread_once` 和 `pthread_atfork` 仍由根 pthread 接口提供。
 
-managed `glob`、`nftw` 和 `ftw` 尚未实现。对于这些 managed object graph，
-mlib 的无前缀头文件不会静默退回根包的 unmanaged 实现。
+managed `glob` 尚未实现。未来的 mlib 无前缀 glob 头文件不能静默退回根包的
+unmanaged 返回图。

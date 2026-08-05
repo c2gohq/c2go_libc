@@ -63,7 +63,8 @@ carrier stores a direct GC-visible Go pointer and therefore needs no global
 ID-to-pointer registry. The implemented families are unnamed semaphores and
 the pthread mutex/condition-variable/rwlock synchronization cluster, plus the
 basic directory-stream lifecycle (`opendir`, `fdopendir`, `readdir`,
-`readdir_r`, `rewinddir`, `dirfd`, and `closedir`), and managed `scandir`.
+`readdir_r`, `rewinddir`, `dirfd`, and `closedir`), managed `scandir`, and the
+Unix `nftw`/`ftw` tree-walk APIs.
 
 Managed names are explicit by default (`mlib_sem_t`, `mlib_sem_init`,
 `mlib_pthread_mutex_t`, `mlib_pthread_mutex_lock`, `mlib_DIR`,

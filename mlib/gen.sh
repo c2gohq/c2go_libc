@@ -58,6 +58,7 @@ trap 'rm -rf "$tmp"' EXIT
 
 LIB_SOURCES=(
 	"$ROOT/csrc/mlib/dirent.c"
+	"$ROOT/csrc/mlib/ftw.c"
 	"$ROOT/csrc/mlib/scandir.c"
 )
 

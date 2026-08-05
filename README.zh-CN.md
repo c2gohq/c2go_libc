@@ -58,7 +58,7 @@ github.com/c2gohq/c2go_libc
 需要全局 ID 到指针的注册表。目前已经实现无名信号量，以及 pthread 的
 mutex、condition variable、rwlock 同步簇，并实现基础目录流生命周期：
 `opendir`、`fdopendir`、`readdir`、`readdir_r`、`rewinddir`、`dirfd`
-和 `closedir`，并实现 managed `scandir`。
+和 `closedir`，并实现 managed `scandir` 以及 Unix `nftw`/`ftw` 文件树遍历。
 
 默认名称显式带 `mlib_` 前缀，例如 `mlib_sem_t`、`mlib_sem_init`、
 `mlib_pthread_mutex_t`、`mlib_pthread_mutex_lock`、`mlib_DIR`、

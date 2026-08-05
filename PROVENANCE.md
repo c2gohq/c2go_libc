@@ -69,6 +69,7 @@ There is no checked-in CI matrix proving them from a clean source checkout.
 | `csrc/stdio.c` | Header and body identify many musl stdio/math/stdlib implementations, including verbatim sections | Mixed musl-derived and original adaptations | Required per-file notice absent |
 | `csrc/multibyte.c` | Explicitly identifies musl derivation and carries a musl copyright reference | Mixed musl-derived and original adaptations | Best current header, still needs final SPDX/legal review |
 | `csrc/locale.c`, `intl.c`, `random.c`, `strsignal.c` | Comments identify musl algorithms, shapes, rewrites, or verbatim sections | Mixed provenance | Required per-file notices incomplete |
+| `csrc/mlib/ftw.c` | Thin managed-instantiation wrapper includes the pinned musl `src/misc/nftw.c` and `src/legacy/ftw.c` sources | Wrapper additions follow the project license; included musl material retains MIT terms | Source relationship and musl license pointer recorded in-file |
 | `csrc/fsops_*`, `stat2.c`, `termios.c`, other POSIX wrappers | Combine independently written bridges with upstream shapes or implementations | Must be assessed file by file | Incomplete |
 | `csrc/termios.c` Darwin branch | Identifies Apple Libc/FreeBSD source; local reference contains a BSD notice missing here | Third-party notice must be restored; original changes may be separately licensed | Release blocker |
 | Darwin headers | Identify XNU structures/constants/command encodings | License significance of copied expression vs ABI facts unresolved | Release blocker |

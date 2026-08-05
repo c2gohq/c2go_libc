@@ -30,9 +30,11 @@ struct FTW {
 	int level;
 };
 
+#ifndef C2GO_FTW_OMIT_FUNCTIONS
 int ftw(const char *, int (*)(const char *, const struct stat *, int), int)
     c2go_linkname("github.com/c2gohq/c2go_libc.ftw", C2GO_GOABI0);
 int nftw(const char *, int (*)(const char *, const struct stat *, int, struct FTW *), int, int)
     c2go_linkname("github.com/c2gohq/c2go_libc.nftw", C2GO_GOABI0);
+#endif
 
 #endif /* _FTW_H */

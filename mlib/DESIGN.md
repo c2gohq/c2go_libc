@@ -33,7 +33,7 @@ RWMutex` implementation in `handle.go`.
 | `condTab` | `pthread_cond_t._id` | cond init/destroy/wait/timedwait/signal/broadcast and attrs | mutex state during wait/reacquire | Implemented |
 | `rwlockTab` | `pthread_rwlock_t._id` | rwlock init/destroy/read/write/try/unlock and attrs | none outside the rwlock family | Implemented |
 | `threadTab` | scalar `pthread_t` ID | create/join/exit/detach/self/equal/yield | pthread-key destructor lifetime and goroutine-local state | Not replaced; unprefixed mlib pthread intentionally retains the root thread API |
-| `dirTab` | `DIR.handle` | opendir/fdopendir/readdir/readdir_r/rewinddir/closedir/dirfd | `scandir`; directory traversal in `glob`; `nftw`/`ftw` | Lifecycle and `scandir` implemented; managed result graph uses a typed pointer array and GC-owned dirent copies; glob/nftw/ftw remain |
+| `dirTab` | `DIR.handle` | opendir/fdopendir/readdir/readdir_r/rewinddir/closedir/dirfd | `scandir`; directory traversal in `glob`; `nftw`/`ftw` | Lifecycle, `scandir`, and Unix `nftw`/`ftw` implemented; glob remains |
 | `fileLockTab` | `FILE.lockid` | internal file lock/trylock/unlock/drop | effectively every stdio operation using `FILE *` | Not implemented; part of the FILE cluster |
 | `popenTab` | `FILE.pipe_id` | popen/pclose bridge | FILE close/pipe ownership and process wait | Not implementable independently of the FILE cluster |
 | `iconvTab` | roots the real `*iconvState` returned as `iconv_t`; the state also records its table ID for close | iconv_open/iconv/iconv_close | none | Not implemented; a managed descriptor can remove the extra root, but `(iconv_t)-1` must remain only in the C wrapper |
@@ -85,9 +85,15 @@ with typed pointer assignments, and an in-place heapsort swaps pointers through
 write barriers instead of using bytewise `qsort`. The returned graph is GC-owned
 and must never be passed to `free`.
 
-The remaining work is propagation into `glob`, `nftw`, and `ftw`. Glob-style
-results have additional nested pointer ownership; ordinary `realloc`, bytewise
-`qsort`, or a generic untyped managed realloc are not safe substitutes.
+Unix `nftw`/`ftw` are also selectively instantiated from the pinned musl
+sources. The source-renaming wrapper substitutes mlib's managed `DIR`
+operations while retaining the stateless traversal algorithm. Its recursive
+history records remain on the managed C stack, callback arguments are borrowed,
+and no heap container is introduced.
+
+The remaining propagation work is `glob`. Its results have additional nested
+pointer ownership; ordinary `realloc`, bytewise `qsort`, or a generic untyped
+managed realloc are not safe substitutes.
 
 ### FILE cluster
 
@@ -104,7 +110,7 @@ last and largest selective-instantiation cluster.
 2. Design pthread thread/key ownership separately; do not extend the current
    unprefixed sync switch implicitly.
 3. Reuse the typed pointer-array and managed-sort pattern proven by `scandir`
-   while migrating the remaining DIR consumers (`glob`, `nftw`/`ftw`).
+   while migrating the remaining DIR consumer, `glob`.
 4. Design and migrate FILE/stdio/popen as one cluster.
 
 At every step the default API remains `mlib_`-prefixed, the unprefixed form is a

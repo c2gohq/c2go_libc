@@ -57,6 +57,9 @@ func init() {
 //go:linkname MlibDirentUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_dirent_unprefixed_selftest
 func MlibDirentUnprefixedSelftest() int32
 
+//go:linkname MlibFtwUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_ftw_unprefixed_selftest
+func MlibFtwUnprefixedSelftest() int32
+
 //go:linkname MlibPthreadUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_pthread_unprefixed_selftest
 func MlibPthreadUnprefixedSelftest() int32
 

@@ -59,6 +59,9 @@ func init() {
 //go:linkname MlibDirentPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_dirent_prefixed_selftest
 func MlibDirentPrefixedSelftest() int32
 
+//go:linkname MlibFtwPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_ftw_prefixed_selftest
+func MlibFtwPrefixedSelftest() int32
+
 //go:linkname MlibPthreadPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_pthread_prefixed_selftest
 func MlibPthreadPrefixedSelftest() int32
 
