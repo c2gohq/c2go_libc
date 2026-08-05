@@ -58,6 +58,7 @@ trap 'rm -rf "$tmp"' EXIT
 
 LIB_SOURCES=(
 	"$ROOT/csrc/mlib/dirent.c"
+	"$ROOT/csrc/mlib/scandir.c"
 )
 
 # Build the selectively-instantiated C part of package mlib once per target.

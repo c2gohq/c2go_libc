@@ -63,7 +63,7 @@ carrier stores a direct GC-visible Go pointer and therefore needs no global
 ID-to-pointer registry. The implemented families are unnamed semaphores and
 the pthread mutex/condition-variable/rwlock synchronization cluster, plus the
 basic directory-stream lifecycle (`opendir`, `fdopendir`, `readdir`,
-`readdir_r`, `rewinddir`, `dirfd`, and `closedir`).
+`readdir_r`, `rewinddir`, `dirfd`, and `closedir`), and managed `scandir`.
 
 Managed names are explicit by default (`mlib_sem_t`, `mlib_sem_init`,
 `mlib_pthread_mutex_t`, `mlib_pthread_mutex_lock`, `mlib_DIR`,
@@ -71,7 +71,8 @@ Managed names are explicit by default (`mlib_sem_t`, `mlib_sem_init`,
 `C2GO_MLIB_UNPREFIXED` before the first mlib header to expose the corresponding
 standard names instead. That switch applies to the whole C2Go/LTO package; do
 not mix both routings in one package. Managed C heap objects use typed
-`gc_malloc(c2go_typeinfo(T), sizeof(T))`, never ordinary `malloc`. See
+`gc_malloc(c2go_typeinfo(T), sizeof(T))`, never ordinary `malloc`. Managed
+`scandir` results are GC-owned and must not be passed to `free`. See
 [mlib/README.md](mlib/README.md) for examples and constraints.
 
 ## Current target manifest

@@ -19,6 +19,23 @@ static int is_name(const struct dirent *entry, const char *name)
     return entry->d_name[i] == name[i];
 }
 
+static int select_dots(const struct dirent *entry)
+{
+    return is_name(entry, ".") || is_name(entry, "..");
+}
+
+static int force_gc_in_compare;
+
+static int compare_reverse_alpha(const struct dirent **a,
+                                 const struct dirent **b)
+{
+    if (force_gc_in_compare) {
+        force_gc_in_compare = 0;
+        c2go_mlib_dir_test_gc();
+    }
+    return alphasort(b, a);
+}
+
 c2go_extern int mlib_dirent_unprefixed_selftest(void)
 {
     DIR *dir = opendir(".");
@@ -55,7 +72,33 @@ c2go_extern int mlib_dirent_unprefixed_selftest(void)
     }
 #endif
 
-    return closedir(dir) == 0 ? 0 : 10;
+    if (closedir(dir) != 0) return 10;
+
+    {
+        struct dirent **names = (void *)0;
+        force_gc_in_compare = 1;
+        int count = scandir(".", &names, (void *)0, compare_reverse_alpha);
+        int found_dot = 0, found_dotdot = 0;
+        if (count < 2) return 11;
+        c2go_mlib_dir_test_gc();
+        for (int i = 0; i < count; ++i) {
+            if (is_name(names[i], ".")) found_dot = 1;
+            if (is_name(names[i], "..")) found_dotdot = 1;
+            if (i && compare_reverse_alpha(
+                         (const struct dirent **)&names[i - 1],
+                         (const struct dirent **)&names[i]) > 0)
+                return 12;
+        }
+        if (!found_dot || !found_dotdot) return 13;
+
+        names = (void *)0;
+        count = scandir(".", &names, select_dots, compare_reverse_alpha);
+        if (count != 2) return 14;
+        c2go_mlib_dir_test_gc();
+        if (!is_name(names[0], "..") || !is_name(names[1], ".")) return 15;
+    }
+
+    return 0;
 }
 
 #pragma c2go pop

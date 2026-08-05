@@ -33,7 +33,7 @@ RWMutex` implementation in `handle.go`.
 | `condTab` | `pthread_cond_t._id` | cond init/destroy/wait/timedwait/signal/broadcast and attrs | mutex state during wait/reacquire | Implemented |
 | `rwlockTab` | `pthread_rwlock_t._id` | rwlock init/destroy/read/write/try/unlock and attrs | none outside the rwlock family | Implemented |
 | `threadTab` | scalar `pthread_t` ID | create/join/exit/detach/self/equal/yield | pthread-key destructor lifetime and goroutine-local state | Not replaced; unprefixed mlib pthread intentionally retains the root thread API |
-| `dirTab` | `DIR.handle` | opendir/fdopendir/readdir/readdir_r/rewinddir/closedir/dirfd | `scandir`; directory traversal in `glob`; `nftw`/`ftw` | Basic lifecycle implemented with a typed-GC carrier over shared `internal/posixdir`; pointer-container consumers remain |
+| `dirTab` | `DIR.handle` | opendir/fdopendir/readdir/readdir_r/rewinddir/closedir/dirfd | `scandir`; directory traversal in `glob`; `nftw`/`ftw` | Lifecycle and `scandir` implemented; managed result graph uses a typed pointer array and GC-owned dirent copies; glob/nftw/ftw remain |
 | `fileLockTab` | `FILE.lockid` | internal file lock/trylock/unlock/drop | effectively every stdio operation using `FILE *` | Not implemented; part of the FILE cluster |
 | `popenTab` | `FILE.pipe_id` | popen/pclose bridge | FILE close/pipe ownership and process wait | Not implementable independently of the FILE cluster |
 | `iconvTab` | roots the real `*iconvState` returned as `iconv_t`; the state also records its table ID for close | iconv_open/iconv/iconv_close | none | Not implemented; a managed descriptor can remove the extra root, but `(iconv_t)-1` must remain only in the C wrapper |
@@ -78,13 +78,16 @@ shared with root libc through `internal/posixdir`, while the managed C carrier
 is selectively instantiated once as `mlib_*`. Unprefixed headers route standard
 names to that one instance rather than compiling a second copy.
 
-The remaining work is the propagation into `scandir`, `glob`, `nftw`, and
-`ftw`.
+`scandir` is now selectively instantiated for mlib. Its growable result uses a
+one-pointer record as the repeated `gc_malloc_array` element descriptor; every
+directory entry is a separate no-pointer Go-heap object. Growth copies elements
+with typed pointer assignments, and an in-place heapsort swaps pointers through
+write barriers instead of using bytewise `qsort`. The returned graph is GC-owned
+and must never be passed to `free`.
 
-`scandir` and glob-style results contain pointer arrays. Their growth and sort
-paths need typed allocation, write barriers, and a managed pointer-aware sort;
-ordinary `realloc`, bytewise `qsort`, or a generic untyped managed realloc are
-not safe substitutes.
+The remaining work is propagation into `glob`, `nftw`, and `ftw`. Glob-style
+results have additional nested pointer ownership; ordinary `realloc`, bytewise
+`qsort`, or a generic untyped managed realloc are not safe substitutes.
 
 ### FILE cluster
 
@@ -100,8 +103,8 @@ last and largest selective-instantiation cluster.
    and GC-stress tests on all release targets.
 2. Design pthread thread/key ownership separately; do not extend the current
    unprefixed sync switch implicitly.
-3. Design typed pointer-array growth and managed sorting, then migrate the DIR
-   consumers (`scandir`, glob, nftw/ftw).
+3. Reuse the typed pointer-array and managed-sort pattern proven by `scandir`
+   while migrating the remaining DIR consumers (`glob`, `nftw`/`ftw`).
 4. Design and migrate FILE/stdio/popen as one cluster.
 
 At every step the default API remains `mlib_`-prefixed, the unprefixed form is a

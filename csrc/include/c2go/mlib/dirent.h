@@ -57,6 +57,26 @@ C2GO_MLIB_NAME(DIR) *C2GO_MLIB_NAME(fdopendir)(int)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fdopendir", C2GO_GOABI0);
 #endif
 
+/* The result graph returned by managed scandir is allocated with gc_malloc:
+ * both the pointer array and every dirent are Go-GC-owned. Keep the returned
+ * pointers only in managed storage and drop them when finished; never pass
+ * either level to free(). The selector and comparator are ordinary c2go
+ * internal-ABI callbacks, as with the root libc scandir API. */
+int C2GO_MLIB_NAME(scandir)(const char *, struct dirent ***,
+    int (*)(const struct dirent *),
+    int (*)(const struct dirent **, const struct dirent **))
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_scandir", C2GO_GOABI0);
+
+/* These comparators are stateless, so mlib reuses root libc's implementations
+ * rather than compiling managed duplicates. Wrap either in a local comparator
+ * before passing it to scandir because the public declaration uses Go ABI0. */
+int C2GO_MLIB_NAME(alphasort)(const struct dirent **,
+    const struct dirent **)
+    c2go_linkname("github.com/c2gohq/c2go_libc.alphasort", C2GO_GOABI0);
+int C2GO_MLIB_NAME(versionsort)(const struct dirent **,
+    const struct dirent **)
+    c2go_linkname("github.com/c2gohq/c2go_libc.versionsort", C2GO_GOABI0);
+
 #pragma c2go pop
 
 #endif /* C2GO_MLIB_DIRENT_H */

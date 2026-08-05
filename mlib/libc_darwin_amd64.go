@@ -19,6 +19,9 @@ type mlib_DIR struct {
 	_state unsafe.Pointer
 	_entry [280]int8
 }
+type mlib_dirent_slot struct {
+	value *dirent
+}
 
 // ─── Forward-only opaque types ───────────────────
 // Types declared in C as `typedef struct X X;` without a
@@ -32,7 +35,8 @@ type dirent struct{}
 // _typeinfo_<X> var below; each caches the *runtime._type computed
 // once at init via reflect.TypeFor[T] (no value construction).
 var (
-	_typeinfo_mlib_DIR unsafe.Pointer
+	_typeinfo_mlib_DIR         unsafe.Pointer
+	_typeinfo_mlib_dirent_slot unsafe.Pointer
 )
 
 // reflect.Type's 2nd interface word is the *runtime._type mallocgc wants.
@@ -42,6 +46,7 @@ func _c2go_rtype(t reflect.Type) unsafe.Pointer {
 
 func init() {
 	_typeinfo_mlib_DIR = _c2go_rtype(reflect.TypeFor[mlib_DIR]())
+	_typeinfo_mlib_dirent_slot = _c2go_rtype(reflect.TypeFor[mlib_dirent_slot]())
 }
 
 // ─── Function declarations ──────────────────────────────────
@@ -68,6 +73,9 @@ func MlibReaddirR(dir *mlib_DIR, entry *dirent, result **dirent) int32
 
 //go:linkname MlibRewinddir github.com/c2gohq/c2go_libc/mlib.mlib_rewinddir
 func MlibRewinddir(dir *mlib_DIR)
+
+//go:linkname MlibScandir github.com/c2gohq/c2go_libc/mlib.mlib_scandir
+func MlibScandir(path *byte, result ***dirent, select_entry uintptr, compare_entry uintptr) int32
 
 // ─── Embedded runtime-support helpers ───────────────────────
 
