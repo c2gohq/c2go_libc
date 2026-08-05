@@ -18,7 +18,9 @@
 #define __NEED_wint_t
 #define __NEED_mbstate_t
 #define __NEED_size_t
+#ifndef C2GO_MLIB_FILE_REPLACEMENT
 #define __NEED_FILE
+#endif
 #define __NEED_va_list
 #define __NEED_locale_t
 #include <bits/alltypes.h>
@@ -171,7 +173,11 @@ unsigned long long wcstoull(const wchar_t *__restrict, wchar_t **__restrict, int
 /* wide character FILE I/O (source/stdio.c, ported from musl src/stdio's
  * fwide/fputwc/fgetwc/... with the per-thread locale switching removed — c2go is
  * UTF-8-only). The FILE `mode` field holds the byte/wide orientation. Each
- * c2go_extern definition needs its matching linkname here. */
+ * c2go_extern definition needs its matching linkname here. Managed FILE
+ * replacement mode hides this family until mlib provides matching wide-stream
+ * wrappers; routing its FILE carrier into root libc would be ABI-unsafe. */
+
+#ifndef C2GO_MLIB_FILE_REPLACEMENT
 
 int    fwide(FILE *, int)
     c2go_linkname("github.com/c2gohq/c2go_libc.fwide", C2GO_GOABI0);
@@ -198,6 +204,8 @@ wchar_t *fgetws(wchar_t *__restrict, int, FILE *__restrict)
 wint_t ungetwc(wint_t, FILE *)
     c2go_linkname("github.com/c2gohq/c2go_libc.ungetwc", C2GO_GOABI0);
 
+#endif
+
 /* wide FORMATTED output (source/stdio.c, ported from musl's src/stdio's
  * vfwprintf/vswprintf + the swprintf/fwprintf/wprintf/vwprintf wrappers). The
  * shared printf state machine / union arg / pop_arg are reused from the narrow
@@ -205,6 +213,7 @@ wint_t ungetwc(wint_t, FILE *)
  * UTF-8-only) and the non-reentrant FILE lock forces the *_unlocked wide-output
  * path. Each c2go_extern definition needs its matching linkname here. */
 
+#ifndef C2GO_MLIB_FILE_REPLACEMENT
 int vfwprintf(FILE *__restrict, const wchar_t *__restrict, va_list)
     c2go_linkname("github.com/c2gohq/c2go_libc.vfwprintf", C2GO_GOABI0);
 int fwprintf(FILE *__restrict, const wchar_t *__restrict, ...)
@@ -213,6 +222,7 @@ int wprintf(const wchar_t *__restrict, ...)
     c2go_linkname("github.com/c2gohq/c2go_libc.wprintf", C2GO_GOABI0);
 int vwprintf(const wchar_t *__restrict, va_list)
     c2go_linkname("github.com/c2gohq/c2go_libc.vwprintf", C2GO_GOABI0);
+#endif
 int swprintf(wchar_t *__restrict, size_t, const wchar_t *__restrict, ...)
     c2go_linkname("github.com/c2gohq/c2go_libc.swprintf", C2GO_GOABI0);
 int vswprintf(wchar_t *__restrict, size_t, const wchar_t *__restrict, va_list)
@@ -225,6 +235,7 @@ int vswprintf(wchar_t *__restrict, size_t, const wchar_t *__restrict, va_list)
  * (rather than musl's fscanf reuse) so the non-reentrant FILE lock is never
  * re-taken. Each c2go_extern definition needs its matching linkname here. */
 
+#ifndef C2GO_MLIB_FILE_REPLACEMENT
 int vfwscanf(FILE *__restrict, const wchar_t *__restrict, va_list)
     c2go_linkname("github.com/c2gohq/c2go_libc.vfwscanf", C2GO_GOABI0);
 int fwscanf(FILE *__restrict, const wchar_t *__restrict, ...)
@@ -233,6 +244,7 @@ int wscanf(const wchar_t *__restrict, ...)
     c2go_linkname("github.com/c2gohq/c2go_libc.wscanf", C2GO_GOABI0);
 int vwscanf(const wchar_t *__restrict, va_list)
     c2go_linkname("github.com/c2gohq/c2go_libc.vwscanf", C2GO_GOABI0);
+#endif
 int swscanf(const wchar_t *__restrict, const wchar_t *__restrict, ...)
     c2go_linkname("github.com/c2gohq/c2go_libc.swscanf", C2GO_GOABI0);
 int vswscanf(const wchar_t *__restrict, const wchar_t *__restrict, va_list)

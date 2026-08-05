@@ -2774,6 +2774,629 @@ _Ltmp132:
 _LBB11_8:
 	RET
 _Lfunc_end11:
+	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
+	FUNCDATA $1, gclocals·1617295a1dc6485e(SB)
+DATA gclocals·1617295a1dc6485e+0(SB)/4, $2
+DATA gclocals·1617295a1dc6485e+4(SB)/4, $9
+DATA gclocals·1617295a1dc6485e+8(SB)/1, $0x00
+DATA gclocals·1617295a1dc6485e+9(SB)/1, $0x00
+DATA gclocals·1617295a1dc6485e+10(SB)/1, $0x80
+DATA gclocals·1617295a1dc6485e+11(SB)/1, $0x00
+GLOBL gclocals·1617295a1dc6485e(SB), DUPOK|RODATA, $12
+
+TEXT ·mlib_stdio_unprefixed_selftest(SB), $1336-8
+	PCDATA $1, $-1
+	BYTE $0x0f
+	BYTE $0x57
+	BYTE $0xc0
+	MOVUPS X0, -152(BP)
+	MOVUPS X0, -64(BP)
+	LONG $0xf045c748
+	LONG $0x00000000
+	MOVQ SP, AX
+	LEAQ _L_str_12<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·Getenv(SB)
+_Ltmp133:
+	MOVQ SP, AX
+	MOVQ 8(AX), AX
+	MOVQ $3617583906656379254, CX
+	MOVQ CX, -48(BP)
+	LONG $0xd845c766
+	BYTE $0x21
+	BYTE $0x00
+	BYTE $0x0f
+	BYTE $0x57
+	BYTE $0xc0
+	MOVUPS X0, -96(BP)
+	MOVUPS X0, -112(BP)
+	LONG $0x2a8c45c7
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ -116(BP), CX
+	MOVQ CX, -152(BP)
+	LONG $0x7085c748
+	LONG $0x00ffffff
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	MOVQ AX, -8(BP)
+	MOVQ SP, AX
+	LEAQ -152(BP), CX
+	MOVQ CX, 24(AX)
+	LEAQ _L_str_1_13<>(SB), CX
+	MOVQ CX, 16(AX)
+	LEAQ -168(BP), CX
+	MOVQ CX, 0(AX)
+	LONG $0x0840c748
+	LONG $0x00000010
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·snprintf(SB)
+_Ltmp134:
+	MOVQ SP, AX
+	MOVL $26, CX
+	LONG $0x08207883
+	JNE _LBB12_43
+	MOVQ SP, AX
+	LEAQ _L_str_2_14<>(SB), CX
+	MOVQ CX, 8(AX)
+	LEAQ -168(BP), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
+_Ltmp135:
+	MOVQ SP, AX
+	LONG $0x00107883
+	MOVL $26, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), CX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc9
+	JEQ _LBB12_4
+	BYTE $0x80
+	BYTE $0x39
+	BYTE $0x00
+	MOVQ CX, AX
+	JNE _LBB12_7
+_LBB12_4:
+	MOVQ SP, AX
+	LEAQ _L_str_3_15<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc·Getenv(SB)
+_Ltmp136:
+	MOVQ SP, AX
+	MOVQ 8(AX), CX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc9
+	JEQ _LBB12_6
+	BYTE $0x80
+	BYTE $0x39
+	BYTE $0x00
+	MOVQ CX, AX
+	JNE _LBB12_7
+_LBB12_6:
+	LEAQ _L_str_4_16<>(SB), CX
+	XORL AX, AX
+_LBB12_7:
+	MOVQ AX, -136(BP)
+	MOVQ CX, -8(BP)
+	MOVQ SP, AX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $5
+	CALL github·com∕c2gohq∕c2go_libc·strlen(SB)
+_Ltmp137:
+	MOVQ SP, AX
+	MOVQ 8(AX), AX
+	MOVQ AX, -72(BP)
+	MOVQ SP, AX
+	LEAQ _L_str_5_17<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $5
+	CALL github·com∕c2gohq∕c2go_libc·strlen(SB)
+_Ltmp138:
+	MOVQ SP, AX
+	MOVQ 8(AX), SI
+	MOVQ -72(BP), AX
+	MOVQ AX, DX
+	ADDQ SI, AX
+	ADDQ $2, AX
+	MOVL $1, CX
+	LONG $0x02003d48
+	BYTE $0x00
+	BYTE $0x00
+	JLS _LBB12_8
+_LBB12_43:
+	MOVL CX, AX
+_LBB12_44:
+	MOVL AX, 16(BP)
+	RET
+_LBB12_8:
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ DX, 16(CX)
+	MOVQ AX, 8(CX)
+	LEAQ -680(BP), AX
+	MOVQ AX, 0(CX)
+	MOVQ SI, -128(BP)
+	PCDATA $1, $5
+	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
+_Ltmp139:
+	MOVQ -72(BP), AX
+	LONG $0x580584c6
+	LONG $0x2ffffffd
+	ADDQ BP, AX
+	LONG $0xfd590548
+	BYTE $0xff
+	BYTE $0xff
+	MOVQ -128(BP), CX
+	BYTE $0x48
+	BYTE $0xff
+	BYTE $0xc1
+	MOVQ SP, DX
+	MOVQ CX, 16(DX)
+	LEAQ _L_str_5_17<>(SB), CX
+	MOVQ CX, 8(DX)
+	MOVQ AX, 0(DX)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
+_Ltmp140:
+	MOVQ SP, AX
+	LEAQ -680(BP), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc·mkdtemp(SB)
+_Ltmp141:
+	MOVQ SP, AX
+	LONG $0x08788348
+	BYTE $0x00
+	MOVL $1, AX
+	JEQ _LBB12_44
+	MOVQ SP, AX
+	LEAQ -680(BP), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc·strlen(SB)
+_Ltmp142:
+	MOVQ SP, AX
+	MOVQ 8(AX), AX
+	MOVQ AX, -72(BP)
+	MOVQ SP, AX
+	LEAQ _L_str_6_18<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc·strlen(SB)
+_Ltmp143:
+	MOVQ SP, AX
+	MOVQ 8(AX), SI
+	MOVQ -72(BP), AX
+	MOVQ AX, DX
+	LEAQ 0(AX)(SI*1), CX
+	ADDQ $2, CX
+	MOVL $2, AX
+	LONG $0x58f98148
+	BYTE $0x02
+	BYTE $0x00
+	BYTE $0x00
+	JHI _LBB12_44
+	MOVQ SP, AX
+	MOVQ DX, 16(AX)
+	LEAQ -680(BP), CX
+	MOVQ CX, 8(AX)
+	LEAQ -1280(BP), CX
+	MOVQ CX, 0(AX)
+	MOVQ SI, -128(BP)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
+_Ltmp144:
+	MOVQ -72(BP), AX
+	LONG $0x000584c6
+	LONG $0x2ffffffb
+	ADDQ BP, AX
+	LONG $0xfb010548
+	BYTE $0xff
+	BYTE $0xff
+	MOVQ -128(BP), CX
+	BYTE $0x48
+	BYTE $0xff
+	BYTE $0xc1
+	MOVQ SP, DX
+	MOVQ CX, 16(DX)
+	LEAQ _L_str_6_18<>(SB), CX
+	MOVQ CX, 8(DX)
+	MOVQ AX, 0(DX)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc·memmove(SB)
+_Ltmp145:
+	MOVQ SP, AX
+	LEAQ _L_str_7_19<>(SB), CX
+	MOVQ CX, 8(AX)
+	LEAQ -1280(BP), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $4
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fopen(SB)
+_Ltmp146:
+	MOVQ SP, AX
+	MOVQ 16(AX), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc0
+	JEQ _LBB12_11
+	MOVQ AX, -8(BP)
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fileno(SB)
+_Ltmp147:
+	MOVQ SP, AX
+	LONG $0x00087883
+	JMI _LBB12_13
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_flockfile(SB)
+_Ltmp148:
+	MOVQ -8(BP), AX
+	LONG $0x2aec45c7
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	LEAQ -20(BP), CX
+	MOVQ CX, -64(BP)
+	LONG $0xc845c748
+	LONG $0x00000000
+	MOVQ SP, CX
+	LEAQ -64(BP), DX
+	MOVQ DX, 16(CX)
+	LEAQ _L_str_1_13<>(SB), DX
+	MOVQ DX, 8(CX)
+	MOVQ AX, 0(CX)
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fprintf(SB)
+_Ltmp149:
+	MOVQ SP, AX
+	MOVL $5, CX
+	LONG $0x08187883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 8(CX)
+	LONG $0x002101c7
+	BYTE $0x00
+	BYTE $0x00
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fputc(SB)
+_Ltmp150:
+	MOVQ SP, AX
+	MOVL $6, CX
+	LONG $0x21107883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_funlockfile(SB)
+_Ltmp151:
+	PCDATA $1, $6
+	CALL ·ForceGC(SB)
+_Ltmp152:
+	MOVQ SP, AX
+	LONG $0x0000c748
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fflush(SB)
+_Ltmp153:
+	MOVQ SP, AX
+	MOVL $7, CX
+	LONG $0x00087883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_ftell(SB)
+_Ltmp154:
+	MOVQ SP, AX
+	MOVL $8, CX
+	LONG $0x09087883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	LEAQ -32(BP), DX
+	MOVQ DX, 8(CX)
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fgetpos(SB)
+_Ltmp155:
+	MOVQ SP, AX
+	MOVL $9, CX
+	LONG $0x00107883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	LONG $0x0841c748
+	LONG $0x00000000
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fseek(SB)
+_Ltmp156:
+	MOVQ SP, AX
+	MOVL $10, CX
+	LONG $0x00107883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 24(CX)
+	LEAQ -112(BP), AX
+	MOVQ AX, 0(CX)
+	LONG $0x1041c748
+	LONG $0x00000009
+	LONG $0x0841c748
+	LONG $0x00000001
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fread(SB)
+_Ltmp157:
+	MOVQ SP, AX
+	MOVL $11, CX
+	LONG $0x20788348
+	BYTE $0x09
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ SP, AX
+	LEAQ -48(BP), CX
+	MOVQ CX, 8(AX)
+	LEAQ -112(BP), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc·strcmp(SB)
+_Ltmp158:
+	MOVQ SP, AX
+	MOVL $12, CX
+	LONG $0x00107883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fgetc(SB)
+_Ltmp159:
+	MOVQ SP, AX
+	MOVL $13, CX
+	LONG $0xff087883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_feof(SB)
+_Ltmp160:
+	MOVQ SP, AX
+	LONG $0x00087883
+	JEQ _LBB12_24
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_ferror(SB)
+_Ltmp161:
+	MOVQ SP, AX
+	LONG $0x00087883
+	MOVL $14, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_clearerr(SB)
+_Ltmp162:
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_feof(SB)
+_Ltmp163:
+	MOVQ SP, AX
+	LONG $0x00087883
+	JEQ _LBB12_28
+	MOVL $15, AX
+	JMP _LBB12_44
+_LBB12_11:
+	MOVL $3, AX
+	JMP _LBB12_44
+_LBB12_13:
+	MOVL $4, AX
+	JMP _LBB12_44
+_LBB12_24:
+	MOVL $14, AX
+	JMP _LBB12_44
+_LBB12_28:
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_ferror(SB)
+_Ltmp164:
+	MOVQ SP, AX
+	LONG $0x00087883
+	MOVL $15, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	LEAQ -32(BP), DX
+	MOVQ DX, 8(CX)
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fsetpos(SB)
+_Ltmp165:
+	MOVQ SP, AX
+	MOVL $16, CX
+	LONG $0x00107883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 8(CX)
+	LEAQ _L_str_8_20<>(SB), AX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fputs(SB)
+_Ltmp166:
+	MOVQ SP, AX
+	LONG $0x00107883
+	JMI _LBB12_31
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $6
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fclose(SB)
+_Ltmp167:
+	MOVQ SP, AX
+	MOVL $18, CX
+	LONG $0x00087883
+	MOVL CX, AX
+	JNE _LBB12_44
+	LONG $0xf045c748
+	LONG $0x00000000
+	MOVQ SP, AX
+	LEAQ -16(BP), CX
+	MOVQ CX, 16(AX)
+	LEAQ -1280(BP), CX
+	MOVQ CX, 0(AX)
+	LONG $0x000840c7
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	PCDATA $1, $7
+	CALL github·com∕c2gohq∕c2go_libc·open(SB)
+_Ltmp168:
+	MOVQ SP, AX
+	MOVL 24(AX), AX
+	MOVL AX, -72(BP)
+	BYTE $0x85
+	BYTE $0xc0
+	JMI _LBB12_34
+	MOVQ SP, AX
+	LEAQ _L_str_9_21<>(SB), CX
+	MOVQ CX, 8(AX)
+	MOVL -72(BP), CX
+	MOVL CX, 0(AX)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fdopen(SB)
+_Ltmp169:
+	MOVQ SP, AX
+	MOVQ 16(AX), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc0
+	JEQ _LBB12_36
+	MOVQ AX, -8(BP)
+	PCDATA $1, $8
+	CALL ·ForceGC(SB)
+_Ltmp170:
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $8
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getc(SB)
+_Ltmp171:
+	MOVQ SP, AX
+	MOVL $21, CX
+	LONG $0x76087883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 8(CX)
+	LONG $0x005601c7
+	BYTE $0x00
+	BYTE $0x00
+	PCDATA $1, $8
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_ungetc(SB)
+_Ltmp172:
+	MOVQ SP, AX
+	MOVL $22, CX
+	LONG $0x56107883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $8
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_getc(SB)
+_Ltmp173:
+	MOVQ SP, AX
+	MOVL $23, CX
+	LONG $0x56087883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ -8(BP), AX
+	MOVQ SP, CX
+	MOVQ AX, 0(CX)
+	PCDATA $1, $8
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_fclose(SB)
+_Ltmp174:
+	MOVQ SP, AX
+	MOVL $24, CX
+	LONG $0x00087883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ SP, AX
+	LEAQ -1280(BP), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·unlink(SB)
+_Ltmp175:
+	MOVQ SP, AX
+	MOVL $25, CX
+	LONG $0x00087883
+	MOVL CX, AX
+	JNE _LBB12_44
+	MOVQ SP, AX
+	LEAQ -680(BP), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·rmdir(SB)
+_Ltmp176:
+	MOVQ SP, AX
+	MOVL 8(AX), AX
+	BYTE $0x85
+	BYTE $0xc0
+	MOVL $25, CX
+	BYTE $0x0f
+	BYTE $0x44
+	BYTE $0xc8
+	JMP _LBB12_43
+_LBB12_31:
+	MOVL $17, AX
+	JMP _LBB12_44
+_LBB12_34:
+	MOVL $19, AX
+	JMP _LBB12_44
+_LBB12_36:
+	MOVQ SP, AX
+	MOVL -72(BP), CX
+	MOVL CX, 0(AX)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·close(SB)
+_Ltmp177:
+	MOVL $20, AX
+	JMP _LBB12_44
+_Lfunc_end12:
 DATA _L_str<>+0(SB)/1, $0x2e
 DATA _L_str<>+1(SB)/1, $0x00
 GLOBL _L_str<>(SB), RODATA, $2
@@ -2873,12 +3496,273 @@ GLOBL c2go_global_gcmask·unprefixed_global_mutex(SB), RODATA, $1
 DATA c2go_global_gcmask·unprefixed_global_sem+0(SB)/1, $0x01
 GLOBL c2go_global_gcmask·unprefixed_global_sem(SB), RODATA, $1
 
-	FUNCDATA $0, gclocals·be8a4aa039a84f5c(SB)
-	FUNCDATA $1, gclocals·1617295a1dc6485e(SB)
-DATA gclocals·1617295a1dc6485e+0(SB)/4, $2
-DATA gclocals·1617295a1dc6485e+4(SB)/4, $9
-DATA gclocals·1617295a1dc6485e+8(SB)/1, $0x00
-DATA gclocals·1617295a1dc6485e+9(SB)/1, $0x00
-DATA gclocals·1617295a1dc6485e+10(SB)/1, $0x80
-DATA gclocals·1617295a1dc6485e+11(SB)/1, $0x00
-GLOBL gclocals·1617295a1dc6485e(SB), DUPOK|RODATA, $12
+DATA _L_str_12<>+0(SB)/1, $0x54
+DATA _L_str_12<>+1(SB)/1, $0x4d
+DATA _L_str_12<>+2(SB)/1, $0x50
+DATA _L_str_12<>+3(SB)/1, $0x44
+DATA _L_str_12<>+4(SB)/1, $0x49
+DATA _L_str_12<>+5(SB)/1, $0x52
+DATA _L_str_12<>+6(SB)/1, $0x00
+GLOBL _L_str_12<>(SB), RODATA, $7
+
+DATA _L__const_mlib_stdio_unprefixed_selftest_expected<>+0(SB)/8, $0x32343d65756c6176
+DATA _L__const_mlib_stdio_unprefixed_selftest_expected<>+8(SB)/1, $0x21
+DATA _L__const_mlib_stdio_unprefixed_selftest_expected<>+9(SB)/1, $0x00
+GLOBL _L__const_mlib_stdio_unprefixed_selftest_expected<>(SB), RODATA, $10
+
+DATA _L_str_1_13<>+0(SB)/8, $0x64253d65756c6176
+DATA _L_str_1_13<>+8(SB)/1, $0x00
+GLOBL _L_str_1_13<>(SB), RODATA, $9
+
+DATA _L_str_2_14<>+0(SB)/8, $0x32343d65756c6176
+DATA _L_str_2_14<>+8(SB)/1, $0x00
+GLOBL _L_str_2_14<>(SB), RODATA, $9
+
+DATA _L_str_3_15<>+0(SB)/1, $0x54
+DATA _L_str_3_15<>+1(SB)/1, $0x45
+DATA _L_str_3_15<>+2(SB)/1, $0x4d
+DATA _L_str_3_15<>+3(SB)/1, $0x50
+DATA _L_str_3_15<>+4(SB)/1, $0x00
+GLOBL _L_str_3_15<>(SB), RODATA, $5
+
+DATA _L_str_4_16<>+0(SB)/1, $0x2e
+DATA _L_str_4_16<>+1(SB)/1, $0x00
+GLOBL _L_str_4_16<>(SB), RODATA, $2
+
+DATA _L_str_5_17<>+0(SB)/8, $0x696c6d5f6f673263
+DATA _L_str_5_17<>+8(SB)/8, $0x5f6f696474735f62
+DATA _L_str_5_17<>+16(SB)/1, $0x58
+DATA _L_str_5_17<>+17(SB)/1, $0x58
+DATA _L_str_5_17<>+18(SB)/1, $0x58
+DATA _L_str_5_17<>+19(SB)/1, $0x58
+DATA _L_str_5_17<>+20(SB)/1, $0x58
+DATA _L_str_5_17<>+21(SB)/1, $0x58
+DATA _L_str_5_17<>+22(SB)/1, $0x00
+GLOBL _L_str_5_17<>(SB), RODATA, $23
+
+DATA _L_str_6_18<>+0(SB)/8, $0x742e6d6165727473
+DATA _L_str_6_18<>+8(SB)/1, $0x78
+DATA _L_str_6_18<>+9(SB)/1, $0x74
+DATA _L_str_6_18<>+10(SB)/1, $0x00
+GLOBL _L_str_6_18<>(SB), RODATA, $11
+
+DATA _L_str_7_19<>+0(SB)/1, $0x77
+DATA _L_str_7_19<>+1(SB)/1, $0x2b
+DATA _L_str_7_19<>+2(SB)/1, $0x00
+GLOBL _L_str_7_19<>(SB), RODATA, $3
+
+DATA _L_str_8_20<>+0(SB)/1, $0x78
+DATA _L_str_8_20<>+1(SB)/1, $0x00
+GLOBL _L_str_8_20<>(SB), RODATA, $2
+
+DATA _L_str_9_21<>+0(SB)/1, $0x72
+DATA _L_str_9_21<>+1(SB)/1, $0x00
+GLOBL _L_str_9_21<>(SB), RODATA, $2
+
+	FUNCDATA $0, gclocals·05ce8345184b6987(SB)
+DATA gclocals·05ce8345184b6987+0(SB)/4, $9
+DATA gclocals·05ce8345184b6987+4(SB)/4, $1
+DATA gclocals·05ce8345184b6987+8(SB)/1, $0x00
+DATA gclocals·05ce8345184b6987+9(SB)/1, $0x00
+DATA gclocals·05ce8345184b6987+10(SB)/1, $0x00
+DATA gclocals·05ce8345184b6987+11(SB)/1, $0x00
+DATA gclocals·05ce8345184b6987+12(SB)/1, $0x00
+DATA gclocals·05ce8345184b6987+13(SB)/1, $0x00
+DATA gclocals·05ce8345184b6987+14(SB)/1, $0x00
+DATA gclocals·05ce8345184b6987+15(SB)/1, $0x00
+DATA gclocals·05ce8345184b6987+16(SB)/1, $0x00
+GLOBL gclocals·05ce8345184b6987(SB), DUPOK|RODATA, $17
+
+	FUNCDATA $1, gclocals·99070d0b67290b54(SB)
+DATA gclocals·99070d0b67290b54+0(SB)/4, $9
+DATA gclocals·99070d0b67290b54+4(SB)/4, $167
+DATA gclocals·99070d0b67290b54+8(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+9(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+10(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+11(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+12(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+13(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+14(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+15(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+16(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+17(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+18(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+19(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+20(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+21(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+22(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+23(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+24(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+25(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+26(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+27(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+28(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+29(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+30(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+31(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+32(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+33(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+34(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+35(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+36(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+37(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+38(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+39(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+40(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+41(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+42(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+43(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+44(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+45(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+46(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+47(SB)/1, $0x30
+DATA gclocals·99070d0b67290b54+48(SB)/1, $0x80
+DATA gclocals·99070d0b67290b54+49(SB)/1, $0x21
+DATA gclocals·99070d0b67290b54+50(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+51(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+52(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+53(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+54(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+55(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+56(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+57(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+58(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+59(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+60(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+61(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+62(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+63(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+64(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+65(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+66(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+67(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+68(SB)/1, $0x30
+DATA gclocals·99070d0b67290b54+69(SB)/1, $0x80
+DATA gclocals·99070d0b67290b54+70(SB)/1, $0x61
+DATA gclocals·99070d0b67290b54+71(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+72(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+73(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+74(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+75(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+76(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+77(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+78(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+79(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+80(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+81(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+82(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+83(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+84(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+85(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+86(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+87(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+88(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+89(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+90(SB)/1, $0x80
+DATA gclocals·99070d0b67290b54+91(SB)/1, $0x61
+DATA gclocals·99070d0b67290b54+92(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+93(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+94(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+95(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+96(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+97(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+98(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+99(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+100(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+101(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+102(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+103(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+104(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+105(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+106(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+107(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+108(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+109(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+110(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+111(SB)/1, $0x80
+DATA gclocals·99070d0b67290b54+112(SB)/1, $0x21
+DATA gclocals·99070d0b67290b54+113(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+114(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+115(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+116(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+117(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+118(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+119(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+120(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+121(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+122(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+123(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+124(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+125(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+126(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+127(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+128(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+129(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+130(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+131(SB)/1, $0x40
+DATA gclocals·99070d0b67290b54+132(SB)/1, $0x80
+DATA gclocals·99070d0b67290b54+133(SB)/1, $0x61
+DATA gclocals·99070d0b67290b54+134(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+135(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+136(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+137(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+138(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+139(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+140(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+141(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+142(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+143(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+144(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+145(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+146(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+147(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+148(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+149(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+150(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+151(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+152(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+153(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+154(SB)/1, $0x60
+DATA gclocals·99070d0b67290b54+155(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+156(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+157(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+158(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+159(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+160(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+161(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+162(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+163(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+164(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+165(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+166(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+167(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+168(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+169(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+170(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+171(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+172(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+173(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+174(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+175(SB)/1, $0x20
+DATA gclocals·99070d0b67290b54+176(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+177(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+178(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+179(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+180(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+181(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+182(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+183(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+184(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+185(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+186(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+187(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+188(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+189(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+190(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+191(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+192(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+193(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+194(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+195(SB)/1, $0x00
+DATA gclocals·99070d0b67290b54+196(SB)/1, $0x40
+GLOBL gclocals·99070d0b67290b54(SB), DUPOK|RODATA, $197

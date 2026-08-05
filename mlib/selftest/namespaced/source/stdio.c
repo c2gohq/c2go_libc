@@ -1,0 +1,38 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+
+#include <c2go/mlib/stdio.h>
+#include <stdio.h>
+
+#pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
+
+c2go_linkname("github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.ForceGC", C2GO_GOABI0)
+void c2go_mlib_stdio_test_gc(void);
+
+#define C2GO_MLIB_TEST_FILE mlib_FILE
+#define C2GO_MLIB_TEST_FPOS mlib_fpos_t
+#define C2GO_MLIB_TEST_FOPEN mlib_fopen
+#define C2GO_MLIB_TEST_FDOPEN mlib_fdopen
+#define C2GO_MLIB_TEST_FCLOSE mlib_fclose
+#define C2GO_MLIB_TEST_FFLUSH mlib_fflush
+#define C2GO_MLIB_TEST_FTELL mlib_ftell
+#define C2GO_MLIB_TEST_FSEEK mlib_fseek
+#define C2GO_MLIB_TEST_FGETPOS mlib_fgetpos
+#define C2GO_MLIB_TEST_FSETPOS mlib_fsetpos
+#define C2GO_MLIB_TEST_FREAD mlib_fread
+#define C2GO_MLIB_TEST_FPUTS mlib_fputs
+#define C2GO_MLIB_TEST_FPUTC mlib_fputc
+#define C2GO_MLIB_TEST_FGETC mlib_fgetc
+#define C2GO_MLIB_TEST_GETC mlib_getc
+#define C2GO_MLIB_TEST_UNGETC mlib_ungetc
+#define C2GO_MLIB_TEST_FEOF mlib_feof
+#define C2GO_MLIB_TEST_FERROR mlib_ferror
+#define C2GO_MLIB_TEST_CLEARERR mlib_clearerr
+#define C2GO_MLIB_TEST_FILENO mlib_fileno
+#define C2GO_MLIB_TEST_FPRINTF mlib_fprintf
+#define C2GO_MLIB_TEST_FLOCKFILE mlib_flockfile
+#define C2GO_MLIB_TEST_FUNLOCKFILE mlib_funlockfile
+#define C2GO_MLIB_TEST_EXPORT mlib_stdio_prefixed_selftest
+#define C2GO_MLIB_TEST_FORCE_GC() c2go_mlib_stdio_test_gc()
+#include "../../source/stdio_fixture.inc"
+
+#pragma c2go pop

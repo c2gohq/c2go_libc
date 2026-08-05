@@ -1,31 +1,27 @@
-// stdio.go — the global lock behind c2go-libc's stdio streams (source/stdio.c).
-//
-// musl serialises FILE access with a per-thread recursive flockfile. c2go-libc
-// uses a single process-wide Go sync.Mutex instead, bridged to C through
-// _c2go_file_lock/_c2go_file_unlock — the FLOCK/FUNLOCK macros in stdio.c call
-// __lockfile/__unlockfile, which call these.
-//
-// The mutex is NOT recursive, so the C side never nests a lock on the same
-// stream (see the puts() note in stdio.c).
+// stdio.go — the Go state behind root libc's FILE locks (csrc/stdio.c).
+// Root FILE keeps a generation-stamped integer handle because its C carrier is
+// unmanaged. The recursive lock algorithm itself lives in internal/posixstdio
+// and is shared with mlib, whose managed FILE stores the Go pointer directly.
 package libc
 
 import (
-	"github.com/timandy/routine"
-
-	"sync/atomic"
 	"sync"
+	"sync/atomic"
 	_ "unsafe"
+
+	"github.com/c2gohq/c2go_libc/internal/posixstdio"
 )
 
 // _c2go_FILE is the opaque Go handle for the C FILE object (source/stdio.c's
-// struct _c2go_FILE — 232 bytes of plain unmanaged memory, emitted NOPTR).
+// struct _c2go_FILE — a 256-byte no-scan envelope for the private C layout
+// (256 bytes on Unix and 248 bytes on Windows).
 // c2go-bind names FILE* parameters *_c2go_FILE in the generated bindings but
 // does NOT emit the type itself, so the package supplies it here. Go code only
 // ever holds a *_c2go_FILE as an opaque pointer (handing it to Fwrite/Fflush/…);
 // it never reads the fields, so a sized noscan byte blob is sufficient and keeps
 // the pointer type noscan.
 type _c2go_FILE struct {
-	_ [232]byte
+	_ [256]byte
 }
 
 // FILE is the exported public alias for the opaque handle. A downstream c2go
@@ -45,38 +41,18 @@ type FILE = _c2go_FILE
 // tid-recursive) so flockfile(f) + stdio calls + funlockfile(f) compose, and
 // nested internal FLOCKs are tolerated. owner/count are only touched by the
 // holder (owner cmp is the sole cross-goroutine read — atomic).
-type fileLock struct {
-	mu    sync.Mutex
-	owner atomic.Uint64 // goid of the holder, 0 = unowned
-	count int32         // recursion depth, guarded by ownership
-}
-
-var fileLockTab handleTable[fileLock]
+var fileLockTab handleTable[posixstdio.Lock]
 
 //go:linkname _c2go_file_lock
 func _c2go_file_lock(idp *uint64) {
-	st := fileLockTab.lazyInit(idp, func() *fileLock { return new(fileLock) })
-	self := uint64(routine.Goid())
-	if st.owner.Load() == self {
-		st.count++
-		return
-	}
-	st.mu.Lock()
-	st.owner.Store(self)
-	st.count = 1
+	st := fileLockTab.lazyInit(idp, func() *posixstdio.Lock { return new(posixstdio.Lock) })
+	st.Lock()
 }
 
 //go:linkname _c2go_file_trylock
 func _c2go_file_trylock(idp *uint64) int32 {
-	st := fileLockTab.lazyInit(idp, func() *fileLock { return new(fileLock) })
-	self := uint64(routine.Goid())
-	if st.owner.Load() == self {
-		st.count++
-		return 0
-	}
-	if st.mu.TryLock() {
-		st.owner.Store(self)
-		st.count = 1
+	st := fileLockTab.lazyInit(idp, func() *posixstdio.Lock { return new(posixstdio.Lock) })
+	if st.TryLock() {
 		return 0
 	}
 	return 1 // held elsewhere (ftrylockfile: nonzero)
@@ -88,10 +64,7 @@ func _c2go_file_unlock(idp *uint64) {
 	if st == nil {
 		return
 	}
-	if st.count--; st.count == 0 {
-		st.owner.Store(0)
-		st.mu.Unlock()
-	}
+	st.Unlock()
 }
 
 //go:linkname _c2go_file_lock_drop

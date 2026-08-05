@@ -105,11 +105,28 @@ No ordinary `malloc`, `realloc`, `qsort`, or `free` participates in this graph.
 
 ### FILE cluster
 
-`FILE` has internal links, buffers, callbacks, a per-file lock handle, open-file
-list membership, and optional popen process state. Its layout and ownership are
-used throughout stdio, so changing only `fopen` or only the lock field would
-create two incompatible FILE worlds. FILE/stdio/popen therefore remains the
-last and largest selective-instantiation cluster.
+The first explicit-stream FILE surface is implemented. An `mlib_FILE` is a
+typed Go-heap carrier with two deliberately separate regions:
+
+- a fixed-size, aligned no-scan envelope containing root libc's raw musl FILE
+  engine; and
+- explicit managed roots for its GC buffer, direct recursive lock, and managed
+  open-file-list links.
+
+Root libc supplies internal raw init/close helpers and the stateless buffering,
+formatting, read, write, seek, and status algorithms. Those helpers never
+allocate the carrier, join root libc's open-file list, or touch `fileLockTab`.
+The managed wrapper uses `gc_malloc`, its own managed list for `fflush(NULL)`,
+and the shared `internal/posixstdio` lock algorithm. Thus the raw engine may
+hold borrowed addresses into its buffer while the scanner sees only the
+parallel managed owner fields.
+
+Implemented now: `fopen`/`fdopen`/`fclose`, explicit-stream flushing, block and
+character I/O, positioning/status, `fprintf`/`vfprintf`, descriptor access, and
+the `flockfile` family. Standard streams and APIs that create additional owned
+graphs (`popen`, `getdelim`, `open_memstream`, `fmemopen`, `fopencookie`, wide
+stdio, and scanf `%m`) remain separate propagation phases; they must not be
+routed to root FILE declarations under the managed carrier type.
 
 ## Next safe migration order
 
@@ -118,7 +135,9 @@ last and largest selective-instantiation cluster.
 2. Design pthread thread/key ownership separately; do not extend the current
    unprefixed sync switch implicitly.
 3. Keep the completed DIR propagation cluster under GC-stress regression.
-4. Design and migrate FILE/stdio/popen as one cluster.
+4. Extend the managed FILE cluster in ownership-closed phases: standard streams
+   and plain formatted input, then managed-output buffers/custom cookies, then
+   wide stdio and `popen` process state.
 
 At every step the default API remains `mlib_`-prefixed, the unprefixed form is a
 whole-LTO-package choice, and root libc must never import or depend on `mlib`.

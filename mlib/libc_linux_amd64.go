@@ -15,6 +15,15 @@ import (
 )
 
 // ─── Types ──────────────────────────────────────────────────
+type _c2go_mlib_FILE struct {
+	_raw         [32]uint64
+	_buffer_root *byte
+	_lock_state  unsafe.Pointer
+	_prev        *_c2go_mlib_FILE
+	_next        *_c2go_mlib_FILE
+	_active      int32
+	_listed      int32
+}
 type history struct {
 	chain *history
 	dev   uint64
@@ -49,6 +58,7 @@ type mlib_match struct {
 // matching definition in any c2go-compiled TU. Emitted as
 // zero-size opaque structs; pointers to them remain valid
 // handles but contents are inaccessible from Go-side code.
+type __va_list_tag struct{}
 type dirent struct{}
 
 // ─── Type-descriptor indirection (#218) ──────
@@ -56,6 +66,7 @@ type dirent struct{}
 // _typeinfo_<X> var below; each caches the *runtime._type computed
 // once at init via reflect.TypeFor[T] (no value construction).
 var (
+	_typeinfo__c2go_mlib_FILE  unsafe.Pointer
 	_typeinfo_mlib_DIR         unsafe.Pointer
 	_typeinfo_mlib_dirent_slot unsafe.Pointer
 	_typeinfo_mlib_glob_slot   unsafe.Pointer
@@ -68,6 +79,7 @@ func _c2go_rtype(t reflect.Type) unsafe.Pointer {
 }
 
 func init() {
+	_typeinfo__c2go_mlib_FILE = _c2go_rtype(reflect.TypeFor[_c2go_mlib_FILE]())
 	_typeinfo_mlib_DIR = _c2go_rtype(reflect.TypeFor[mlib_DIR]())
 	_typeinfo_mlib_dirent_slot = _c2go_rtype(reflect.TypeFor[mlib_dirent_slot]())
 	_typeinfo_mlib_glob_slot = _c2go_rtype(reflect.TypeFor[mlib_glob_slot]())
@@ -78,17 +90,92 @@ func init() {
 // Bodies provided by clang-emitted Plan 9 .s with TEXT ·<name>(SB)
 // at ABI0. Go compiler auto-generates the ABIInternal wrapper.
 
+//go:linkname MlibClearerr github.com/c2gohq/c2go_libc/mlib.mlib_clearerr
+func MlibClearerr(stream *_c2go_mlib_FILE)
+
 //go:linkname MlibClosedir github.com/c2gohq/c2go_libc/mlib.mlib_closedir
 func MlibClosedir(dir *mlib_DIR) int32
 
 //go:linkname MlibDirfd github.com/c2gohq/c2go_libc/mlib.mlib_dirfd
 func MlibDirfd(dir *mlib_DIR) int32
 
+//go:linkname MlibFclose github.com/c2gohq/c2go_libc/mlib.mlib_fclose
+func MlibFclose(stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibFdopen github.com/c2gohq/c2go_libc/mlib.mlib_fdopen
+func MlibFdopen(fd int32, mode *byte) *_c2go_mlib_FILE
+
 //go:linkname MlibFdopendir github.com/c2gohq/c2go_libc/mlib.mlib_fdopendir
 func MlibFdopendir(fd int32) *mlib_DIR
 
+//go:linkname MlibFeof github.com/c2gohq/c2go_libc/mlib.mlib_feof
+func MlibFeof(stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibFerror github.com/c2gohq/c2go_libc/mlib.mlib_ferror
+func MlibFerror(stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibFflush github.com/c2gohq/c2go_libc/mlib.mlib_fflush
+func MlibFflush(stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibFgetc github.com/c2gohq/c2go_libc/mlib.mlib_fgetc
+func MlibFgetc(stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibFgetpos github.com/c2gohq/c2go_libc/mlib.mlib_fgetpos
+func MlibFgetpos(stream *_c2go_mlib_FILE, position *int64) int32
+
+//go:linkname MlibFgets github.com/c2gohq/c2go_libc/mlib.mlib_fgets
+func MlibFgets(destination *byte, count int32, stream *_c2go_mlib_FILE) *byte
+
+//go:linkname MlibFileno github.com/c2gohq/c2go_libc/mlib.mlib_fileno
+func MlibFileno(stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibFlockfile github.com/c2gohq/c2go_libc/mlib.mlib_flockfile
+func MlibFlockfile(stream *_c2go_mlib_FILE)
+
+//go:linkname MlibFopen github.com/c2gohq/c2go_libc/mlib.mlib_fopen
+func MlibFopen(filename *byte, mode *byte) *_c2go_mlib_FILE
+
+//go:linkname MlibFprintf github.com/c2gohq/c2go_libc/mlib.mlib_fprintf
+func MlibFprintf(stream *_c2go_mlib_FILE, format *byte, argptrs unsafe.Pointer) int32
+
+//go:linkname MlibFputc github.com/c2gohq/c2go_libc/mlib.mlib_fputc
+func MlibFputc(character int32, stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibFputs github.com/c2gohq/c2go_libc/mlib.mlib_fputs
+func MlibFputs(text *byte, stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibFread github.com/c2gohq/c2go_libc/mlib.mlib_fread
+func MlibFread(destination unsafe.Pointer, size uint64, count uint64, stream *_c2go_mlib_FILE) uint64
+
+//go:linkname MlibFseek github.com/c2gohq/c2go_libc/mlib.mlib_fseek
+func MlibFseek(stream *_c2go_mlib_FILE, offset int64, whence int32) int32
+
+//go:linkname MlibFseeko github.com/c2gohq/c2go_libc/mlib.mlib_fseeko
+func MlibFseeko(stream *_c2go_mlib_FILE, offset int64, whence int32) int32
+
+//go:linkname MlibFsetpos github.com/c2gohq/c2go_libc/mlib.mlib_fsetpos
+func MlibFsetpos(stream *_c2go_mlib_FILE, position *int64) int32
+
+//go:linkname MlibFtell github.com/c2gohq/c2go_libc/mlib.mlib_ftell
+func MlibFtell(stream *_c2go_mlib_FILE) int64
+
+//go:linkname MlibFtello github.com/c2gohq/c2go_libc/mlib.mlib_ftello
+func MlibFtello(stream *_c2go_mlib_FILE) int64
+
+//go:linkname MlibFtrylockfile github.com/c2gohq/c2go_libc/mlib.mlib_ftrylockfile
+func MlibFtrylockfile(stream *_c2go_mlib_FILE) int32
+
 //go:linkname MlibFtw github.com/c2gohq/c2go_libc/mlib.mlib_ftw
 func MlibFtw(path *byte, fn uintptr, fd_limit int32) int32
+
+//go:linkname MlibFunlockfile github.com/c2gohq/c2go_libc/mlib.mlib_funlockfile
+func MlibFunlockfile(stream *_c2go_mlib_FILE)
+
+//go:linkname MlibFwrite github.com/c2gohq/c2go_libc/mlib.mlib_fwrite
+func MlibFwrite(source unsafe.Pointer, size uint64, count uint64, stream *_c2go_mlib_FILE) uint64
+
+//go:linkname MlibGetc github.com/c2gohq/c2go_libc/mlib.mlib_getc
+func MlibGetc(stream *_c2go_mlib_FILE) int32
 
 //go:linkname MlibGlob github.com/c2gohq/c2go_libc/mlib.mlib_glob
 func MlibGlob(pattern *byte, flags int32, error_function uintptr, result *mlib_glob_t) int32
@@ -102,17 +189,38 @@ func MlibNftw(path *byte, fn uintptr, fd_limit int32, flags int32) int32
 //go:linkname MlibOpendir github.com/c2gohq/c2go_libc/mlib.mlib_opendir
 func MlibOpendir(name *byte) *mlib_DIR
 
+//go:linkname MlibPutc github.com/c2gohq/c2go_libc/mlib.mlib_putc
+func MlibPutc(character int32, stream *_c2go_mlib_FILE) int32
+
 //go:linkname MlibReaddir github.com/c2gohq/c2go_libc/mlib.mlib_readdir
 func MlibReaddir(dir *mlib_DIR) *dirent
 
 //go:linkname MlibReaddirR github.com/c2gohq/c2go_libc/mlib.mlib_readdir_r
 func MlibReaddirR(dir *mlib_DIR, entry *dirent, result **dirent) int32
 
+//go:linkname MlibRewind github.com/c2gohq/c2go_libc/mlib.mlib_rewind
+func MlibRewind(stream *_c2go_mlib_FILE)
+
 //go:linkname MlibRewinddir github.com/c2gohq/c2go_libc/mlib.mlib_rewinddir
 func MlibRewinddir(dir *mlib_DIR)
 
 //go:linkname MlibScandir github.com/c2gohq/c2go_libc/mlib.mlib_scandir
 func MlibScandir(path *byte, result ***dirent, select_entry uintptr, compare_entry uintptr) int32
+
+//go:linkname MlibUngetc github.com/c2gohq/c2go_libc/mlib.mlib_ungetc
+func MlibUngetc(character int32, stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibVfprintf github.com/c2gohq/c2go_libc/mlib.mlib_vfprintf
+func MlibVfprintf(stream *_c2go_mlib_FILE, format *byte, arguments *__va_list_tag) int32
+
+// ─── §B4 Go-owned global storage ────────────────────────────
+// Pointer-carrying file-scope C globals whose storage is owned
+// by this Go package. Each var's layout mirrors the C global's
+// gcmask (unsafe.Pointer per pointer word, uintptr filler), so
+// the Go compiler emits matching gcdata bits and the runtime
+// scans every pointer slot as a root. Clang's .s output
+// suppresses the matching GLOBL trailer for each name below.
+var mlib_ofl_head unsafe.Pointer
 
 // ─── Embedded runtime-support helpers ───────────────────────
 

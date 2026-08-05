@@ -6,6 +6,7 @@
 // Go-state pointer directly in GC-visible C memory. It therefore needs no
 // process-wide ID-to-pointer handle table. C callers use the headers below
 // c2go/mlib; managed C allocation must use gc_malloc with c2go_typeinfo, never
-// ordinary malloc. The current surface covers unnamed semaphores and pthread
-// mutex, condition-variable, and rwlock synchronization.
+// ordinary malloc. The current surface covers unnamed semaphores; pthread
+// mutex, condition-variable, and rwlock synchronization; managed directory
+// graphs; and the first explicit-FILE stdio surface.
 package mlib

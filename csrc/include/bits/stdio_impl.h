@@ -3,7 +3,9 @@
  * the opaque `FILE` in <bits/alltypes.h>; only c2go-libc's own stdio .c files
  * include it. FILE + buffer are PLAIN unmanaged memory: every field is a byte,
  * an int, a size, or a function pointer (uintptr in c2go) — no GC-managed
- * pointer — so no gc_malloc / write barriers are involved. */
+ * pointer — so no gc_malloc / write barriers are involved. Including the
+ * c2go-only tail fields below, the current layout is 256 bytes on Unix and
+ * 248 bytes on Windows (where long is 32-bit). */
 #ifndef _BITS_STDIO_IMPL_H
 #define _BITS_STDIO_IMPL_H
 

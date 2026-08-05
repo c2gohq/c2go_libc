@@ -55,6 +55,15 @@ func SnprintfProbe(buf *byte, n int32, depth int32) int32
 //go:linkname AssertFail github.com/c2gohq/c2go_libc.__assert_fail
 func AssertFail(expr *byte, file *byte, line int32, fn *byte)
 
+//go:linkname C2goFileRawClose github.com/c2gohq/c2go_libc.__c2go_file_raw_close
+func C2goFileRawClose(f *FILE) int32
+
+//go:linkname C2goFileRawFdopen github.com/c2gohq/c2go_libc.__c2go_file_raw_fdopen
+func C2goFileRawFdopen(f *FILE, fd int32, mode *byte, storage *byte, storage_size uint64) int32
+
+//go:linkname C2goFileRawOpen github.com/c2gohq/c2go_libc.__c2go_file_raw_open
+func C2goFileRawOpen(f *FILE, filename *byte, mode *byte, storage *byte, storage_size uint64) int32
+
 //go:linkname C2goFinalize github.com/c2gohq/c2go_libc.__c2go_finalize
 func C2goFinalize()
 

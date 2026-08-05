@@ -18,12 +18,10 @@
  *
  * Adaptations from musl (faithful otherwise — the printf_core formatter is
  * musl's, unchanged for the integer/string cases):
- *   - Locking: musl's per-thread recursive flockfile is replaced by a single Go
- *     per-FILE sync.Mutex bridged through _c2go_file_lock/_unlock (stdio.go,
- *     #659 — one stream's blocking read no longer freezes the rest). Because
- *     that mutex is NOT recursive, puts() is rewritten to use the *_unlocked
- *     primitives under one FLOCK instead of calling fputs()+putc (which would
- *     re-lock and deadlock). Every other path takes the lock at most once.
+ *   - Locking: musl's thread-owned recursive flockfile is represented by one
+ *     goroutine-owned recursive Go lock per FILE, bridged through
+ *     _c2go_file_lock/_unlock (stdio.go, #659/#664). The explicit unlocked
+ *     inner primitives keep compound operations within one clear lock scope.
  *   - Write callback: c2go has no writev, so __stdio_write emits its two
  *     segments (the buffered [wbase,wpos) then the caller's [buf,buf+len)) with
  *     write() calls, preserving musl's partial-write + error return semantics.
@@ -78,8 +76,7 @@ extern FILE *const stderr;
 
 /* Open-file list lock — a SECOND global mutex, distinct from the stdio lock, so
  * fflush(NULL) can hold the ofl lock while it re-locks each file's stdio lock
- * (musl relies on the two locks being different; the single non-recursive
- * stdio mutex would self-deadlock otherwise). See stdio.go. */
+ * (musl relies on the list and stream locks being different). See stdio.go. */
 c2go_linkname("github.com/c2gohq/c2go_libc._c2go_ofl_lock", C2GO_GOABI0)
 void _c2go_ofl_lock(void);
 c2go_linkname("github.com/c2gohq/c2go_libc._c2go_ofl_unlock", C2GO_GOABI0)
@@ -96,8 +93,8 @@ int _c2go_file_trylock(unsigned long long *idp);
 /* Per-FILE locking (#659, decision ②, musl parity): each stream owns its own
  * mutex (Go-side, rooted by f->lockid), so one goroutine's blocking
  * read(stdin) no longer freezes every other stream — the old process-global
- * stdio mutex did. Still NON-recursive (unlike musl's tid-recursive
- * __lockfile), so the existing unlocked-variant deviations stand. */
+ * stdio mutex did. The shared Go lock is goroutine-recursive, matching musl's
+ * thread-recursive behavior. */
 static int __lockfile(FILE *f) { _c2go_file_lock(&f->lockid); return 1; }
 static void __unlockfile(FILE *f) { _c2go_file_unlock(&f->lockid); }
 
@@ -1491,10 +1488,9 @@ int fputs(const char *restrict s, FILE *restrict f)
 	return (fwrite(s, 1, l, f)==l) - 1;
 }
 
-/* musl's puts is FLOCK(stdout) then fputs()+putc_unlocked. fputs re-enters
- * fwrite -> FLOCK, which would re-lock the stream's non-recursive lock and
- * deadlock, so drive the buffer directly with the *_unlocked primitives under
- * a single FLOCK. Output is identical to musl's. */
+/* Drive both writes through unlocked primitives under one FLOCK. The current
+ * lock is recursive, but a single scope avoids redundant bridge calls and
+ * keeps the two output segments atomic with respect to other writers. */
 c2go_extern
 int puts(const char *s)
 {
@@ -1526,9 +1522,8 @@ c2go_extern int putc(int c, FILE *f)
 /* ── perror (musl stdio) ─────────────────────────────────────────────────────
  * Snapshot strerror(errno) BEFORE touching the stream: locking/writing may clobber
  * errno, and perror must report the errno at entry. Then write "msg: errstr\n"
- * (or "errstr\n" when msg is null/empty) to stderr. Like puts (see its note), the
- * non-recursive per-FILE lock forbids calling fwrite/fputc under FLOCK, so
- * drive the buffer with __fwritex / putc_unlocked directly under one FLOCK. stderr
+ * (or "errstr\n" when msg is null/empty) to stderr. Like puts, drive the buffer
+ * with __fwritex / putc_unlocked directly under one FLOCK. stderr
  * is unbuffered, so every byte reaches fd 2 immediately (no fflush needed). */
 c2go_extern void perror(const char *msg)
 {
@@ -1579,9 +1574,8 @@ c2go_extern int fflush(FILE *f)
 		r |= fflush(stderr);
 
 		/* Flush every writing stream on the open-file list (fopen'd files).
-		 * musl re-enters fflush(f) under FLOCK(f) via a recursive flockfile;
-		 * our stdio mutex is non-recursive, so call the unlocked body inside
-		 * FLOCK instead. The ofl lock is a distinct mutex, so holding it while
+		 * Call the unlocked body inside the existing FLOCK to avoid a redundant
+		 * recursive bridge. The ofl lock is distinct, so holding it while
 		 * taking each file's stdio lock cannot self-deadlock. */
 		for (f = *__ofl_lock(); f; f = f->next) {
 			FLOCK(f);
@@ -1663,6 +1657,42 @@ static FILE *__ofl_add(FILE *f)
 	return f;
 }
 
+/* Initialize a caller-owned raw FILE engine. The storage and its buffer may
+ * come from either root libc's unmanaged allocator or mlib's Go heap; this
+ * helper only installs musl's descriptor operations and scalar state. `lock`
+ * is 0 for the root carrier and -1 when an outer managed wrapper owns locking.
+ */
+static int __file_init_fd(FILE *f, int fd, const char *mode,
+	unsigned char *storage, size_t storage_size, int lock)
+{
+	if (!strchr("rwa", *mode) || storage_size < UNGET) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	memset(f, 0, sizeof *f);
+	if (!strchr(mode, '+')) f->flags = (*mode == 'r') ? F_NOWR : F_NORD;
+	if (*mode == 'a') f->flags |= F_APP;
+
+	f->fd = fd;
+	f->buf = storage + UNGET;
+	f->buf_size = storage_size - UNGET;
+	f->lbf = EOF;
+#if !defined(_WIN32)
+	if (!(f->flags & F_NOWR)) {
+		int e_ = errno;
+		if (isatty(fd)) f->lbf = '\n';
+		errno = e_;
+	}
+#endif
+	f->read = __stdio_read;
+	f->write = __stdio_write;
+	f->seek = __stdio_seek;
+	f->close = __stdio_close;
+	f->lock = lock;
+	return 0;
+}
+
 /* musl __fdopen.c, minus the ioctl/fcntl bits (see the section note). */
 static FILE *__fdopen(int fd, const char *mode)
 {
@@ -1677,42 +1707,38 @@ static FILE *__fdopen(int fd, const char *mode)
 	/* Allocate FILE+buffer or fail */
 	if (!(f = malloc(sizeof *f + UNGET + BUFSIZ))) return 0;
 
-	/* Zero-fill only the struct, not the buffer */
-	memset(f, 0, sizeof *f);
-
-	/* Impose mode restrictions */
-	if (!strchr(mode, '+')) f->flags = (*mode == 'r') ? F_NOWR : F_NORD;
-
-	/* Append flag for parity (kernel O_APPEND already set via open()). */
-	if (*mode == 'a') f->flags |= F_APP;
-
-	f->fd = fd;
-	f->buf = (unsigned char *)f + sizeof *f + UNGET;
-	f->buf_size = BUFSIZ;
-
-	/* musl __fdopen: line-buffer terminals. musl probes ioctl TIOCGWINSZ; this
-	 * port's probe is isatty (#661 — errno preserved: the probe is not an
-	 * error). Windows has no unix tty probe and stays fully buffered. */
-	f->lbf = EOF;
-#if !defined(_WIN32)
-	if (!(f->flags & F_NOWR)) {
-		int e_ = errno;
-		if (isatty(fd)) f->lbf = '\n';
-		errno = e_;
-	}
-#endif
-
-	/* Initialize op ptrs. */
-	f->read = __stdio_read;
-	f->write = __stdio_write;
-	f->seek = __stdio_seek;
-	f->close = __stdio_close;
-
-	/* lock stays 0 (memset) -> guarded by the stream's own per-FILE lock
-	 * (#659), lazily created on first FLOCK. */
+	/* lock=0 engages root libc's handle-backed per-FILE lock. */
+	(void)__file_init_fd(f, fd, mode, (unsigned char *)f + sizeof *f,
+		UNGET + BUFSIZ, 0);
 
 	/* Add new FILE to open file list */
 	return __ofl_add(f);
+}
+
+/* Internal cross-package entry points for mlib's managed FILE carrier. They
+ * deliberately do not allocate, join root libc's open-file list, or touch the
+ * root fileLockTab. The caller supplies a separately rooted buffer and owns
+ * synchronization around every operation on the raw engine. */
+c2go_extern int __c2go_file_raw_fdopen(FILE *f, int fd, const char *mode,
+	unsigned char *storage, size_t storage_size)
+{
+	return __file_init_fd(f, fd, mode, storage, storage_size, -1);
+}
+
+c2go_extern int __c2go_file_raw_open(FILE *f, const char *filename,
+	const char *mode, unsigned char *storage, size_t storage_size)
+{
+	int fd;
+	if (!strchr("rwa", *mode)) {
+		errno = EINVAL;
+		return -1;
+	}
+	fd = open(filename, __fmodeflags(mode), 0666);
+	if (fd < 0) return -1;
+	if (__file_init_fd(f, fd, mode, storage, storage_size, -1) == 0)
+		return 0;
+	close(fd);
+	return -1;
 }
 
 /* musl fopen.c, minus the redundant post-open CLOEXEC fcntl. (fopen is a clang
@@ -1752,8 +1778,8 @@ FILE *fdopen(int fd, const char *mode)
 }
 
 /* musl fclose.c. The per-thread locked-file list (__unlist_locked_file) has no
- * analogue here (single global mutex), so it is omitted. fflush is inlined as
- * __fflush_unlocked to avoid re-locking the non-recursive stdio mutex. */
+ * analogue in the Go-backed lock, so it is omitted. fflush is inlined as
+ * __fflush_unlocked inside the stream's existing lock scope. */
 c2go_extern
 int fclose(FILE *f)
 {
@@ -1777,6 +1803,16 @@ int fclose(FILE *f)
 	free(f->getln_buf);
 	free(f);
 
+	return r;
+}
+
+/* mlib counterpart of fclose's engine portion. The managed wrapper has
+ * already locked and retired its public carrier; storage reclamation belongs
+ * to Go's GC, so this helper only flushes and closes the descriptor. */
+c2go_extern int __c2go_file_raw_close(FILE *f)
+{
+	int r = __fflush_unlocked(f);
+	r |= f->close(f);
 	return r;
 }
 
@@ -1843,13 +1879,12 @@ c2go_extern int pclose(FILE *f)
 
 /* musl freopen.c. The stream object f is reused: its fd is repointed at the
  * newly opened file (kept at the same descriptor number via dup3) and its I/O
- * ops are copied from the temporary stream. Deviations from musl, forced by the
- * non-recursive per-FILE stream lock (#659):
+ * ops are copied from the temporary stream. Lock-order adaptations:
  *   - fflush(f) is the unlocked __fflush_unlocked (fclose does the same).
  *   - fopen(filename) runs BEFORE FLOCK(f): fopen takes the ofl lock, and
  *     fflush(NULL) takes ofl-then-stdio, so opening under FLOCK(f)
  *     (stdio-then-ofl) would invert that lock order (ABBA).
- *   - fclose(f2) runs AFTER FUNLOCK(f): it re-takes the non-recursive mutex.
+ *   - fclose(f2) runs AFTER FUNLOCK(f), avoiding an unnecessary nested lock.
  * (freopen is a clang LibFunc like fopen — same benign builtin-CC warning, no
  * no_builtin needed; see fopen.) */
 c2go_extern
@@ -3258,10 +3293,9 @@ int sscanf(const char *restrict s, const char *restrict fmt, ...)
  * FILE read path (#604/#605/#606): buffered character/line/block input, file
  * positioning, and stream status. Ported from musl's src/stdio/.
  *
- * Locking note (see the file header): our Go stdio mutex is NON-recursive, so
- * fgetc/getc/getchar do NOT use musl's per-thread recursive do_getc — they take
- * the lock once and call getc_unlocked, exactly as puts() was rewritten. fgets
- * likewise uses getc_unlocked + the feof MACRO under its single FLOCK.
+ * Locking note (see the file header): these public entry points take the lock
+ * once and use getc_unlocked inside that scope. This avoids redundant Go bridge
+ * calls even though the shared per-FILE lock is recursive.
  * ───────────────────────────────────────────────────────────────────────── */
 
 /* musl's getc_unlocked macro (stdio_impl.h): fast path when the read buffer is

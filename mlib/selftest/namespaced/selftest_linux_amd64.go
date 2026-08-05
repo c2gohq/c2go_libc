@@ -78,6 +78,9 @@ func MlibPthreadPrefixedSelftest() int32
 //go:linkname MlibSemPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_sem_prefixed_selftest
 func MlibSemPrefixedSelftest() int32
 
+//go:linkname MlibStdioPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_stdio_prefixed_selftest
+func MlibStdioPrefixedSelftest() int32
+
 // ─── §B4 Go-owned global storage ────────────────────────────
 // Pointer-carrying file-scope C globals whose storage is owned
 // by this Go package. Each var's layout mirrors the C global's

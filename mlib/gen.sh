@@ -60,6 +60,25 @@ verify_function_write_barrier() {
 	fi
 }
 
+verify_function_call_count() {
+	local asm_path="$1"
+	local symbol="$2"
+	local callee="$3"
+	local minimum="$4"
+	local description="$5"
+	local count
+	count="$(awk -v prefix="TEXT ·${symbol}(SB)" -v call="CALL ·${callee}(SB)" '
+		index($0, prefix) == 1 { in_function=1; next }
+		in_function && /^TEXT / { exit }
+		in_function && index($0, call) { count++ }
+		END { print count+0 }
+	' "$asm_path")"
+	if [ "$count" -lt "$minimum" ]; then
+		echo "mlib/gen.sh: $description has $count calls, want at least $minimum in $asm_path" >&2
+		exit 1
+	fi
+}
+
 verify_managed_write_barriers() {
 	local asm_path="$1"
 	verify_function_write_barrier "$asm_path" mlib_opendir \
@@ -74,6 +93,18 @@ verify_managed_write_barriers() {
 		"managed glob pointer swaps"
 	verify_function_write_barrier "$asm_path" mlib_glob_store_paths \
 		"managed glob carrier updates"
+	verify_function_write_barrier "$asm_path" mlib_file_allocate \
+		"managed FILE buffer ownership"
+	verify_function_write_barrier "$asm_path" mlib_ofl_add \
+		"managed FILE open-list insertion"
+	verify_function_write_barrier "$asm_path" mlib_ofl_remove \
+		"managed FILE open-list removal"
+	verify_function_write_barrier "$asm_path" mlib_clear_file_pointer \
+		"managed FILE link retirement"
+	verify_function_call_count "$asm_path" mlib_file_clear_links \
+		mlib_clear_file_pointer 2 "managed FILE link clearing"
+	verify_function_write_barrier "$asm_path" mlib_fclose \
+		"managed FILE buffer release"
 }
 
 TARGETS=(
@@ -92,6 +123,7 @@ LIB_SOURCES=(
 	"$ROOT/csrc/mlib/ftw.c"
 	"$ROOT/csrc/mlib/glob.c"
 	"$ROOT/csrc/mlib/scandir.c"
+	"$ROOT/csrc/mlib/stdio.c"
 )
 
 # Build the selectively-instantiated C part of package mlib once per target.

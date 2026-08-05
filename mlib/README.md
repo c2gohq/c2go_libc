@@ -17,6 +17,7 @@ The default API is explicitly namespaced:
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
+#include <c2go/mlib/stdio.h>
 
 #pragma c2go managed push
 
@@ -47,6 +48,12 @@ static void example(void) {
         /* Use matches.gl_pathv[0..matches.gl_pathc). */
         mlib_globfree(&matches);
     }
+
+    mlib_FILE *file = mlib_fopen("result.txt", "w");
+    if (file) {
+        mlib_fprintf(file, "count=%d\n", count);
+        mlib_fclose(file); /* The carrier itself is reclaimed by the GC. */
+    }
 }
 
 #pragma c2go pop
@@ -61,6 +68,7 @@ corresponding standard names for the entire C2Go/LTO package:
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
+#include <c2go/mlib/stdio.h>
 
 #pragma c2go managed push
 
@@ -75,6 +83,12 @@ static void example(void) {
     DIR *dir = opendir(".");
     struct dirent *entry = readdir(dir);
     closedir(dir);
+
+    FILE *file = fopen("result.txt", "w");
+    if (file) {
+        fprintf(file, "managed stdio\n");
+        fclose(file);
+    }
 }
 
 #pragma c2go pop
@@ -93,7 +107,7 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 `mlib` does not provide or use `malloc`, `realloc`, or `free`. It currently
 implements unnamed semaphores; pthread mutexes, condition variables, and
 rwlocks; the directory-stream lifecycle; `scandir`; Unix `nftw`/`ftw`; and
-`glob`.
+`glob`; and the first ownership-closed managed `FILE` surface.
 Their state algorithms are shared with root libc; only state resolution differs
 (direct managed pointer versus unmanaged handle ID). Managed `opendir` and
 `fdopendir` allocate the carrier internally with typed `gc_malloc`; `closedir`
@@ -116,12 +130,23 @@ and copying pointers with write barriers. `mlib_globfree` clears the carrier's
 root for early release or reuse; callers must never pass `gl_pathv` or its
 strings to `free`.
 
+Managed `FILE` objects use a typed GC carrier around the shared raw musl stdio
+engine. Their buffer, recursive lock, and open-file-list links are direct
+managed roots; `fopen` and `fdopen` never allocate with ordinary `malloc`, and
+`fclose` retires those roots instead of freeing the carrier. The current surface
+covers explicit file streams: open/close, `fflush` (including `NULL`), block and
+character I/O, seek/status, `fprintf`/`vfprintf`, `fileno`, and `flockfile`.
+Standard streams, `popen`, allocation-returning stdio, custom/memory streams,
+wide stdio, and formatted input are not yet part of mlib; do not pass an
+`mlib_FILE *` to their root-libc counterparts.
+
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
 `pthread_atfork` remain available from the root pthread surface.
 
-The directory propagation cluster is now complete. FILE/stdio/popen and the
-remaining state families still require separate designs described below.
+The directory propagation cluster is complete. FILE is being extended in
+ownership-closed phases; `popen` and the remaining state families retain the
+boundaries documented in DESIGN.md.
 
 ## 简体中文
 
@@ -137,6 +162,7 @@ remaining state families still require separate designs described below.
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
+#include <c2go/mlib/stdio.h>
 
 #pragma c2go managed push
 
@@ -167,6 +193,12 @@ static void example(void) {
         /* 使用 matches.gl_pathv[0..matches.gl_pathc)。 */
         mlib_globfree(&matches);
     }
+
+    mlib_FILE *file = mlib_fopen("result.txt", "w");
+    if (file) {
+        mlib_fprintf(file, "count=%d\n", count);
+        mlib_fclose(file); /* carrier 本身由 GC 回收。 */
+    }
 }
 
 #pragma c2go pop
@@ -180,6 +212,7 @@ static void example(void) {
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
+#include <c2go/mlib/stdio.h>
 
 #pragma c2go managed push
 
@@ -194,6 +227,12 @@ static void example(void) {
     DIR *dir = opendir(".");
     struct dirent *entry = readdir(dir);
     closedir(dir);
+
+    FILE *file = fopen("result.txt", "w");
+    if (file) {
+        fprintf(file, "managed stdio\n");
+        fclose(file);
+    }
 }
 
 #pragma c2go pop
@@ -211,7 +250,8 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 
 `mlib` 不提供、也不使用 `malloc`、`realloc` 或 `free`。当前已经实现无名
 信号量、pthread 的 mutex/condition variable/rwlock、目录流生命周期、
-`scandir`、Unix `nftw`/`ftw`，以及 `glob`。它们的行为核心与根 libc 共用，只有状态解析
+`scandir`、Unix `nftw`/`ftw`、`glob`，以及第一阶段 ownership-closed 的
+managed `FILE` 接口。它们的行为核心与根 libc 共用，只有状态解析
 方式不同：`mlib` 直接读取 managed pointer，根 libc 仍通过 unmanaged handle ID 查表。managed `opendir`
 和 `fdopendir` 在内部使用 typed `gc_malloc` 分配 carrier；`closedir` 清空状态
 指针，由 GC 回收 carrier。managed `scandir` 的结果数组及每个 `dirent` 都位于
@@ -229,7 +269,16 @@ GC-owned 的对象图。`GLOB_APPEND` 会分配新的 typed vector，并通过 w
 复制旧指针。`mlib_globfree` 会清除 carrier 中的根，便于提前释放或复用；调用方
 不能把 `gl_pathv` 或其中的字符串传给 `free`。
 
+managed `FILE` 使用 typed GC carrier 包住共用的 raw musl stdio engine；缓冲区、
+递归锁和打开文件链表都由明确的 managed 字段直接持有。`fopen`/`fdopen` 不会调用
+普通 `malloc`，`fclose` 清除这些根并由 GC 回收 carrier。当前支持显式文件流的
+打开/关闭、`fflush`（包括 `NULL`）、块与字符 I/O、定位与状态、
+`fprintf`/`vfprintf`、`fileno` 和 `flockfile`。标准流、`popen`、返回新分配
+内存的 stdio、memory/custom stream、wide stdio 和 formatted input 尚未进入
+mlib；不能把 `mlib_FILE *` 传给这些根 libc 接口。
+
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、
 `pthread_once` 和 `pthread_atfork` 仍由根 pthread 接口提供。
 
-目录传播簇现已完整。FILE/stdio/popen 及其余状态簇仍需按照下文分别设计。
+目录传播簇现已完整。FILE 将继续按 ownership-closed 阶段扩展；`popen` 与其余
+状态簇仍遵循 DESIGN.md 中记录的边界。
