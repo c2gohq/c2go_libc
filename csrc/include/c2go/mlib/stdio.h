@@ -165,10 +165,12 @@ int C2GO_MLIB_NAME(fprintf)(C2GO_MLIB_NAME(FILE) *__restrict,
     const char *__restrict, ...)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fprintf", C2GO_GOABI0);
 
-/* Formatted input reuses root libc's scanner only for scalar and byte/wide-
- * character destinations. POSIX `%m` allocation and `%p` pointer publication
- * require managed allocation/write-barrier policy and are rejected with
- * ENOTSUP before any input is consumed. */
+/* Formatted input shares root libc's parser while selecting mlib's result
+ * policy: POSIX `%m` buffers come from gc_malloc and `%m`/`%p` pointer results
+ * are published with managed write barriers. Such results are GC-owned and
+ * must not be passed to free(). A non-null `%p` result must denote a valid
+ * Go-managed address; arbitrary foreign addresses do not belong in a managed
+ * pointer slot. */
 int C2GO_MLIB_NAME(vscanf)(const char *__restrict, va_list)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vscanf", C2GO_GOABI0);
 int C2GO_MLIB_NAME(scanf)(const char *__restrict, ...)

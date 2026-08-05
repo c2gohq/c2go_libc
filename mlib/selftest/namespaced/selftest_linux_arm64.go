@@ -16,6 +16,12 @@ import (
 )
 
 // ─── Types ──────────────────────────────────────────────────
+type c2go_mlib_scan_result struct {
+	file_text *byte
+	text      *byte
+	wide      *uint32
+	pointer   unsafe.Pointer
+}
 type mlib_DIR struct {
 	_state unsafe.Pointer
 	_entry [280]int8
@@ -45,8 +51,9 @@ type mlib_sem_t struct {
 // _typeinfo_<X> var below; each caches the *runtime._type computed
 // once at init via reflect.TypeFor[T] (no value construction).
 var (
-	_typeinfo_mlib_pthread_mutex_t unsafe.Pointer
-	_typeinfo_mlib_sem_t           unsafe.Pointer
+	_typeinfo_c2go_mlib_scan_result unsafe.Pointer
+	_typeinfo_mlib_pthread_mutex_t  unsafe.Pointer
+	_typeinfo_mlib_sem_t            unsafe.Pointer
 )
 
 // reflect.Type's 2nd interface word is the *runtime._type mallocgc wants.
@@ -55,6 +62,7 @@ func _c2go_rtype(t reflect.Type) unsafe.Pointer {
 }
 
 func init() {
+	_typeinfo_c2go_mlib_scan_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_scan_result]())
 	_typeinfo_mlib_pthread_mutex_t = _c2go_rtype(reflect.TypeFor[mlib_pthread_mutex_t]())
 	_typeinfo_mlib_sem_t = _c2go_rtype(reflect.TypeFor[mlib_sem_t]())
 }

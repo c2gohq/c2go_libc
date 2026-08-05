@@ -2,6 +2,7 @@
 
 #include <c2go/mlib/stdio.h>
 #include <stdio.h>
+#include <wchar.h>
 
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
 

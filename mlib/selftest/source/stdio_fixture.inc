@@ -62,6 +62,13 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+struct c2go_mlib_scan_result {
+    char *file_text;
+    char *text;
+    wchar_t *wide;
+    void *pointer;
+};
+
 static int c2go_mlib_test_vscanf(const char *format, ...)
 {
     int result;
@@ -110,10 +117,12 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
 {
     const char *tmp = getenv("TMPDIR");
     const char expected[] = "value=42!";
+    const char managed_text[] =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-long";
     char root[512], path[600], input[32] = {0}, formatted[16];
     char word[8] = {0}, set[4] = {0}, mark = 0;
-    char *allocated = (void *)0;
-    void *parsed_pointer = (void *)0;
+    char pointer_text[32], *target;
+    struct c2go_mlib_scan_result *scan;
     C2GO_MLIB_TEST_FILE *stream;
     C2GO_MLIB_TEST_FPOS position;
     double fraction = 0;
@@ -164,12 +173,13 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
         close(fd);
         return 20;
     }
+    scan = gc_malloc(c2go_typeinfo(struct c2go_mlib_scan_result),
+                     sizeof(*scan));
+    if (!scan) return 33;
     C2GO_MLIB_TEST_FORCE_GC();
-    errno = 0;
-    if (C2GO_MLIB_TEST_FSCANF(stream, "%ms", &allocated) != EOF ||
-        errno != ENOTSUP || allocated) return 21;
-    /* Rejection is a policy check, not a partial conversion: no input moved. */
-    if (C2GO_MLIB_TEST_GETC(stream) != 'v') return 22;
+    if (C2GO_MLIB_TEST_FSCANF(stream, "%m[a-z]", &scan->file_text) != 1 ||
+        strcmp(scan->file_text, "value")) return 21;
+    if (C2GO_MLIB_TEST_GETC(stream) != '=') return 22;
     if (C2GO_MLIB_TEST_UNGETC('V', stream) != 'V') return 23;
     if (C2GO_MLIB_TEST_GETC(stream) != 'V') return 24;
     if (C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0) return 25;
@@ -183,13 +193,27 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     if (c2go_mlib_test_vsscanf("%m mp", "%%m %2[mp]", set) != 1 ||
         strcmp(set, "mp")) return 29;
 
-    errno = 0;
-    if (c2go_mlib_test_vsscanf("0x1", "%p", &parsed_pointer) != EOF ||
-        errno != ENOTSUP || parsed_pointer) return 30;
-    C2GO_MLIB_TEST_FORCE_GC();
-    if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 31;
+    target = gc_malloc((void *)0, 8);
+    if (!target) return 33;
+    memcpy(target, "alive", 6);
 
-    if (unlink(path) || rmdir(root)) return 32;
+    /* A long %ms forces multiple managed growth allocations. Both the result
+     * object and each pointer field are GC-scanned, so publication must use a
+     * write barrier rather than root scanf's ordinary pointer store. */
+    if (C2GO_MLIB_TEST_SSCANF(managed_text, "%ms", &scan->text) != 1 ||
+        strcmp(scan->text, managed_text)) return 30;
+    if (c2go_mlib_test_vsscanf("wide", "%mls", &scan->wide) != 1 ||
+        scan->wide[0] != 'w' || scan->wide[4] != 0) return 31;
+    if (snprintf(pointer_text, sizeof(pointer_text), "%p", (void *)target) < 1 ||
+        c2go_mlib_test_vsscanf(pointer_text, "%p", &scan->pointer) != 1 ||
+        scan->pointer != target) return 32;
+    target = (void *)0;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (strcmp(scan->text, managed_text) ||
+        strcmp((const char *)scan->pointer, "alive")) return 34;
+    if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 35;
+
+    if (unlink(path) || rmdir(root)) return 36;
     return 0;
 }
 

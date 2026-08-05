@@ -63,6 +63,21 @@ verify_arm64_link_register() {
 	fi
 }
 
+verify_function_write_barrier() {
+	local asm_path="$1"
+	local symbol="$2"
+	local description="$3"
+	if ! awk -v prefix="TEXT ·${symbol}(SB)" '
+		index($0, prefix) == 1 { in_function=1; next }
+		in_function && /^TEXT / { exit }
+		in_function && /_c2go_writePtr\(SB\)/ { found=1; exit }
+		END { exit !found }
+	' "$asm_path"; then
+		echo "gen.sh: $description lost write barriers in $asm_path" >&2
+		exit 1
+	fi
+}
+
 # Pull the .c paths out of CMakeLists.txt, expanding ${MUSL_DIR}/${CSRC_DIR}.
 SOURCES=()
 while IFS= read -r line; do
@@ -134,6 +149,8 @@ for t in "${LIBC_TARGETS[@]}"; do
 		amd64) verify_amd64_stack_moves "$ROOT/libc_${goos}_${arch}.s" ;;
 		arm64) verify_arm64_link_register "$ROOT/libc_${goos}_${arch}.s" ;;
 	esac
+	verify_function_write_barrier "$ROOT/libc_${goos}_${arch}.s" \
+		c2go_scan_managed_store "managed scanf result publication"
 	out="$tmp/out_${goos}_${arch}"; mkdir -p "$out"
 	"$C2GOBIND" -pkgname=libc -goname="libc_${goos}_${arch}" \
 		-sidecar="$json" -out="$out" ${lib:+-l "$lib"} "$asm"

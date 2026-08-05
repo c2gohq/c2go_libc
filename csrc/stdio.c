@@ -2047,9 +2047,11 @@ FILE *freopen(const char *restrict filename, const char *restrict mode,
  *   - Wide-char conversions (%ls/%lc/%l[, %C/%S) decode input bytes to wchar_t
  *     via __mbrtoc32; on Windows a supplementary scalar is stored as a UTF-16
  *     surrogate PAIR (a per-unit mbrtowc alone would EILSEQ it).
- *   - The %m (POSIX malloc-the-result) extension and positional %n$ arguments
- *     are ported from musl (#660; arg_n sits just above vfscanf, shared with
- *     the wide vfwscanf below). The only %m deviation: on the UTF-16 wchar_t
+ *   - The %m extension and positional %n$ arguments are ported from musl
+ *     (#660; arg_n sits just above vfscanf, shared with the wide vfwscanf
+ *     below). Root scanf preserves POSIX malloc ownership; the managed mlib
+ *     entry points select GC-owned buffers instead. The only %m deviation in
+ *     either policy: on the UTF-16 wchar_t
  *     target a supplementary scalar appends a surrogate PAIR, so the
  *     alloc-grow check runs BEFORE the append (musl grows after appending a
  *     single unit, which a two-unit append could overshoot).
@@ -2753,19 +2755,42 @@ static void *arg_n(va_list ap, unsigned int n)
 	return p;
 }
 
-c2go_extern
-int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
+enum c2go_scan_allocation {
+	SCAN_ALLOC_NONE,
+	SCAN_ALLOC_LIBC,
+	SCAN_ALLOC_GC,
+};
+
+/* A managed scanf instantiation uses the same parser but changes the two
+ * ownership-sensitive operations: `%m` allocates a noscan Go-heap buffer, and
+ * pointer results are published through a write barrier. The helper is kept
+ * noinline so generation can verify that this contract did not optimize away. */
+typedef void *managed c2go_scan_managed_pointer;
+typedef c2go_scan_managed_pointer *managed c2go_scan_managed_slot;
+
+#pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
+static __attribute__((noinline)) void
+c2go_scan_managed_store(c2go_scan_managed_slot slot,
+			c2go_scan_managed_pointer value)
+{
+	*slot = value;
+}
+#pragma c2go pop
+
+static int vfscanf_core(FILE *restrict f, const char *restrict fmt,
+	va_list ap, int managed_results)
 {
 	int width;
 	int size;
 	int base;
 	const unsigned char *p;
 	int c, t;
-	int alloc = 0;
-	char *s;
-	wchar_t *wcs;
+	int alloc = SCAN_ALLOC_NONE;
+	char *managed s;
+	wchar_t *managed wcs;
 	mbstate_t st;
 	void *dest=NULL;
+	c2go_scan_managed_slot managed_slot = (void *)0;
 	int invert;
 	int matches=0;
 	unsigned long long x;
@@ -2814,6 +2839,8 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 		} else {
 			dest = va_arg(ap, void *);
 		}
+		managed_slot = managed_results && dest
+			? (c2go_scan_managed_slot)dest : (c2go_scan_managed_slot)0;
 
 		for (width=0; isdigit(*p); p++) {
 			width = 10*width + *p - '0';
@@ -2822,10 +2849,11 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 		if (*p=='m') {
 			wcs = 0;
 			s = 0;
-			alloc = !!dest;
+			alloc = !dest ? SCAN_ALLOC_NONE :
+				managed_results ? SCAN_ALLOC_GC : SCAN_ALLOC_LIBC;
 			p++;
 		} else {
-			alloc = 0;
+			alloc = SCAN_ALLOC_NONE;
 		}
 
 		size = SIZE_def;
@@ -2929,15 +2957,20 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 			k = t=='c' ? width+1U : 31;
 			if (size == SIZE_l) {
 				/* %ls / %lc / %S / %C: decode input bytes into wchar_t via
-				 * __mbrtoc32, ported from musl vfscanf.c. With %m (alloc) the
-				 * result buffer is malloc'd and grown geometrically (#660);
-				 * the mbstate_t carries a partial multibyte sequence across
-				 * bytes. */
+				 * __mbrtoc32, ported from musl vfscanf.c. With %m the result
+				 * buffer is grown geometrically using the selected malloc or
+				 * GC-owned policy (#660); mbstate_t carries a partial multibyte
+				 * sequence across bytes. */
 				if (alloc) {
-					wcs = malloc(k*sizeof(wchar_t));
-					if (!wcs) goto alloc_fail;
+					wcs = alloc == SCAN_ALLOC_GC
+						? (wchar_t *managed)gc_malloc(0, k*sizeof(wchar_t))
+						: (wchar_t *managed)malloc(k*sizeof(wchar_t));
+					if (!wcs) {
+						if (alloc == SCAN_ALLOC_GC) errno = ENOMEM;
+						goto alloc_fail;
+					}
 				} else {
-					wcs = dest;
+					wcs = (wchar_t *managed)dest;
 				}
 				st = (mbstate_t){0};
 				while (scanset[(c=shgetc(f))+1]) {
@@ -2955,9 +2988,21 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 					 * pair could overshoot musl's grow-after-one-unit check. */
 					if (wcs) {
 						if (alloc && i+2 >= k) {
+							wchar_t *managed tmp;
 							k += k+2;
-							wchar_t *tmp = realloc(wcs, k*sizeof(wchar_t));
-							if (!tmp) goto alloc_fail;
+							if (alloc == SCAN_ALLOC_GC) {
+								tmp = (wchar_t *managed)gc_malloc(0,
+									k*sizeof(wchar_t));
+								if (tmp) memcpy((void *)tmp, (const void *)wcs,
+									i*sizeof(wchar_t));
+							} else {
+								tmp = (wchar_t *managed)realloc((void *)wcs,
+									k*sizeof(wchar_t));
+							}
+							if (!tmp) {
+								if (alloc == SCAN_ALLOC_GC) errno = ENOMEM;
+								goto alloc_fail;
+							}
 							wcs = tmp;
 						}
 						if (WCHAR_UTF16 && sc >= 0x10000u) {
@@ -2970,18 +3015,32 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 				}
 				if (!mbsinit(&st)) goto input_fail;
 			} else if (alloc) {
-				s = malloc(k);
-				if (!s) goto alloc_fail;
+				s = alloc == SCAN_ALLOC_GC
+					? (char *managed)gc_malloc(0, k)
+					: (char *managed)malloc(k);
+				if (!s) {
+					if (alloc == SCAN_ALLOC_GC) errno = ENOMEM;
+					goto alloc_fail;
+				}
 				while (scanset[(c=shgetc(f))+1]) {
 					s[i++] = c;
 					if (i==k) {
+						char *managed tmp;
 						k += k+1;
-						char *tmp = realloc(s, k);
-						if (!tmp) goto alloc_fail;
+						if (alloc == SCAN_ALLOC_GC) {
+							tmp = (char *managed)gc_malloc(0, k);
+							if (tmp) memcpy((void *)tmp, (const void *)s, i);
+						} else {
+							tmp = (char *managed)realloc((void *)s, k);
+						}
+						if (!tmp) {
+							if (alloc == SCAN_ALLOC_GC) errno = ENOMEM;
+							goto alloc_fail;
+						}
 						s = tmp;
 					}
 				}
-			} else if ((s = dest)) {
+			} else if ((s = (char *managed)dest)) {
 				while (scanset[(c=shgetc(f))+1])
 					s[i++] = c;
 			} else {
@@ -2991,8 +3050,17 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 			if (!shcnt(f)) goto match_fail;
 			if (t == 'c' && shcnt(f) != width) goto match_fail;
 			if (alloc) {
-				if (size == SIZE_l) *(wchar_t **)dest = wcs;
-				else *(char **)dest = s;
+				if (alloc == SCAN_ALLOC_GC) {
+					c2go_scan_managed_store(
+						managed_slot,
+						size == SIZE_l ?
+							(c2go_scan_managed_pointer)wcs :
+							(c2go_scan_managed_pointer)s);
+				} else if (size == SIZE_l) {
+					*(wchar_t **)(void *)dest = (wchar_t *)(void *)wcs;
+				} else {
+					*(char **)(void *)dest = (char *)(void *)s;
+				}
 			}
 			if (t != 'c') {
 				if (wcs) wcs[i] = 0;
@@ -3016,7 +3084,14 @@ int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
 		int_common:
 			x = __intscan(f, base, 0, ULLONG_MAX);
 			if (!shcnt(f)) goto match_fail;
-			if (t=='p' && dest) *(void **)dest = (void *)(uintptr_t)x;
+			if (t=='p' && dest) {
+				if (managed_results)
+					c2go_scan_managed_store(
+						managed_slot,
+						(c2go_scan_managed_pointer)(uintptr_t)x);
+				else
+					*(void **)(void *)dest = (void *)(uintptr_t)x;
+			}
 			else store_int(dest, size, x);
 			break;
 		case 'a': case 'A':
@@ -3049,13 +3124,26 @@ alloc_fail:
 input_fail:
 		if (!matches) matches--;
 match_fail:
-		if (alloc) {
-			free(s);
-			free(wcs);
+		if (alloc == SCAN_ALLOC_LIBC) {
+			free((void *)s);
+			free((void *)wcs);
 		}
 	}
 	FUNLOCK(f);
 	return matches;
+}
+
+c2go_extern int vfscanf(FILE *restrict f, const char *restrict fmt, va_list ap)
+{
+	return vfscanf_core(f, fmt, ap, 0);
+}
+
+/* Internal cross-package entry for mlib. The FILE remains the same raw engine;
+ * only result allocation/publication changes to the managed policy above. */
+c2go_extern int __c2go_file_raw_vfscanf_managed(FILE *restrict f,
+	const char *restrict fmt, va_list ap)
+{
+	return vfscanf_core(f, fmt, ap, 1);
 }
 
 /* ── scanf family public wrappers (musl scanf.c/fscanf.c/…) ─────────────── */
@@ -3090,6 +3178,18 @@ c2go_extern int vsscanf(const char *restrict s, const char *restrict fmt, va_lis
 	f.read = string_read;
 	f.lock = -1;
 	return vfscanf(&f, fmt, ap);
+}
+
+c2go_extern int __c2go_vsscanf_managed(const char *restrict s,
+	const char *restrict fmt, va_list ap)
+{
+	FILE f;
+	memset(&f, 0, sizeof f);
+	f.buf = (void *)s;
+	f.cookie = (void *)s;
+	f.read = string_read;
+	f.lock = -1;
+	return vfscanf_core(&f, fmt, ap, 1);
 }
 
 /* ── strtod / strtof / strtold / atof (musl src/stdlib) ──────────────────────

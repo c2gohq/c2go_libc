@@ -140,11 +140,13 @@ explicit streams plus managed `stdin`/`stdout`/`stderr`: open/close, `fflush`
 (including `NULL`), block and character I/O, seek/status, formatted input and
 output, `fileno`, and `flockfile`. A package-level finalize hook flushes this
 separate FILE world before root libc flushes its own streams. Formatted input
-supports scalar, string, character, and scanset conversions; `%m` and `%p` are
-rejected with `ENOTSUP` before consuming input until managed allocation and
-pointer-publication paths are available. `popen`, allocation-returning stdio,
-custom/memory streams, and wide stdio are not yet part of mlib; do not pass an
-`mlib_FILE *` to their root-libc counterparts.
+supports the root scanner's conversions, including `%m` and `%p`; `%m` buffers
+are allocated by `gc_malloc`, and all pointer results are published with a Go
+write barrier. Those results are GC-owned and must not be passed to `free`; a
+non-null `%p` result must be a valid Go-managed address, not an arbitrary
+foreign address.
+`popen`, `getline`/`getdelim`, custom/memory streams, and wide stdio are not yet
+part of mlib; do not pass an `mlib_FILE *` to their root-libc counterparts.
 
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
@@ -283,10 +285,11 @@ managed `FILE` 使用 typed GC carrier 包住共用的 raw musl stdio engine；�
 和 managed `stdin`/`stdout`/`stderr`：打开/关闭、`fflush`（包括 `NULL`）、块与
 字符 I/O、定位与状态、格式化输入输出、`fileno` 和 `flockfile`。包级 finalize
 hook 会先刷新这一套独立的 FILE world，再由 root libc 刷新自己的流。格式化输入
-支持标量、字符串、字符和 scanset 转换；在 managed 分配和指针发布路径完成前，
-`%m` 与 `%p` 会在消费输入前以 `ENOTSUP` 明确拒绝。`popen`、返回新分配内存的
-stdio、memory/custom stream 和 wide stdio 尚未进入 mlib；不能把 `mlib_FILE *`
-传给这些根 libc 接口。
+支持 root scanner 的全部转换，包括 `%m` 与 `%p`；`%m` 缓冲区由 `gc_malloc`
+分配，所有指针结果都通过 Go 写屏障发布。这些结果归 GC 所有，不能传给 `free`；
+非空 `%p` 结果必须是有效的 Go managed 地址，不能是任意外部地址。
+`popen`、`getline`/`getdelim`、memory/custom stream 和 wide stdio 尚未进入
+mlib；不能把 `mlib_FILE *` 传给这些根 libc 接口。
 
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、
 `pthread_once` 和 `pthread_atfork` 仍由根 pthread 接口提供。

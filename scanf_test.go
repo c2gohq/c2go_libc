@@ -129,6 +129,25 @@ func TestSscanfString(t *testing.T) {
 	}
 }
 
+// TestSscanfAllocatedString keeps root libc's POSIX %m contract covered while
+// mlib selects a separate GC-owned allocation policy in the shared parser. The
+// input is long enough to exercise root malloc/realloc rather than only the
+// scanner's initial buffer.
+func TestSscanfAllocatedString(t *testing.T) {
+	const input = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-long"
+	out := new(*byte)
+	if n := ssf(t, input, "%ms", unsafe.Pointer(out)); n != 1 {
+		t.Fatalf("%%ms n=%d, want 1", n)
+	}
+	if *out == nil {
+		t.Fatal("%ms returned a nil buffer")
+	}
+	defer Free(unsafe.Pointer(*out))
+	if got := cstr(*out); got != input {
+		t.Fatalf("%%ms = %q, want %q", got, input)
+	}
+}
+
 // TestSscanfScanset covers %[...] positive/negative sets and ranges.
 func TestSscanfScanset(t *testing.T) {
 	cases := []struct {

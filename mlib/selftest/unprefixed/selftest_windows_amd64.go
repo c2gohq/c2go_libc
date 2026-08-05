@@ -20,6 +20,12 @@ type DIR struct {
 	_state unsafe.Pointer
 	_entry [280]int8
 }
+type c2go_mlib_scan_result struct {
+	file_text *byte
+	text      *byte
+	wide      *uint16
+	pointer   unsafe.Pointer
+}
 type glob_t struct {
 	gl_pathc uint64
 	gl_pathv **byte
@@ -45,7 +51,8 @@ type sem_t struct {
 // _typeinfo_<X> var below; each caches the *runtime._type computed
 // once at init via reflect.TypeFor[T] (no value construction).
 var (
-	_typeinfo_pthread_mutex_t unsafe.Pointer
+	_typeinfo_c2go_mlib_scan_result unsafe.Pointer
+	_typeinfo_pthread_mutex_t       unsafe.Pointer
 )
 
 // reflect.Type's 2nd interface word is the *runtime._type mallocgc wants.
@@ -54,6 +61,7 @@ func _c2go_rtype(t reflect.Type) unsafe.Pointer {
 }
 
 func init() {
+	_typeinfo_c2go_mlib_scan_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_scan_result]())
 	_typeinfo_pthread_mutex_t = _c2go_rtype(reflect.TypeFor[pthread_mutex_t]())
 }
 
