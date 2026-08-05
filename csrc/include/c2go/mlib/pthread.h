@@ -24,11 +24,12 @@
 
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
 
-/* A managed synchronization object is one GC-visible pointer. The pointed-to
- * Go state is shared with root libc's algorithm, but root libc stores an ID in
- * its larger unmanaged carrier instead. */
+/* A managed synchronization object is one GC-visible pointer. Explicit
+ * managed pointer types retain AS1 provenance; the pointed-to Go state is
+ * shared with root libc's algorithm, while root libc stores an ID in its
+ * larger unmanaged carrier instead. */
 typedef struct {
-    void *_state;
+    void *managed _state;
 } C2GO_MLIB_NAME(pthread_mutex_t);
 
 typedef struct {
@@ -37,7 +38,7 @@ typedef struct {
 } C2GO_MLIB_NAME(pthread_mutexattr_t);
 
 typedef struct {
-    void *_state;
+    void *managed _state;
 } C2GO_MLIB_NAME(pthread_cond_t);
 
 typedef struct {
@@ -46,7 +47,7 @@ typedef struct {
 } C2GO_MLIB_NAME(pthread_condattr_t);
 
 typedef struct {
-    void *_state;
+    void *managed _state;
 } C2GO_MLIB_NAME(pthread_rwlock_t);
 
 typedef struct {

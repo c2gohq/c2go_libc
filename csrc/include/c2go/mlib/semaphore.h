@@ -19,13 +19,13 @@
 #define _SEMAPHORE_H
 #endif
 
-/* The carrier contains the direct Go-heap state pointer. C2GO_PTR makes the
- * field and API pointer values managed; C2GO_RECORD makes every use of the
- * carrier participate in C2Go's stack/global/typeinfo GC metadata. */
+/* The carrier contains the direct Go-heap state pointer. Its explicit managed
+ * type preserves AS1 provenance; C2GO_RECORD makes every use of the carrier
+ * participate in C2Go's stack/global/typeinfo GC metadata. */
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
 
 typedef struct {
-    void *_state;
+    void *managed _state;
 } C2GO_MLIB_NAME(sem_t);
 
 c2go_linkname("github.com/c2gohq/c2go_libc/mlib.SemInit", C2GO_GOABI0)

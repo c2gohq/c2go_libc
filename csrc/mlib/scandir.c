@@ -11,12 +11,16 @@
 
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
 
+typedef struct dirent *managed mlib_dirent_pointer;
+
 /* A one-pointer record gives gc_malloc_array an element type whose bitmap can
  * be repeated across the allocation. Its layout is intentionally identical to
  * struct dirent *, which is the public scandir result element type. */
 typedef struct {
-    struct dirent *value;
+    mlib_dirent_pointer value;
 } mlib_dirent_slot;
+
+typedef mlib_dirent_pointer *managed mlib_dirent_vector;
 
 static int mlib_scandir_less(mlib_dirent_slot *items, size_t a, size_t b,
                              int (*cmp)(const struct dirent **,
@@ -28,7 +32,7 @@ static int mlib_scandir_less(mlib_dirent_slot *items, size_t a, size_t b,
 
 static void mlib_scandir_swap(mlib_dirent_slot *a, mlib_dirent_slot *b)
 {
-    struct dirent *value = a->value;
+    mlib_dirent_pointer value = a->value;
     a->value = b->value;
     b->value = value;
 }
@@ -54,9 +58,10 @@ static void mlib_scandir_sift_down(mlib_dirent_slot *items, size_t root,
 /* In-place heapsort uses typed pointer assignments for every swap. Ordinary
  * qsort performs byte copies and therefore cannot safely mutate this managed
  * pointer array. */
-static void mlib_scandir_sort(mlib_dirent_slot *items, size_t count,
-                              int (*cmp)(const struct dirent **,
-                                         const struct dirent **))
+static __attribute__((noinline)) void
+mlib_scandir_sort(mlib_dirent_slot *items, size_t count,
+                  int (*cmp)(const struct dirent **,
+                             const struct dirent **))
 {
     size_t start, end;
 
@@ -74,27 +79,38 @@ static void mlib_scandir_sort(mlib_dirent_slot *items, size_t count,
     }
 }
 
+/* Preserve an AS1 value at the public POSIX-compatible triple-pointer
+ * boundary. The destination may be a caller's heap field, so it needs a write
+ * barrier even though the API spelling remains struct dirent ***. */
+static __attribute__((noinline)) void
+mlib_scandir_store_result(struct dirent ***result, mlib_dirent_slot *items)
+{
+    *(mlib_dirent_vector *)result = (mlib_dirent_vector)items;
+}
+
 c2go_extern int mlib_scandir(const char *path, struct dirent ***result,
                              int (*select_entry)(const struct dirent *),
                              int (*compare_entry)(const struct dirent **,
                                                   const struct dirent **))
 {
     mlib_DIR *dir;
-    struct dirent *entry;
+    mlib_dirent_pointer entry;
     mlib_dirent_slot *items = (void *)0;
     size_t count = 0, capacity = 0;
     int old_errno = errno;
 
-    *result = (void *)0;
+    mlib_scandir_store_result(result, (void *)0);
     dir = mlib_opendir(path);
     if (!dir) return -1;
 
-    while ((errno = 0), (entry = mlib_readdir(dir))) {
+    while ((errno = 0),
+           (entry = (mlib_dirent_pointer)mlib_readdir(dir))) {
         mlib_dirent_slot *grown;
-        struct dirent *copy;
+        mlib_dirent_pointer copy;
         size_t next, i;
 
-        if (select_entry && !select_entry(entry)) continue;
+        if (select_entry && !select_entry((const struct dirent *)entry))
+            continue;
         if (count == INT_MAX) {
             errno = ENOMEM;
             break;
@@ -121,7 +137,7 @@ c2go_extern int mlib_scandir(const char *path, struct dirent ***result,
         }
 
         /* struct dirent has no pointers, so a noscan managed blob is exact. */
-        copy = gc_malloc((void *)0, sizeof(*copy));
+        copy = (mlib_dirent_pointer)gc_malloc((void *)0, sizeof(*copy));
         if (!copy) {
             errno = ENOMEM;
             break;
@@ -135,7 +151,7 @@ c2go_extern int mlib_scandir(const char *path, struct dirent ***result,
     errno = old_errno;
 
     if (compare_entry) mlib_scandir_sort(items, count, compare_entry);
-    *result = (struct dirent **)items;
+    mlib_scandir_store_result(result, items);
     return (int)count;
 }
 

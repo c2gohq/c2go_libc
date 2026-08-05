@@ -27,7 +27,7 @@
  * opendir/fdopendir with typed gc_malloc; closedir clears the state pointer and
  * leaves object reclamation to the Go GC. */
 typedef struct {
-    void *_state;
+    void *managed _state;
     /* Keep the embedded no-pointer record as bytes. Header-defined struct
      * dirent is intentionally opaque in the generated Go API; spelling this
      * field as struct dirent would therefore produce an 8-byte Go carrier and

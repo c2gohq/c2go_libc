@@ -14,6 +14,11 @@ listed family is already available from `mlib`.
 - An mlib state carrier stores a direct Go pointer and is described to C2Go as a
   managed record. Stack and global carriers are emitted with GC metadata; heap
   carriers must be allocated with typed `gc_malloc`.
+- GC metadata and pointer-store provenance are separate requirements. A direct
+  Go-heap pointer stored in a carrier or typed container uses an explicit
+  `managed` pointer type so it remains AS1 through LLVM and every heap/root
+  update receives a Go write barrier. `mlib/gen.sh` rejects generated assembly
+  if the DIR, `scandir`, or `glob` barrier sites disappear.
 - `mlib` never exposes or uses ordinary `malloc`, `realloc`, or `free`.
 - Stateless implementations are shared. Go-owned state algorithms are shared
   below both carrier layers. C code is instantiated twice only when allocation,

@@ -45,26 +45,35 @@ verify_arm64_link_register() {
 	fi
 }
 
-verify_glob_write_barriers() {
+verify_function_write_barrier() {
 	local asm_path="$1"
-	if ! awk '
-		/^TEXT ·mlib_glob_sort\(SB\)/ { in_function=1; next }
+	local symbol="$2"
+	local description="$3"
+	if ! awk -v prefix="TEXT ·${symbol}(SB)" '
+		index($0, prefix) == 1 { in_function=1; next }
 		in_function && /^TEXT / { exit }
 		in_function && /_c2go_writePtr\(SB\)/ { found=1; exit }
 		END { exit !found }
 	' "$asm_path"; then
-		echo "mlib/gen.sh: managed glob pointer swaps lost write barriers in $asm_path" >&2
+		echo "mlib/gen.sh: $description lost write barriers in $asm_path" >&2
 		exit 1
 	fi
-	if ! awk '
-		/^TEXT ·mlib_glob_store_paths\(SB\)/ { in_function=1; next }
-		in_function && /^TEXT / { exit }
-		in_function && /_c2go_writePtr\(SB\)/ { found=1; exit }
-		END { exit !found }
-	' "$asm_path"; then
-		echo "mlib/gen.sh: managed glob carrier updates lost write barriers in $asm_path" >&2
-		exit 1
-	fi
+}
+
+verify_managed_write_barriers() {
+	local asm_path="$1"
+	verify_function_write_barrier "$asm_path" mlib_opendir \
+		"managed DIR state installation"
+	verify_function_write_barrier "$asm_path" mlib_closedir \
+		"managed DIR state removal"
+	verify_function_write_barrier "$asm_path" mlib_scandir_sort \
+		"managed scandir pointer swaps"
+	verify_function_write_barrier "$asm_path" mlib_scandir_store_result \
+		"managed scandir result publication"
+	verify_function_write_barrier "$asm_path" mlib_glob_sort \
+		"managed glob pointer swaps"
+	verify_function_write_barrier "$asm_path" mlib_glob_store_paths \
+		"managed glob carrier updates"
 }
 
 TARGETS=(
@@ -111,7 +120,7 @@ generate_library() {
 			amd64) verify_amd64_stack_moves "$asm" ;;
 			arm64) verify_arm64_link_register "$asm" ;;
 		esac
-		verify_glob_write_barriers "$asm"
+		verify_managed_write_barriers "$asm"
 		out="$tmp/out_lib_${goos}_${arch}"
 		mkdir -p "$out"
 		"$C2GOBIND" -pkgname=mlib -goname="libc_${goos}_${arch}" \
