@@ -31,6 +31,7 @@ struct dirent {
 	char           d_name[256];
 };
 
+#ifndef C2GO_DIRENT_OMIT_STREAM
 typedef struct __dirstream DIR;
 
 DIR *opendir(const char *)
@@ -67,5 +68,6 @@ int dirfd(DIR *)   /* #675; unix-only (HANDLE != CRT fd, #677) */
 DIR *fdopendir(int)
     c2go_linkname("github.com/c2gohq/c2go_libc.fdopendir", C2GO_GOABI0);
 #endif
+#endif /* !C2GO_DIRENT_OMIT_STREAM */
 
 #endif /* _DIRENT_H */

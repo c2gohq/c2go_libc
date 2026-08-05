@@ -16,6 +16,10 @@ import (
 )
 
 // ─── Types ──────────────────────────────────────────────────
+type mlib_DIR struct {
+	_state unsafe.Pointer
+	_entry [280]int8
+}
 type mlib_pthread_cond_t struct {
 	_state unsafe.Pointer
 }
@@ -51,6 +55,9 @@ func init() {
 // ─── Function declarations ──────────────────────────────────
 // Bodies provided by clang-emitted Plan 9 .s with TEXT ·<name>(SB)
 // at ABI0. Go compiler auto-generates the ABIInternal wrapper.
+
+//go:linkname MlibDirentPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_dirent_prefixed_selftest
+func MlibDirentPrefixedSelftest() int32
 
 //go:linkname MlibPthreadPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_pthread_prefixed_selftest
 func MlibPthreadPrefixedSelftest() int32

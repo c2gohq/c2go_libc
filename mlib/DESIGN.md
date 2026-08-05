@@ -33,7 +33,7 @@ RWMutex` implementation in `handle.go`.
 | `condTab` | `pthread_cond_t._id` | cond init/destroy/wait/timedwait/signal/broadcast and attrs | mutex state during wait/reacquire | Implemented |
 | `rwlockTab` | `pthread_rwlock_t._id` | rwlock init/destroy/read/write/try/unlock and attrs | none outside the rwlock family | Implemented |
 | `threadTab` | scalar `pthread_t` ID | create/join/exit/detach/self/equal/yield | pthread-key destructor lifetime and goroutine-local state | Not replaced; unprefixed mlib pthread intentionally retains the root thread API |
-| `dirTab` | `DIR.handle` | opendir/fdopendir/readdir/readdir_r/rewinddir/closedir/dirfd | `scandir`; directory traversal in `glob`; `nftw`/`ftw` | Not implemented; must migrate as a stateful DIR cluster |
+| `dirTab` | `DIR.handle` | opendir/fdopendir/readdir/readdir_r/rewinddir/closedir/dirfd | `scandir`; directory traversal in `glob`; `nftw`/`ftw` | Basic lifecycle implemented with a typed-GC carrier over shared `internal/posixdir`; pointer-container consumers remain |
 | `fileLockTab` | `FILE.lockid` | internal file lock/trylock/unlock/drop | effectively every stdio operation using `FILE *` | Not implemented; part of the FILE cluster |
 | `popenTab` | `FILE.pipe_id` | popen/pclose bridge | FILE close/pipe ownership and process wait | Not implementable independently of the FILE cluster |
 | `iconvTab` | roots the real `*iconvState` returned as `iconv_t`; the state also records its table ID for close | iconv_open/iconv/iconv_close | none | Not implemented; a managed descriptor can remove the extra root, but `(iconv_t)-1` must remain only in the C wrapper |
@@ -55,6 +55,10 @@ the state-carrier table and must not be migrated mechanically:
 root sem/pthread sync carrier (_id) ---+
                                         +--> internal/posixsync --> Go state
 mlib carrier (direct managed pointer) --+
+
+root DIR carrier (handle id) -----------+
+                                        +--> internal/posixdir --> Go stream
+mlib DIR (direct pointer, typed heap) ---+
 ```
 
 No musl source is dual-compiled for semaphore or pthread synchronization. Their
@@ -67,10 +71,15 @@ thread keys, `pthread_once`, and `pthread_atfork`.
 
 ### DIR cluster
 
-A managed `DIR` must hold the direct directory state pointer and must itself be
-created by typed `gc_malloc`. That changes `struct __dirstream`, `opendir`,
-`fdopendir`, and `closedir`, so those C functions need an mlib instance. The
-change propagates into `scandir`, `glob`, `nftw`, and `ftw`.
+The basic managed `DIR` lifecycle is implemented. `mlib_DIR` holds the direct
+directory state pointer and is created by typed `gc_malloc`; `closedir` clears
+the pointer and never calls ordinary `free`. The state/enumeration behavior is
+shared with root libc through `internal/posixdir`, while the managed C carrier
+is selectively instantiated once as `mlib_*`. Unprefixed headers route standard
+names to that one instance rather than compiling a second copy.
+
+The remaining work is the propagation into `scandir`, `glob`, `nftw`, and
+`ftw`.
 
 `scandir` and glob-style results contain pointer arrays. Their growth and sort
 paths need typed allocation, write barriers, and a managed pointer-aware sort;
@@ -91,8 +100,8 @@ last and largest selective-instantiation cluster.
    and GC-stress tests on all release targets.
 2. Design pthread thread/key ownership separately; do not extend the current
    unprefixed sync switch implicitly.
-3. Migrate the basic DIR lifecycle, then its pointer-container consumers
-   (`scandir`, glob, nftw/ftw).
+3. Design typed pointer-array growth and managed sorting, then migrate the DIR
+   consumers (`scandir`, glob, nftw/ftw).
 4. Design and migrate FILE/stdio/popen as one cluster.
 
 At every step the default API remains `mlib_`-prefixed, the unprefixed form is a

@@ -13,4 +13,5 @@ const (
 	errETIMEDOUT int32 = 138
 	errEDEADLK   int32 = 36
 	errEOVERFLOW int32 = 132
+	errEBADF     int32 = 9
 )

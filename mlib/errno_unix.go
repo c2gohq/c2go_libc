@@ -14,4 +14,5 @@ const (
 	errETIMEDOUT = int32(syscall.ETIMEDOUT)
 	errEDEADLK   = int32(syscall.EDEADLK)
 	errEOVERFLOW = int32(syscall.EOVERFLOW)
+	errEBADF     = int32(syscall.EBADF)
 )

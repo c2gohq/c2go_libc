@@ -61,10 +61,13 @@ The root package keeps its unmanaged, handle-ID-based compatibility surface.
 The new `mlib` subpackage is the managed counterpart for stateful APIs: its C
 carrier stores a direct GC-visible Go pointer and therefore needs no global
 ID-to-pointer registry. The implemented families are unnamed semaphores and
-the pthread mutex/condition-variable/rwlock synchronization cluster.
+the pthread mutex/condition-variable/rwlock synchronization cluster, plus the
+basic directory-stream lifecycle (`opendir`, `fdopendir`, `readdir`,
+`readdir_r`, `rewinddir`, `dirfd`, and `closedir`).
 
 Managed names are explicit by default (`mlib_sem_t`, `mlib_sem_init`,
-`mlib_pthread_mutex_t`, `mlib_pthread_mutex_lock`). Define
+`mlib_pthread_mutex_t`, `mlib_pthread_mutex_lock`, `mlib_DIR`,
+`mlib_opendir`). Define
 `C2GO_MLIB_UNPREFIXED` before the first mlib header to expose the corresponding
 standard names instead. That switch applies to the whole C2Go/LTO package; do
 not mix both routings in one package. Managed C heap objects use typed

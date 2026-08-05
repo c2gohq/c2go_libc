@@ -22,6 +22,11 @@ mlib_sem_init(&sem, 0, 1);
 mlib_pthread_mutex_t mutex = MLIB_PTHREAD_MUTEX_INITIALIZER;
 mlib_pthread_mutex_lock(&mutex);
 mlib_pthread_mutex_unlock(&mutex);
+
+#include <c2go/mlib/dirent.h>
+mlib_DIR *dir = mlib_opendir(".");
+struct dirent *entry = mlib_readdir(dir);
+mlib_closedir(dir);
 ```
 
 Define `C2GO_MLIB_UNPREFIXED` before the first mlib header to replace the
@@ -38,6 +43,11 @@ sem_init(&sem, 0, 1);
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_lock(&mutex);
 pthread_mutex_unlock(&mutex);
+
+#include <c2go/mlib/dirent.h>
+DIR *dir = opendir(".");
+struct dirent *entry = readdir(dir);
+closedir(dir);
 ```
 
 Do not mix managed and unmanaged definitions of the same standard API in one
@@ -51,13 +61,20 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 ```
 
 `mlib` does not provide or use `malloc`, `realloc`, or `free`. It currently
-implements unnamed semaphores plus pthread mutexes, condition variables, and
-rwlocks. Their state algorithms are shared with root libc; only state
-resolution differs (direct managed pointer versus unmanaged handle ID).
+implements unnamed semaphores; pthread mutexes, condition variables, and
+rwlocks; and the basic directory-stream lifecycle. Their state algorithms are
+shared with root libc; only state resolution differs (direct managed pointer
+versus unmanaged handle ID). Managed `opendir` and `fdopendir` allocate the
+carrier internally with typed `gc_malloc`; `closedir` clears its state pointer
+and lets the GC reclaim the carrier.
 
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
 `pthread_atfork` remain available from the root pthread surface.
+
+Managed `scandir`, `glob`, `nftw`, and `ftw` are not implemented yet. They need
+typed pointer-array growth and managed sorting, so the unprefixed mlib dirent
+header deliberately does not fall back to the root unmanaged versions.
 
 ## 简体中文
 
@@ -78,6 +95,11 @@ mlib_sem_init(&sem, 0, 1);
 mlib_pthread_mutex_t mutex = MLIB_PTHREAD_MUTEX_INITIALIZER;
 mlib_pthread_mutex_lock(&mutex);
 mlib_pthread_mutex_unlock(&mutex);
+
+#include <c2go/mlib/dirent.h>
+mlib_DIR *dir = mlib_opendir(".");
+struct dirent *entry = mlib_readdir(dir);
+mlib_closedir(dir);
 ```
 
 如果希望替换标准 C 名称，必须在第一次包含 mlib 头文件前定义宏：
@@ -93,6 +115,11 @@ sem_init(&sem, 0, 1);
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_lock(&mutex);
 pthread_mutex_unlock(&mutex);
+
+#include <c2go/mlib/dirent.h>
+DIR *dir = opendir(".");
+struct dirent *entry = readdir(dir);
+closedir(dir);
 ```
 
 无前缀模式是整个 C2Go/LTO 包的构建选择，不能在同一包内混用 managed 与
@@ -106,9 +133,15 @@ mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 ```
 
 `mlib` 不提供、也不使用 `malloc`、`realloc` 或 `free`。当前已经实现无名
-信号量，以及 pthread 的 mutex、condition variable、rwlock。它们的行为核心
-与根 libc 共用，只有状态解析方式不同：`mlib` 直接读取 managed pointer，
-根 libc 仍通过 unmanaged handle ID 查表。
+信号量、pthread 的 mutex/condition variable/rwlock，以及基础目录流生命周期。
+它们的行为核心与根 libc 共用，只有状态解析方式不同：`mlib` 直接读取 managed
+pointer，根 libc 仍通过 unmanaged handle ID 查表。managed `opendir` 和
+`fdopendir` 在内部使用 typed `gc_malloc` 分配 carrier；`closedir` 清空状态指针，
+由 GC 回收 carrier。
 
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、
 `pthread_once` 和 `pthread_atfork` 仍由根 pthread 接口提供。
+
+managed `scandir`、`glob`、`nftw` 和 `ftw` 尚未实现。它们需要带类型的指针
+数组扩容和 managed 排序，因此 mlib 的无前缀 dirent 头文件不会静默退回根包的
+unmanaged 实现。
