@@ -1,8 +1,7 @@
 /* SPDX-License-Identifier: AGPL-3.0-only */
 
 #define C2GO_MLIB_UNPREFIXED 1
-#include <c2go/mlib/stdio.h>
-#include <wchar.h> /* Must keep string-only wide APIs without exposing root FILE I/O. */
+#include <c2go/mlib/wchar.h>
 
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
 
@@ -50,6 +49,12 @@ void c2go_mlib_stdio_test_gc(void);
 #define C2GO_MLIB_TEST_VFSCANF vfscanf
 #define C2GO_MLIB_TEST_SSCANF sscanf
 #define C2GO_MLIB_TEST_VSSCANF vsscanf
+#define C2GO_MLIB_TEST_FWIDE fwide
+#define C2GO_MLIB_TEST_FPUTWC fputwc
+#define C2GO_MLIB_TEST_FGETWC fgetwc
+#define C2GO_MLIB_TEST_FPUTWS fputws
+#define C2GO_MLIB_TEST_FGETWS fgetws
+#define C2GO_MLIB_TEST_UNGETWC ungetwc
 #define C2GO_MLIB_TEST_EXPORT mlib_stdio_unprefixed_selftest
 #define C2GO_MLIB_TEST_STDOUT_EXPORT mlib_stdio_unprefixed_stdout_selftest
 #define C2GO_MLIB_TEST_STDIN_EXPORT mlib_stdio_unprefixed_stdin_selftest

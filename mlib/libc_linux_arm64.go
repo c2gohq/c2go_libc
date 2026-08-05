@@ -139,6 +139,12 @@ func MlibFgetpos(stream *_c2go_mlib_FILE, position *int64) int32
 //go:linkname MlibFgets github.com/c2gohq/c2go_libc/mlib.mlib_fgets
 func MlibFgets(destination *byte, count int32, stream *_c2go_mlib_FILE) *byte
 
+//go:linkname MlibFgetwc github.com/c2gohq/c2go_libc/mlib.mlib_fgetwc
+func MlibFgetwc(stream *_c2go_mlib_FILE) uint32
+
+//go:linkname MlibFgetws github.com/c2gohq/c2go_libc/mlib.mlib_fgetws
+func MlibFgetws(text *uint32, count int32, stream *_c2go_mlib_FILE) *uint32
+
 //go:linkname MlibFileno github.com/c2gohq/c2go_libc/mlib.mlib_fileno
 func MlibFileno(stream *_c2go_mlib_FILE) int32
 
@@ -162,6 +168,12 @@ func MlibFputc(character int32, stream *_c2go_mlib_FILE) int32
 
 //go:linkname MlibFputs github.com/c2gohq/c2go_libc/mlib.mlib_fputs
 func MlibFputs(text *byte, stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibFputwc github.com/c2gohq/c2go_libc/mlib.mlib_fputwc
+func MlibFputwc(character uint32, stream *_c2go_mlib_FILE) uint32
+
+//go:linkname MlibFputws github.com/c2gohq/c2go_libc/mlib.mlib_fputws
+func MlibFputws(text *uint32, stream *_c2go_mlib_FILE) int32
 
 //go:linkname MlibFread github.com/c2gohq/c2go_libc/mlib.mlib_fread
 func MlibFread(destination unsafe.Pointer, size uint64, count uint64, stream *_c2go_mlib_FILE) uint64
@@ -193,6 +205,9 @@ func MlibFtw(path *byte, fn uintptr, fd_limit int32) int32
 //go:linkname MlibFunlockfile github.com/c2gohq/c2go_libc/mlib.mlib_funlockfile
 func MlibFunlockfile(stream *_c2go_mlib_FILE)
 
+//go:linkname MlibFwide github.com/c2gohq/c2go_libc/mlib.mlib_fwide
+func MlibFwide(stream *_c2go_mlib_FILE, mode int32) int32
+
 //go:linkname MlibFwrite github.com/c2gohq/c2go_libc/mlib.mlib_fwrite
 func MlibFwrite(source unsafe.Pointer, size uint64, count uint64, stream *_c2go_mlib_FILE) uint64
 
@@ -207,6 +222,12 @@ func MlibGetdelim(line **byte, capacity *uint64, delimiter int32, stream *_c2go_
 
 //go:linkname MlibGetline github.com/c2gohq/c2go_libc/mlib.mlib_getline
 func MlibGetline(line **byte, capacity *uint64, stream *_c2go_mlib_FILE) int64
+
+//go:linkname MlibGetwc github.com/c2gohq/c2go_libc/mlib.mlib_getwc
+func MlibGetwc(stream *_c2go_mlib_FILE) uint32
+
+//go:linkname MlibGetwchar github.com/c2gohq/c2go_libc/mlib.mlib_getwchar
+func MlibGetwchar() uint32
 
 //go:linkname MlibGlob github.com/c2gohq/c2go_libc/mlib.mlib_glob
 func MlibGlob(pattern *byte, flags int32, error_function uintptr, result *mlib_glob_t) int32
@@ -235,6 +256,12 @@ func MlibPutchar(character int32) int32
 //go:linkname MlibPuts github.com/c2gohq/c2go_libc/mlib.mlib_puts
 func MlibPuts(text *byte) int32
 
+//go:linkname MlibPutwc github.com/c2gohq/c2go_libc/mlib.mlib_putwc
+func MlibPutwc(character uint32, stream *_c2go_mlib_FILE) uint32
+
+//go:linkname MlibPutwchar github.com/c2gohq/c2go_libc/mlib.mlib_putwchar
+func MlibPutwchar(character uint32) uint32
+
 //go:linkname MlibReaddir github.com/c2gohq/c2go_libc/mlib.mlib_readdir
 func MlibReaddir(dir *mlib_DIR) *dirent
 
@@ -261,6 +288,9 @@ func MlibStdfile(which int32) *_c2go_mlib_FILE
 
 //go:linkname MlibUngetc github.com/c2gohq/c2go_libc/mlib.mlib_ungetc
 func MlibUngetc(character int32, stream *_c2go_mlib_FILE) int32
+
+//go:linkname MlibUngetwc github.com/c2gohq/c2go_libc/mlib.mlib_ungetwc
+func MlibUngetwc(character uint32, stream *_c2go_mlib_FILE) uint32
 
 //go:linkname MlibVfprintf github.com/c2gohq/c2go_libc/mlib.mlib_vfprintf
 func MlibVfprintf(stream *_c2go_mlib_FILE, format *byte, arguments __va_list) int32

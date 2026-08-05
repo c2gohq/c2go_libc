@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: AGPL-3.0-only */
 
-#include <c2go/mlib/stdio.h>
+#include <c2go/mlib/wchar.h>
 #include <stdio.h>
 #include <wchar.h>
 
@@ -50,6 +50,12 @@ void c2go_mlib_stdio_test_gc(void);
 #define C2GO_MLIB_TEST_VFSCANF mlib_vfscanf
 #define C2GO_MLIB_TEST_SSCANF mlib_sscanf
 #define C2GO_MLIB_TEST_VSSCANF mlib_vsscanf
+#define C2GO_MLIB_TEST_FWIDE mlib_fwide
+#define C2GO_MLIB_TEST_FPUTWC mlib_fputwc
+#define C2GO_MLIB_TEST_FGETWC mlib_fgetwc
+#define C2GO_MLIB_TEST_FPUTWS mlib_fputws
+#define C2GO_MLIB_TEST_FGETWS mlib_fgetws
+#define C2GO_MLIB_TEST_UNGETWC mlib_ungetwc
 #define C2GO_MLIB_TEST_EXPORT mlib_stdio_prefixed_selftest
 #define C2GO_MLIB_TEST_STDOUT_EXPORT mlib_stdio_prefixed_stdout_selftest
 #define C2GO_MLIB_TEST_STDIN_EXPORT mlib_stdio_prefixed_stdin_selftest

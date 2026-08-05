@@ -174,8 +174,9 @@ unsigned long long wcstoull(const wchar_t *__restrict, wchar_t **__restrict, int
  * fwide/fputwc/fgetwc/... with the per-thread locale switching removed — c2go is
  * UTF-8-only). The FILE `mode` field holds the byte/wide orientation. Each
  * c2go_extern definition needs its matching linkname here. Managed FILE
- * replacement mode hides this family until mlib provides matching wide-stream
- * wrappers; routing its FILE carrier into root libc would be ABI-unsafe. */
+ * replacement mode hides the root family; <c2go/mlib/wchar.h> supplies the
+ * matching managed wrappers. Routing an mlib FILE into root libc remains
+ * ABI-unsafe. */
 
 #ifndef C2GO_MLIB_FILE_REPLACEMENT
 

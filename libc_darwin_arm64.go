@@ -60,8 +60,23 @@ func C2goFileRawClose(f *FILE) int32
 //go:linkname C2goFileRawFdopen github.com/c2gohq/c2go_libc.__c2go_file_raw_fdopen
 func C2goFileRawFdopen(f *FILE, fd int32, mode *byte, storage *byte, storage_size uint64) int32
 
+//go:linkname C2goFileRawFgetwc github.com/c2gohq/c2go_libc.__c2go_file_raw_fgetwc
+func C2goFileRawFgetwc(f *FILE) uint32
+
+//go:linkname C2goFileRawFgetws github.com/c2gohq/c2go_libc.__c2go_file_raw_fgetws
+func C2goFileRawFgetws(s *int32, n int32, f *FILE) *int32
+
 //go:linkname C2goFileRawFmemopen github.com/c2gohq/c2go_libc.__c2go_file_raw_fmemopen
 func C2goFileRawFmemopen(f *FILE, cookie_storage unsafe.Pointer, cookie_storage_size uint64, storage *byte, storage_size uint64, buf unsafe.Pointer, size uint64, mode *byte) int32
+
+//go:linkname C2goFileRawFputwc github.com/c2gohq/c2go_libc.__c2go_file_raw_fputwc
+func C2goFileRawFputwc(c int32, f *FILE) uint32
+
+//go:linkname C2goFileRawFputws github.com/c2gohq/c2go_libc.__c2go_file_raw_fputws
+func C2goFileRawFputws(ws *int32, f *FILE) int32
+
+//go:linkname C2goFileRawFwide github.com/c2gohq/c2go_libc.__c2go_file_raw_fwide
+func C2goFileRawFwide(f *FILE, mode int32) int32
 
 //go:linkname C2goFileRawGetdelimManaged github.com/c2gohq/c2go_libc.__c2go_file_raw_getdelim_managed
 func C2goFileRawGetdelimManaged(s *unsafe.Pointer, n *uint64, delim int32, f *FILE) int64
@@ -71,6 +86,9 @@ func C2goFileRawOpen(f *FILE, filename *byte, mode *byte, storage *byte, storage
 
 //go:linkname C2goFileRawStdinit github.com/c2gohq/c2go_libc.__c2go_file_raw_stdinit
 func C2goFileRawStdinit(f *FILE, which int32, storage *byte, storage_size uint64) int32
+
+//go:linkname C2goFileRawUngetwc github.com/c2gohq/c2go_libc.__c2go_file_raw_ungetwc
+func C2goFileRawUngetwc(c uint32, f *FILE) uint32
 
 //go:linkname C2goFileRawVfscanfManaged github.com/c2gohq/c2go_libc.__c2go_file_raw_vfscanf_managed
 func C2goFileRawVfscanfManaged(f *FILE, fmt *byte, ap unsafe.Pointer) int32

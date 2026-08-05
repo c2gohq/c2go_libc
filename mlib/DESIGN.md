@@ -141,8 +141,10 @@ are synchronous internal-ABI functions: the cookie parameter is explicitly
 managed, while data buffers and the seek-position pointer are borrowed and may
 not escape. The root policy continues to use ordinary malloc/realloc/free and
 caller-managed cookie lifetime. APIs that create other owned graphs (`popen`
-and wide stdio) remain separate propagation phases; they must not be routed to
-root FILE declarations under the managed carrier type.
+and wide formatted I/O) remain separate propagation phases. Basic wide-stream
+orientation, character/string I/O, and pushback already reuse root libc's
+lock-free UTF engine beneath the managed carrier lock. No mlib FILE may be
+routed to a root public FILE declaration.
 
 ## Next safe migration order
 
@@ -152,7 +154,7 @@ root FILE declarations under the managed carrier type.
    unprefixed sync switch implicitly.
 3. Keep the completed DIR propagation cluster under GC-stress regression.
 4. Extend the managed FILE cluster in ownership-closed phases:
-   wide stdio, then `popen` process state.
+   wide formatted I/O, then `popen` process state.
 
 At every step the default API remains `mlib_`-prefixed, the unprefixed form is a
 whole-LTO-package choice, and root libc must never import or depend on `mlib`.

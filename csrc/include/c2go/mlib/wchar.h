@@ -1,0 +1,42 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+ * Also available under a separate commercial agreement. */
+#ifndef C2GO_MLIB_WCHAR_H
+#define C2GO_MLIB_WCHAR_H
+
+/* stdio replacement mode must be established before <wchar.h> decides
+ * whether root FILE declarations are safe to expose. Namespaced mode keeps
+ * both root and managed wide-stream families available. */
+#include <c2go/mlib/stdio.h>
+#include <wchar.h>
+
+#pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
+
+int C2GO_MLIB_NAME(fwide)(C2GO_MLIB_NAME(FILE) *, int)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fwide", C2GO_GOABI0);
+
+wint_t C2GO_MLIB_NAME(fputwc)(wchar_t, C2GO_MLIB_NAME(FILE) *)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fputwc", C2GO_GOABI0);
+wint_t C2GO_MLIB_NAME(putwc)(wchar_t, C2GO_MLIB_NAME(FILE) *)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_putwc", C2GO_GOABI0);
+wint_t C2GO_MLIB_NAME(putwchar)(wchar_t)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_putwchar", C2GO_GOABI0);
+
+wint_t C2GO_MLIB_NAME(fgetwc)(C2GO_MLIB_NAME(FILE) *)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fgetwc", C2GO_GOABI0);
+wint_t C2GO_MLIB_NAME(getwc)(C2GO_MLIB_NAME(FILE) *)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_getwc", C2GO_GOABI0);
+wint_t C2GO_MLIB_NAME(getwchar)(void)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_getwchar", C2GO_GOABI0);
+
+int C2GO_MLIB_NAME(fputws)(const wchar_t *__restrict,
+    C2GO_MLIB_NAME(FILE) *__restrict)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fputws", C2GO_GOABI0);
+wchar_t *C2GO_MLIB_NAME(fgetws)(wchar_t *__restrict, int,
+    C2GO_MLIB_NAME(FILE) *__restrict)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_fgetws", C2GO_GOABI0);
+wint_t C2GO_MLIB_NAME(ungetwc)(wint_t, C2GO_MLIB_NAME(FILE) *)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_ungetwc", C2GO_GOABI0);
+
+#pragma c2go pop
+
+#endif /* C2GO_MLIB_WCHAR_H */

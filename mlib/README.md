@@ -18,6 +18,7 @@ The default API is explicitly namespaced:
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
 #include <c2go/mlib/stdio.h>
+#include <c2go/mlib/wchar.h>
 
 #pragma c2go managed push
 
@@ -70,6 +71,7 @@ corresponding standard names for the entire C2Go/LTO package:
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
 #include <c2go/mlib/stdio.h>
+#include <c2go/mlib/wchar.h>
 
 #pragma c2go managed push
 
@@ -156,8 +158,11 @@ typed `gc_malloc` record), not in C stack locals; never pass its output to
 `free`. Managed `fopencookie` roots a non-null cookie until `fclose`; its cookie
 callback parameter is `void *managed`, while callback data buffers and seek
 positions are borrowed for the synchronous call only. All callbacks must be
-c2go-compiled internal-ABI functions. `popen` and wide stdio are not yet part
-of mlib; do not pass an `mlib_FILE *` to their root-libc counterparts.
+c2go-compiled internal-ABI functions. Basic wide-stream orientation,
+character/string I/O, and pushback are available through
+`<c2go/mlib/wchar.h>` and reuse root libc's UTF engine under the managed FILE
+lock. Wide formatted I/O and `popen` are not yet part of mlib; do not pass an
+`mlib_FILE *` to their root-libc counterparts.
 
 In unprefixed pthread mode only the synchronization records and functions are
 replaced. Thread lifecycle, thread-specific keys, `pthread_once`, and
@@ -182,6 +187,7 @@ boundaries documented in DESIGN.md.
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
 #include <c2go/mlib/stdio.h>
+#include <c2go/mlib/wchar.h>
 
 #pragma c2go managed push
 
@@ -233,6 +239,7 @@ static void example(void) {
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
 #include <c2go/mlib/stdio.h>
+#include <c2go/mlib/wchar.h>
 
 #pragma c2go managed push
 
@@ -309,7 +316,9 @@ managed `open_memstream` 返回 GC-owned 输出，扩容时通过写屏障重新
 不能是 C 栈局部变量；输出也不能传给 `free`。
 managed `fopencookie` 会保留非空 cookie 直到 `fclose`；回调的 cookie 参数是
 `void *managed`，数据缓冲区与 seek position 只在同步回调期间借用，不能逃逸。
-所有回调都必须是由 c2go 编译的 internal-ABI 函数。`popen` 和 wide stdio
+所有回调都必须是由 c2go 编译的 internal-ABI 函数。
+`<c2go/mlib/wchar.h>` 已提供 wide stream 定向、字符/字符串读写与回退，并在
+managed FILE 锁内复用 root libc 的 UTF engine。wide formatted I/O 与 `popen`
 尚未进入 mlib；不能把 `mlib_FILE *` 传给这些根 libc 接口。
 
 pthread 无前缀模式只替换同步对象和同步函数；线程生命周期、线程私有 key、

@@ -4102,16 +4102,25 @@ int creat(const char *path, mode_t mode)
  * MB_LEN_MAX as 1, shrinking every conversion buffer below (wcrtomb/wctomb
  * write up to 4 bytes — stack corruption of whatever followed the buffer). */
 
+/* Lock-free orientation core shared with mlib's already-locked raw FILE
+ * carrier. Public root fwide retains the ordinary root FILE lock below. */
 c2go_extern
-int fwide(FILE *f, int mode)
+int __c2go_file_raw_fwide(FILE *f, int mode)
 {
-	FLOCK(f);
 	if (mode) {
 		if (!f->mode) f->mode = mode>0 ? 1 : -1;
 	}
-	mode = f->mode;
+	return f->mode;
+}
+
+c2go_extern
+int fwide(FILE *f, int mode)
+{
+	int result;
+	FLOCK(f);
+	result = __c2go_file_raw_fwide(f, mode);
 	FUNLOCK(f);
-	return mode;
+	return result;
 }
 
 /* Set wide orientation WITHOUT taking the FILE lock: the callers below already
@@ -4191,11 +4200,17 @@ static wint_t __fputwc_unlocked(wchar_t wc, FILE *f)
 }
 
 c2go_extern
+wint_t __c2go_file_raw_fputwc(wchar_t c, FILE *f)
+{
+	return __fputwc_unlocked(c, f);
+}
+
+c2go_extern
 wint_t fputwc(wchar_t c, FILE *f)
 {
 	wint_t r;
 	FLOCK(f);
-	r = __fputwc_unlocked(c, f);
+	r = __c2go_file_raw_fputwc(c, f);
 	FUNLOCK(f);
 	return r;
 }
@@ -4283,11 +4298,17 @@ static wint_t __fgetwc_unlocked(FILE *f)
 }
 
 c2go_extern
+wint_t __c2go_file_raw_fgetwc(FILE *f)
+{
+	return __fgetwc_unlocked(f);
+}
+
+c2go_extern
 wint_t fgetwc(FILE *f)
 {
 	wint_t c;
 	FLOCK(f);
-	c = __fgetwc_unlocked(f);
+	c = __c2go_file_raw_fgetwc(f);
 	FUNLOCK(f);
 	return c;
 }
@@ -4305,32 +4326,36 @@ wint_t getwchar(void)
 }
 
 c2go_extern
-int fputws(const wchar_t *restrict ws, FILE *restrict f)
+int __c2go_file_raw_fputws(const wchar_t *restrict ws, FILE *restrict f)
 {
 	unsigned char buf[BUFSIZ];
 	size_t l=0;
 
-	FLOCK(f);
 	__fwide_wide(f);
 
 	while (ws && (l = wcsrtombs((void *)buf, (void*)&ws, sizeof buf, 0))+1 > 1)
-		if (__fwritex(buf, l, f) < l) {
-			FUNLOCK(f);
-			return -1;
-		}
+		if (__fwritex(buf, l, f) < l) return -1;
 
-	FUNLOCK(f);
 	return l; /* 0 or -1 */
 }
 
 c2go_extern
-wchar_t *fgetws(wchar_t *restrict s, int n, FILE *restrict f)
+int fputws(const wchar_t *restrict ws, FILE *restrict f)
+{
+	int result;
+	FLOCK(f);
+	result = __c2go_file_raw_fputws(ws, f);
+	FUNLOCK(f);
+	return result;
+}
+
+c2go_extern
+wchar_t *__c2go_file_raw_fgetws(wchar_t *restrict s, int n,
+	FILE *restrict f)
 {
 	wchar_t *p = s;
 
 	if (!n--) return s;
-
-	FLOCK(f);
 
 	for (; n; n--) {
 		wint_t c = __fgetwc_unlocked(f);
@@ -4341,9 +4366,17 @@ wchar_t *fgetws(wchar_t *restrict s, int n, FILE *restrict f)
 	*p = 0;
 	if (f->flags & F_ERR) p = s; /* the ferror MACRO — no re-lock in the FLOCK region */
 
-	FUNLOCK(f);
-
 	return (p == s) ? NULL : s;
+}
+
+c2go_extern
+wchar_t *fgetws(wchar_t *restrict s, int n, FILE *restrict f)
+{
+	wchar_t *result;
+	FLOCK(f);
+	result = __c2go_file_raw_fgetws(s, n, f);
+	FUNLOCK(f);
+	return result;
 }
 
 /* Non-locking ungetwc core (mirrors the public ungetwc()'s body after its
@@ -4383,10 +4416,16 @@ static wint_t __ungetwc_unlocked(wint_t c, FILE *f)
 }
 
 c2go_extern
+wint_t __c2go_file_raw_ungetwc(wint_t c, FILE *f)
+{
+	return __ungetwc_unlocked(c, f);
+}
+
+c2go_extern
 wint_t ungetwc(wint_t c, FILE *f)
 {
 	FLOCK(f);
-	wint_t r = __ungetwc_unlocked(c, f);
+	wint_t r = __c2go_file_raw_ungetwc(c, f);
 	FUNLOCK(f);
 	return r;
 }

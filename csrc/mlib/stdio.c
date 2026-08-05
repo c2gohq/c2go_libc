@@ -4,7 +4,7 @@
  * The raw engine stays opaque/noscan; every Go-heap object reachable from
  * it has a parallel managed root in this carrier. */
 
-#include <c2go/mlib/stdio.h>
+#include <c2go/mlib/wchar.h>
 #include <bits/stdio_impl.h>
 #include <errno.h>
 #include <limits.h>
@@ -76,6 +76,18 @@ int __c2go_vsscanf_managed(const char *, const char *, va_list);
 c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_getdelim_managed", C2GO_GOABI0)
 ssize_t __c2go_file_raw_getdelim_managed(mlib_line_slot, mlib_size_slot,
     int, FILE *);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_fwide", C2GO_GOABI0)
+int __c2go_file_raw_fwide(FILE *, int);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_fputwc", C2GO_GOABI0)
+wint_t __c2go_file_raw_fputwc(wchar_t, FILE *);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_fgetwc", C2GO_GOABI0)
+wint_t __c2go_file_raw_fgetwc(FILE *);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_fputws", C2GO_GOABI0)
+int __c2go_file_raw_fputws(const wchar_t *, FILE *);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_fgetws", C2GO_GOABI0)
+wchar_t *__c2go_file_raw_fgetws(wchar_t *, int, FILE *);
+c2go_linkname("github.com/c2gohq/c2go_libc.__c2go_file_raw_ungetwc", C2GO_GOABI0)
+wint_t __c2go_file_raw_ungetwc(wint_t, FILE *);
 
 c2go_linkname("github.com/c2gohq/c2go_libc/mlib.FileLock", C2GO_GOABI0)
 void __c2go_mlib_file_lock(mlib_state_pointer *);
@@ -532,6 +544,94 @@ c2go_extern mlib_FILE *mlib_fopencookie(
     f->_active = 1;
     mlib_ofl_add(f);
     return f;
+}
+
+c2go_extern int mlib_fwide(mlib_FILE *stream, int mode)
+{
+    mlib_file_pointer f = stream;
+    FILE *raw = mlib_file_acquire(f);
+    int result;
+    if (!raw) return 0;
+    result = __c2go_file_raw_fwide(raw, mode);
+    mlib_file_release(f);
+    return result;
+}
+
+c2go_extern wint_t mlib_fputwc(wchar_t character, mlib_FILE *stream)
+{
+    mlib_file_pointer f = stream;
+    FILE *raw = mlib_file_acquire(f);
+    wint_t result;
+    if (!raw) return WEOF;
+    result = __c2go_file_raw_fputwc(character, raw);
+    mlib_file_release(f);
+    return result;
+}
+
+c2go_extern wint_t mlib_putwc(wchar_t character, mlib_FILE *stream)
+{
+    return mlib_fputwc(character, stream);
+}
+
+c2go_extern wint_t mlib_putwchar(wchar_t character)
+{
+    return mlib_fputwc(character, mlib_stdfile(1));
+}
+
+c2go_extern wint_t mlib_fgetwc(mlib_FILE *stream)
+{
+    mlib_file_pointer f = stream;
+    FILE *raw = mlib_file_acquire(f);
+    wint_t result;
+    if (!raw) return WEOF;
+    result = __c2go_file_raw_fgetwc(raw);
+    mlib_file_release(f);
+    return result;
+}
+
+c2go_extern wint_t mlib_getwc(mlib_FILE *stream)
+{
+    return mlib_fgetwc(stream);
+}
+
+c2go_extern wint_t mlib_getwchar(void)
+{
+    return mlib_fgetwc(mlib_stdfile(0));
+}
+
+c2go_extern int mlib_fputws(const wchar_t *restrict text,
+                            mlib_FILE *restrict stream)
+{
+    mlib_file_pointer f = stream;
+    FILE *raw = mlib_file_acquire(f);
+    int result;
+    if (!raw) return -1;
+    result = __c2go_file_raw_fputws(text, raw);
+    mlib_file_release(f);
+    return result;
+}
+
+c2go_extern wchar_t *mlib_fgetws(wchar_t *restrict text, int count,
+                                  mlib_FILE *restrict stream)
+{
+    mlib_file_pointer f = stream;
+    FILE *raw = mlib_file_acquire(f);
+    wchar_t *result;
+    if (!raw) return (void *)0;
+    result = __c2go_file_raw_fgetws(text, count, raw);
+    mlib_file_release(f);
+    return result;
+}
+
+c2go_extern wint_t mlib_ungetwc(wint_t character, mlib_FILE *stream)
+{
+    mlib_file_pointer f = stream;
+    FILE *raw = mlib_file_acquire(f);
+    wint_t result;
+    if (!raw) return WEOF;
+    result = __c2go_file_raw_ungetwc(character, raw);
+    mlib_file_release(f);
+    return result;
 }
 
 c2go_extern int mlib_fclose(mlib_FILE *stream)

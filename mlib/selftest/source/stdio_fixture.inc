@@ -15,6 +15,24 @@
 #ifndef C2GO_MLIB_TEST_FOPENCOOKIE
 #error "C2GO_MLIB_TEST_FOPENCOOKIE must name the managed fopencookie"
 #endif
+#ifndef C2GO_MLIB_TEST_FWIDE
+#error "C2GO_MLIB_TEST_FWIDE must name the managed fwide"
+#endif
+#ifndef C2GO_MLIB_TEST_FPUTWC
+#error "C2GO_MLIB_TEST_FPUTWC must name the managed fputwc"
+#endif
+#ifndef C2GO_MLIB_TEST_FGETWC
+#error "C2GO_MLIB_TEST_FGETWC must name the managed fgetwc"
+#endif
+#ifndef C2GO_MLIB_TEST_FPUTWS
+#error "C2GO_MLIB_TEST_FPUTWS must name the managed fputws"
+#endif
+#ifndef C2GO_MLIB_TEST_FGETWS
+#error "C2GO_MLIB_TEST_FGETWS must name the managed fgetws"
+#endif
+#ifndef C2GO_MLIB_TEST_UNGETWC
+#error "C2GO_MLIB_TEST_UNGETWC must name the managed ungetwc"
+#endif
 #ifndef C2GO_MLIB_TEST_FPOS
 #error "C2GO_MLIB_TEST_FPOS must name the managed fpos type"
 #endif
@@ -220,9 +238,11 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-long";
     const char memory_text[] = "managed-memory";
     const char cookie_text[] = "managed-cookie";
+    const wchar_t wide_text[] = L"wide-stream";
     char root[512], path[600], input[32] = {0}, formatted[16];
     char word[8] = {0}, set[4] = {0}, mark = 0;
     char pointer_text[32], *target, *line_before, *memory, *output_initial;
+    wchar_t wide_input[32] = {0};
     struct c2go_mlib_scan_result *scan;
     c2go_mlib_cookie_state_pointer cookie_state;
     C2GO_MLIB_TEST_COOKIE_IO cookie_functions = {
@@ -423,7 +443,31 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     if (C2GO_MLIB_TEST_FCLOSE(stream) != 0 ||
         c2go_mlib_cookie_close_count != 1) return 63;
 
-    if (unlink(path) || rmdir(root)) return 64;
+    /* Wide FILE operations share root libc's lock-free UTF engine while the
+     * mlib wrapper owns the managed carrier lock and buffer root. */
+    memory = gc_malloc((void *)0, 256);
+    if (!memory) return 64;
+    stream = C2GO_MLIB_TEST_FMEMOPEN(memory, 256, "w+");
+    if (!stream) return 65;
+    memory = (void *)0;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (C2GO_MLIB_TEST_FWIDE(stream, 0) != 0 ||
+        C2GO_MLIB_TEST_FWIDE(stream, 1) <= 0) return 66;
+    if (C2GO_MLIB_TEST_FPUTWS(L"wide", stream) < 0 ||
+        C2GO_MLIB_TEST_FPUTWC(L'-', stream) == WEOF ||
+        C2GO_MLIB_TEST_FPUTWS(L"stream", stream) < 0 ||
+        C2GO_MLIB_TEST_FFLUSH(stream) != 0) return 67;
+    if (C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0 ||
+        C2GO_MLIB_TEST_FGETWC(stream) != L'w' ||
+        C2GO_MLIB_TEST_UNGETWC(L'w', stream) != L'w' ||
+        C2GO_MLIB_TEST_FGETWC(stream) != L'w') return 68;
+    if (C2GO_MLIB_TEST_FSEEK(stream, 0, SEEK_SET) != 0 ||
+        C2GO_MLIB_TEST_FGETWS(wide_input, 32, stream) != wide_input ||
+        wcscmp(wide_input, wide_text)) return 69;
+    C2GO_MLIB_TEST_FORCE_GC();
+    if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 70;
+
+    if (unlink(path) || rmdir(root)) return 71;
     return 0;
 }
 
@@ -466,6 +510,12 @@ c2go_extern int C2GO_MLIB_TEST_STDIN_EXPORT(void)
 #undef C2GO_MLIB_TEST_SCANF
 #undef C2GO_MLIB_TEST_GETLINE
 #undef C2GO_MLIB_TEST_GETDELIM
+#undef C2GO_MLIB_TEST_UNGETWC
+#undef C2GO_MLIB_TEST_FGETWS
+#undef C2GO_MLIB_TEST_FPUTWS
+#undef C2GO_MLIB_TEST_FGETWC
+#undef C2GO_MLIB_TEST_FPUTWC
+#undef C2GO_MLIB_TEST_FWIDE
 #undef C2GO_MLIB_TEST_FOPENCOOKIE
 #undef C2GO_MLIB_TEST_COOKIE_IO
 #undef C2GO_MLIB_TEST_OPEN_MEMSTREAM
