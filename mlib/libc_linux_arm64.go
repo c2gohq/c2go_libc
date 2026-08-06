@@ -15,6 +15,13 @@ import (
 )
 
 // ─── Types ──────────────────────────────────────────────────
+type __va_list struct {
+	__stack   unsafe.Pointer
+	__gr_top  unsafe.Pointer
+	__vr_top  unsafe.Pointer
+	__gr_offs int32
+	__vr_offs int32
+}
 type _c2go_mlib_FILE struct {
 	_raw                 [32]uint64
 	_cookie_raw          [8]uint64
@@ -109,7 +116,6 @@ type mlib_tnode struct {
 // matching definition in any c2go-compiled TU. Emitted as
 // zero-size opaque structs; pointers to them remain valid
 // handles but contents are inaccessible from Go-side code.
-type __va_list struct{}
 type dirent struct{}
 type mlib_pthread_attr_t struct{}
 

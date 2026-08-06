@@ -12,6 +12,32 @@ import (
 )
 
 // ─── Types ──────────────────────────────────────────────────
+type cookie_io_functions_t struct {
+	read  uintptr
+	write uintptr
+	seek  uintptr
+	close uintptr
+}
+type div_t struct {
+	quot int32
+	rem  int32
+}
+type entry struct {
+	key  *byte
+	data unsafe.Pointer
+}
+type imaxdiv_t struct {
+	quot int64
+	rem  int64
+}
+type ldiv_t struct {
+	quot int32
+	rem  int32
+}
+type lldiv_t struct {
+	quot int64
+	rem  int64
+}
 
 // ─── Forward-only opaque types ───────────────────
 // Types declared in C as `typedef struct X X;` without a
@@ -21,9 +47,7 @@ import (
 type __dirstream struct{}
 type __locale_struct struct{}
 type __mbstate_t struct{}
-type cookie_io_functions_t struct{}
 type dirent struct{}
-type entry struct{}
 type glob_t struct{}
 type hsearch_data struct{}
 type lconv struct{}
