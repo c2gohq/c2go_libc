@@ -13,5 +13,6 @@
 // tables, and linked queues; and managed explicit/standard FILE streams with
 // formatted and allocation-returning line I/O, managed memory/custom streams,
 // and wide character, string, and formatted input/output I/O, including
-// managed popen/pclose process streams; and managed POSIX regular expressions.
+// managed popen/pclose process streams; managed POSIX regular expressions; and
+// GC-owned strdup, strndup, and wcsdup results.
 package mlib

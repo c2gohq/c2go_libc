@@ -132,8 +132,10 @@ wchar_t *wcstok(wchar_t *__restrict, const wchar_t *__restrict, wchar_t **__rest
     c2go_linkname("github.com/c2gohq/c2go_libc.wcstok", C2GO_GOABI0);
 
 /* duplicate */
+#ifndef C2GO_WCHAR_OMIT_DUP
 wchar_t *wcsdup(const wchar_t *)
     c2go_linkname("github.com/c2gohq/c2go_libc.wcsdup", C2GO_GOABI0);
+#endif
 
 /* wide memory (wchar_t-count, not byte-count) */
 wchar_t *wmemchr(const wchar_t *, wchar_t, size_t)

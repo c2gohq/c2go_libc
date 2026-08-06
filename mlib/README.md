@@ -19,6 +19,7 @@ The default API is explicitly namespaced:
 #include <c2go/mlib/glob.h>
 #include <c2go/mlib/regex.h>
 #include <c2go/mlib/search.h>
+#include <c2go/mlib/string.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/wchar.h>
 
@@ -31,6 +32,10 @@ static int by_name(const struct dirent **a, const struct dirent **b) {
 }
 
 static void example(void) {
+    char *managed label = mlib_strdup("managed");
+    /* Use label, then sever the owning root instead of calling free(). */
+    label = NULL;
+
     mlib_sem_t sem;
     mlib_sem_init(&sem, 0, 1);
 
@@ -83,12 +88,16 @@ corresponding standard names for the entire C2Go/LTO package:
 #include <c2go/mlib/glob.h>
 #include <c2go/mlib/regex.h>
 #include <c2go/mlib/search.h>
+#include <c2go/mlib/string.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/wchar.h>
 
 #pragma c2go managed push
 
 static void example(void) {
+    char *managed label = strdup("managed");
+    label = NULL; /* Managed release: never free(label). */
+
     sem_t sem;
     sem_init(&sem, 0, 1);
 
@@ -133,7 +142,8 @@ implements unnamed semaphores; pthread lifecycle, thread-specific keys,
 mutexes, condition variables, and rwlocks; the directory-stream lifecycle;
 `scandir`; Unix `nftw`/`ftw`; `glob`; managed search trees, hash tables, and
 queues; and the ownership-closed managed `FILE` surface, including process
-streams; plus managed POSIX regex. Where state lives in Go, root libc and mlib
+streams; managed POSIX regex; plus GC-owned `strdup`, `strndup`, and `wcsdup`.
+Where state lives in Go, root libc and mlib
 share the same behavior core and differ only in state resolution (direct
 managed pointer versus unmanaged handle ID). Pointer-bearing C containers are selectively
 instantiated with typed GC storage. Managed `opendir` and
@@ -145,6 +155,17 @@ managed storage and are reclaimed by dropping references, not by calling
 The caller must keep the returned pointer graph in managed locals, fields, or
 globals; the examples use a managed pragma around the owning code for that
 reason.
+
+Managed `strdup`, `strndup`, and `wcsdup` reuse the root libc's stateless
+length/copy algorithms but allocate their results with no-scan `gc_malloc`.
+Include `<c2go/mlib/string.h>` for the narrow pair and
+`<c2go/mlib/wstring.h>` for `wcsdup`; the broader
+`<c2go/mlib/wchar.h>` also includes that declaration. The results are
+GC-owned: never pass them to `free`, and assign the last managed owning pointer
+to `NULL` after use so the buffer becomes unreachable promptly. In unprefixed
+mode the standard C source spellings are preprocessor aliases to the single
+`mlib_` implementation; this avoids conflicting LLVM libcall routes in
+multi-translation-unit LTO.
 
 Managed `nftw` and `ftw` selectively instantiate musl's stateless walk
 algorithm over mlib's `DIR` operations; they do not allocate a second state
@@ -241,6 +262,7 @@ exact implemented and pending boundary is recorded in DESIGN.md.
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
 #include <c2go/mlib/regex.h>
+#include <c2go/mlib/string.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/wchar.h>
 
@@ -253,6 +275,10 @@ static int by_name(const struct dirent **a, const struct dirent **b) {
 }
 
 static void example(void) {
+    char *managed label = mlib_strdup("managed");
+    /* 使用后主动断开根，不调用 free()。 */
+    label = NULL;
+
     mlib_sem_t sem;
     mlib_sem_init(&sem, 0, 1);
 
@@ -303,12 +329,16 @@ static void example(void) {
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
 #include <c2go/mlib/regex.h>
+#include <c2go/mlib/string.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/wchar.h>
 
 #pragma c2go managed push
 
 static void example(void) {
+    char *managed label = strdup("managed");
+    label = NULL; /* managed release：不能 free(label)。 */
+
     sem_t sem;
     sem_init(&sem, 0, 1);
 
@@ -350,8 +380,9 @@ family header（例如 `<c2go/mlib/stdio.h>`、`<c2go/mlib/dirent.h>`）；在�
 选择性 managed surface 时有意不提供聚合头文件。当前已经实现无名
 信号量、pthread 的线程生命周期、线程私有 key、mutex/condition variable/
 rwlock、目录流生命周期、`scandir`、Unix `nftw`/`ftw`、`glob`、managed
-search tree/hash/queue，以及包含进程流的 ownership-closed managed `FILE`
-接口和 managed POSIX regex。位于 Go 中的状态逻辑由 root libc 与 mlib 共用，
+search tree/hash/queue、包含进程流的 ownership-closed managed `FILE`、managed
+POSIX regex，以及 GC-owned `strdup`、`strndup`、`wcsdup`。位于 Go 中的状态逻辑
+由 root libc 与 mlib 共用，
 两者只在状态解析方式上不同：`mlib` 直接读取 managed pointer，根 libc 仍通过
 unmanaged handle ID
 查表；包含指针的 C 容器则使用 typed GC storage 选择性实例化。managed `opendir`
@@ -361,6 +392,15 @@ Go heap，必须保存在 managed storage 中，使用完只需丢弃引用，�
 排序过程使用 typed pointer store，不使用按字节交换的 `qsort`。调用方必须把返回
 的 pointer graph 保存在 managed 局部变量、字段或全局变量中，因此示例在持有这些
 对象的代码外使用了 managed pragma。
+
+managed `strdup`、`strndup` 和 `wcsdup` 复用 root libc 的无状态长度/复制算法，
+但结果由 no-scan `gc_malloc` 分配。窄字符串接口包含
+`<c2go/mlib/string.h>`，单独使用 `wcsdup` 时包含
+`<c2go/mlib/wstring.h>`；更完整的 `<c2go/mlib/wchar.h>` 也会包含该声明。
+这些结果归 GC 所有，绝不能传给 `free`；最后一次使用后应把持有它的 managed
+pointer 主动赋成 `NULL`，让 buffer 及时变成不可达。无前缀模式把标准 C 源码名字
+预处理为唯一的 `mlib_` 实现，从而避免多翻译单元 LTO 中产生冲突的 LLVM
+libcall route。
 
 managed `nftw` 和 `ftw` 在 mlib 的 `DIR` 操作之上选择性实例化 musl 的无状态
 遍历算法，不会引入第二套状态模型。回调参数只是当前遍历栈帧的借用视图，回调返回后

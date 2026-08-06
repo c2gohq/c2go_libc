@@ -89,6 +89,25 @@ verify_function_call_count() {
 	fi
 }
 
+verify_function_symbol_call_count() {
+	local asm_path="$1"
+	local symbol="$2"
+	local callee="$3"
+	local minimum="$4"
+	local description="$5"
+	local count
+	count="$(awk -v prefix="TEXT ·${symbol}(SB)" -v suffix="·${callee}(SB)" '
+		index($0, prefix) == 1 { in_function=1; next }
+		in_function && /^TEXT / { exit }
+		in_function && /CALL / && index($0, suffix) { count++ }
+		END { print count+0 }
+	' "$asm_path")"
+	if [ "$count" -lt "$minimum" ]; then
+		echo "mlib/gen.sh: $description has $count calls, want at least $minimum in $asm_path" >&2
+		exit 1
+	fi
+}
+
 verify_managed_write_barriers() {
 	local asm_path="$1"
 	verify_function_write_barrier "$asm_path" mlib_opendir \
@@ -197,6 +216,12 @@ verify_managed_write_barriers() {
 		regexArenaNew 1 "managed regex persistent arena creation"
 	verify_function_call_count "$asm_path" mlib_regexec \
 		regexArenaNew 1 "managed regex per-call arena creation"
+	verify_function_symbol_call_count "$asm_path" mlib_strdup \
+		GCMalloc 1 "managed strdup allocation"
+	verify_function_symbol_call_count "$asm_path" mlib_strndup \
+		GCMalloc 1 "managed strndup allocation"
+	verify_function_symbol_call_count "$asm_path" mlib_wcsdup \
+		GCMalloc 1 "managed wcsdup allocation"
 }
 
 TARGETS=(
@@ -222,6 +247,10 @@ LIB_SOURCES=(
 	"$ROOT/musl/src/regex/regcomp.c"
 	"$ROOT/musl/src/regex/regexec.c"
 	"$ROOT/musl/src/regex/tre-mem.c"
+	# Keep additive families last so their function/label numbering does not
+	# rewrite the existing large TRE assembly on every regeneration.
+	"$ROOT/csrc/mlib/string.c"
+	"$ROOT/csrc/mlib/wstring.c"
 )
 
 # Build the selectively-instantiated C part of package mlib once per target.
@@ -287,6 +316,12 @@ generate_mode() {
 	local mode="$1"
 	local test_dir="$MLIB_DIR/selftest/$mode"
 	local test_mod="$MOD/mlib/selftest/$mode"
+	local string_selftest
+	case "$mode" in
+		namespaced) string_selftest=mlib_string_prefixed_selftest ;;
+		unprefixed) string_selftest=mlib_string_unprefixed_selftest ;;
+		*) echo "mlib/gen.sh: unknown namespace mode $mode" >&2; exit 1 ;;
+	esac
 	echo "== mlib/selftest/$mode ($test_mod) =="
 	for t in "${TARGETS[@]}"; do
 		IFS=: read -r goos arch triple lib <<<"$t"
@@ -312,6 +347,15 @@ generate_mode() {
 		esac
 		verify_function_write_barrier "$test_dir/selftest_${goos}_${arch}.s" \
 			c2go_mlib_cookie_write "managed cookie callback publication"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$string_selftest" mlib_strdup 1 \
+			"$mode standard/namespaced strdup routing"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$string_selftest" mlib_strndup 1 \
+			"$mode standard/namespaced strndup routing"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$string_selftest" mlib_wcsdup 1 \
+			"$mode standard/namespaced wcsdup routing"
 		out="$tmp/out_${mode}_${goos}_${arch}"
 		mkdir -p "$out"
 		"$C2GOBIND" -pkgname="$mode" -goname="selftest_${goos}_${arch}" \

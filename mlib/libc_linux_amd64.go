@@ -445,6 +445,12 @@ func MlibSscanf(input *byte, format *byte, argptrs unsafe.Pointer) int32
 //go:linkname MlibStdfile github.com/c2gohq/c2go_libc/mlib.mlib_stdfile
 func MlibStdfile(which int32) *_c2go_mlib_FILE
 
+//go:linkname MlibStrdup github.com/c2gohq/c2go_libc/mlib.mlib_strdup
+func MlibStrdup(source *byte) *byte
+
+//go:linkname MlibStrndup github.com/c2gohq/c2go_libc/mlib.mlib_strndup
+func MlibStrndup(source *byte, limit uint64) *byte
+
 //go:linkname MlibSwscanf github.com/c2gohq/c2go_libc/mlib.mlib_swscanf
 func MlibSwscanf(input *int32, format *int32, argptrs unsafe.Pointer) int32
 
@@ -498,6 +504,9 @@ func MlibVwprintf(format *int32, arguments *__va_list_tag) int32
 
 //go:linkname MlibVwscanf github.com/c2gohq/c2go_libc/mlib.mlib_vwscanf
 func MlibVwscanf(format *int32, arguments *__va_list_tag) int32
+
+//go:linkname MlibWcsdup github.com/c2gohq/c2go_libc/mlib.mlib_wcsdup
+func MlibWcsdup(source *int32) *int32
 
 //go:linkname MlibWprintf github.com/c2gohq/c2go_libc/mlib.mlib_wprintf
 func MlibWprintf(format *int32, argptrs unsafe.Pointer) int32

@@ -244,6 +244,23 @@ local keeps the process alive. A process stream must be retired with `pclose`,
 not plain `fclose`, so the child is reaped. No mlib FILE may be routed to a root
 public FILE declaration.
 
+### String-allocation cluster
+
+Managed `strdup`, `strndup`, and `wcsdup` share root libc's stateless
+length/copy functions but instantiate a separate ownership policy: each result
+is a no-pointer `gc_malloc` buffer. `<c2go/mlib/string.h>` owns the narrow pair;
+`<c2go/mlib/wstring.h>` owns only `wcsdup` and intentionally does not import the
+managed FILE surface. The broader `<c2go/mlib/wchar.h>` includes that focused
+header for users that also select managed wide-stream I/O.
+
+In replacement mode the standard source spellings are macros targeting the
+single prefixed implementation. This is necessary for `strdup`/`strndup`, which
+LLVM treats as libcalls: giving the exact same IR function name both root and
+managed link routes across different translation units is ambiguous. The
+generated package therefore still contains one `mlib_` implementation. Results
+must never reach ordinary `free`; the caller retires them by assigning the last
+managed owner to `NULL`.
+
 ## Managed allocation inventory
 
 Handle-table carriers and allocation ownership are separate migration axes.
@@ -252,7 +269,7 @@ open for APIs that create caller-owned storage or persistent pointer graphs.
 
 | Root allocation surface | Managed treatment | Status |
 | --- | --- | --- |
-| `strdup`, `strndup`, `wcsdup` | return GC-owned no-pointer byte/rune storage | Pending |
+| `strdup`, `strndup`, `wcsdup` | allocate GC-owned no-pointer byte/rune storage; caller retires the last root by assigning `NULL` | Implemented |
 | `asprintf`, `vasprintf` | format into and publish a GC-owned byte buffer | Pending |
 | `realpath(path, NULL)` | allocate the result with `gc_malloc`; caller-buffer form can share the root algorithm | Pending |
 | `regcomp`, `regexec`, `regfree` | selectively instantiate TRE; every no-scan GC block is directly rooted by a per-object arena, and each match uses a temporary arena | Implemented |
@@ -277,7 +294,9 @@ above. Keep the following gates in place:
    generated write-barrier regression; keep `lsearch`/`lfind` pointer-free.
 5. Run managed regex compile/match/free under forced GC in both namespace
    modes; keep its arena publication/retirement barrier gates enabled.
-6. Reject any generated mlib library that calls root `malloc`, `calloc`,
+6. Run managed `strdup`/`strndup`/`wcsdup` through both namespace modes under
+   forced GC; keep the final owner-to-`NULL` release pattern in the fixtures.
+7. Reject any generated mlib library that calls root `malloc`, `calloc`,
    `realloc`, or `free`; `mlib/gen.sh` enforces this on every target.
 
 `iconvTab` is not unfinished migration work. An mlib descriptor that stores the

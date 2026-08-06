@@ -11051,6 +11051,117 @@ _LBB32_4:
 	MOVL AX, 16(BP)
 	RET
 _Lfunc_end32:
+	FUNCDATA $0, gclocals·4049a89979623773(SB)
+	FUNCDATA $1, gclocals·1816af156b13e4ed(SB)
+DATA gclocals·1816af156b13e4ed+0(SB)/4, $5
+DATA gclocals·1816af156b13e4ed+4(SB)/4, $13
+DATA gclocals·1816af156b13e4ed+8(SB)/1, $0x00
+DATA gclocals·1816af156b13e4ed+9(SB)/1, $0x00
+DATA gclocals·1816af156b13e4ed+10(SB)/1, $0xc0
+DATA gclocals·1816af156b13e4ed+11(SB)/1, $0x0f
+DATA gclocals·1816af156b13e4ed+12(SB)/1, $0xe0
+DATA gclocals·1816af156b13e4ed+13(SB)/1, $0x0f
+DATA gclocals·1816af156b13e4ed+14(SB)/1, $0xc0
+DATA gclocals·1816af156b13e4ed+15(SB)/1, $0x0b
+DATA gclocals·1816af156b13e4ed+16(SB)/1, $0x00
+DATA gclocals·1816af156b13e4ed+17(SB)/1, $0x03
+GLOBL gclocals·1816af156b13e4ed(SB), DUPOK|RODATA, $18
+
+TEXT ·mlib_string_prefixed_selftest(SB), $56-8
+	PCDATA $1, $-1
+	MOVQ SP, AX
+	LEAQ _L_str_54<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_strdup(SB)
+_Ltmp449:
+	MOVQ SP, AX
+	MOVQ 8(AX), AX
+	MOVQ AX, -8(BP)
+	MOVQ SP, AX
+	LEAQ _L_str_1_55<>(SB), CX
+	MOVQ CX, 0(AX)
+	LONG $0x0840c748
+	LONG $0x00000005
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_strndup(SB)
+_Ltmp450:
+	MOVQ SP, AX
+	MOVQ 16(AX), AX
+	MOVQ AX, -16(BP)
+	MOVQ SP, AX
+	LEAQ _L_str_2_56<>(SB), CX
+	MOVQ CX, 0(AX)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_wcsdup(SB)
+_Ltmp451:
+	MOVQ SP, AX
+	MOVQ 8(AX), CX
+	LONG $0xf87d8348
+	BYTE $0x00
+	BYTE $0x0f
+	BYTE $0x95
+	BYTE $0xc0
+	LONG $0xf07d8348
+	BYTE $0x00
+	BYTE $0x0f
+	BYTE $0x95
+	BYTE $0xc2
+	ANDB AL, DL
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc9
+	BYTE $0x0f
+	BYTE $0x95
+	BYTE $0xc3
+	ANDB DL, BL
+	MOVL $1, AX
+	BYTE $0x80
+	BYTE $0xfb
+	BYTE $0x01
+	JNE _LBB33_11
+	MOVQ CX, -24(BP)
+	PCDATA $1, $3
+	CALL ·ForceGC(SB)
+_Ltmp452:
+	MOVQ -8(BP), CX
+	MOVL $2, AX
+	BYTE $0x80
+	BYTE $0x39
+	BYTE $0x6d
+	JNE _LBB33_11
+	LONG $0x20077980
+	JNE _LBB33_11
+	LONG $0x000e7980
+	JNE _LBB33_11
+	MOVQ -16(BP), CX
+	MOVL $3, AX
+	BYTE $0x80
+	BYTE $0x39
+	BYTE $0x62
+	JNE _LBB33_11
+	LONG $0x64047980
+	JNE _LBB33_11
+	LONG $0x00057980
+	JNE _LBB33_11
+	MOVQ -24(BP), CX
+	MOVL $4, AX
+	LONG $0x77398366
+	JNE _LBB33_11
+	LONG $0x06798366
+	BYTE $0x65
+	JNE _LBB33_11
+	LONG $0x08798366
+	BYTE $0x00
+	JNE _LBB33_11
+	PCDATA $1, $0
+	CALL ·ForceGC(SB)
+_Ltmp453:
+	XORL AX, AX
+_LBB33_11:
+	MOVL AX, 16(BP)
+	RET
+_Lfunc_end33:
 DATA _L_str<>+0(SB)/1, $0x2e
 DATA _L_str<>+1(SB)/1, $0x00
 GLOBL _L_str<>(SB), RODATA, $2
@@ -11925,18 +12036,37 @@ DATA _L_str_39<>+2(SB)/1, $0x64
 DATA _L_str_39<>+3(SB)/1, $0x00
 GLOBL _L_str_39<>(SB), RODATA, $4
 
-	FUNCDATA $0, gclocals·4049a89979623773(SB)
-	FUNCDATA $1, gclocals·1816af156b13e4ed(SB)
-DATA gclocals·1816af156b13e4ed+0(SB)/4, $5
-DATA gclocals·1816af156b13e4ed+4(SB)/4, $13
-DATA gclocals·1816af156b13e4ed+8(SB)/1, $0x00
-DATA gclocals·1816af156b13e4ed+9(SB)/1, $0x00
-DATA gclocals·1816af156b13e4ed+10(SB)/1, $0xc0
-DATA gclocals·1816af156b13e4ed+11(SB)/1, $0x0f
-DATA gclocals·1816af156b13e4ed+12(SB)/1, $0xe0
-DATA gclocals·1816af156b13e4ed+13(SB)/1, $0x0f
-DATA gclocals·1816af156b13e4ed+14(SB)/1, $0xc0
-DATA gclocals·1816af156b13e4ed+15(SB)/1, $0x0b
-DATA gclocals·1816af156b13e4ed+16(SB)/1, $0x00
-DATA gclocals·1816af156b13e4ed+17(SB)/1, $0x03
-GLOBL gclocals·1816af156b13e4ed(SB), DUPOK|RODATA, $18
+DATA _L_str_54<>+0(SB)/8, $0x20646567616e616d
+DATA _L_str_54<>+8(SB)/1, $0x73
+DATA _L_str_54<>+9(SB)/1, $0x74
+DATA _L_str_54<>+10(SB)/1, $0x72
+DATA _L_str_54<>+11(SB)/1, $0x69
+DATA _L_str_54<>+12(SB)/1, $0x6e
+DATA _L_str_54<>+13(SB)/1, $0x67
+DATA _L_str_54<>+14(SB)/1, $0x00
+GLOBL _L_str_54<>(SB), RODATA, $15
+
+DATA _L_str_1_55<>+0(SB)/8, $0x006465646e756f62
+GLOBL _L_str_1_55<>(SB), RODATA, $8
+
+DATA _L_str_2_56<>+0(SB)/1, $0x77
+DATA _L_str_2_56<>+1(SB)/1, $0x00
+DATA _L_str_2_56<>+2(SB)/1, $0x69
+DATA _L_str_2_56<>+3(SB)/1, $0x00
+DATA _L_str_2_56<>+4(SB)/1, $0x64
+DATA _L_str_2_56<>+5(SB)/1, $0x00
+DATA _L_str_2_56<>+6(SB)/1, $0x65
+DATA _L_str_2_56<>+7(SB)/1, $0x00
+DATA _L_str_2_56<>+8(SB)/1, $0x00
+DATA _L_str_2_56<>+9(SB)/1, $0x00
+GLOBL _L_str_2_56<>(SB), RODATA, $10
+
+	FUNCDATA $0, gclocals·605edb4fa6e837b0(SB)
+	FUNCDATA $1, gclocals·ef745584ae286c86(SB)
+DATA gclocals·ef745584ae286c86+0(SB)/4, $4
+DATA gclocals·ef745584ae286c86+4(SB)/4, $7
+DATA gclocals·ef745584ae286c86+8(SB)/1, $0x00
+DATA gclocals·ef745584ae286c86+9(SB)/1, $0x40
+DATA gclocals·ef745584ae286c86+10(SB)/1, $0x60
+DATA gclocals·ef745584ae286c86+11(SB)/1, $0x70
+GLOBL gclocals·ef745584ae286c86(SB), DUPOK|RODATA, $12

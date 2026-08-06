@@ -7,7 +7,11 @@
  * whether root FILE declarations are safe to expose. Namespaced mode keeps
  * both root and managed wide-stream families available. */
 #include <c2go/mlib/stdio.h>
+#ifdef C2GO_MLIB_UNPREFIXED
+#define C2GO_WCHAR_OMIT_DUP 1
+#endif
 #include <wchar.h>
+#include <c2go/mlib/wstring.h>
 
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
 
