@@ -28,7 +28,10 @@
 
 /* Thread and key descriptors are direct Go pointers. The thread argument and
  * result values below are managed too because they may live in Go state while
- * the new goroutine runs or until pthread_join publishes the result. */
+ * the new goroutine runs or until pthread_join publishes the result.
+ * pthread_join, pthread_detach, and pthread_key_delete take descriptors by
+ * value, so they cannot clear the caller's variable. After a successful call,
+ * discard that value and preferably assign NULL to the managed descriptor. */
 typedef void *managed C2GO_MLIB_NAME(pthread_t);
 
 typedef struct {

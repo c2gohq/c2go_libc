@@ -365,6 +365,39 @@ func TestPthreadKeyRootTracking(t *testing.T) {
 	}
 }
 
+// A joined thread transfers its result to the caller. The thread state must
+// stop retaining the same managed pointer once that transfer is complete.
+func TestJoinThreadClearsRetval(t *testing.T) {
+	st := &threadState{done: make(chan struct{})}
+	want := unsafe.Pointer(new(int))
+	st.retval = want
+	close(st.done)
+	var got unsafe.Pointer
+	if r := joinThread(st, unsafe.Pointer(&got)); r != 0 {
+		t.Fatalf("joinThread = %d", r)
+	}
+	if got != want {
+		t.Fatalf("joined result = %p, want %p", got, want)
+	}
+	if st.retval != nil {
+		t.Fatal("join retained the managed result in threadState")
+	}
+}
+
+// A detached thread has no consumer for its result. Reaping it must sever that
+// root rather than retaining the result through a stale pthread_t value.
+func TestDetachThreadClearsRetval(t *testing.T) {
+	st := &threadState{done: make(chan struct{})}
+	st.retval = unsafe.Pointer(new(int))
+	close(st.done)
+	if r := detachThread(st); r != 0 {
+		t.Fatalf("detachThread = %d", r)
+	}
+	if st.retval != nil {
+		t.Fatal("detach retained the managed result in threadState")
+	}
+}
+
 // TestPthreadRWLock: writers mutually exclude (counter == M*N), and the single
 // pthread_rwlock_unlock correctly dispatches read vs write releases. Run with
 // -race: a reader concurrent with a writer would trip it.

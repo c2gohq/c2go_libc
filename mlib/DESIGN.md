@@ -20,6 +20,12 @@ listed family is already available from `mlib`.
   update receives a Go write barrier. `mlib/gen.sh` rejects generated assembly
   if required carrier, pointer-container, or retirement barriers disappear.
 - `mlib` never exposes or uses ordinary `malloc`, `realloc`, or `free`.
+- Logical release is still explicit even though storage is GC-owned. Every
+  managed `free`/`destroy`/`close`/`delete` equivalent clears carrier fields,
+  container slots, and propagated roots before returning. If a POSIX API takes
+  a pointer descriptor by value and therefore cannot rewrite the caller's
+  variable, it clears all library-owned roots and the caller must discard or
+  preferably assign `NULL` to that descriptor.
 - Stateless implementations are shared. Go-owned state algorithms are shared
   below both carrier layers. C code is instantiated twice only when allocation,
   record layout, pointer copying, or returned object graphs differ.

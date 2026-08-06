@@ -203,7 +203,10 @@ Thread arguments, return values, and TLS values are managed pointers too, so
 they remain live across thread start, join, and destructor execution. In
 unprefixed mode lifecycle, keys, and synchronization objects are all replaced;
 the integer-only `pthread_once` carrier and stateless `pthread_atfork` remain
-shared from the root pthread surface. Never mix root and mlib thread/key
+shared from the root pthread surface. A successful `pthread_join`,
+`pthread_detach`, or `pthread_key_delete` clears the library-owned roots, but
+the POSIX by-value signature cannot clear the caller's descriptor; discard it
+and preferably assign `NULL` immediately. Never mix root and mlib thread/key
 carriers.
 
 Managed `tsearch`/`tfind`/`tdelete`/`twalk`/`tdestroy`, the `hsearch` family,
@@ -405,7 +408,10 @@ managed `pthread_t` 和 `pthread_key_t` 都是 GC 可见的直接状态指针；
 返回值和 TLS value 也显式声明为 managed pointer，因此能跨线程启动、join 和
 析构过程保活。无前缀模式会同时替换生命周期、key 与同步对象；只包含整数状态的
 `pthread_once` carrier 和无状态的 `pthread_atfork` 继续复用根 pthread 接口。
-不能在 root 与 mlib 之间混用 thread/key carrier。
+`pthread_join`、`pthread_detach` 或 `pthread_key_delete` 成功后，库内持有的根
+会被清除；但 POSIX 接口按值接收 descriptor，无法替调用者修改变量，因此调用者
+应立即丢弃并最好主动赋成 `NULL`。不能在 root 与 mlib 之间混用 thread/key
+carrier。
 
 managed `tsearch`/`tfind`/`tdelete`/`twalk`/`tdestroy`、`hsearch` family 和
 `insque`/`remque` 会把应用指针保存在 typed GC 对象中，并通过写屏障完成插入、

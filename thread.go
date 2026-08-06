@@ -26,7 +26,8 @@ import (
 // pointer in GC-visible C storage. detached/reaped are atomic because join,
 // detach and the finishing goroutine all race on them; retval is published by
 // the goroutine before it closes done, so a joiner that has observed done sees
-// the final retval.
+// the final retval. Whichever path successfully reaps the thread also retires
+// retval after either publishing it to the joiner or discarding it for detach.
 type threadState struct {
 	done     chan struct{}  // closed when the start routine returns
 	retval   unsafe.Pointer // the void* the start routine returned
@@ -68,6 +69,17 @@ func reap(st *threadState) bool {
 	return false
 }
 
+// reapDetached retires a detached thread and its retained result together.
+// Only the successful reaper may touch retval: this keeps a racing join/detach
+// pair from reading and clearing the managed root concurrently.
+func reapDetached(st *threadState) bool {
+	if !reap(st) {
+		return false
+	}
+	st.retval = nil
+	return true
+}
+
 func chanClosed(ch chan struct{}) bool {
 	select {
 	case <-ch:
@@ -95,7 +107,7 @@ func startThread(st *threadState, start, arg unsafe.Pointer) {
 			runKeyDestructors() // POSIX: run this thread's TSD destructors on exit
 			close(st.done)
 			if st.detached.Load() {
-				reap(st)
+				reapDetached(st)
 			}
 		}()
 		// Run the start routine in C (it is a c2go fp). A normal return yields
@@ -138,8 +150,10 @@ func joinThread(st *threadState, retval unsafe.Pointer) int32 {
 	if !reap(st) {
 		return errESRCH
 	}
+	result := st.retval
+	st.retval = nil
 	if retval != nil {
-		*(*unsafe.Pointer)(retval) = st.retval
+		*(*unsafe.Pointer)(retval) = result
 	}
 	return 0
 }
@@ -177,7 +191,7 @@ func detachThread(st *threadState) int32 {
 	}
 	st.detached.Store(true)
 	if chanClosed(st.done) {
-		reap(st) // already finished: reclaim now
+		reapDetached(st) // already finished: reclaim result and state now
 	}
 	return 0
 }
