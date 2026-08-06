@@ -339,6 +339,7 @@ generate_mode() {
 	local getcwd_selftest
 	local stdio_retire_selftest
 	local dirent_retire_selftest
+	local sync_retire_selftest
 	case "$mode" in
 		namespaced)
 			string_selftest=mlib_string_prefixed_selftest
@@ -347,6 +348,7 @@ generate_mode() {
 			getcwd_selftest=mlib_getcwd_prefixed_selftest
 			stdio_retire_selftest=mlib_stdio_retire_prefixed_selftest
 			dirent_retire_selftest=mlib_dirent_retire_prefixed_selftest
+			sync_retire_selftest=mlib_sync_retire_prefixed_selftest
 			;;
 		unprefixed)
 			string_selftest=mlib_string_unprefixed_selftest
@@ -355,6 +357,7 @@ generate_mode() {
 			getcwd_selftest=mlib_getcwd_unprefixed_selftest
 			stdio_retire_selftest=mlib_stdio_retire_unprefixed_selftest
 			dirent_retire_selftest=mlib_dirent_retire_unprefixed_selftest
+			sync_retire_selftest=mlib_sync_retire_unprefixed_selftest
 			;;
 		*) echo "mlib/gen.sh: unknown namespace mode $mode" >&2; exit 1 ;;
 	esac
@@ -426,6 +429,24 @@ generate_mode() {
 		verify_function_write_barrier "$test_dir/selftest_${goos}_${arch}.s" \
 			"$dirent_retire_selftest" \
 			"$mode managed DIR/scandir owner retirement"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$sync_retire_selftest" GCMalloc 5 \
+			"$mode managed synchronization carrier allocation"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$sync_retire_selftest" SemDestroy 1 \
+			"$mode managed semaphore state retirement"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$sync_retire_selftest" PthreadMutexDestroy 1 \
+			"$mode managed mutex state retirement"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$sync_retire_selftest" PthreadCondDestroy 1 \
+			"$mode managed condition state retirement"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$sync_retire_selftest" PthreadRWLockDestroy 1 \
+			"$mode managed rwlock state retirement"
+		verify_function_write_barrier "$test_dir/selftest_${goos}_${arch}.s" \
+			"$sync_retire_selftest" \
+			"$mode managed synchronization owner retirement"
 		out="$tmp/out_${mode}_${goos}_${arch}"
 		mkdir -p "$out"
 		"$C2GOBIND" -pkgname="$mode" -goname="selftest_${goos}_${arch}" \

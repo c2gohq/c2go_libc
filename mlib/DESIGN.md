@@ -108,6 +108,17 @@ build of the complete musl library.
 
 ## Stateful clusters and selective C instantiation
 
+### semaphore and pthread synchronization cluster
+
+Managed semaphore, mutex, condition-variable, and rwlock carriers each contain
+one direct pointer to the shared `internal/posixsync` state. Their destroy
+functions atomically clear that field. A stack or global carrier needs no
+physical deallocation; a carrier allocated with typed `gc_malloc` has a second
+lifetime edge in the caller, which must also be assigned `NULL` after destroy.
+The focused retirement fixture holds all four carrier pointers in one typed
+GC-heap owner and keeps generated allocation, destroy-route, and write-barrier
+gates for both namespace modes.
+
 ### pthread lifecycle and key cluster
 
 Managed `pthread_t` is a direct pointer to the shared Go thread state rather
@@ -335,7 +346,8 @@ mlib carrier. This statement does not close the managed allocation inventory
 above. Keep the following gates in place:
 
 1. Run semaphore and the complete pthread state family under C, race, and
-   GC-stress regression on all release targets.
+   GC-stress regression on all release targets; require destroy to clear every
+   carrier state and typed heap owners to clear their final carrier pointers.
 2. Run the DIR propagation cluster under GC-stress regression; verify
    `closedir` retires the carrier state and every internal/caller owner is set
    to `NULL`, including the final `scandir` result owner.

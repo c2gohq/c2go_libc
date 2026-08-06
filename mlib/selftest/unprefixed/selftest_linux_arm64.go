@@ -69,6 +69,12 @@ type c2go_mlib_stdio_retire_owner struct {
 	closed      *_c2go_mlib_FILE
 	replacement *_c2go_mlib_FILE
 }
+type c2go_mlib_sync_retire_owner struct {
+	sem    *sem_t
+	mutex  *pthread_mutex_t
+	cond   *pthread_cond_t
+	rwlock *pthread_rwlock_t
+}
 type cookie_io_functions_t struct {
 	read  uintptr
 	write uintptr
@@ -137,7 +143,11 @@ var (
 	_typeinfo_c2go_mlib_search_item         unsafe.Pointer
 	_typeinfo_c2go_mlib_search_payload      unsafe.Pointer
 	_typeinfo_c2go_mlib_search_queue        unsafe.Pointer
+	_typeinfo_c2go_mlib_sync_retire_owner   unsafe.Pointer
+	_typeinfo_pthread_cond_t                unsafe.Pointer
 	_typeinfo_pthread_mutex_t               unsafe.Pointer
+	_typeinfo_pthread_rwlock_t              unsafe.Pointer
+	_typeinfo_sem_t                         unsafe.Pointer
 )
 
 // reflect.Type's 2nd interface word is the *runtime._type mallocgc wants.
@@ -155,7 +165,11 @@ func init() {
 	_typeinfo_c2go_mlib_search_item = _c2go_rtype(reflect.TypeFor[c2go_mlib_search_item]())
 	_typeinfo_c2go_mlib_search_payload = _c2go_rtype(reflect.TypeFor[c2go_mlib_search_payload]())
 	_typeinfo_c2go_mlib_search_queue = _c2go_rtype(reflect.TypeFor[c2go_mlib_search_queue]())
+	_typeinfo_c2go_mlib_sync_retire_owner = _c2go_rtype(reflect.TypeFor[c2go_mlib_sync_retire_owner]())
+	_typeinfo_pthread_cond_t = _c2go_rtype(reflect.TypeFor[pthread_cond_t]())
 	_typeinfo_pthread_mutex_t = _c2go_rtype(reflect.TypeFor[pthread_mutex_t]())
+	_typeinfo_pthread_rwlock_t = _c2go_rtype(reflect.TypeFor[pthread_rwlock_t]())
+	_typeinfo_sem_t = _c2go_rtype(reflect.TypeFor[sem_t]())
 }
 
 // ─── Function declarations ──────────────────────────────────
@@ -213,6 +227,9 @@ func MlibStdioUnprefixedStdoutSelftest() int32
 //go:linkname MlibStringUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_string_unprefixed_selftest
 func MlibStringUnprefixedSelftest() int32
 
+//go:linkname MlibSyncRetireUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_sync_retire_unprefixed_selftest
+func MlibSyncRetireUnprefixedSelftest() int32
+
 // ─── §B4 Go-owned global storage ────────────────────────────
 // Pointer-carrying file-scope C globals whose storage is owned
 // by this Go package. Each var's layout mirrors the C global's
@@ -220,6 +237,7 @@ func MlibStringUnprefixedSelftest() int32
 // the Go compiler emits matching gcdata bits and the runtime
 // scans every pointer slot as a root. Clang's .s output
 // suppresses the matching GLOBL trailer for each name below.
+var c2go_mlib_sync_retire_root unsafe.Pointer
 var unprefixed_global_mutex unsafe.Pointer
 var unprefixed_global_sem unsafe.Pointer
 var unprefixed_thread_key unsafe.Pointer

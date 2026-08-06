@@ -76,6 +76,10 @@ typedef struct {
     int _pad[5];
 } C2GO_MLIB_NAME(pthread_rwlockattr_t);
 
+/* The synchronization destroy functions clear their carrier's _state field.
+ * When a carrier itself lives in typed gc_malloc storage, callers must also
+ * assign NULL to the final owning pointer after a successful destroy. */
+
 #ifdef C2GO_MLIB_UNPREFIXED
 #define PTHREAD_CREATE_JOINABLE 0
 #define PTHREAD_CREATE_DETACHED 1

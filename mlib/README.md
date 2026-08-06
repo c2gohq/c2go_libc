@@ -54,10 +54,12 @@ static void example(void) {
 
     mlib_sem_t sem;
     mlib_sem_init(&sem, 0, 1);
+    mlib_sem_destroy(&sem); /* Clears sem._state. */
 
     mlib_pthread_mutex_t mutex = MLIB_PTHREAD_MUTEX_INITIALIZER;
     mlib_pthread_mutex_lock(&mutex);
     mlib_pthread_mutex_unlock(&mutex);
+    mlib_pthread_mutex_destroy(&mutex); /* Clears mutex._state. */
 
     mlib_DIR *dir = mlib_opendir(".");
     struct dirent *entry = mlib_readdir(dir);
@@ -125,10 +127,12 @@ static void example(void) {
 
     sem_t sem;
     sem_init(&sem, 0, 1);
+    sem_destroy(&sem);
 
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&mutex);
     pthread_mutex_unlock(&mutex);
+    pthread_mutex_destroy(&mutex);
 
     DIR *dir = opendir(".");
     struct dirent *entry = readdir(dir);
@@ -156,6 +160,11 @@ Pointer-bearing managed C records must be typed and GC-visible:
 
 ```c
 mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
+if (sem) {
+    mlib_sem_init(sem, 0, 1);
+    mlib_sem_destroy(sem); /* Retires the state inside the carrier. */
+    sem = NULL;            /* Retires the caller's carrier owner. */
+}
 ```
 
 Pointer-free buffers may use `gc_malloc(NULL, size)`. A type-erased graph such
@@ -295,6 +304,12 @@ the POSIX by-value signature cannot clear the caller's descriptor; discard it
 and preferably assign `NULL` immediately. Never mix root and mlib thread/key
 carriers.
 
+Managed semaphore, mutex, condition-variable, and rwlock destroy functions
+clear the direct state pointer inside their carrier. Stack/global carriers can
+then be reused or leave scope. If a carrier itself was allocated with typed
+`gc_malloc`, the caller must additionally assign its final `sem_t *` or
+`pthread_*_t *` owner `NULL`; there is no managed `free` call.
+
 Managed `tsearch`/`tfind`/`tdelete`/`twalk`/`tdestroy`, the `hsearch` family,
 and `insque`/`remque` retain application pointers in typed GC objects and use
 write barriers for insertion, resizing, rotation, and removal. Keys, values,
@@ -362,10 +377,12 @@ static void example(void) {
 
     mlib_sem_t sem;
     mlib_sem_init(&sem, 0, 1);
+    mlib_sem_destroy(&sem); /* 清除 sem._state。 */
 
     mlib_pthread_mutex_t mutex = MLIB_PTHREAD_MUTEX_INITIALIZER;
     mlib_pthread_mutex_lock(&mutex);
     mlib_pthread_mutex_unlock(&mutex);
+    mlib_pthread_mutex_destroy(&mutex); /* 清除 mutex._state。 */
 
     mlib_DIR *dir = mlib_opendir(".");
     struct dirent *entry = mlib_readdir(dir);
@@ -429,10 +446,12 @@ static void example(void) {
 
     sem_t sem;
     sem_init(&sem, 0, 1);
+    sem_destroy(&sem);
 
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&mutex);
     pthread_mutex_unlock(&mutex);
+    pthread_mutex_destroy(&mutex);
 
     DIR *dir = opendir(".");
     struct dirent *entry = readdir(dir);
@@ -459,6 +478,11 @@ unmanaged 的同名标准 API。无前缀 mlib 头文件必须先于普通 libc 
 
 ```c
 mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
+if (sem) {
+    mlib_sem_init(sem, 0, 1);
+    mlib_sem_destroy(sem); /* 清除 carrier 内部状态。 */
+    sem = NULL;            /* 清除调用方持有的 carrier owner。 */
+}
 ```
 
 无指针 buffer 可以使用 `gc_malloc(NULL, size)`。TRE 这类 type-erased 对象图还
@@ -572,6 +596,11 @@ managed `pthread_t` 和 `pthread_key_t` 都是 GC 可见的直接状态指针；
 会被清除；但 POSIX 接口按值接收 descriptor，无法替调用者修改变量，因此调用者
 应立即丢弃并最好主动赋成 `NULL`。不能在 root 与 mlib 之间混用 thread/key
 carrier。
+
+managed semaphore、mutex、condition variable 与 rwlock 的 destroy 函数会清除
+carrier 内部的直接状态指针。栈或全局 carrier 随后可以复用或离开作用域；如果
+carrier 本身由 typed `gc_malloc` 分配，调用方还必须把最后一个 `sem_t *` 或
+`pthread_*_t *` owner 赋成 `NULL`，不存在 managed `free` 调用。
 
 managed `tsearch`/`tfind`/`tdelete`/`twalk`/`tdestroy`、`hsearch` family 和
 `insque`/`remque` 会把应用指针保存在 typed GC 对象中，并通过写屏障完成插入、

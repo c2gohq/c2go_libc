@@ -28,6 +28,9 @@ typedef struct {
     void *managed _state;
 } C2GO_MLIB_NAME(sem_t);
 
+/* sem_destroy clears _state. If the carrier itself was allocated with typed
+ * gc_malloc, the caller must then assign NULL to its owning sem_t * slot. */
+
 c2go_linkname("github.com/c2gohq/c2go_libc/mlib.SemInit", C2GO_GOABI0)
 int C2GO_MLIB_NAME(sem_init)(C2GO_MLIB_NAME(sem_t) *, int, unsigned);
 c2go_linkname("github.com/c2gohq/c2go_libc/mlib.SemDestroy", C2GO_GOABI0)
