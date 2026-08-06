@@ -30143,6 +30143,69 @@ _Ltmp999:
 	MOVW R8, 112(RSP)
 	RET
 _Lfunc_end173:
+	FUNCDATA $0, gclocals·0556bc3a5dbf06ca(SB)
+	FUNCDATA $1, gclocals·16f0aa5a1e7f1451(SB)
+TEXT ·mlib_realpath(SB), $64-24
+	PCDATA $1, $-1
+	MOVD 88(RSP), R8
+	CBZ R8, _LBB174_7
+	MOVBU 0(R8), R9
+	CBZW R9, _LBB174_8
+	MOVD 96(RSP), R9
+	CBNZ R9, _LBB174_5
+	MOVD R8, 64(RSP)
+	MOVD RSP, R8
+	MOVW $1024, R10
+	STP (ZR, R10), 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp1000:
+	MOVD RSP, R8
+	MOVD 24(R8), R8
+	CBZ R8, _LBB174_10
+	MOVD 64(RSP), R9
+	MOVD R8, R0
+	MOVD R9, R8
+	MOVD R0, R9
+_LBB174_5:
+	STP (R9, R8), 56(RSP)
+	MOVD RSP, R10
+	MOVW $1024, R11
+	STP (R9, R11), 16(R10)
+	MOVD R8, 8(R10)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_realpath(SB)
+_Ltmp1001:
+	MOVD RSP, R8
+	MOVWU 32(R8), R8
+	TBNZ $31, R8, _LBB174_9
+	MOVD 56(RSP), R8
+	JMP _LBB174_12
+_LBB174_7:
+	MOVW $22, R8
+	JMP _LBB174_11
+_LBB174_8:
+	MOVW $2, R8
+	JMP _LBB174_11
+_LBB174_9:
+	SUBW R8, ZR, R8
+	JMP _LBB174_11
+_LBB174_10:
+	MOVW $12, R8
+_LBB174_11:
+	MOVW R8, 52(RSP)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp1002:
+	MOVD RSP, R8
+	MOVD 8(R8), R8
+	MOVWU 52(RSP), R9
+	MOVW R9, 0(R8)
+	MOVD $0, R8
+_LBB174_12:
+	MOVD R8, 104(RSP)
+	RET
+_Lfunc_end174:
 DATA _L_str<>+0(SB)/1, $0x48
 DATA _L_str<>+1(SB)/1, $0x4f
 DATA _L_str<>+2(SB)/1, $0x4d
@@ -30355,5 +30418,5 @@ DATA ·tre_macros+192(SB)/8, $0x0000000000000000
 DATA ·tre_macros+200(SB)/8, $0x0000000000000000
 GLOBL ·tre_macros(SB), NOPTR, $208
 
-	FUNCDATA $0, gclocals·0556bc3a5dbf06ca(SB)
-	FUNCDATA $1, gclocals·16f0aa5a1e7f1451(SB)
+	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
+	FUNCDATA $1, gclocals·62d682c46a1fe54f(SB)

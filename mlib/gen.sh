@@ -230,6 +230,8 @@ verify_managed_write_barriers() {
 		mlib_store_formatted_pointer 2 "managed vasprintf result retirement and publication"
 	verify_function_call_count "$asm_path" mlib_asprintf \
 		mlib_vasprintf 1 "managed asprintf variadic forwarding"
+	verify_function_symbol_call_count "$asm_path" mlib_realpath \
+		GCMalloc 1 "managed realpath allocation"
 }
 
 TARGETS=(
@@ -260,6 +262,7 @@ LIB_SOURCES=(
 	"$ROOT/csrc/mlib/string.c"
 	"$ROOT/csrc/mlib/wstring.c"
 	"$ROOT/csrc/mlib/asprintf.c"
+	"$ROOT/csrc/mlib/realpath.c"
 )
 
 # Build the selectively-instantiated C part of package mlib once per target.
@@ -327,14 +330,17 @@ generate_mode() {
 	local test_mod="$MOD/mlib/selftest/$mode"
 	local string_selftest
 	local asprintf_selftest
+	local realpath_selftest
 	case "$mode" in
 		namespaced)
 			string_selftest=mlib_string_prefixed_selftest
 			asprintf_selftest=mlib_asprintf_prefixed_selftest
+			realpath_selftest=mlib_realpath_prefixed_selftest
 			;;
 		unprefixed)
 			string_selftest=mlib_string_unprefixed_selftest
 			asprintf_selftest=mlib_asprintf_unprefixed_selftest
+			realpath_selftest=mlib_realpath_unprefixed_selftest
 			;;
 		*) echo "mlib/gen.sh: unknown namespace mode $mode" >&2; exit 1 ;;
 	esac
@@ -378,6 +384,11 @@ generate_mode() {
 		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
 			c2go_mlib_asprintf_test_vcall mlib_vasprintf 1 \
 			"$mode standard/namespaced vasprintf routing"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$realpath_selftest" mlib_realpath 4 \
+			"$mode standard/namespaced realpath routing"
+		verify_function_write_barrier "$test_dir/selftest_${goos}_${arch}.s" \
+			"$realpath_selftest" "managed realpath owner retirement and publication"
 		out="$tmp/out_${mode}_${goos}_${arch}"
 		mkdir -p "$out"
 		"$C2GOBIND" -pkgname="$mode" -goname="selftest_${goos}_${arch}" \

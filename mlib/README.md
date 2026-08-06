@@ -21,6 +21,7 @@ The default API is explicitly namespaced:
 #include <c2go/mlib/search.h>
 #include <c2go/mlib/string.h>
 #include <c2go/mlib/stdio.h>
+#include <c2go/mlib/stdlib.h>
 #include <c2go/mlib/wchar.h>
 
 #pragma c2go managed push
@@ -41,6 +42,10 @@ static void example(void) {
         /* Use message, then retire the GC root explicitly. */
         message = NULL;
     }
+
+    char *managed canonical = mlib_realpath(".", NULL);
+    /* Use canonical, then sever the GC root instead of calling free(). */
+    canonical = NULL;
 
     mlib_sem_t sem;
     mlib_sem_init(&sem, 0, 1);
@@ -149,7 +154,7 @@ mutexes, condition variables, and rwlocks; the directory-stream lifecycle;
 `scandir`; Unix `nftw`/`ftw`; `glob`; managed search trees, hash tables, and
 queues; and the ownership-closed managed `FILE` surface, including process
 streams; managed POSIX regex; plus GC-owned `strdup`, `strndup`, `wcsdup`,
-`asprintf`, and `vasprintf`.
+`asprintf`, `vasprintf`, and `realpath`.
 Where state lives in Go, root libc and mlib
 share the same behavior core and differ only in state resolution (direct
 managed pointer versus unmanaged handle ID). Pointer-bearing C containers are selectively
@@ -183,6 +188,17 @@ leaves it `NULL` after every failure, and publishes a complete result through a
 write barrier. Never call `free` on the result; assign its final owner `NULL`.
 Replacement mode maps the standard source spellings to the same single
 `mlib_` implementation.
+
+Managed `realpath` reuses the root package's cross-platform Go
+canonicalisation bridge. With a null output it allocates `PATH_MAX` bytes using
+no-scan `gc_malloc`; the result is released by assigning its final owner
+`NULL`, never with `free`. Because the standard API conditionally returns either
+its input buffer or a new allocation, mlib keeps one precise managed return
+type: a non-null caller buffer must also be managed storage such as
+`gc_malloc(NULL, PATH_MAX)`, not a C stack array or root `malloc` block. Use root
+`realpath` when an ordinary stack buffer is required. Include
+`<c2go/mlib/stdlib.h>`; unprefixed mode aliases only `realpath`, leaving the rest
+of `<stdlib.h>` on root libc.
 
 Managed `nftw` and `ftw` selectively instantiate musl's stateless walk
 algorithm over mlib's `DIR` operations; they do not allocate a second state
@@ -281,6 +297,7 @@ exact implemented and pending boundary is recorded in DESIGN.md.
 #include <c2go/mlib/regex.h>
 #include <c2go/mlib/string.h>
 #include <c2go/mlib/stdio.h>
+#include <c2go/mlib/stdlib.h>
 #include <c2go/mlib/wchar.h>
 
 #pragma c2go managed push
@@ -301,6 +318,10 @@ static void example(void) {
         /* 使用后显式清除最后一个 GC root。 */
         message = NULL;
     }
+
+    char *managed canonical = mlib_realpath(".", NULL);
+    /* 使用后断开 GC root，不能调用 free()。 */
+    canonical = NULL;
 
     mlib_sem_t sem;
     mlib_sem_init(&sem, 0, 1);
@@ -405,7 +426,7 @@ family header（例如 `<c2go/mlib/stdio.h>`、`<c2go/mlib/dirent.h>`）；在�
 rwlock、目录流生命周期、`scandir`、Unix `nftw`/`ftw`、`glob`、managed
 search tree/hash/queue、包含进程流的 ownership-closed managed `FILE`、managed
 POSIX regex，以及 GC-owned `strdup`、`strndup`、`wcsdup`、`asprintf`、
-`vasprintf`。位于 Go 中的状态逻辑
+`vasprintf`、`realpath`。位于 Go 中的状态逻辑
 由 root libc 与 mlib 共用，
 两者只在状态解析方式上不同：`mlib` 直接读取 managed pointer，根 libc 仍通过
 unmanaged handle ID
@@ -433,6 +454,15 @@ managed pointer slot；函数不会保留该 slot 的地址，因此当前栈帧
 失败路径都保持 `NULL`，只有完整格式化成功后才通过写屏障发布结果。结果不能传给
 `free`，最后使用完必须把持有它的 managed pointer 主动赋成 `NULL`。无前缀模式
 仍然把标准源码名称映射到唯一一份 `mlib_` 实现。
+
+managed `realpath` 复用 root package 的跨平台 Go 路径规范化 bridge。
+输出参数为空时，它使用 no-scan `gc_malloc` 分配 `PATH_MAX` 字节；结果最后通过把
+owner 赋成 `NULL` 释放，不能调用 `free`。标准接口会根据参数返回调用者 buffer 或
+新分配结果，为了让返回指针始终保持精确的 managed 类型，mlib 要求非空调用者
+buffer 也必须来自 `gc_malloc(NULL, PATH_MAX)` 等 managed storage，不能使用 C
+栈数组或 root `malloc`。需要普通栈 buffer 时应继续调用 root `realpath`。接口位于
+`<c2go/mlib/stdlib.h>`；无前缀模式只替换 `realpath`，其余 `<stdlib.h>` API 仍由
+root libc 提供。
 
 managed `nftw` 和 `ftw` 在 mlib 的 `DIR` 操作之上选择性实例化 musl 的无状态
 遍历算法，不会引入第二套状态模型。回调参数只是当前遍历栈帧的借用视图，回调返回后

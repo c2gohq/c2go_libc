@@ -276,6 +276,21 @@ As with the string-duplication family, unprefixed source names are aliases to
 one `mlib_` IR implementation. This keeps root and managed libcall routes from
 becoming ambiguous when multiple translation units enter the same LTO package.
 
+### Path-allocation cluster
+
+Managed `realpath` shares root libc's `__c2go_realpath` Go bridge. A null output
+selects a no-scan `gc_malloc(PATH_MAX)` result; bridge failure explicitly drops
+the local owner before returning `NULL`. The standard signature conditionally
+returns either a caller buffer or an allocation, which cannot be represented as
+both unmanaged and precise managed address spaces. mlib therefore requires a
+non-null caller buffer to be managed no-pointer storage as well. Root `realpath`
+remains the correct API for stack or root-malloc buffers.
+
+The focused `<c2go/mlib/stdlib.h>` includes the ordinary stdlib surface and
+overrides only `realpath` in replacement mode. Both namespace modes route to one
+`mlib_realpath` implementation. Tests hold allocated and caller buffers in an
+explicit typed owner, exercise failed replacement, and clear every final root.
+
 ## Managed allocation inventory
 
 Handle-table carriers and allocation ownership are separate migration axes.
@@ -286,7 +301,8 @@ open for APIs that create caller-owned storage or persistent pointer graphs.
 | --- | --- | --- |
 | `strdup`, `strndup`, `wcsdup` | allocate GC-owned no-pointer byte/rune storage; caller retires the last root by assigning `NULL` | Implemented |
 | `asprintf`, `vasprintf` | clear the managed output slot, format into a GC-owned no-pointer buffer, then publish through a write barrier; caller retires the last owner with `NULL` | Implemented |
-| `realpath(path, NULL)` | allocate the result with `gc_malloc`; caller-buffer form can share the root algorithm | Pending |
+| `realpath(path, NULL)` | share the Go canonicalisation bridge, allocate with `gc_malloc`, and require any caller buffer to be managed so the conditional return stays precise | Implemented |
+| `getcwd(NULL, size)` | share the syscall bridge and return an exact GC-owned duplicate instead of root `strdup` | Pending |
 | `regcomp`, `regexec`, `regfree` | selectively instantiate TRE; every no-scan GC block is directly rooted by a per-object arena, and each match uses a temporary arena | Implemented |
 | generic `malloc`/`calloc`/`realloc`/`free` | no mlib equivalent: their type-erased ABI cannot describe a precise GC bitmap | Intentionally root-only |
 
@@ -314,7 +330,9 @@ above. Keep the following gates in place:
 7. Run managed `asprintf`/`vasprintf` through both namespace modes under forced
    GC; retain the generated `GCMalloc`, output-slot clearing, and publication
    gates.
-8. Reject any generated mlib library that calls root `malloc`, `calloc`,
+8. Run managed `realpath` through both namespace modes under forced GC; retain
+   its `GCMalloc`, precise owner, replacement-failure, and final-`NULL` gates.
+9. Reject any generated mlib library that calls root `malloc`, `calloc`,
    `realloc`, or `free`; `mlib/gen.sh` enforces this on every target.
 
 `iconvTab` is not unfinished migration work. An mlib descriptor that stores the

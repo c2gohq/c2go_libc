@@ -14,5 +14,5 @@
 // formatted and allocation-returning line I/O, managed memory/custom streams,
 // and wide character, string, and formatted input/output I/O, including
 // managed popen/pclose process streams; managed POSIX regular expressions; and
-// GC-owned strdup, strndup, wcsdup, asprintf, and vasprintf results.
+// GC-owned strdup, strndup, wcsdup, asprintf, vasprintf, and realpath results.
 package mlib

@@ -424,6 +424,9 @@ func MlibReaddir(dir *mlib_DIR) *dirent
 //go:linkname MlibReaddirR github.com/c2gohq/c2go_libc/mlib.mlib_readdir_r
 func MlibReaddirR(dir *mlib_DIR, entry *dirent, result **dirent) int32
 
+//go:linkname MlibRealpath github.com/c2gohq/c2go_libc/mlib.mlib_realpath
+func MlibRealpath(path *byte, resolved_path *byte) *byte
+
 //go:linkname MlibRegcomp github.com/c2gohq/c2go_libc/mlib.mlib_regcomp
 func MlibRegcomp(expression *mlib_regex, pattern *byte, flags int32) int32
 

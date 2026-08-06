@@ -43731,6 +43731,90 @@ _Ltmp999:
 	MOVL AX, 40(BP)
 	RET
 _Lfunc_end169:
+	FUNCDATA $0, gclocals·0556bc3a5dbf06ca(SB)
+	FUNCDATA $1, gclocals·16f0aa5a1e7f1451(SB)
+TEXT ·mlib_realpath(SB), $72-24
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc0
+	JEQ _LBB170_1
+	BYTE $0x80
+	BYTE $0x38
+	BYTE $0x00
+	JEQ _LBB170_3
+	MOVQ 24(BP), SI
+	MOVQ 24(BP), CX
+	MOVQ 24(BP), DX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xf6
+	JNE _LBB170_7
+	MOVQ AX, -8(BP)
+	MOVQ SP, AX
+	LONG $0x0840c748
+	LONG $0x00000104
+	LONG $0x0000c748
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp1000:
+	MOVQ SP, AX
+	MOVQ 16(AX), DX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xd2
+	JEQ _LBB170_12
+	MOVQ -8(BP), AX
+	MOVQ DX, CX
+_LBB170_7:
+	MOVQ CX, -32(BP)
+	MOVQ AX, -8(BP)
+	MOVQ DX, -24(BP)
+	MOVQ SP, CX
+	MOVQ DX, 8(CX)
+	MOVQ AX, 0(CX)
+	LONG $0x1041c748
+	LONG $0x00000104
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_realpath(SB)
+_Ltmp1001:
+	MOVQ SP, AX
+	MOVL 24(AX), AX
+	BYTE $0x85
+	BYTE $0xc0
+	JMI _LBB170_9
+	MOVQ -24(BP), AX
+	JMP _LBB170_11
+_LBB170_1:
+	MOVL $22, AX
+	JMP _LBB170_10
+_LBB170_3:
+	MOVL $2, AX
+	JMP _LBB170_10
+_LBB170_9:
+	BYTE $0xf7
+	BYTE $0xd8
+	JMP _LBB170_10
+_LBB170_12:
+	MOVL $12, AX
+_LBB170_10:
+	MOVL AX, -12(BP)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp1002:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	MOVL -12(BP), CX
+	MOVL CX, 0(AX)
+	XORL AX, AX
+_LBB170_11:
+	MOVQ AX, 32(BP)
+	RET
+_Lfunc_end170:
 DATA _L_str<>+0(SB)/1, $0x48
 DATA _L_str<>+1(SB)/1, $0x4f
 DATA _L_str<>+2(SB)/1, $0x4d
@@ -43943,5 +44027,14 @@ DATA ·tre_macros+192(SB)/8, $0x0000000000000000
 DATA ·tre_macros+200(SB)/8, $0x0000000000000000
 GLOBL ·tre_macros(SB), NOPTR, $208
 
-	FUNCDATA $0, gclocals·0556bc3a5dbf06ca(SB)
-	FUNCDATA $1, gclocals·16f0aa5a1e7f1451(SB)
+	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
+	FUNCDATA $1, gclocals·64f642c46beddeef(SB)
+DATA gclocals·64f642c46beddeef+0(SB)/4, $3
+DATA gclocals·64f642c46beddeef+4(SB)/4, $9
+DATA gclocals·64f642c46beddeef+8(SB)/1, $0x00
+DATA gclocals·64f642c46beddeef+9(SB)/1, $0x00
+DATA gclocals·64f642c46beddeef+10(SB)/1, $0x00
+DATA gclocals·64f642c46beddeef+11(SB)/1, $0x01
+DATA gclocals·64f642c46beddeef+12(SB)/1, $0x60
+DATA gclocals·64f642c46beddeef+13(SB)/1, $0x01
+GLOBL gclocals·64f642c46beddeef(SB), DUPOK|RODATA, $14

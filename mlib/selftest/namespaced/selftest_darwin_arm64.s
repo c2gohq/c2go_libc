@@ -10998,6 +10998,219 @@ _Ltmp515:
 	MOVWU 32(R8), R0
 	RET
 _Lfunc_end42:
+	FUNCDATA $0, gclocals·0556bc3a5dbf06ca(SB)
+DATA gclocals·0556bc3a5dbf06ca+0(SB)/4, $2
+DATA gclocals·0556bc3a5dbf06ca+4(SB)/4, $3
+DATA gclocals·0556bc3a5dbf06ca+8(SB)/1, $0x07
+DATA gclocals·0556bc3a5dbf06ca+9(SB)/1, $0x07
+GLOBL gclocals·0556bc3a5dbf06ca(SB), DUPOK|RODATA, $10
+
+	FUNCDATA $1, gclocals·16172a5a1dc64a11(SB)
+DATA gclocals·16172a5a1dc64a11+0(SB)/4, $2
+DATA gclocals·16172a5a1dc64a11+4(SB)/4, $9
+DATA gclocals·16172a5a1dc64a11+8(SB)/1, $0x00
+DATA gclocals·16172a5a1dc64a11+9(SB)/1, $0x00
+DATA gclocals·16172a5a1dc64a11+10(SB)/1, $0x80
+DATA gclocals·16172a5a1dc64a11+11(SB)/1, $0x01
+GLOBL gclocals·16172a5a1dc64a11(SB), DUPOK|RODATA, $12
+
+TEXT ·mlib_realpath_prefixed_selftest(SB), $80-8
+	PCDATA $1, $-1
+	MOVD RSP, R8
+	MOVW $16, R9
+	MOVD ·_typeinfo_c2go_mlib_realpath_result(SB), R10
+	STP (R10, R9), 8(R8)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp516:
+	MOVD RSP, R8
+	MOVD 24(R8), R8
+	CBZ R8, _LBB43_14
+	MOVD R8, 80(RSP)
+	MOVD RSP, R8
+	MOVW $1024, R10
+	STP (ZR, R10), 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp517:
+	MOVD RSP, R8
+	MOVD 24(R8), R10
+	MOVD 80(RSP), R8
+	ADD $8, R8, R8
+	MOVD $runtime·writeBarrier(SB), R9
+	MOVWU 0(R9), R9
+	CBZW R9, _LBB43_15
+	MOVD RSP, R9
+	STP (R8, R10), 8(R9)
+	MOVD R10, 64(RSP)
+	CALL ·_c2go_writePtr(SB)
+	MOVD 64(RSP), R10
+	CBZ R10, _LBB43_16
+_LBB43_3:
+	MOVD RSP, R8
+	MOVD $_L_str_69<>(SB), R10
+	STP (R10, ZR), 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_realpath(SB)
+_Ltmp518:
+	MOVD RSP, R8
+	MOVD 24(R8), R10
+	MOVD 80(RSP), R8
+	MOVD $runtime·writeBarrier(SB), R9
+	MOVWU 0(R9), R9
+	CBZW R9, _LBB43_18
+	MOVD RSP, R9
+	STP (R8, R10), 8(R9)
+	MOVD R10, 64(RSP)
+	CALL ·_c2go_writePtr(SB)
+	MOVD 64(RSP), R10
+	CBZ R10, _LBB43_19
+_LBB43_5:
+	PCDATA $1, $1
+	CALL ·ForceGC(SB)
+_Ltmp519:
+	MOVD 80(RSP), R8
+	MOVD 8(R8), R10
+	MOVD R10, 72(RSP)
+	MOVD RSP, R9
+	MOVD $_L_str_69<>(SB), R8
+	STP (R8, R10), 8(R9)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_realpath(SB)
+_Ltmp520:
+	MOVD RSP, R8
+	MOVD 24(R8), R8
+	MOVD 72(RSP), R0
+	CMP R0, R8
+	BNE _LBB43_17
+	MOVD 80(RSP), R8
+	MOVD 0(R8), R8
+	WORD $0x38401509
+	CBZW R9, _LBB43_10
+	MOVD R0, R10
+_LBB43_8:
+	MOVD R10, R0
+	MOVBU 0(R10), R10
+	CMPW R10, R9
+	BNE _LBB43_10
+	ADD $1, R0, R0
+	WORD $0x3840150b
+	MOVD R11, R9
+	MOVD R0, R10
+	CBNZW R11, _LBB43_8
+_LBB43_10:
+	MOVBU 0(R0), R8
+	CMPW R8, R9
+	BNE _LBB43_17
+	MOVD RSP, R8
+	MOVD $_L_str_1_70<>(SB), R10
+	STP (R10, ZR), 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_realpath(SB)
+_Ltmp521:
+	MOVD RSP, R8
+	MOVD 24(R8), R10
+	MOVD 80(RSP), R8
+	MOVD $runtime·writeBarrier(SB), R9
+	MOVWU 0(R9), R9
+	CBZW R9, _LBB43_21
+	MOVD RSP, R9
+	STP (R8, R10), 8(R9)
+	MOVD R10, 64(RSP)
+	CALL ·_c2go_writePtr(SB)
+	MOVD 64(RSP), R10
+	CBZ R10, _LBB43_22
+_LBB43_13:
+	MOVW $5, R8
+	JMP _LBB43_20
+_LBB43_14:
+	MOVW $1, R8
+	JMP _LBB43_20
+_LBB43_15:
+	MOVD R10, 0(R8)
+	CBNZ R10, _LBB43_3
+_LBB43_16:
+	MOVW $2, R8
+	JMP _LBB43_20
+_LBB43_17:
+	MOVW $4, R8
+	JMP _LBB43_20
+_LBB43_18:
+	MOVD R10, 0(R8)
+	CBNZ R10, _LBB43_5
+_LBB43_19:
+	MOVW $3, R8
+_LBB43_20:
+	MOVW R8, 104(RSP)
+	RET
+_LBB43_21:
+	MOVD R10, 0(R8)
+	CBNZ R10, _LBB43_13
+_LBB43_22:
+	PCDATA $1, $1
+	CALL ·ForceGC(SB)
+_Ltmp522:
+	MOVD RSP, R8
+	MOVD $_L_str_69<>(SB), R9
+	STP (R9, ZR), 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_realpath(SB)
+_Ltmp523:
+	MOVD RSP, R8
+	MOVD 24(R8), R9
+	MOVD R9, 56(RSP)
+	MOVD 80(RSP), R10
+	MOVD $runtime·writeBarrier(SB), R8
+	MOVWU 0(R8), R8
+	MOVD R10, 64(RSP)
+	CBZW R8, _LBB43_24
+	MOVD RSP, R8
+	STP (R10, R9), 8(R8)
+	MOVD R9, 48(RSP)
+	CALL ·_c2go_writePtr(SB)
+	MOVD 48(RSP), R9
+	JMP _LBB43_25
+_LBB43_24:
+	MOVD R9, 0(R10)
+_LBB43_25:
+	CBZ R9, _LBB43_33
+	MOVD 64(RSP), R8
+	MOVD 8(R8), R0
+	MOVBU 0(R9), R8
+	CBZW R8, _LBB43_30
+	MOVD R8, R9
+	MOVD 56(RSP), R8
+	ADD $1, R8, R8
+	MOVD R0, R10
+_LBB43_28:
+	MOVD R10, R0
+	MOVBU 0(R10), R10
+	CMPW R10, R9
+	BNE _LBB43_31
+	ADD $1, R0, R0
+	WORD $0x3840150b
+	MOVD R11, R9
+	MOVD R0, R10
+	CBNZW R11, _LBB43_28
+	JMP _LBB43_31
+_LBB43_30:
+	MOVW $0, R9
+_LBB43_31:
+	MOVBU 0(R0), R8
+	CMPW R8, R9
+	BNE _LBB43_33
+	PCDATA $1, $0
+	CALL ·ForceGC(SB)
+_Ltmp524:
+	PCDATA $1, $0
+	CALL ·ForceGC(SB)
+_Ltmp525:
+	MOVW $0, R8
+	JMP _LBB43_20
+_LBB43_33:
+	MOVW $6, R8
+	JMP _LBB43_20
+_Lfunc_end43:
 DATA _L_str<>+0(SB)/1, $0x2e
 DATA _L_str<>+1(SB)/1, $0x00
 GLOBL _L_str<>(SB), RODATA, $2
@@ -12299,18 +12512,21 @@ DATA _L_str_5_68<>+12(SB)/1, $0x33
 DATA _L_str_5_68<>+13(SB)/1, $0x00
 GLOBL _L_str_5_68<>(SB), RODATA, $14
 
-	FUNCDATA $0, gclocals·0556bc3a5dbf06ca(SB)
-DATA gclocals·0556bc3a5dbf06ca+0(SB)/4, $2
-DATA gclocals·0556bc3a5dbf06ca+4(SB)/4, $3
-DATA gclocals·0556bc3a5dbf06ca+8(SB)/1, $0x07
-DATA gclocals·0556bc3a5dbf06ca+9(SB)/1, $0x07
-GLOBL gclocals·0556bc3a5dbf06ca(SB), DUPOK|RODATA, $10
+DATA _L_str_69<>+0(SB)/1, $0x2e
+DATA _L_str_69<>+1(SB)/1, $0x00
+GLOBL _L_str_69<>(SB), RODATA, $2
 
-	FUNCDATA $1, gclocals·16172a5a1dc64a11(SB)
-DATA gclocals·16172a5a1dc64a11+0(SB)/4, $2
-DATA gclocals·16172a5a1dc64a11+4(SB)/4, $9
-DATA gclocals·16172a5a1dc64a11+8(SB)/1, $0x00
-DATA gclocals·16172a5a1dc64a11+9(SB)/1, $0x00
-DATA gclocals·16172a5a1dc64a11+10(SB)/1, $0x80
-DATA gclocals·16172a5a1dc64a11+11(SB)/1, $0x01
-GLOBL gclocals·16172a5a1dc64a11(SB), DUPOK|RODATA, $12
+DATA _L_str_1_70<>+0(SB)/1, $0x00
+GLOBL _L_str_1_70<>(SB), RODATA, $1
+
+	FUNCDATA $0, gclocals·be91aa5e7697217d(SB)
+	FUNCDATA $1, gclocals·1942d0bd56393aef(SB)
+DATA gclocals·1942d0bd56393aef+0(SB)/4, $3
+DATA gclocals·1942d0bd56393aef+4(SB)/4, $11
+DATA gclocals·1942d0bd56393aef+8(SB)/1, $0x00
+DATA gclocals·1942d0bd56393aef+9(SB)/1, $0x00
+DATA gclocals·1942d0bd56393aef+10(SB)/1, $0x00
+DATA gclocals·1942d0bd56393aef+11(SB)/1, $0x04
+DATA gclocals·1942d0bd56393aef+12(SB)/1, $0x00
+DATA gclocals·1942d0bd56393aef+13(SB)/1, $0x06
+GLOBL gclocals·1942d0bd56393aef(SB), DUPOK|RODATA, $14
