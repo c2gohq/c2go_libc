@@ -147,6 +147,8 @@ c2go_extern int mlib_scandir(const char *path, struct dirent ***result,
     }
 
     (void)mlib_closedir(dir);
+    entry = (mlib_dirent_pointer)0;
+    dir = (void *)0;
     if (errno) return -1;
     errno = old_errno;
 

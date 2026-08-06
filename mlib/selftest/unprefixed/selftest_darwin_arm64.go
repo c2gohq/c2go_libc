@@ -29,6 +29,10 @@ type c2go_mlib_cookie_state struct {
 	position uint64
 	length   uint64
 }
+type c2go_mlib_dirent_retire_owner struct {
+	stream *DIR
+	names  **dirent
+}
 type c2go_mlib_getcwd_result struct {
 	allocated     *byte
 	caller_buffer *byte
@@ -116,6 +120,7 @@ type sem_t struct {
 // zero-size opaque structs; pointers to them remain valid
 // handles but contents are inaccessible from Go-side code.
 type _c2go_mlib_FILE struct{}
+type dirent struct{}
 type mlib_hsearch_table struct{}
 
 // ─── Type-descriptor indirection (#218) ──────
@@ -123,15 +128,16 @@ type mlib_hsearch_table struct{}
 // _typeinfo_<X> var below; each caches the *runtime._type computed
 // once at init via reflect.TypeFor[T] (no value construction).
 var (
-	_typeinfo_c2go_mlib_asprintf_result unsafe.Pointer
-	_typeinfo_c2go_mlib_cookie_state    unsafe.Pointer
-	_typeinfo_c2go_mlib_getcwd_result   unsafe.Pointer
-	_typeinfo_c2go_mlib_realpath_result unsafe.Pointer
-	_typeinfo_c2go_mlib_scan_result     unsafe.Pointer
-	_typeinfo_c2go_mlib_search_item     unsafe.Pointer
-	_typeinfo_c2go_mlib_search_payload  unsafe.Pointer
-	_typeinfo_c2go_mlib_search_queue    unsafe.Pointer
-	_typeinfo_pthread_mutex_t           unsafe.Pointer
+	_typeinfo_c2go_mlib_asprintf_result     unsafe.Pointer
+	_typeinfo_c2go_mlib_cookie_state        unsafe.Pointer
+	_typeinfo_c2go_mlib_dirent_retire_owner unsafe.Pointer
+	_typeinfo_c2go_mlib_getcwd_result       unsafe.Pointer
+	_typeinfo_c2go_mlib_realpath_result     unsafe.Pointer
+	_typeinfo_c2go_mlib_scan_result         unsafe.Pointer
+	_typeinfo_c2go_mlib_search_item         unsafe.Pointer
+	_typeinfo_c2go_mlib_search_payload      unsafe.Pointer
+	_typeinfo_c2go_mlib_search_queue        unsafe.Pointer
+	_typeinfo_pthread_mutex_t               unsafe.Pointer
 )
 
 // reflect.Type's 2nd interface word is the *runtime._type mallocgc wants.
@@ -142,6 +148,7 @@ func _c2go_rtype(t reflect.Type) unsafe.Pointer {
 func init() {
 	_typeinfo_c2go_mlib_asprintf_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_asprintf_result]())
 	_typeinfo_c2go_mlib_cookie_state = _c2go_rtype(reflect.TypeFor[c2go_mlib_cookie_state]())
+	_typeinfo_c2go_mlib_dirent_retire_owner = _c2go_rtype(reflect.TypeFor[c2go_mlib_dirent_retire_owner]())
 	_typeinfo_c2go_mlib_getcwd_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_getcwd_result]())
 	_typeinfo_c2go_mlib_realpath_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_realpath_result]())
 	_typeinfo_c2go_mlib_scan_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_scan_result]())
@@ -157,6 +164,9 @@ func init() {
 
 //go:linkname MlibAsprintfUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_asprintf_unprefixed_selftest
 func MlibAsprintfUnprefixedSelftest() int32
+
+//go:linkname MlibDirentRetireUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_dirent_retire_unprefixed_selftest
+func MlibDirentRetireUnprefixedSelftest() int32
 
 //go:linkname MlibDirentUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_dirent_unprefixed_selftest
 func MlibDirentUnprefixedSelftest() int32

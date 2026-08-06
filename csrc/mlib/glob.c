@@ -173,13 +173,17 @@ static int mlib_do_glob(char *buffer, size_t position, int type, char *pattern,
                               separator ? separator : "", flags,
                               error_function, tail);
         if (result) {
+            entry = (void *)0;
             mlib_closedir(directory);
+            directory = (void *)0;
             return result;
         }
     }
     read_error = errno;
     if (separator) *separator = saved_separator;
+    entry = (void *)0;
     mlib_closedir(directory);
+    directory = (void *)0;
     if (read_error &&
         (error_function(buffer, errno) || (flags & GLOB_ERR)))
         return GLOB_ABORTED;

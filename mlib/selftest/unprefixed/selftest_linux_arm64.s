@@ -11420,6 +11420,148 @@ _Ltmp525:
 	MOVWU ZR, R8
 	JMP _LBB45_4
 _Lfunc_end45:
+	FUNCDATA $0, gclocals·be86e5a039a56de6(SB)
+	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+TEXT ·mlib_dirent_retire_unprefixed_selftest(SB), $80-8
+	PCDATA $1, $-1
+	MOVD RSP, R8
+	MOVW $16, R9
+	MOVD ·_typeinfo_c2go_mlib_dirent_retire_owner(SB), R10
+	STP (R10, R9), 8(R8)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp526:
+	MOVD RSP, R8
+	MOVD 24(R8), R8
+	CBZ R8, _LBB46_5
+	MOVD R8, 80(RSP)
+	MOVD RSP, R8
+	MOVD $_L_str_71<>(SB), R9
+	MOVD R9, 8(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_opendir(SB)
+_Ltmp527:
+	MOVD $runtime·writeBarrier(SB), R10
+	MOVD RSP, R8
+	MOVD runtime·writeBarrier(SB), R10
+	MOVD 80(RSP), R9
+	MOVD 16(R8), R11
+	MOVWU 0(R10), R10
+	MOVD R9, R8
+	CBZW R10, _LBB46_6
+	MOVD RSP, R9
+	MOVD R11, 64(RSP)
+	STP (R8, R11), 8(R9)
+	CALL ·_c2go_writePtr(SB)
+	MOVD 64(RSP), R11
+	CBZ R11, _LBB46_7
+_LBB46_3:
+	PCDATA $1, $1
+	CALL ·ForceGC(SB)
+_Ltmp528:
+	MOVD 80(RSP), R8
+	MOVD RSP, R9
+	MOVD 0(R8), R8
+	MOVD R8, 72(RSP)
+	MOVD R8, 8(R9)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_closedir(SB)
+_Ltmp529:
+	MOVD RSP, R8
+	MOVWU 16(R8), R8
+	CBZW R8, _LBB46_8
+	MOVW $3, R8
+	JMP _LBB46_21
+_LBB46_5:
+	MOVW $1, R8
+	JMP _LBB46_21
+_LBB46_6:
+	MOVD R11, 0(R8)
+	CBNZ R11, _LBB46_3
+_LBB46_7:
+	MOVW $2, R8
+	JMP _LBB46_21
+_LBB46_8:
+	MOVD 80(RSP), R8
+	MOVD 0(R8), R9
+	MOVD 0(R9), R9
+	CBZ R9, _LBB46_10
+	MOVW $4, R8
+	JMP _LBB46_21
+_LBB46_10:
+	MOVD $runtime·writeBarrier(SB), R9
+	MOVWU 0(R9), R9
+	CBZW R9, _LBB46_12
+	MOVD RSP, R9
+	STP (R8, ZR), 8(R9)
+	CALL ·_c2go_writePtr(SB)
+	JMP _LBB46_13
+_LBB46_12:
+	MOVD ZR, 0(R8)
+_LBB46_13:
+	PCDATA $1, $1
+	CALL ·ForceGC(SB)
+_Ltmp530:
+	MOVD 80(RSP), R8
+	WORD $0xf8408509
+	CBZ R9, _LBB46_15
+	MOVW $5, R8
+	JMP _LBB46_21
+_LBB46_15:
+	MOVD RSP, R10
+	MOVD R8, 72(RSP)
+	MOVD R8, 16(R10)
+	MOVD $_L_str_71<>(SB), R8
+	STP (ZR, ZR), 24(R10)
+	MOVD R8, 8(R10)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc∕mlib·mlib_scandir(SB)
+_Ltmp531:
+	MOVD RSP, R8
+	MOVWU 40(R8), R8
+	CMPW $2, R8
+	BLT _LBB46_20
+	MOVD 80(RSP), R8
+	MOVD 8(R8), R8
+	CBZ R8, _LBB46_20
+	MOVD 0(R8), R8
+	CBZ R8, _LBB46_20
+	PCDATA $1, $1
+	CALL ·ForceGC(SB)
+_Ltmp532:
+	MOVD $runtime·writeBarrier(SB), R9
+	MOVD 80(RSP), R8
+	MOVD runtime·writeBarrier(SB), R9
+	ADD $8, R8, R8
+	MOVWU 0(R9), R9
+	CBZW R9, _LBB46_22
+	MOVD RSP, R9
+	STP (R8, ZR), 8(R9)
+	CALL ·_c2go_writePtr(SB)
+	JMP _LBB46_23
+_LBB46_20:
+	MOVW $6, R8
+_LBB46_21:
+	MOVW R8, 104(RSP)
+	RET
+_LBB46_22:
+	MOVD ZR, 0(R8)
+_LBB46_23:
+	PCDATA $1, $1
+	CALL ·ForceGC(SB)
+_Ltmp533:
+	MOVD 80(RSP), R8
+	MOVD 8(R8), R8
+	CBZ R8, _LBB46_25
+	MOVW $7, R8
+	JMP _LBB46_21
+_LBB46_25:
+	PCDATA $1, $0
+	CALL ·ForceGC(SB)
+_Ltmp534:
+	MOVWU ZR, R8
+	JMP _LBB46_21
+_Lfunc_end46:
 DATA _L_str<>+0(SB)/1, $0x2e
 DATA _L_str<>+1(SB)/1, $0x00
 GLOBL _L_str<>(SB), RODATA, $2
@@ -12732,5 +12874,9 @@ GLOBL _L_str_69<>(SB), RODATA, $2
 DATA _L_str_1_70<>+0(SB)/1, $0x00
 GLOBL _L_str_1_70<>(SB), RODATA, $1
 
-	FUNCDATA $0, gclocals·be86e5a039a56de6(SB)
-	FUNCDATA $1, gclocals·4c2d44d481de39d2(SB)
+DATA _L_str_71<>+0(SB)/1, $0x2e
+DATA _L_str_71<>+1(SB)/1, $0x00
+GLOBL _L_str_71<>(SB), RODATA, $2
+
+	FUNCDATA $0, gclocals·be91aa5e7697217d(SB)
+	FUNCDATA $1, gclocals·1942d0bd56393aef(SB)

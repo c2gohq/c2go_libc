@@ -25,7 +25,9 @@
 /* The managed stream contains its direct Go state pointer and the stable
  * entry buffer returned by readdir. Heap instances are created inside mlib's
  * opendir/fdopendir with typed gc_malloc; closedir clears the state pointer and
- * leaves object reclamation to the Go GC. */
+ * leaves object reclamation to the Go GC. Because closedir receives the handle
+ * by value, callers must discard and preferably assign NULL to their DIR *
+ * owner after a successful close. */
 typedef struct {
     void *managed _state;
     /* Keep the embedded no-pointer record as bytes. Header-defined struct
@@ -59,9 +61,9 @@ C2GO_MLIB_NAME(DIR) *C2GO_MLIB_NAME(fdopendir)(int)
 
 /* The result graph returned by managed scandir is allocated with gc_malloc:
  * both the pointer array and every dirent are Go-GC-owned. Keep the returned
- * pointers only in managed storage and drop them when finished; never pass
- * either level to free(). The selector and comparator are ordinary c2go
- * internal-ABI callbacks, as with the root libc scandir API. */
+ * pointers only in managed storage and assign the last owning pointer NULL
+ * when finished; never pass either level to free(). The selector and comparator
+ * are ordinary c2go internal-ABI callbacks, as with the root libc scandir API. */
 int C2GO_MLIB_NAME(scandir)(const char *, struct dirent ***,
     int (*)(const struct dirent *),
     int (*)(const struct dirent **, const struct dirent **))

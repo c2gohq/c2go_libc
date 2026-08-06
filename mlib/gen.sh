@@ -338,6 +338,7 @@ generate_mode() {
 	local realpath_selftest
 	local getcwd_selftest
 	local stdio_retire_selftest
+	local dirent_retire_selftest
 	case "$mode" in
 		namespaced)
 			string_selftest=mlib_string_prefixed_selftest
@@ -345,6 +346,7 @@ generate_mode() {
 			realpath_selftest=mlib_realpath_prefixed_selftest
 			getcwd_selftest=mlib_getcwd_prefixed_selftest
 			stdio_retire_selftest=mlib_stdio_retire_prefixed_selftest
+			dirent_retire_selftest=mlib_dirent_retire_prefixed_selftest
 			;;
 		unprefixed)
 			string_selftest=mlib_string_unprefixed_selftest
@@ -352,6 +354,7 @@ generate_mode() {
 			realpath_selftest=mlib_realpath_unprefixed_selftest
 			getcwd_selftest=mlib_getcwd_unprefixed_selftest
 			stdio_retire_selftest=mlib_stdio_retire_unprefixed_selftest
+			dirent_retire_selftest=mlib_dirent_retire_unprefixed_selftest
 			;;
 		*) echo "mlib/gen.sh: unknown namespace mode $mode" >&2; exit 1 ;;
 	esac
@@ -411,6 +414,18 @@ generate_mode() {
 		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
 			"$stdio_retire_selftest" mlib_fclose 2 \
 			"$mode managed standard-stream close routing"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$dirent_retire_selftest" mlib_opendir 1 \
+			"$mode managed DIR open routing"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$dirent_retire_selftest" mlib_closedir 1 \
+			"$mode managed DIR close routing"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$dirent_retire_selftest" mlib_scandir 1 \
+			"$mode managed scandir routing"
+		verify_function_write_barrier "$test_dir/selftest_${goos}_${arch}.s" \
+			"$dirent_retire_selftest" \
+			"$mode managed DIR/scandir owner retirement"
 		out="$tmp/out_${mode}_${goos}_${arch}"
 		mkdir -p "$out"
 		"$C2GOBIND" -pkgname="$mode" -goname="selftest_${goos}_${arch}" \

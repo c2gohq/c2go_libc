@@ -62,10 +62,13 @@ static void example(void) {
     mlib_DIR *dir = mlib_opendir(".");
     struct dirent *entry = mlib_readdir(dir);
     mlib_closedir(dir);
+    entry = NULL; /* Borrowed from dir; do not retain it after close. */
+    dir = NULL;   /* closedir cannot clear a by-value caller owner. */
 
-    struct dirent **names;
+    struct dirent **names = NULL;
     int count = mlib_scandir(".", &names, NULL, by_name);
-    /* Use names[0..count), then drop all references. Do not call free(). */
+    /* Use names[0..count), then retire the result root. */
+    names = NULL; /* Do not call free() on either level. */
 
     mlib_glob_t matches = {0};
     if (mlib_glob("*.c", 0, NULL, &matches) == 0) {
@@ -130,6 +133,8 @@ static void example(void) {
     DIR *dir = opendir(".");
     struct dirent *entry = readdir(dir);
     closedir(dir);
+    entry = NULL;
+    dir = NULL;
 
     FILE *file = fopen("result.txt", "w");
     if (file) {
@@ -172,10 +177,12 @@ share the same behavior core and differ only in state resolution (direct
 managed pointer versus unmanaged handle ID). Pointer-bearing C containers are selectively
 instantiated with typed GC storage. Managed `opendir` and
 `fdopendir` allocate the carrier internally with typed `gc_malloc`; `closedir`
-clears its state pointer and lets the GC reclaim the carrier. Managed `scandir` allocates
+clears its state pointer and lets the GC reclaim the carrier; because the C API
+takes the pointer by value, the caller must then assign its `DIR *` owner
+`NULL`. Managed `scandir` allocates
 both its result array and each `dirent` on the Go heap. They must remain in
-managed storage and are reclaimed by dropping references, not by calling
-`free`. Its sort uses typed pointer stores instead of bytewise `qsort`.
+managed storage and are reclaimed by assigning the last result owner `NULL`,
+not by calling `free`. Its sort uses typed pointer stores instead of bytewise `qsort`.
 The caller must keep the returned pointer graph in managed locals, fields, or
 globals; the examples use a managed pragma around the owning code for that
 reason.
@@ -363,10 +370,13 @@ static void example(void) {
     mlib_DIR *dir = mlib_opendir(".");
     struct dirent *entry = mlib_readdir(dir);
     mlib_closedir(dir);
+    entry = NULL; /* 借用自 dir，关闭后不能继续持有。 */
+    dir = NULL;   /* closedir 无法清空按值传入的调用方 owner。 */
 
-    struct dirent **names;
+    struct dirent **names = NULL;
     int count = mlib_scandir(".", &names, NULL, by_name);
-    /* 使用 names[0..count) 后丢弃引用；不要调用 free()。 */
+    /* 使用 names[0..count) 后清除结果根。 */
+    names = NULL; /* 两层对象都不能调用 free()。 */
 
     mlib_glob_t matches = {0};
     if (mlib_glob("*.c", 0, NULL, &matches) == 0) {
@@ -427,6 +437,8 @@ static void example(void) {
     DIR *dir = opendir(".");
     struct dirent *entry = readdir(dir);
     closedir(dir);
+    entry = NULL;
+    dir = NULL;
 
     FILE *file = fopen("result.txt", "w");
     if (file) {
@@ -466,8 +478,10 @@ POSIX regex，以及 GC-owned `strdup`、`strndup`、`wcsdup`、`asprintf`、
 unmanaged handle ID
 查表；包含指针的 C 容器则使用 typed GC storage 选择性实例化。managed `opendir`
 和 `fdopendir` 在内部使用 typed `gc_malloc` 分配 carrier；`closedir` 清空状态
-指针，由 GC 回收 carrier。managed `scandir` 的结果数组及每个 `dirent` 都位于
-Go heap，必须保存在 managed storage 中，使用完只需丢弃引用，不能调用 `free`；
+指针，由 GC 回收 carrier；由于 C 接口按值传入指针，调用方随后还必须把自己的
+`DIR *` owner 赋成 `NULL`。managed `scandir` 的结果数组及每个 `dirent` 都位于
+Go heap，必须保存在 managed storage 中，使用完把最后一个结果 owner 赋成
+`NULL`，不能调用 `free`；
 排序过程使用 typed pointer store，不使用按字节交换的 `qsort`。调用方必须把返回
 的 pointer graph 保存在 managed 局部变量、字段或全局变量中，因此示例在持有这些
 对象的代码外使用了 managed pragma。

@@ -132,14 +132,18 @@ directory state pointer and is created by typed `gc_malloc`; `closedir` clears
 the pointer and never calls ordinary `free`. The state/enumeration behavior is
 shared with root libc through `internal/posixdir`, while the managed C carrier
 is selectively instantiated once as `mlib_*`. Unprefixed headers route standard
-names to that one instance rather than compiling a second copy.
+names to that one instance rather than compiling a second copy. Since POSIX
+`closedir` receives `DIR *` by value, it cannot clear the caller's owner;
+internal users and public callers must discard borrowed entries and assign the
+closed `DIR *` slot `NULL`.
 
 `scandir` is now selectively instantiated for mlib. Its growable result uses a
 one-pointer record as the repeated `gc_malloc_array` element descriptor; every
 directory entry is a separate no-pointer Go-heap object. Growth copies elements
 with typed pointer assignments, and an in-place heapsort swaps pointers through
 write barriers instead of using bytewise `qsort`. The returned graph is GC-owned
-and must never be passed to `free`.
+and must never be passed to `free`; the caller logically releases it by assigning
+the last managed result owner `NULL`.
 
 Unix `nftw`/`ftw` are also selectively instantiated from the pinned musl
 sources. The source-renaming wrapper substitutes mlib's managed `DIR`
@@ -332,7 +336,9 @@ above. Keep the following gates in place:
 
 1. Run semaphore and the complete pthread state family under C, race, and
    GC-stress regression on all release targets.
-2. Run the DIR propagation cluster under GC-stress regression.
+2. Run the DIR propagation cluster under GC-stress regression; verify
+   `closedir` retires the carrier state and every internal/caller owner is set
+   to `NULL`, including the final `scandir` result owner.
 3. Run the managed FILE process-stream phase under native and GC-stress
    regression; verify close retires the direct lock and standard-stream global
    roots, then require caller-owned `FILE *` values to be set to `NULL`.

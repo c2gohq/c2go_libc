@@ -41,6 +41,7 @@ c2go_extern mlib_DIR *mlib_opendir(const char *name)
     mlib_DIR *dir = gc_malloc(c2go_typeinfo(mlib_DIR), sizeof(*dir));
     if (!dir) {
         (void)__c2go_mlib_dir_close(state);
+        state = (mlib_dir_state)0;
         errno = ENOMEM;
         return (void *)0;
     }
@@ -84,6 +85,7 @@ c2go_extern int mlib_closedir(mlib_DIR *dir)
     mlib_dir_state state = dir->_state;
     dir->_state = (mlib_dir_state)0;
     int r = __c2go_mlib_dir_close(state);
+    state = (mlib_dir_state)0;
     if (r < 0) {
         errno = -r;
         return -1;
@@ -120,6 +122,7 @@ c2go_extern mlib_DIR *mlib_fdopendir(int fd)
     mlib_DIR *dir = gc_malloc(c2go_typeinfo(mlib_DIR), sizeof(*dir));
     if (!dir) {
         (void)__c2go_mlib_dir_close(state);
+        state = (mlib_dir_state)0;
         errno = ENOMEM;
         return (void *)0;
     }

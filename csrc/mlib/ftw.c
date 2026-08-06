@@ -19,10 +19,20 @@
 
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
 
+/* The pinned musl traversal takes DIR * by value. Keep that source unchanged,
+ * but make the mlib instantiation retire its local owning slot immediately
+ * after closedir invalidates the managed carrier. */
+static int mlib_nftw_closedir(mlib_DIR **slot)
+{
+    int result = mlib_closedir(*slot);
+    *slot = (void *)0;
+    return result;
+}
+
 #define DIR       mlib_DIR
 #define fdopendir mlib_fdopendir
 #define readdir   mlib_readdir
-#define closedir  mlib_closedir
+#define closedir(d) mlib_nftw_closedir(&(d))
 #define dirfd     mlib_dirfd
 #define nftw      mlib_nftw
 #define ftw       mlib_ftw
