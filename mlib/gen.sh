@@ -222,6 +222,14 @@ verify_managed_write_barriers() {
 		GCMalloc 1 "managed strndup allocation"
 	verify_function_symbol_call_count "$asm_path" mlib_wcsdup \
 		GCMalloc 1 "managed wcsdup allocation"
+	verify_function_symbol_call_count "$asm_path" mlib_vasprintf \
+		GCMalloc 1 "managed vasprintf allocation"
+	verify_function_write_barrier "$asm_path" mlib_store_formatted_pointer \
+		"managed vasprintf result stores"
+	verify_function_call_count "$asm_path" mlib_vasprintf \
+		mlib_store_formatted_pointer 2 "managed vasprintf result retirement and publication"
+	verify_function_call_count "$asm_path" mlib_asprintf \
+		mlib_vasprintf 1 "managed asprintf variadic forwarding"
 }
 
 TARGETS=(
@@ -251,6 +259,7 @@ LIB_SOURCES=(
 	# rewrite the existing large TRE assembly on every regeneration.
 	"$ROOT/csrc/mlib/string.c"
 	"$ROOT/csrc/mlib/wstring.c"
+	"$ROOT/csrc/mlib/asprintf.c"
 )
 
 # Build the selectively-instantiated C part of package mlib once per target.
@@ -317,9 +326,16 @@ generate_mode() {
 	local test_dir="$MLIB_DIR/selftest/$mode"
 	local test_mod="$MOD/mlib/selftest/$mode"
 	local string_selftest
+	local asprintf_selftest
 	case "$mode" in
-		namespaced) string_selftest=mlib_string_prefixed_selftest ;;
-		unprefixed) string_selftest=mlib_string_unprefixed_selftest ;;
+		namespaced)
+			string_selftest=mlib_string_prefixed_selftest
+			asprintf_selftest=mlib_asprintf_prefixed_selftest
+			;;
+		unprefixed)
+			string_selftest=mlib_string_unprefixed_selftest
+			asprintf_selftest=mlib_asprintf_unprefixed_selftest
+			;;
 		*) echo "mlib/gen.sh: unknown namespace mode $mode" >&2; exit 1 ;;
 	esac
 	echo "== mlib/selftest/$mode ($test_mod) =="
@@ -356,6 +372,12 @@ generate_mode() {
 		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
 			"$string_selftest" mlib_wcsdup 1 \
 			"$mode standard/namespaced wcsdup routing"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$asprintf_selftest" mlib_asprintf 2 \
+			"$mode standard/namespaced asprintf routing"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			c2go_mlib_asprintf_test_vcall mlib_vasprintf 1 \
+			"$mode standard/namespaced vasprintf routing"
 		out="$tmp/out_${mode}_${goos}_${arch}"
 		mkdir -p "$out"
 		"$C2GOBIND" -pkgname="$mode" -goname="selftest_${goos}_${arch}" \

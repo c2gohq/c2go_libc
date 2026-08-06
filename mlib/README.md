@@ -36,6 +36,12 @@ static void example(void) {
     /* Use label, then sever the owning root instead of calling free(). */
     label = NULL;
 
+    char *managed message = NULL;
+    if (mlib_asprintf(&message, "managed-%d", 42) >= 0) {
+        /* Use message, then retire the GC root explicitly. */
+        message = NULL;
+    }
+
     mlib_sem_t sem;
     mlib_sem_init(&sem, 0, 1);
 
@@ -142,7 +148,8 @@ implements unnamed semaphores; pthread lifecycle, thread-specific keys,
 mutexes, condition variables, and rwlocks; the directory-stream lifecycle;
 `scandir`; Unix `nftw`/`ftw`; `glob`; managed search trees, hash tables, and
 queues; and the ownership-closed managed `FILE` surface, including process
-streams; managed POSIX regex; plus GC-owned `strdup`, `strndup`, and `wcsdup`.
+streams; managed POSIX regex; plus GC-owned `strdup`, `strndup`, `wcsdup`,
+`asprintf`, and `vasprintf`.
 Where state lives in Go, root libc and mlib
 share the same behavior core and differ only in state resolution (direct
 managed pointer versus unmanaged handle ID). Pointer-bearing C containers are selectively
@@ -166,6 +173,16 @@ to `NULL` after use so the buffer becomes unreachable promptly. In unprefixed
 mode the standard C source spellings are preprocessor aliases to the single
 `mlib_` implementation; this avoids conflicting LLVM libcall routes in
 multi-translation-unit LTO.
+
+Managed `asprintf` and `vasprintf` reuse root libc's stateless `vsnprintf`
+formatting engine but allocate the result with no-scan `gc_malloc`. Their
+`char **` output must identify a managed pointer slot. The address is used only
+during the call, so a managed local in the current frame or a field in a typed
+GC record is valid. The implementation clears that slot before doing any work,
+leaves it `NULL` after every failure, and publishes a complete result through a
+write barrier. Never call `free` on the result; assign its final owner `NULL`.
+Replacement mode maps the standard source spellings to the same single
+`mlib_` implementation.
 
 Managed `nftw` and `ftw` selectively instantiate musl's stateless walk
 algorithm over mlib's `DIR` operations; they do not allocate a second state
@@ -279,6 +296,12 @@ static void example(void) {
     /* 使用后主动断开根，不调用 free()。 */
     label = NULL;
 
+    char *managed message = NULL;
+    if (mlib_asprintf(&message, "managed-%d", 42) >= 0) {
+        /* 使用后显式清除最后一个 GC root。 */
+        message = NULL;
+    }
+
     mlib_sem_t sem;
     mlib_sem_init(&sem, 0, 1);
 
@@ -381,7 +404,8 @@ family header（例如 `<c2go/mlib/stdio.h>`、`<c2go/mlib/dirent.h>`）；在�
 信号量、pthread 的线程生命周期、线程私有 key、mutex/condition variable/
 rwlock、目录流生命周期、`scandir`、Unix `nftw`/`ftw`、`glob`、managed
 search tree/hash/queue、包含进程流的 ownership-closed managed `FILE`、managed
-POSIX regex，以及 GC-owned `strdup`、`strndup`、`wcsdup`。位于 Go 中的状态逻辑
+POSIX regex，以及 GC-owned `strdup`、`strndup`、`wcsdup`、`asprintf`、
+`vasprintf`。位于 Go 中的状态逻辑
 由 root libc 与 mlib 共用，
 两者只在状态解析方式上不同：`mlib` 直接读取 managed pointer，根 libc 仍通过
 unmanaged handle ID
@@ -401,6 +425,14 @@ managed `strdup`、`strndup` 和 `wcsdup` 复用 root libc 的无状态长度/�
 pointer 主动赋成 `NULL`，让 buffer 及时变成不可达。无前缀模式把标准 C 源码名字
 预处理为唯一的 `mlib_` 实现，从而避免多翻译单元 LTO 中产生冲突的 LLVM
 libcall route。
+
+managed `asprintf` 和 `vasprintf` 复用 root libc 的无状态 `vsnprintf`
+格式化 engine，但结果由 no-scan `gc_malloc` 分配。传入的 `char **` 必须指向
+managed pointer slot；函数不会保留该 slot 的地址，因此当前栈帧内的 managed
+局部变量或 typed GC record 字段都可以使用。实现会先把 slot 清成 `NULL`，任何
+失败路径都保持 `NULL`，只有完整格式化成功后才通过写屏障发布结果。结果不能传给
+`free`，最后使用完必须把持有它的 managed pointer 主动赋成 `NULL`。无前缀模式
+仍然把标准源码名称映射到唯一一份 `mlib_` 实现。
 
 managed `nftw` 和 `ftw` 在 mlib 的 `DIR` 操作之上选择性实例化 musl 的无状态
 遍历算法，不会引入第二套状态模型。回调参数只是当前遍历栈帧的借用视图，回调返回后

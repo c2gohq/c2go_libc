@@ -47,9 +47,10 @@ typedef struct _c2go_mlib_FILE mlib_FILE;
 
 /* Keep FILE-independent stdio utilities available in replacement mode. They
  * use root libc internally but neither accept nor return a FILE carrier and do
- * not create managed ownership graphs. Allocation-returning asprintf remains
- * intentionally excluded; the scanf family below selects managed allocation
- * and pointer-publication policy inside the shared root parser. */
+ * not create managed ownership graphs. The allocation-returning asprintf
+ * family is declared separately below because it needs managed allocation and
+ * pointer publication; the scanf family likewise selects managed allocation
+ * and publication policy inside the shared root parser. */
 int remove(const char *)
     c2go_linkname("github.com/c2gohq/c2go_libc.remove", C2GO_GOABI0);
 int rename(const char *, const char *)
@@ -71,6 +72,24 @@ int vdprintf(int, const char *__restrict, va_list)
 typedef long long C2GO_MLIB_NAME(fpos_t);
 
 #pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
+
+/* The result is a GC-owned no-pointer buffer and must be stored in a managed
+ * pointer slot. The call does not retain the slot address, so a managed local
+ * in the current frame is valid. The slot is cleared before formatting, stays
+ * NULL on every failure path, and is published with a write barrier only after
+ * formatting succeeds. Never pass the result to free(); assign the final
+ * managed owner NULL after use. */
+int mlib_vasprintf(char **__restrict, const char *__restrict, va_list)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_vasprintf", C2GO_GOABI0);
+int mlib_asprintf(char **__restrict, const char *__restrict, ...)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_asprintf", C2GO_GOABI0);
+
+/* Keep a single prefixed IR implementation when replacement and root
+ * translation units are merged into one LTO package. */
+#ifdef C2GO_MLIB_UNPREFIXED
+#define vasprintf mlib_vasprintf
+#define asprintf mlib_asprintf
+#endif
 
 /* FILE stays opaque. Instances returned here are typed Go-heap objects: their
  * raw musl engine is a no-scan byte region, while the buffer, lock, and list

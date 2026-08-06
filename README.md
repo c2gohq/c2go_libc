@@ -65,7 +65,8 @@ pthread lifecycle, keys, and synchronization; the complete managed directory
 propagation cluster (`DIR`, `scandir`, `nftw`/`ftw`, and `glob`); managed
 standard, explicit, memory, custom, wide, and process streams; and managed
 `search.h` tree, hash-table, and queue containers; and POSIX regular
-expressions backed by a per-object GC arena.
+expressions backed by a per-object GC arena. Managed allocation helpers include
+`strdup`/`strndup`/`wcsdup` and `asprintf`/`vasprintf`, with GC-owned results.
 
 Managed names are explicit by default (`mlib_sem_t`, `mlib_sem_init`,
 `mlib_pthread_mutex_t`, `mlib_pthread_mutex_lock`, `mlib_DIR`,
@@ -82,7 +83,7 @@ and may be used only with pointer-free elements. See
 [mlib/README.md](mlib/README.md) for examples and constraints.
 
 The current handle-table carrier migration is complete, but the managed
-allocation surface is not. Allocation-returning byte-buffer APIs and
+allocation surface is not. Remaining allocation-returning buffers and
 pointer-bearing owned graphs are tracked separately. Managed POSIX regex is
 implemented by selectively compiling a second TRE instance: all of its
 allocations use `gc_malloc`, and a per-`regex_t` Go arena directly roots every

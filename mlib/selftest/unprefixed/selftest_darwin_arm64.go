@@ -20,6 +20,9 @@ type DIR struct {
 	_state unsafe.Pointer
 	_entry [280]int8
 }
+type c2go_mlib_asprintf_result struct {
+	formatted *byte
+}
 type c2go_mlib_cookie_state struct {
 	bytes    [128]int8
 	snapshot *byte
@@ -107,12 +110,13 @@ type mlib_hsearch_table struct{}
 // _typeinfo_<X> var below; each caches the *runtime._type computed
 // once at init via reflect.TypeFor[T] (no value construction).
 var (
-	_typeinfo_c2go_mlib_cookie_state   unsafe.Pointer
-	_typeinfo_c2go_mlib_scan_result    unsafe.Pointer
-	_typeinfo_c2go_mlib_search_item    unsafe.Pointer
-	_typeinfo_c2go_mlib_search_payload unsafe.Pointer
-	_typeinfo_c2go_mlib_search_queue   unsafe.Pointer
-	_typeinfo_pthread_mutex_t          unsafe.Pointer
+	_typeinfo_c2go_mlib_asprintf_result unsafe.Pointer
+	_typeinfo_c2go_mlib_cookie_state    unsafe.Pointer
+	_typeinfo_c2go_mlib_scan_result     unsafe.Pointer
+	_typeinfo_c2go_mlib_search_item     unsafe.Pointer
+	_typeinfo_c2go_mlib_search_payload  unsafe.Pointer
+	_typeinfo_c2go_mlib_search_queue    unsafe.Pointer
+	_typeinfo_pthread_mutex_t           unsafe.Pointer
 )
 
 // reflect.Type's 2nd interface word is the *runtime._type mallocgc wants.
@@ -121,6 +125,7 @@ func _c2go_rtype(t reflect.Type) unsafe.Pointer {
 }
 
 func init() {
+	_typeinfo_c2go_mlib_asprintf_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_asprintf_result]())
 	_typeinfo_c2go_mlib_cookie_state = _c2go_rtype(reflect.TypeFor[c2go_mlib_cookie_state]())
 	_typeinfo_c2go_mlib_scan_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_scan_result]())
 	_typeinfo_c2go_mlib_search_item = _c2go_rtype(reflect.TypeFor[c2go_mlib_search_item]())
@@ -132,6 +137,9 @@ func init() {
 // ─── Function declarations ──────────────────────────────────
 // Bodies provided by clang-emitted Plan 9 .s with TEXT ·<name>(SB)
 // at ABI0. Go compiler auto-generates the ABIInternal wrapper.
+
+//go:linkname MlibAsprintfUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_asprintf_unprefixed_selftest
+func MlibAsprintfUnprefixedSelftest() int32
 
 //go:linkname MlibDirentUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_dirent_unprefixed_selftest
 func MlibDirentUnprefixedSelftest() int32

@@ -32266,6 +32266,167 @@ _LBB170_5:
 	MOVD R8, 96(RSP)
 	RET
 _Lfunc_end170:
+	FUNCDATA $0, gclocals·77404dbf8600c621(SB)
+	FUNCDATA $1, gclocals·62d682c46a1fe54f(SB)
+TEXT ·mlib_vasprintf(SB), $176-56
+	PCDATA $1, $-1
+	MOVD 200(RSP), R8
+	STP (ZR, ZR), 152(RSP)
+	MOVD ZR, 168(RSP)
+	CBZ R8, _LBB171_6
+	LDP 224(RSP), (R9, R10)
+	MOVD R8, 112(RSP)
+	MOVD ZR, 96(RSP)
+	STP (R9, R10), 136(RSP)
+	LDP 208(RSP), (R11, R9)
+	STP (R11, R9), 120(RSP)
+	MOVD RSP, R9
+	STP (R8, ZR), 8(R9)
+	PCDATA $1, $1
+	CALL ·mlib_store_formatted_pointer(SB)
+_Ltmp1035:
+	LDP 120(RSP), (R9, R8)
+	MOVD RSP, R10
+	MOVD 96(RSP), R11
+	MOVD R8, 152(RSP)
+	STP (R11, R11), 8(R10)
+	STP (R9, R8), 24(R10)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·vsnprintf(SB)
+_Ltmp1036:
+	MOVD RSP, R8
+	MOVWU 64(R8), R8
+	TBNZ $31, R8, _LBB171_7
+	MOVW R8, 96(RSP)
+	ADDW $1, R8, R8
+	MOVWU R8, R10
+	MOVD RSP, R8
+	MOVD ZR, 8(R8)
+	MOVD R10, 88(RSP)
+	MOVD R10, 16(R8)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp1037:
+	MOVD RSP, R8
+	MOVD 24(R8), R8
+	CBZ R8, _LBB171_8
+	WORD $0x295e27ea
+	LDP 120(RSP), (R11, R12)
+	MOVD RSP, R15
+	LDP 136(RSP), (R13, R14)
+	MOVD R8, 104(RSP)
+	STPW (R10, R9), 56(R15)
+	MOVD 88(RSP), R9
+	STP (R11, R12), 24(R15)
+	STP (R13, R14), 40(R15)
+	STP (R8, R9), 8(R15)
+	PCDATA $1, $2
+	CALL github·com∕c2gohq∕c2go_libc·vsnprintf(SB)
+_Ltmp1038:
+	MOVD RSP, R8
+	MOVWU 96(RSP), R9
+	MOVWU 64(R8), R8
+	CMPW R9, R8
+	BLS _LBB171_11
+	BLE _LBB171_7
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp1039:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $75, R10
+	JMP _LBB171_9
+_LBB171_6:
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp1040:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $22, R10
+	JMP _LBB171_9
+_LBB171_7:
+	MOVW $-1, R8
+	JMP _LBB171_10
+_LBB171_8:
+	PCDATA $1, $3
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp1041:
+	MOVD RSP, R8
+	MOVW $-1, R9
+	MOVW $12, R10
+_LBB171_9:
+	MOVD 8(R8), R8
+	MOVW R10, 0(R8)
+	MOVWU R9, R8
+_LBB171_10:
+	MOVW R8, 248(RSP)
+	RET
+_LBB171_11:
+	LDP 104(RSP), (R10, R9)
+	MOVW R8, 96(RSP)
+	MOVD RSP, R8
+	STP (R9, R10), 8(R8)
+	PCDATA $1, $4
+	CALL ·mlib_store_formatted_pointer(SB)
+_Ltmp1042:
+	MOVWU 96(RSP), R8
+	JMP _LBB171_10
+_Lfunc_end171:
+	FUNCDATA $0, gclocals·77511564849c08d8(SB)
+	FUNCDATA $1, gclocals·272a7b280948cc1b(SB)
+DATA gclocals·272a7b280948cc1b+0(SB)/4, $5
+DATA gclocals·272a7b280948cc1b+4(SB)/4, $23
+DATA gclocals·272a7b280948cc1b+8(SB)/1, $0x00
+DATA gclocals·272a7b280948cc1b+9(SB)/1, $0x00
+DATA gclocals·272a7b280948cc1b+10(SB)/1, $0x00
+DATA gclocals·272a7b280948cc1b+11(SB)/1, $0x00
+DATA gclocals·272a7b280948cc1b+12(SB)/1, $0xc0
+DATA gclocals·272a7b280948cc1b+13(SB)/1, $0x3f
+DATA gclocals·272a7b280948cc1b+14(SB)/1, $0x00
+DATA gclocals·272a7b280948cc1b+15(SB)/1, $0xe0
+DATA gclocals·272a7b280948cc1b+16(SB)/1, $0x3f
+DATA gclocals·272a7b280948cc1b+17(SB)/1, $0x00
+DATA gclocals·272a7b280948cc1b+18(SB)/1, $0x00
+DATA gclocals·272a7b280948cc1b+19(SB)/1, $0x38
+DATA gclocals·272a7b280948cc1b+20(SB)/1, $0x00
+DATA gclocals·272a7b280948cc1b+21(SB)/1, $0x60
+DATA gclocals·272a7b280948cc1b+22(SB)/1, $0x38
+GLOBL gclocals·272a7b280948cc1b(SB), DUPOK|RODATA, $23
+
+TEXT ·mlib_store_formatted_pointer(SB), $32-16
+	PCDATA $1, $-1
+	MOVD $runtime·writeBarrier(SB), R8
+	MOVWU 0(R8), R10
+	LDP 56(RSP), (R8, R9)
+	CBZW R10, _LBB172_2
+	MOVD RSP, R10
+	STP (R8, R9), 8(R10)
+	CALL ·_c2go_writePtr(SB)
+	JMP _LBB172_3
+_LBB172_2:
+	MOVD R9, 0(R8)
+_LBB172_3:
+	RET
+_Lfunc_end172:
+	FUNCDATA $0, gclocals·6bf7f2318a9406bf(SB)
+	FUNCDATA $1, gclocals·2c8d835d1806f483(SB)
+TEXT ·mlib_asprintf(SB), $96-24
+	PCDATA $1, $-1
+	LDP 128(RSP), (R8, R9)
+	MOVD RSP, R11
+	MOVD 120(RSP), R10
+	STP (R8, R9), 88(RSP)
+	MOVD R10, 80(RSP)
+	STP (R8, R9), 16(R11)
+	MOVD R10, 8(R11)
+	PCDATA $1, $1
+	CALL ·mlib_vasprintf(SB)
+_Ltmp1043:
+	MOVD RSP, R8
+	MOVWU 56(R8), R8
+	MOVW R8, 144(RSP)
+	RET
+_Lfunc_end173:
 DATA _L_str<>+0(SB)/1, $0x48
 DATA _L_str<>+1(SB)/1, $0x4f
 DATA _L_str<>+2(SB)/1, $0x4d
@@ -32478,5 +32639,5 @@ DATA ·tre_macros+192(SB)/8, $0x0000000000000000
 DATA ·tre_macros+200(SB)/8, $0x0000000000000000
 GLOBL ·tre_macros(SB), NOPTR, $208
 
-	FUNCDATA $0, gclocals·77404dbf8600c621(SB)
-	FUNCDATA $1, gclocals·62d682c46a1fe54f(SB)
+	FUNCDATA $0, gclocals·0556bc3a5dbf06ca(SB)
+	FUNCDATA $1, gclocals·9bdef135f37a84c6(SB)

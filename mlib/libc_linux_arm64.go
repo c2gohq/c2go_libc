@@ -178,6 +178,9 @@ func __mlib_tre_mem_alloc_impl(mem *tre_mem_struct, provided int32, provided_blo
 func __mlib_tre_mem_destroy(mem *tre_mem_struct)
 func __mlib_tre_mem_new_impl(provided int32, provided_block unsafe.Pointer) *tre_mem_struct
 
+//go:linkname MlibAsprintf github.com/c2gohq/c2go_libc/mlib.mlib_asprintf
+func MlibAsprintf(output **byte, format *byte, argptrs unsafe.Pointer) int32
+
 //go:linkname MlibClearerr github.com/c2gohq/c2go_libc/mlib.mlib_clearerr
 func MlibClearerr(stream *_c2go_mlib_FILE)
 
@@ -480,6 +483,9 @@ func MlibUngetc(character int32, stream *_c2go_mlib_FILE) int32
 
 //go:linkname MlibUngetwc github.com/c2gohq/c2go_libc/mlib.mlib_ungetwc
 func MlibUngetwc(character uint32, stream *_c2go_mlib_FILE) uint32
+
+//go:linkname MlibVasprintf github.com/c2gohq/c2go_libc/mlib.mlib_vasprintf
+func MlibVasprintf(output **byte, format *byte, arguments __va_list) int32
 
 //go:linkname MlibVfprintf github.com/c2gohq/c2go_libc/mlib.mlib_vfprintf
 func MlibVfprintf(stream *_c2go_mlib_FILE, format *byte, arguments __va_list) int32

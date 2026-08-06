@@ -261,6 +261,21 @@ generated package therefore still contains one `mlib_` implementation. Results
 must never reach ordinary `free`; the caller retires them by assigning the last
 managed owner to `NULL`.
 
+### Formatted-string allocation cluster
+
+Managed `asprintf` and `vasprintf` share root libc's stateless `vsnprintf`
+engine but allocate the returned no-pointer buffer with `gc_malloc`. Their
+output slot is synchronous and is never retained: it may be a managed local in
+the current frame or a field of a typed GC object. `mlib_vasprintf` first clears
+the slot through a managed write barrier, keeps it `NULL` on measurement,
+allocation, or formatting failure, then publishes only the complete result.
+The caller logically releases that result by assigning the last managed owner
+to `NULL`, never by calling ordinary `free`.
+
+As with the string-duplication family, unprefixed source names are aliases to
+one `mlib_` IR implementation. This keeps root and managed libcall routes from
+becoming ambiguous when multiple translation units enter the same LTO package.
+
 ## Managed allocation inventory
 
 Handle-table carriers and allocation ownership are separate migration axes.
@@ -270,7 +285,7 @@ open for APIs that create caller-owned storage or persistent pointer graphs.
 | Root allocation surface | Managed treatment | Status |
 | --- | --- | --- |
 | `strdup`, `strndup`, `wcsdup` | allocate GC-owned no-pointer byte/rune storage; caller retires the last root by assigning `NULL` | Implemented |
-| `asprintf`, `vasprintf` | format into and publish a GC-owned byte buffer | Pending |
+| `asprintf`, `vasprintf` | clear the managed output slot, format into a GC-owned no-pointer buffer, then publish through a write barrier; caller retires the last owner with `NULL` | Implemented |
 | `realpath(path, NULL)` | allocate the result with `gc_malloc`; caller-buffer form can share the root algorithm | Pending |
 | `regcomp`, `regexec`, `regfree` | selectively instantiate TRE; every no-scan GC block is directly rooted by a per-object arena, and each match uses a temporary arena | Implemented |
 | generic `malloc`/`calloc`/`realloc`/`free` | no mlib equivalent: their type-erased ABI cannot describe a precise GC bitmap | Intentionally root-only |
@@ -296,7 +311,10 @@ above. Keep the following gates in place:
    modes; keep its arena publication/retirement barrier gates enabled.
 6. Run managed `strdup`/`strndup`/`wcsdup` through both namespace modes under
    forced GC; keep the final owner-to-`NULL` release pattern in the fixtures.
-7. Reject any generated mlib library that calls root `malloc`, `calloc`,
+7. Run managed `asprintf`/`vasprintf` through both namespace modes under forced
+   GC; retain the generated `GCMalloc`, output-slot clearing, and publication
+   gates.
+8. Reject any generated mlib library that calls root `malloc`, `calloc`,
    `realloc`, or `free`; `mlib/gen.sh` enforces this on every target.
 
 `iconvTab` is not unfinished migration work. An mlib descriptor that stores the
