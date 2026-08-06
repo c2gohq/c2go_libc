@@ -246,13 +246,16 @@ Managed `glob_t.gl_pathv`, its pointer slots, and every returned string form a
 typed GC-owned graph. `GLOB_APPEND` grows it by allocating a new typed vector
 and copying pointers with write barriers. `mlib_globfree` clears the carrier's
 root for early release or reuse; callers must never pass `gl_pathv` or its
-strings to `free`.
+strings to `free`. If the `glob_t` carrier itself came from typed `gc_malloc`,
+assign its final owning `glob_t *` slot `NULL` after `globfree`.
 
 Managed POSIX regex selectively instantiates a second TRE engine under private
 mlib symbols. Its type-erased internal blocks use no-scan `gc_malloc`, but every
 block base is directly rooted by the owning per-`regex_t` Go arena; a separate
 temporary arena owns each synchronous match. `regfree` clears the carrier roots
-instead of traversing ordinary `free`.
+instead of traversing ordinary `free`. A typed-GC-allocated `regex_t` carrier
+still has an outer owner; assign that final `regex_t *` slot `NULL` after
+`regfree`.
 
 Managed `FILE` objects use a typed GC carrier around the shared raw musl stdio
 engine. Their buffer, recursive lock, and open-file-list links are direct
@@ -315,10 +318,11 @@ and `insque`/`remque` retain application pointers in typed GC objects and use
 write barriers for insertion, resizing, rotation, and removal. Keys, values,
 and queue nodes must live in managed storage. Destruction or removal clears
 references and leaves reclamation to the GC; never call `free` on these
-containers. Comparators, walk functions, and destroy functions are synchronous
-c2go internal-ABI callbacks. `lsearch`/`lfind` keep using the root implementation
-because their size-based API erases the element type; use them only with
-pointer-free elements.
+containers. Because `tdestroy` receives its root by value, explicitly assign
+the caller's root variable `NULL` after it returns. Comparators, walk functions,
+and destroy functions are synchronous c2go internal-ABI callbacks.
+`lsearch`/`lfind` keep using the root implementation because their size-based
+API erases the element type; use them only with pointer-free elements.
 
 The handle-table carrier migration is complete for the currently implemented
 families, but managed allocation-returning APIs are a separate open inventory.
@@ -550,12 +554,14 @@ managed `nftw` 和 `ftw` 在 mlib 的 `DIR` 操作之上选择性实例化 musl 
 managed `glob_t.gl_pathv`、其中的 pointer slot 和每个返回字符串共同组成 typed、
 GC-owned 的对象图。`GLOB_APPEND` 会分配新的 typed vector，并通过 write barrier
 复制旧指针。`mlib_globfree` 会清除 carrier 中的根，便于提前释放或复用；调用方
-不能把 `gl_pathv` 或其中的字符串传给 `free`。
+不能把 `gl_pathv` 或其中的字符串传给 `free`。如果 `glob_t` carrier 本身来自
+typed `gc_malloc`，`globfree` 后还要把最后一个 `glob_t *` owner 赋成 `NULL`。
 
 managed POSIX regex 会在私有 mlib 符号下选择性实例化第二份 TRE engine。
 内部 type-erased block 使用 no-scan `gc_malloc`，但每个 block 的基地址都由该
 `regex_t` 的 Go arena 直接持有；每次同步匹配另有临时 arena。`regfree` 只清除
-carrier 根，不会逐项调用普通 `free`。
+carrier 根，不会逐项调用普通 `free`。如果 `regex_t` carrier 本身来自 typed
+`gc_malloc`，`regfree` 后还要把最后一个 `regex_t *` owner 赋成 `NULL`。
 
 managed `FILE` 使用 typed GC carrier 包住共用的 raw musl stdio engine；缓冲区、
 递归锁和打开文件链表都由明确的 managed 字段直接持有。`fopen`/`fdopen` 不会调用
@@ -605,10 +611,11 @@ carrier 本身由 typed `gc_malloc` 分配，调用方还必须把最后一个 `
 managed `tsearch`/`tfind`/`tdelete`/`twalk`/`tdestroy`、`hsearch` family 和
 `insque`/`remque` 会把应用指针保存在 typed GC 对象中，并通过写屏障完成插入、
 扩容、旋转和移除。key、value 与 queue node 必须位于 managed storage；销毁或
-移除只会清除引用，由 GC 回收，不能调用 `free`。comparator、walk 与 destroy
-回调必须是 c2go 编译的同步 internal-ABI 函数。`lsearch`/`lfind` 的 `size_t`
-接口擦除了元素类型，无法生成 pointer bitmap，因此仍复用 root 版本且只允许
-不含指针的元素。
+移除只会清除引用，由 GC 回收，不能调用 `free`。`tdestroy` 按值接收 root，返回后
+必须由调用方把自己的 root 变量赋成 `NULL`。comparator、walk 与 destroy 回调
+必须是 c2go 编译的同步 internal-ABI 函数。`lsearch`/`lfind` 的 `size_t` 接口擦除
+了元素类型，无法生成 pointer bitmap，因此仍复用 root 版本且只允许不含指针的
+元素。
 
 当前已实现 family 的 handle-table carrier 迁移已经闭环，但返回 managed 分配的
 接口是另一份仍开放的清单。POSIX regex 已按上面的 arena ownership 模型实现。

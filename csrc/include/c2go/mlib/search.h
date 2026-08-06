@@ -82,7 +82,9 @@ void C2GO_MLIB_NAME(twalk)(const void *managed,
 
 /* Comparator, walk, and destroy callbacks are synchronous c2go internal-ABI
  * callbacks. tdelete/tdestroy unlink and clear managed roots; detached nodes
- * are reclaimed by the GC and must not be passed to free(). */
+ * are reclaimed by the GC and must not be passed to free(). tdestroy receives
+ * the root by value, so the caller must assign its root variable NULL after
+ * destruction. */
 
 #ifdef _GNU_SOURCE
 c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_tdestroy", C2GO_GOABI0)

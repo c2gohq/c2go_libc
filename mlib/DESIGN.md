@@ -168,6 +168,8 @@ typed objects and their variable-length strings are separate no-pointer
 objects. `GLOB_APPEND` allocates a replacement vector and copies old slots with
 write barriers; sorting uses typed swaps; `globfree` clears the carrier root.
 No ordinary `malloc`, `realloc`, `qsort`, or `free` participates in this graph.
+If a typed-GC-allocated `glob_t` carrier is itself retired, its caller-owned
+pointer is a separate lifetime edge and must also be assigned `NULL`.
 
 ### Search-container cluster
 
@@ -183,7 +185,9 @@ reentrant hash APIs share this same managed implementation.
 The public algorithm shape is shared, but the storage instance cannot be: a
 root node is a noscan C object while an mlib node is a precisely scanned Go
 object. `tdelete`, `tdestroy`, `hdestroy`, and `remque` clear managed roots and
-let the GC reclaim unreachable storage rather than calling `free`.
+let the GC reclaim unreachable storage rather than calling `free`. Since
+`tdestroy` receives the tree root by value, its caller explicitly clears the
+last root variable after destruction.
 
 `lsearch` and `lfind` are deliberately not instantiated for mlib. Their
 `void * + element width` interface performs byte copies without carrying a C
@@ -207,7 +211,9 @@ base. Internal record pointers are used only for C navigation. A successful
 compile publishes the arena through a write barrier. Each `regexec` uses an
 independent goroutine-local temporary arena, so concurrent matches share only
 the immutable compiled TNFA. `regfree` clears the carrier roots and lets the Go
-GC reclaim the whole graph; callers must not pass any part of it to `free`.
+GC reclaim the whole graph; callers must not pass any part of it to `free`. A
+heap `regex_t` carrier has one additional caller-owned edge, which must be set
+to `NULL` after `regfree` when that carrier is retired.
 
 ### FILE cluster
 

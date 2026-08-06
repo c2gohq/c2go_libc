@@ -35,6 +35,10 @@ typedef struct {
     uintptr_t __dummy2[5];
 } C2GO_MLIB_NAME(glob_t);
 
+/* globfree clears gl_pathv and resets gl_pathc. If the glob_t carrier itself
+ * is retired from typed gc_malloc storage, the caller must then assign NULL to
+ * its final owning glob_t * slot. */
+
 int C2GO_MLIB_NAME(glob)(const char *__restrict, int,
     int (*)(const char *, int), C2GO_MLIB_NAME(glob_t) *__restrict)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_glob", C2GO_GOABI0);

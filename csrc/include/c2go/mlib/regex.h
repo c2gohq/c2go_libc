@@ -33,6 +33,10 @@ typedef struct C2GO_MLIB_NAME(regex) {
 	void *managed __c2go_arena;
 } C2GO_MLIB_NAME(regex_t);
 
+/* regfree clears both managed roots. If the regex_t carrier itself is retired
+ * from typed gc_malloc storage, the caller must then assign NULL to its final
+ * owning regex_t * slot. */
+
 int C2GO_MLIB_NAME(regcomp)(C2GO_MLIB_NAME(regex_t) *__restrict,
                             const char *__restrict, int)
     c2go_linkname("github.com/c2gohq/c2go_libc/mlib.mlib_regcomp", C2GO_GOABI0);
