@@ -112,7 +112,10 @@ Managed C allocation must be typed and GC-visible:
 mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 ```
 
-`mlib` does not provide or use `malloc`, `realloc`, or `free`. It currently
+`mlib` does not provide or use `malloc`, `realloc`, or `free`. Include only the
+family headers you use (`<c2go/mlib/stdio.h>`, `<c2go/mlib/dirent.h>`, and so
+on); there is deliberately no umbrella header while this is a selective
+managed surface. It currently
 implements unnamed semaphores; pthread lifecycle, thread-specific keys,
 mutexes, condition variables, and rwlocks; the directory-stream lifecycle;
 `scandir`; Unix `nftw`/`ftw`; `glob`; managed search trees, hash tables, and
@@ -194,12 +197,14 @@ c2go internal-ABI callbacks. `lsearch`/`lfind` keep using the root implementatio
 because their size-based API erases the element type; use them only with
 pointer-free elements.
 
-The direct-carrier migration set is complete for the currently implemented
-libc surface. `iconv` intentionally remains root-only because its required
-`(iconv_t)-1` value cannot live in a precise-GC pointer slot. mlib is not a
-mechanical mirror of every root function: APIs that neither retain managed
-caller pointers nor expose a managed object graph continue to share the root
-implementation. The exact boundary is recorded in DESIGN.md.
+The handle-table carrier migration is complete for the currently implemented
+families, but managed allocation-returning APIs are a separate open inventory.
+POSIX regex is currently root-only: its persistent TRE graph contains pointers,
+so a managed version must selectively instantiate the engine and allocate the
+whole graph with correct GC metadata; replacing its calls with untyped
+`gc_malloc` would be incorrect. `iconv` intentionally remains root-only because
+its required `(iconv_t)-1` value cannot live in a precise-GC pointer slot. The
+exact implemented and pending boundary is recorded in DESIGN.md.
 
 ## 简体中文
 
@@ -307,7 +312,9 @@ managed C 对象必须通过带类型信息的 GC 分配接口创建：
 mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 ```
 
-`mlib` 不提供、也不使用 `malloc`、`realloc` 或 `free`。当前已经实现无名
+`mlib` 不提供、也不使用 `malloc`、`realloc` 或 `free`。使用者只应包含实际需要的
+family header（例如 `<c2go/mlib/stdio.h>`、`<c2go/mlib/dirent.h>`）；在接口仍为
+选择性 managed surface 时有意不提供聚合头文件。当前已经实现无名
 信号量、pthread 的线程生命周期、线程私有 key、mutex/condition variable/
 rwlock、目录流生命周期、`scandir`、Unix `nftw`/`ftw`、`glob`、managed
 search tree/hash/queue，以及包含进程流的 ownership-closed managed `FILE`
@@ -372,7 +379,9 @@ managed `tsearch`/`tfind`/`tdelete`/`twalk`/`tdestroy`、`hsearch` family 和
 接口擦除了元素类型，无法生成 pointer bitmap，因此仍复用 root 版本且只允许
 不含指针的元素。
 
-当前已实现 libc 接口中的 direct-carrier 迁移范围已经闭环。`iconv` 是有意保留的
-root-only 例外：它要求的 `(iconv_t)-1` 不能放进 precise-GC pointer slot。mlib
-也不是把 root 的每个函数机械复制一份；既不长期保存调用方 managed pointer、也不
-返回 managed 对象图的 API 继续共用 root 实现。准确边界见 DESIGN.md。
+当前已实现 family 的 handle-table carrier 迁移已经闭环，但返回 managed 分配的
+接口是另一份仍开放的清单。POSIX regex 当前仍为 root-only：其持久 TRE 对象图内部
+含有指针，managed 版本必须选择性实例化该引擎，并让整个对象图按正确 GC 类型信息
+分配；简单把 `malloc` 替换为无类型 `gc_malloc` 是错误的。`iconv` 是有意保留的
+root-only 例外：它要求的 `(iconv_t)-1` 不能放进 precise-GC pointer slot。准确的
+已实现与待迁移边界见 DESIGN.md。

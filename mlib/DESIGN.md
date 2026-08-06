@@ -47,12 +47,14 @@ The following roots have a similar motivation but are not interchangeable with
 the state-carrier table and must not be migrated mechanically:
 
 - `mallocRegistry` and `mallocFreeIdx` root raw unmanaged allocations. mlib
-  deliberately does not wrap this allocator. An internally owned unmanaged
-  object graph does not become an mlib candidate merely because it uses this
-  allocator. For example, `regcomp` consumes its input while building a private
-  TRE TNFA graph; `regex_t` retains no caller-owned managed pointer after
-  `regcomp` returns, so `regcomp`/`regexec`/`regfree` remain shared root
-  functions.
+  deliberately does not wrap this type-erased allocator: managed callers use
+  typed `gc_malloc` instead. This does not make allocation-owning APIs safe to
+  present as mlib functions. In particular, POSIX `regex_t` owns a TRE TNFA
+  graph containing pointers. Its root implementation remains available, but a
+  future mlib regex instance must allocate the complete persistent graph with
+  correct GC type information and pointer stores; simply replacing `malloc`
+  with untyped `gc_malloc(0, size)` would leave child objects unrooted. Regex is
+  therefore pending managed allocation work, not a shared mlib function.
 - `keyRoots` roots real `*pthreadKey` values only for root libc, whose
   `pthread_key_t` lives in unmanaged C memory. The mlib key slot is GC-visible
   and publishes the descriptor directly, so it does not enter `keyRoots`.
@@ -209,11 +211,29 @@ local keeps the process alive. A process stream must be retired with `pclose`,
 not plain `fclose`, so the child is reaped. No mlib FILE may be routed to a root
 public FILE declaration.
 
+## Managed allocation inventory
+
+Handle-table carriers and allocation ownership are separate migration axes.
+The former is closed for the currently implemented tables; the latter remains
+open for APIs that create caller-owned storage or persistent pointer graphs.
+
+| Root allocation surface | Managed treatment | Status |
+| --- | --- | --- |
+| `strdup`, `strndup`, `wcsdup` | return GC-owned no-pointer byte/rune storage | Pending |
+| `asprintf`, `vasprintf` | format into and publish a GC-owned byte buffer | Pending |
+| `realpath(path, NULL)` | allocate the result with `gc_malloc`; caller-buffer form can share the root algorithm | Pending |
+| `regcomp`, `regexec`, `regfree` | selectively instantiate TRE with a managed `regex_t` and a fully rooted, typed persistent graph; temporary matcher storage may be GC-owned noscan storage while live in the call frame | Pending |
+| generic `malloc`/`calloc`/`realloc`/`free` | no mlib equivalent: their type-erased ABI cannot describe a precise GC bitmap | Intentionally root-only |
+
+No pending family may be added to an mlib public header until its generated
+assembly passes the no-root-allocator gate and its ownership/GC-stress tests.
+
 ## Closure and maintenance gates
 
 The handle-table migration set is closed for the currently implemented libc
 surface. Every root table with a managed-equivalent ABI has a direct-pointer
-mlib carrier. Keep the following gates in place:
+mlib carrier. This statement does not close the managed allocation inventory
+above. Keep the following gates in place:
 
 1. Run semaphore and the complete pthread state family under C, race, and
    GC-stress regression on all release targets.

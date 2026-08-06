@@ -78,11 +78,16 @@ passed to `free`. The byte-oriented `lsearch`/`lfind` pair remains root-only
 and may be used only with pointer-free elements. See
 [mlib/README.md](mlib/README.md) for examples and constraints.
 
-The current direct-carrier migration set is complete. `iconv` remains an
-intentional root-only exception: exact POSIX compatibility requires the
-non-pointer `(iconv_t)-1` failure value, which cannot be stored in a
-precise-GC managed pointer slot. mlib is therefore a managed ownership surface,
-not a mechanical duplicate of every root-libc function.
+The current handle-table carrier migration is complete, but the managed
+allocation surface is not. Allocation-returning byte-buffer APIs and
+pointer-bearing owned graphs are tracked separately; POSIX regex is currently
+root-only until its TRE graph can be allocated and linked entirely through
+typed `gc_malloc` storage. `iconv` remains an intentional root-only exception:
+exact POSIX compatibility requires the non-pointer `(iconv_t)-1` failure value,
+which cannot be stored in a precise-GC managed pointer slot. mlib is therefore
+a managed ownership surface, not a mechanical duplicate of every root-libc
+function. Include the required `<c2go/mlib/...>` family headers explicitly;
+there is deliberately no umbrella header for this partial surface.
 
 ## Current target manifest
 

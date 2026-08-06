@@ -71,10 +71,13 @@ github.com/c2gohq/c2go_libc
 的元素。示例和约束见
 [mlib/README.md](mlib/README.md)。
 
-当前 direct-carrier 迁移范围已经闭环。`iconv` 是有意保留的 root-only 例外：
-精确兼容 POSIX 必须支持非指针值 `(iconv_t)-1`，它不能存入 precise-GC managed
-pointer slot。因此 mlib 是 managed ownership 接口层，而不是把 root libc 的每个
-函数机械复制一份。
+当前基于 handle table 的 carrier 迁移已经闭环，但 managed 分配接口仍未完成。
+返回新字节缓冲区的函数与内部持有指针的对象图需要单独迁移；POSIX regex 当前仍是
+root-only，直到 TRE 对象图能够全部通过带正确类型信息的 `gc_malloc` 分配和连接。
+`iconv` 是有意保留的 root-only 例外：精确兼容 POSIX 必须支持非指针值
+`(iconv_t)-1`，它不能存入 precise-GC managed pointer slot。因此 mlib 是 managed
+ownership 接口层，而不是把 root libc 的每个函数机械复制一份。使用时应明确包含所需
+的 `<c2go/mlib/...>` family header；这个尚未完整覆盖 libc 的接口层不提供聚合头文件。
 
 ## 当前目标清单
 
