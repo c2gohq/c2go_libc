@@ -59,7 +59,9 @@ github.com/c2gohq/c2go_libc
 同步对象；完整的 managed 目录传播簇（`DIR`、`scandir`、`nftw`/`ftw`、
 `glob`）；标准、显式、内存、自定义、宽字符和进程流；以及 managed
 `search.h` 树、哈希表和队列容器；以及由每对象 GC arena 持有的 POSIX
-正则表达式。
+正则表达式。managed 分配接口还包括 GC-owned 的
+`strdup`/`strndup`/`wcsdup`、`asprintf`/`vasprintf`、`realpath` 和
+`getcwd(NULL, size)`。
 
 默认名称显式带 `mlib_` 前缀，例如 `mlib_sem_t`、`mlib_sem_init`、
 `mlib_pthread_mutex_t`、`mlib_pthread_mutex_lock`、`mlib_DIR`、

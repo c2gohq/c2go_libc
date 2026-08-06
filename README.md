@@ -66,8 +66,8 @@ propagation cluster (`DIR`, `scandir`, `nftw`/`ftw`, and `glob`); managed
 standard, explicit, memory, custom, wide, and process streams; and managed
 `search.h` tree, hash-table, and queue containers; and POSIX regular
 expressions backed by a per-object GC arena. Managed allocation helpers include
-`strdup`/`strndup`/`wcsdup`, `asprintf`/`vasprintf`, and `realpath`, with
-GC-owned results.
+`strdup`/`strndup`/`wcsdup`, `asprintf`/`vasprintf`, `realpath`, and
+`getcwd(NULL, size)`, with GC-owned results.
 
 Managed names are explicit by default (`mlib_sem_t`, `mlib_sem_init`,
 `mlib_pthread_mutex_t`, `mlib_pthread_mutex_lock`, `mlib_DIR`,

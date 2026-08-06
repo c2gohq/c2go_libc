@@ -29,6 +29,10 @@ type c2go_mlib_cookie_state struct {
 	position uint64
 	length   uint64
 }
+type c2go_mlib_getcwd_result struct {
+	allocated     *byte
+	caller_buffer *byte
+}
 type c2go_mlib_realpath_result struct {
 	allocated     *byte
 	caller_buffer *byte
@@ -116,6 +120,7 @@ type mlib_hsearch_table struct{}
 var (
 	_typeinfo_c2go_mlib_asprintf_result unsafe.Pointer
 	_typeinfo_c2go_mlib_cookie_state    unsafe.Pointer
+	_typeinfo_c2go_mlib_getcwd_result   unsafe.Pointer
 	_typeinfo_c2go_mlib_realpath_result unsafe.Pointer
 	_typeinfo_c2go_mlib_scan_result     unsafe.Pointer
 	_typeinfo_c2go_mlib_search_item     unsafe.Pointer
@@ -132,6 +137,7 @@ func _c2go_rtype(t reflect.Type) unsafe.Pointer {
 func init() {
 	_typeinfo_c2go_mlib_asprintf_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_asprintf_result]())
 	_typeinfo_c2go_mlib_cookie_state = _c2go_rtype(reflect.TypeFor[c2go_mlib_cookie_state]())
+	_typeinfo_c2go_mlib_getcwd_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_getcwd_result]())
 	_typeinfo_c2go_mlib_realpath_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_realpath_result]())
 	_typeinfo_c2go_mlib_scan_result = _c2go_rtype(reflect.TypeFor[c2go_mlib_scan_result]())
 	_typeinfo_c2go_mlib_search_item = _c2go_rtype(reflect.TypeFor[c2go_mlib_search_item]())
@@ -152,6 +158,9 @@ func MlibDirentUnprefixedSelftest() int32
 
 //go:linkname MlibFtwUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_ftw_unprefixed_selftest
 func MlibFtwUnprefixedSelftest() int32
+
+//go:linkname MlibGetcwdUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_getcwd_unprefixed_selftest
+func MlibGetcwdUnprefixedSelftest() int32
 
 //go:linkname MlibGlobUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_glob_unprefixed_selftest
 func MlibGlobUnprefixedSelftest() int32

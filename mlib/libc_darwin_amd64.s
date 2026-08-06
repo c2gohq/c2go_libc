@@ -42946,6 +42946,90 @@ _LBB175_11:
 	MOVQ AX, 32(BP)
 	RET
 _Lfunc_end175:
+	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
+	FUNCDATA $1, gclocals·64f642c46beddeef(SB)
+DATA gclocals·64f642c46beddeef+0(SB)/4, $3
+DATA gclocals·64f642c46beddeef+4(SB)/4, $9
+DATA gclocals·64f642c46beddeef+8(SB)/1, $0x00
+DATA gclocals·64f642c46beddeef+9(SB)/1, $0x00
+DATA gclocals·64f642c46beddeef+10(SB)/1, $0x00
+DATA gclocals·64f642c46beddeef+11(SB)/1, $0x01
+DATA gclocals·64f642c46beddeef+12(SB)/1, $0x60
+DATA gclocals·64f642c46beddeef+13(SB)/1, $0x01
+GLOBL gclocals·64f642c46beddeef(SB), DUPOK|RODATA, $14
+
+TEXT ·mlib_getcwd(SB), $56-24
+	PCDATA $1, $-1
+	MOVQ 16(BP), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc0
+	JEQ _LBB176_1
+	MOVQ 24(BP), SI
+	MOVQ 16(BP), CX
+	MOVQ 16(BP), DX
+	MOVQ 24(BP), AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xf6
+	JNE _LBB176_5
+	MOVL $22, AX
+	JMP _LBB176_8
+_LBB176_1:
+	MOVQ SP, AX
+	LONG $0x0840c748
+	LONG $0x00000400
+	LONG $0x0000c748
+	BYTE $0x00
+	BYTE $0x00
+	BYTE $0x00
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp1001:
+	MOVQ SP, AX
+	MOVQ 16(AX), CX
+	MOVL $1024, AX
+	BYTE $0x48
+	BYTE $0x85
+	BYTE $0xc9
+	MOVQ CX, DX
+	JEQ _LBB176_2
+_LBB176_5:
+	MOVQ DX, -16(BP)
+	MOVQ CX, -24(BP)
+	MOVQ SP, CX
+	MOVQ AX, 8(CX)
+	MOVQ DX, 0(CX)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_syscall_getcwd(SB)
+_Ltmp1002:
+	MOVQ SP, AX
+	MOVL 16(AX), AX
+	BYTE $0x85
+	BYTE $0xc0
+	JMI _LBB176_7
+	MOVQ -16(BP), AX
+	JMP _LBB176_9
+_LBB176_7:
+	BYTE $0xf7
+	BYTE $0xd8
+	JMP _LBB176_8
+_LBB176_2:
+	MOVL $12, AX
+_LBB176_8:
+	MOVL AX, -4(BP)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp1003:
+	MOVQ SP, AX
+	MOVQ 0(AX), AX
+	MOVL -4(BP), CX
+	MOVL CX, 0(AX)
+	XORL AX, AX
+_LBB176_9:
+	MOVQ AX, 32(BP)
+	RET
+_Lfunc_end176:
 DATA _L_str<>+0(SB)/1, $0x48
 DATA _L_str<>+1(SB)/1, $0x4f
 DATA _L_str<>+2(SB)/1, $0x4d
@@ -43158,14 +43242,5 @@ DATA ·tre_macros+192(SB)/8, $0x0000000000000000
 DATA ·tre_macros+200(SB)/8, $0x0000000000000000
 GLOBL ·tre_macros(SB), NOPTR, $208
 
-	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
-	FUNCDATA $1, gclocals·64f642c46beddeef(SB)
-DATA gclocals·64f642c46beddeef+0(SB)/4, $3
-DATA gclocals·64f642c46beddeef+4(SB)/4, $9
-DATA gclocals·64f642c46beddeef+8(SB)/1, $0x00
-DATA gclocals·64f642c46beddeef+9(SB)/1, $0x00
-DATA gclocals·64f642c46beddeef+10(SB)/1, $0x00
-DATA gclocals·64f642c46beddeef+11(SB)/1, $0x01
-DATA gclocals·64f642c46beddeef+12(SB)/1, $0x60
-DATA gclocals·64f642c46beddeef+13(SB)/1, $0x01
-GLOBL gclocals·64f642c46beddeef(SB), DUPOK|RODATA, $14
+	FUNCDATA $0, gclocals·055d823a5dc4c2ea(SB)
+	FUNCDATA $1, gclocals·93005c6ea5fa7700(SB)

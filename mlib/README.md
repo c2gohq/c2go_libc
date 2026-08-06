@@ -22,6 +22,7 @@ The default API is explicitly namespaced:
 #include <c2go/mlib/string.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/stdlib.h>
+#include <c2go/mlib/unistd.h>
 #include <c2go/mlib/wchar.h>
 
 #pragma c2go managed push
@@ -46,6 +47,10 @@ static void example(void) {
     char *managed canonical = mlib_realpath(".", NULL);
     /* Use canonical, then sever the GC root instead of calling free(). */
     canonical = NULL;
+
+    char *managed cwd = mlib_getcwd(NULL, 0);
+    /* Managed release is an explicit owner store, even though GC reclaims. */
+    cwd = NULL;
 
     mlib_sem_t sem;
     mlib_sem_init(&sem, 0, 1);
@@ -101,6 +106,8 @@ corresponding standard names for the entire C2Go/LTO package:
 #include <c2go/mlib/search.h>
 #include <c2go/mlib/string.h>
 #include <c2go/mlib/stdio.h>
+#include <c2go/mlib/stdlib.h>
+#include <c2go/mlib/unistd.h>
 #include <c2go/mlib/wchar.h>
 
 #pragma c2go managed push
@@ -154,7 +161,7 @@ mutexes, condition variables, and rwlocks; the directory-stream lifecycle;
 `scandir`; Unix `nftw`/`ftw`; `glob`; managed search trees, hash tables, and
 queues; and the ownership-closed managed `FILE` surface, including process
 streams; managed POSIX regex; plus GC-owned `strdup`, `strndup`, `wcsdup`,
-`asprintf`, `vasprintf`, and `realpath`.
+`asprintf`, `vasprintf`, `realpath`, and `getcwd`.
 Where state lives in Go, root libc and mlib
 share the same behavior core and differ only in state resolution (direct
 managed pointer versus unmanaged handle ID). Pointer-bearing C containers are selectively
@@ -199,6 +206,15 @@ type: a non-null caller buffer must also be managed storage such as
 `realpath` when an ordinary stack buffer is required. Include
 `<c2go/mlib/stdlib.h>`; unprefixed mode aliases only `realpath`, leaving the rest
 of `<stdlib.h>` on root libc.
+
+Managed `getcwd` follows the same conditional-return rule. A null buffer uses
+no-scan `gc_malloc(PATH_MAX)` and ignores `size`, matching the root musl-style
+extension. A non-null buffer must be managed storage; use root `getcwd` for a C
+stack array. Failed internal allocation or lookup retires the local managed
+owner before returning `NULL`, while failure with a caller buffer merely stops
+borrowing it and does not consume the caller's owner. Include
+`<c2go/mlib/unistd.h>`; unprefixed mode replaces only `getcwd`. The caller must
+still assign the final returned owner `NULL` after use.
 
 Managed `nftw` and `ftw` selectively instantiate musl's stateless walk
 algorithm over mlib's `DIR` operations; they do not allocate a second state
@@ -298,6 +314,7 @@ exact implemented and pending boundary is recorded in DESIGN.md.
 #include <c2go/mlib/string.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/stdlib.h>
+#include <c2go/mlib/unistd.h>
 #include <c2go/mlib/wchar.h>
 
 #pragma c2go managed push
@@ -322,6 +339,10 @@ static void example(void) {
     char *managed canonical = mlib_realpath(".", NULL);
     /* 使用后断开 GC root，不能调用 free()。 */
     canonical = NULL;
+
+    char *managed cwd = mlib_getcwd(NULL, 0);
+    /* 即使由 GC 回收，逻辑释放仍显式把 owner 置成 NULL。 */
+    cwd = NULL;
 
     mlib_sem_t sem;
     mlib_sem_init(&sem, 0, 1);
@@ -426,7 +447,7 @@ family header（例如 `<c2go/mlib/stdio.h>`、`<c2go/mlib/dirent.h>`）；在�
 rwlock、目录流生命周期、`scandir`、Unix `nftw`/`ftw`、`glob`、managed
 search tree/hash/queue、包含进程流的 ownership-closed managed `FILE`、managed
 POSIX regex，以及 GC-owned `strdup`、`strndup`、`wcsdup`、`asprintf`、
-`vasprintf`、`realpath`。位于 Go 中的状态逻辑
+`vasprintf`、`realpath`、`getcwd`。位于 Go 中的状态逻辑
 由 root libc 与 mlib 共用，
 两者只在状态解析方式上不同：`mlib` 直接读取 managed pointer，根 libc 仍通过
 unmanaged handle ID
@@ -463,6 +484,13 @@ buffer 也必须来自 `gc_malloc(NULL, PATH_MAX)` 等 managed storage，不能�
 栈数组或 root `malloc`。需要普通栈 buffer 时应继续调用 root `realpath`。接口位于
 `<c2go/mlib/stdlib.h>`；无前缀模式只替换 `realpath`，其余 `<stdlib.h>` API 仍由
 root libc 提供。
+
+managed `getcwd` 使用同样的条件返回规则。buffer 为空时，它通过 no-scan
+`gc_malloc(PATH_MAX)` 分配结果，并与 root 的 musl 风格扩展一样忽略 `size`；
+buffer 非空时必须传 managed storage，需要 C 栈数组时应使用 root `getcwd`。
+内部新分配或路径读取失败时会先清除局部 managed owner；调用者 buffer 失败时只会
+结束借用，不会消耗调用者已有的 owner。接口位于 `<c2go/mlib/unistd.h>`，无前缀
+模式只替换 `getcwd`。最终返回结果用完后仍必须把最后一个 owner 赋成 `NULL`。
 
 managed `nftw` 和 `ftw` 在 mlib 的 `DIR` 操作之上选择性实例化 musl 的无状态
 遍历算法，不会引入第二套状态模型。回调参数只是当前遍历栈帧的借用视图，回调返回后

@@ -232,6 +232,8 @@ verify_managed_write_barriers() {
 		mlib_vasprintf 1 "managed asprintf variadic forwarding"
 	verify_function_symbol_call_count "$asm_path" mlib_realpath \
 		GCMalloc 1 "managed realpath allocation"
+	verify_function_symbol_call_count "$asm_path" mlib_getcwd \
+		GCMalloc 1 "managed getcwd allocation"
 }
 
 TARGETS=(
@@ -263,6 +265,7 @@ LIB_SOURCES=(
 	"$ROOT/csrc/mlib/wstring.c"
 	"$ROOT/csrc/mlib/asprintf.c"
 	"$ROOT/csrc/mlib/realpath.c"
+	"$ROOT/csrc/mlib/getcwd.c"
 )
 
 # Build the selectively-instantiated C part of package mlib once per target.
@@ -331,16 +334,19 @@ generate_mode() {
 	local string_selftest
 	local asprintf_selftest
 	local realpath_selftest
+	local getcwd_selftest
 	case "$mode" in
 		namespaced)
 			string_selftest=mlib_string_prefixed_selftest
 			asprintf_selftest=mlib_asprintf_prefixed_selftest
 			realpath_selftest=mlib_realpath_prefixed_selftest
+			getcwd_selftest=mlib_getcwd_prefixed_selftest
 			;;
 		unprefixed)
 			string_selftest=mlib_string_unprefixed_selftest
 			asprintf_selftest=mlib_asprintf_unprefixed_selftest
 			realpath_selftest=mlib_realpath_unprefixed_selftest
+			getcwd_selftest=mlib_getcwd_unprefixed_selftest
 			;;
 		*) echo "mlib/gen.sh: unknown namespace mode $mode" >&2; exit 1 ;;
 	esac
@@ -389,6 +395,11 @@ generate_mode() {
 			"$mode standard/namespaced realpath routing"
 		verify_function_write_barrier "$test_dir/selftest_${goos}_${arch}.s" \
 			"$realpath_selftest" "managed realpath owner retirement and publication"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$getcwd_selftest" mlib_getcwd 4 \
+			"$mode standard/namespaced getcwd routing"
+		verify_function_write_barrier "$test_dir/selftest_${goos}_${arch}.s" \
+			"$getcwd_selftest" "managed getcwd owner retirement and publication"
 		out="$tmp/out_${mode}_${goos}_${arch}"
 		mkdir -p "$out"
 		"$C2GOBIND" -pkgname="$mode" -goname="selftest_${goos}_${arch}" \

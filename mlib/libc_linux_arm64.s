@@ -32490,6 +32490,62 @@ _LBB174_12:
 	MOVD R8, 104(RSP)
 	RET
 _Lfunc_end174:
+	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
+	FUNCDATA $1, gclocals·62d682c46a1fe54f(SB)
+TEXT ·mlib_getcwd(SB), $48-24
+	PCDATA $1, $-1
+	MOVD 72(RSP), R8
+	CBZ R8, _LBB175_3
+	MOVD 80(RSP), R10
+	MOVD R8, R9
+	MOVD R10, R8
+	CBNZ R10, _LBB175_4
+	MOVW $22, R8
+	JMP _LBB175_8
+_LBB175_3:
+	MOVD RSP, R8
+	MOVW $4096, R10
+	MOVD R10, 40(RSP)
+	STP (ZR, R10), 8(R8)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·GCMalloc(SB)
+_Ltmp1047:
+	MOVD RSP, R9
+	MOVD 40(RSP), R8
+	MOVD 24(R9), R10
+	MOVD R10, R9
+	CBZ R10, _LBB175_7
+_LBB175_4:
+	MOVD RSP, R10
+	MOVD R9, 48(RSP)
+	STP (R9, R8), 8(R10)
+	PCDATA $1, $1
+	CALL github·com∕c2gohq∕c2go_libc·__c2go_syscall_getcwd(SB)
+_Ltmp1048:
+	MOVD RSP, R8
+	MOVWU 24(R8), R8
+	TBNZ $31, R8, _LBB175_6
+	MOVD 48(RSP), R8
+	JMP _LBB175_9
+_LBB175_6:
+	SUBW R8, ZR, R8
+	JMP _LBB175_8
+_LBB175_7:
+	MOVW $12, R8
+_LBB175_8:
+	MOVW R8, 40(RSP)
+	PCDATA $1, $0
+	CALL github·com∕c2gohq∕c2go_libc·ErrnoPtr(SB)
+_Ltmp1049:
+	MOVD RSP, R8
+	MOVWU 40(RSP), R9
+	MOVD 8(R8), R8
+	MOVW R9, 0(R8)
+	MOVD ZR, R8
+_LBB175_9:
+	MOVD R8, 88(RSP)
+	RET
+_Lfunc_end175:
 DATA _L_str<>+0(SB)/1, $0x48
 DATA _L_str<>+1(SB)/1, $0x4f
 DATA _L_str<>+2(SB)/1, $0x4d
@@ -32702,5 +32758,5 @@ DATA ·tre_macros+192(SB)/8, $0x0000000000000000
 DATA ·tre_macros+200(SB)/8, $0x0000000000000000
 GLOBL ·tre_macros(SB), NOPTR, $208
 
-	FUNCDATA $0, gclocals·3c92c549d7d49230(SB)
-	FUNCDATA $1, gclocals·62d682c46a1fe54f(SB)
+	FUNCDATA $0, gclocals·055d823a5dc4c2ea(SB)
+	FUNCDATA $1, gclocals·9300cc6ea5fb3550(SB)
