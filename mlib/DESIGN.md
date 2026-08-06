@@ -244,6 +244,13 @@ local keeps the process alive. A process stream must be retired with `pclose`,
 not plain `fclose`, so the child is reaped. No mlib FILE may be routed to a root
 public FILE declaration.
 
+`fclose` clears every managed carrier field after the raw close: object,
+process, retained result-slot addresses, buffer, list links, and—after its final
+unlock—the direct lock state. It also removes a matching `stdin`/`stdout`/
+`stderr` package-global root, so the next lookup cannot return a closed carrier.
+The POSIX by-value parameter cannot clear the caller's `FILE *`; callers and
+fixtures must assign that final owner `NULL` after `fclose` or `pclose`.
+
 ### String-allocation cluster
 
 Managed `strdup`, `strndup`, and `wcsdup` share root libc's stateless
@@ -327,7 +334,8 @@ above. Keep the following gates in place:
    GC-stress regression on all release targets.
 2. Run the DIR propagation cluster under GC-stress regression.
 3. Run the managed FILE process-stream phase under native and GC-stress
-   regression.
+   regression; verify close retires the direct lock and standard-stream global
+   roots, then require caller-owned `FILE *` values to be set to `NULL`.
 4. Run managed search trees, hash tables, and queues under GC-stress and
    generated write-barrier regression; keep `lsearch`/`lfind` pointer-free.
 5. Run managed regex compile/match/free under forced GC in both namespace

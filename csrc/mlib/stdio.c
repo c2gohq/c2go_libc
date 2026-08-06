@@ -231,7 +231,15 @@ static void mlib_file_clear_links(mlib_file_pointer f)
 __attribute__((noinline))
 static void mlib_ofl_remove(mlib_file_pointer f)
 {
+    int which;
     __c2go_mlib_ofl_lock();
+    /* Standard streams are rooted outside the ordinary open-file list. A
+     * successful fclose must retire that propagation root too, otherwise the
+     * next stdin/stdout/stderr lookup returns this closed carrier forever. */
+    for (which = 0; which < 3; ++which) {
+        if (mlib_std_files[which] == f)
+            mlib_stdfile_store(which, (void *)0);
+    }
     if (f->_listed) {
         if (f->_prev) f->_prev->_next = f->_next;
         if (f->_next) f->_next->_prev = f->_prev;
@@ -800,6 +808,10 @@ c2go_extern int mlib_fclose(mlib_FILE *stream)
     mlib_clear_buffer_pointer(&f->_buffer_root);
     mlib_file_release(f);
     mlib_ofl_remove(f);
+    /* The lock must remain alive until the final unlock and unregister steps
+     * finish. Afterwards it is another retired managed root, not storage that
+     * needs free(). Callers must discard or NULL their by-value FILE pointer. */
+    mlib_clear_state_pointer(&f->_lock_state);
     return result;
 }
 

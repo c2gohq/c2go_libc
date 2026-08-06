@@ -57,6 +57,10 @@ type c2go_mlib_search_queue struct {
 	payload  *c2go_mlib_search_payload
 	key      int32
 }
+type c2go_mlib_stdio_retire_owner struct {
+	closed      *_c2go_mlib_FILE
+	replacement *_c2go_mlib_FILE
+}
 type mlib_DIR struct {
 	_state unsafe.Pointer
 	_entry [280]int8
@@ -111,6 +115,7 @@ type mlib_sem_t struct {
 // matching definition in any c2go-compiled TU. Emitted as
 // zero-size opaque structs; pointers to them remain valid
 // handles but contents are inaccessible from Go-side code.
+type _c2go_mlib_FILE struct{}
 type mlib_hsearch_table struct{}
 
 // ─── Type-descriptor indirection (#218) ──────
@@ -190,6 +195,9 @@ func MlibStdioPrefixedStdinSelftest() int32
 
 //go:linkname MlibStdioPrefixedStdoutSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_stdio_prefixed_stdout_selftest
 func MlibStdioPrefixedStdoutSelftest() int32
+
+//go:linkname MlibStdioRetirePrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_stdio_retire_prefixed_selftest
+func MlibStdioRetirePrefixedSelftest() int32
 
 //go:linkname MlibStringPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_string_prefixed_selftest
 func MlibStringPrefixedSelftest() int32

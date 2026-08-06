@@ -83,10 +83,14 @@ static void example(void) {
     mlib_FILE *file = mlib_fopen("result.txt", "w");
     if (file) {
         mlib_fprintf(file, "count=%d\n", count);
-        mlib_fclose(file); /* The carrier itself is reclaimed by the GC. */
+        mlib_fclose(file);
+        file = NULL; /* fclose retired its fields; retire the caller owner. */
     }
     mlib_FILE *pipe = mlib_popen("echo managed process", "r");
-    if (pipe) mlib_pclose(pipe); /* Close the pipe, then reap the child. */
+    if (pipe) {
+        mlib_pclose(pipe); /* Close the pipe, then reap the child. */
+        pipe = NULL;
+    }
     mlib_printf("managed stdout is also available\n");
 }
 
@@ -131,6 +135,7 @@ static void example(void) {
     if (file) {
         fprintf(file, "managed stdio\n");
         fclose(file);
+        file = NULL;
     }
     printf("managed stdout is also available\n");
 }
@@ -236,7 +241,11 @@ instead of traversing ordinary `free`.
 Managed `FILE` objects use a typed GC carrier around the shared raw musl stdio
 engine. Their buffer, recursive lock, and open-file-list links are direct
 managed roots; `fopen` and `fdopen` never allocate with ordinary `malloc`, and
-`fclose` retires those roots instead of freeing the carrier. The surface covers
+`fclose` retires all carrier roots—including the lock and any package-global
+standard-stream slot—instead of freeing the carrier. A later standard-stream
+lookup therefore creates a new live carrier. Because POSIX passes `FILE *` by
+value, `fclose`/`pclose` cannot rewrite the caller variable; assign that final
+owner `NULL` after a successful close. The surface covers
 explicit streams plus managed `stdin`/`stdout`/`stderr`: open/close, `fflush`
 (including `NULL`), block and character I/O, seek/status, formatted input and
 output, `fileno`, and `flockfile`. A package-level finalize hook flushes this
@@ -375,10 +384,14 @@ static void example(void) {
     mlib_FILE *file = mlib_fopen("result.txt", "w");
     if (file) {
         mlib_fprintf(file, "count=%d\n", count);
-        mlib_fclose(file); /* carrier 本身由 GC 回收。 */
+        mlib_fclose(file);
+        file = NULL; /* fclose 已清内部字段；这里再清调用方 owner。 */
     }
     mlib_FILE *pipe = mlib_popen("echo managed process", "r");
-    if (pipe) mlib_pclose(pipe); /* 先关闭管道，再回收子进程。 */
+    if (pipe) {
+        mlib_pclose(pipe); /* 先关闭管道，再回收子进程。 */
+        pipe = NULL;
+    }
     mlib_printf("managed stdout 同样可用\n");
 }
 
@@ -508,7 +521,10 @@ carrier 根，不会逐项调用普通 `free`。
 
 managed `FILE` 使用 typed GC carrier 包住共用的 raw musl stdio engine；缓冲区、
 递归锁和打开文件链表都由明确的 managed 字段直接持有。`fopen`/`fdopen` 不会调用
-普通 `malloc`，`fclose` 清除这些根并由 GC 回收 carrier。当前同时支持显式文件流
+普通 `malloc`；`fclose` 会清除包括 lock 与 package-global 标准流槽在内的全部
+carrier root，之后再次读取标准流会创建新的 live carrier。由于 POSIX 的
+`fclose`/`pclose` 按值接收 `FILE *`，它无法改写调用方变量，成功关闭后调用方仍应
+把最后一个 owner 赋成 `NULL`。当前同时支持显式文件流
 和 managed `stdin`/`stdout`/`stderr`：打开/关闭、`fflush`（包括 `NULL`）、块与
 字符 I/O、定位与状态、格式化输入输出、`fileno` 和 `flockfile`。包级 finalize
 hook 会先刷新这一套独立的 FILE world，再由 root libc 刷新自己的流。格式化输入

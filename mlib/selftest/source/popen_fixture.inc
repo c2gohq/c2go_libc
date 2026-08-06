@@ -41,6 +41,7 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
         return 3;
     status = C2GO_MLIB_TEST_PCLOSE(stream);
     if (status != 0) return 4;
+    stream = (void *)0;
 
     stream = C2GO_MLIB_TEST_POPEN(C2GO_MLIB_POPEN_WRITE_COMMAND, "w");
     if (!stream) return 5;
@@ -48,6 +49,7 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     if (C2GO_MLIB_TEST_FPUTS("managed-pipe\n", stream) < 0) return 6;
     status = C2GO_MLIB_TEST_PCLOSE(stream);
     if (status != 0) return 7;
+    stream = (void *)0;
 
     /* Rejecting a non-process stream must leave it open for ordinary close. */
     stream = C2GO_MLIB_TEST_FMEMOPEN((void *)0, 32, "w+");
@@ -55,6 +57,8 @@ c2go_extern int C2GO_MLIB_TEST_EXPORT(void)
     errno = 0;
     if (C2GO_MLIB_TEST_PCLOSE(stream) != -1 || errno != EINVAL) return 9;
     if (C2GO_MLIB_TEST_FCLOSE(stream) != 0) return 10;
+    stream = (void *)0;
+    C2GO_MLIB_TEST_FORCE_GC();
     return 0;
 }
 

@@ -148,6 +148,8 @@ verify_managed_write_barriers() {
 		"managed FILE open-list insertion"
 	verify_function_write_barrier "$asm_path" mlib_ofl_remove \
 		"managed FILE open-list removal"
+	verify_function_call_count "$asm_path" mlib_ofl_remove \
+		mlib_stdfile_store 1 "managed standard-stream root retirement"
 	verify_function_write_barrier "$asm_path" mlib_clear_file_pointer \
 		"managed FILE link retirement"
 	verify_function_write_barrier "$asm_path" mlib_clear_buffer_pointer \
@@ -159,7 +161,7 @@ verify_managed_write_barriers() {
 	verify_function_call_count "$asm_path" mlib_fclose \
 		mlib_clear_buffer_pointer 1 "managed FILE buffer release"
 	verify_function_call_count "$asm_path" mlib_fclose \
-		mlib_clear_state_pointer 4 "managed FILE object, process, and slot release"
+		mlib_clear_state_pointer 5 "managed FILE object, process, slot, and lock release"
 	verify_function_write_barrier "$asm_path" mlib_tnode_clear_key \
 		"managed tree key retirement"
 	verify_function_write_barrier "$asm_path" mlib_tnode_clear_child \
@@ -335,18 +337,21 @@ generate_mode() {
 	local asprintf_selftest
 	local realpath_selftest
 	local getcwd_selftest
+	local stdio_retire_selftest
 	case "$mode" in
 		namespaced)
 			string_selftest=mlib_string_prefixed_selftest
 			asprintf_selftest=mlib_asprintf_prefixed_selftest
 			realpath_selftest=mlib_realpath_prefixed_selftest
 			getcwd_selftest=mlib_getcwd_prefixed_selftest
+			stdio_retire_selftest=mlib_stdio_retire_prefixed_selftest
 			;;
 		unprefixed)
 			string_selftest=mlib_string_unprefixed_selftest
 			asprintf_selftest=mlib_asprintf_unprefixed_selftest
 			realpath_selftest=mlib_realpath_unprefixed_selftest
 			getcwd_selftest=mlib_getcwd_unprefixed_selftest
+			stdio_retire_selftest=mlib_stdio_retire_unprefixed_selftest
 			;;
 		*) echo "mlib/gen.sh: unknown namespace mode $mode" >&2; exit 1 ;;
 	esac
@@ -400,6 +405,12 @@ generate_mode() {
 			"$mode standard/namespaced getcwd routing"
 		verify_function_write_barrier "$test_dir/selftest_${goos}_${arch}.s" \
 			"$getcwd_selftest" "managed getcwd owner retirement and publication"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$stdio_retire_selftest" mlib_stdfile 2 \
+			"$mode managed standard-stream lookup routing"
+		verify_function_symbol_call_count "$test_dir/selftest_${goos}_${arch}.s" \
+			"$stdio_retire_selftest" mlib_fclose 2 \
+			"$mode managed standard-stream close routing"
 		out="$tmp/out_${mode}_${goos}_${arch}"
 		mkdir -p "$out"
 		"$C2GOBIND" -pkgname="$mode" -goname="selftest_${goos}_${arch}" \

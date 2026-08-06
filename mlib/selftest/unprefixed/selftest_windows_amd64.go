@@ -61,6 +61,10 @@ type c2go_mlib_search_queue struct {
 	payload  *c2go_mlib_search_payload
 	key      int32
 }
+type c2go_mlib_stdio_retire_owner struct {
+	closed      *_c2go_mlib_FILE
+	replacement *_c2go_mlib_FILE
+}
 type cookie_io_functions_t struct {
 	read  uintptr
 	write uintptr
@@ -111,6 +115,7 @@ type sem_t struct {
 // matching definition in any c2go-compiled TU. Emitted as
 // zero-size opaque structs; pointers to them remain valid
 // handles but contents are inaccessible from Go-side code.
+type _c2go_mlib_FILE struct{}
 type mlib_hsearch_table struct{}
 
 // ─── Type-descriptor indirection (#218) ──────
@@ -179,6 +184,9 @@ func MlibSearchUnprefixedSelftest() int32
 
 //go:linkname MlibSemUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_sem_unprefixed_selftest
 func MlibSemUnprefixedSelftest() int32
+
+//go:linkname MlibStdioRetireUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_stdio_retire_unprefixed_selftest
+func MlibStdioRetireUnprefixedSelftest() int32
 
 //go:linkname MlibStdioUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_stdio_unprefixed_selftest
 func MlibStdioUnprefixedSelftest() int32

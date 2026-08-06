@@ -94,7 +94,10 @@ int mlib_asprintf(char **__restrict, const char *__restrict, ...)
 /* FILE stays opaque. Instances returned here are typed Go-heap objects: their
  * raw musl engine is a no-scan byte region, while the buffer, lock, and list
  * ownership are retained in explicit managed fields. Never pass this carrier
- * to root libc's stdio functions or to free(). */
+ * to root libc's stdio functions or to free(). fclose/pclose clear every
+ * library-owned managed root, but their POSIX by-value signature cannot clear
+ * the caller's FILE pointer; assign that final owner NULL after a successful
+ * close. */
 typedef struct _c2go_mlib_FILE C2GO_MLIB_NAME(FILE);
 
 /* Standard streams are lazily allocated managed carriers over the same live
