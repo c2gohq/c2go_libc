@@ -86,6 +86,11 @@ type qelem struct {
 	q_back *qelem
 	q_data [1]int8
 }
+type regex struct {
+	re_nsub      uint64
+	__opaque     unsafe.Pointer
+	__c2go_arena unsafe.Pointer
+}
 type sem_t struct {
 	_state unsafe.Pointer
 }
@@ -142,6 +147,9 @@ func MlibPopenUnprefixedSelftest() int32
 
 //go:linkname MlibPthreadUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_pthread_unprefixed_selftest
 func MlibPthreadUnprefixedSelftest() int32
+
+//go:linkname MlibRegexUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_regex_unprefixed_selftest
+func MlibRegexUnprefixedSelftest() int32
 
 //go:linkname MlibSearchUnprefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/unprefixed.mlib_search_unprefixed_selftest
 func MlibSearchUnprefixedSelftest() int32

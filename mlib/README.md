@@ -17,6 +17,7 @@ The default API is explicitly namespaced:
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
+#include <c2go/mlib/regex.h>
 #include <c2go/mlib/search.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/wchar.h>
@@ -51,6 +52,13 @@ static void example(void) {
         mlib_globfree(&matches);
     }
 
+    mlib_regex_t expression = {0};
+    regmatch_t match;
+    if (mlib_regcomp(&expression, "^managed$", REG_EXTENDED) == 0) {
+        (void)mlib_regexec(&expression, "managed", 1, &match, 0);
+        mlib_regfree(&expression);
+    }
+
     mlib_FILE *file = mlib_fopen("result.txt", "w");
     if (file) {
         mlib_fprintf(file, "count=%d\n", count);
@@ -73,6 +81,7 @@ corresponding standard names for the entire C2Go/LTO package:
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
+#include <c2go/mlib/regex.h>
 #include <c2go/mlib/search.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/wchar.h>
@@ -106,11 +115,15 @@ Do not mix managed and unmanaged definitions of the same standard API in one
 LTO package. The unprefixed header must precede the corresponding ordinary
 libc header. Namespaced mode may coexist with the ordinary header.
 
-Managed C allocation must be typed and GC-visible:
+Pointer-bearing managed C records must be typed and GC-visible:
 
 ```c
 mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 ```
+
+Pointer-free buffers may use `gc_malloc(NULL, size)`. A type-erased graph such
+as TRE still needs an explicit GC-visible owner that roots every block; a
+no-scan allocation alone is not an ownership model.
 
 `mlib` does not provide or use `malloc`, `realloc`, or `free`. Include only the
 family headers you use (`<c2go/mlib/stdio.h>`, `<c2go/mlib/dirent.h>`, and so
@@ -120,9 +133,9 @@ implements unnamed semaphores; pthread lifecycle, thread-specific keys,
 mutexes, condition variables, and rwlocks; the directory-stream lifecycle;
 `scandir`; Unix `nftw`/`ftw`; `glob`; managed search trees, hash tables, and
 queues; and the ownership-closed managed `FILE` surface, including process
-streams. Where state lives in Go, root libc and mlib share the same behavior
-core and differ only in state resolution (direct managed pointer versus
-unmanaged handle ID). Pointer-bearing C containers are selectively
+streams; plus managed POSIX regex. Where state lives in Go, root libc and mlib
+share the same behavior core and differ only in state resolution (direct
+managed pointer versus unmanaged handle ID). Pointer-bearing C containers are selectively
 instantiated with typed GC storage. Managed `opendir` and
 `fdopendir` allocate the carrier internally with typed `gc_malloc`; `closedir`
 clears its state pointer and lets the GC reclaim the carrier. Managed `scandir` allocates
@@ -143,6 +156,12 @@ typed GC-owned graph. `GLOB_APPEND` grows it by allocating a new typed vector
 and copying pointers with write barriers. `mlib_globfree` clears the carrier's
 root for early release or reuse; callers must never pass `gl_pathv` or its
 strings to `free`.
+
+Managed POSIX regex selectively instantiates a second TRE engine under private
+mlib symbols. Its type-erased internal blocks use no-scan `gc_malloc`, but every
+block base is directly rooted by the owning per-`regex_t` Go arena; a separate
+temporary arena owns each synchronous match. `regfree` clears the carrier roots
+instead of traversing ordinary `free`.
 
 Managed `FILE` objects use a typed GC carrier around the shared raw musl stdio
 engine. Their buffer, recursive lock, and open-file-list links are direct
@@ -199,10 +218,8 @@ pointer-free elements.
 
 The handle-table carrier migration is complete for the currently implemented
 families, but managed allocation-returning APIs are a separate open inventory.
-POSIX regex is currently root-only: its persistent TRE graph contains pointers,
-so a managed version must selectively instantiate the engine and allocate the
-whole graph with correct GC metadata; replacing its calls with untyped
-`gc_malloc` would be incorrect. `iconv` intentionally remains root-only because
+POSIX regex is now implemented with the arena ownership model described above.
+`iconv` intentionally remains root-only because
 its required `(iconv_t)-1` value cannot live in a precise-GC pointer slot. The
 exact implemented and pending boundary is recorded in DESIGN.md.
 
@@ -220,6 +237,7 @@ exact implemented and pending boundary is recorded in DESIGN.md.
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
+#include <c2go/mlib/regex.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/wchar.h>
 
@@ -253,6 +271,13 @@ static void example(void) {
         mlib_globfree(&matches);
     }
 
+    mlib_regex_t expression = {0};
+    regmatch_t match;
+    if (mlib_regcomp(&expression, "^managed$", REG_EXTENDED) == 0) {
+        (void)mlib_regexec(&expression, "managed", 1, &match, 0);
+        mlib_regfree(&expression);
+    }
+
     mlib_FILE *file = mlib_fopen("result.txt", "w");
     if (file) {
         mlib_fprintf(file, "count=%d\n", count);
@@ -274,6 +299,7 @@ static void example(void) {
 #include <c2go/mlib/pthread.h>
 #include <c2go/mlib/dirent.h>
 #include <c2go/mlib/glob.h>
+#include <c2go/mlib/regex.h>
 #include <c2go/mlib/stdio.h>
 #include <c2go/mlib/wchar.h>
 
@@ -306,11 +332,15 @@ static void example(void) {
 unmanaged 的同名标准 API。无前缀 mlib 头文件必须先于普通 libc 对应头文件；
 默认带前缀模式则可以与普通头文件共存。
 
-managed C 对象必须通过带类型信息的 GC 分配接口创建：
+含指针的 managed C record 必须通过带类型信息的 GC 分配接口创建：
 
 ```c
 mlib_sem_t *sem = gc_malloc(c2go_typeinfo(mlib_sem_t), sizeof(*sem));
 ```
+
+无指针 buffer 可以使用 `gc_malloc(NULL, size)`。TRE 这类 type-erased 对象图还
+必须用 GC 可见的 owner 直接持有每一个 block；仅使用 no-scan 分配本身并不构成
+所有权模型。
 
 `mlib` 不提供、也不使用 `malloc`、`realloc` 或 `free`。使用者只应包含实际需要的
 family header（例如 `<c2go/mlib/stdio.h>`、`<c2go/mlib/dirent.h>`）；在接口仍为
@@ -318,8 +348,9 @@ family header（例如 `<c2go/mlib/stdio.h>`、`<c2go/mlib/dirent.h>`）；在�
 信号量、pthread 的线程生命周期、线程私有 key、mutex/condition variable/
 rwlock、目录流生命周期、`scandir`、Unix `nftw`/`ftw`、`glob`、managed
 search tree/hash/queue，以及包含进程流的 ownership-closed managed `FILE`
-接口。位于 Go 中的状态逻辑由 root libc 与 mlib 共用，两者只在状态解析方式上
-不同：`mlib` 直接读取 managed pointer，根 libc 仍通过 unmanaged handle ID
+接口和 managed POSIX regex。位于 Go 中的状态逻辑由 root libc 与 mlib 共用，
+两者只在状态解析方式上不同：`mlib` 直接读取 managed pointer，根 libc 仍通过
+unmanaged handle ID
 查表；包含指针的 C 容器则使用 typed GC storage 选择性实例化。managed `opendir`
 和 `fdopendir` 在内部使用 typed `gc_malloc` 分配 carrier；`closedir` 清空状态
 指针，由 GC 回收 carrier。managed `scandir` 的结果数组及每个 `dirent` 都位于
@@ -336,6 +367,11 @@ managed `glob_t.gl_pathv`、其中的 pointer slot 和每个返回字符串共�
 GC-owned 的对象图。`GLOB_APPEND` 会分配新的 typed vector，并通过 write barrier
 复制旧指针。`mlib_globfree` 会清除 carrier 中的根，便于提前释放或复用；调用方
 不能把 `gl_pathv` 或其中的字符串传给 `free`。
+
+managed POSIX regex 会在私有 mlib 符号下选择性实例化第二份 TRE engine。
+内部 type-erased block 使用 no-scan `gc_malloc`，但每个 block 的基地址都由该
+`regex_t` 的 Go arena 直接持有；每次同步匹配另有临时 arena。`regfree` 只清除
+carrier 根，不会逐项调用普通 `free`。
 
 managed `FILE` 使用 typed GC carrier 包住共用的 raw musl stdio engine；缓冲区、
 递归锁和打开文件链表都由明确的 managed 字段直接持有。`fopen`/`fdopen` 不会调用
@@ -380,8 +416,7 @@ managed `tsearch`/`tfind`/`tdelete`/`twalk`/`tdestroy`、`hsearch` family 和
 不含指针的元素。
 
 当前已实现 family 的 handle-table carrier 迁移已经闭环，但返回 managed 分配的
-接口是另一份仍开放的清单。POSIX regex 当前仍为 root-only：其持久 TRE 对象图内部
-含有指针，managed 版本必须选择性实例化该引擎，并让整个对象图按正确 GC 类型信息
-分配；简单把 `malloc` 替换为无类型 `gc_malloc` 是错误的。`iconv` 是有意保留的
+接口是另一份仍开放的清单。POSIX regex 已按上面的 arena ownership 模型实现。
+`iconv` 是有意保留的
 root-only 例外：它要求的 `(iconv_t)-1` 不能放进 precise-GC pointer slot。准确的
 已实现与待迁移边界见 DESIGN.md。

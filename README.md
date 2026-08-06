@@ -64,15 +64,18 @@ ID-to-pointer registry. The implemented families cover unnamed semaphores;
 pthread lifecycle, keys, and synchronization; the complete managed directory
 propagation cluster (`DIR`, `scandir`, `nftw`/`ftw`, and `glob`); managed
 standard, explicit, memory, custom, wide, and process streams; and managed
-`search.h` tree, hash-table, and queue containers.
+`search.h` tree, hash-table, and queue containers; and POSIX regular
+expressions backed by a per-object GC arena.
 
 Managed names are explicit by default (`mlib_sem_t`, `mlib_sem_init`,
 `mlib_pthread_mutex_t`, `mlib_pthread_mutex_lock`, `mlib_DIR`,
 `mlib_opendir`). Define
 `C2GO_MLIB_UNPREFIXED` before the first mlib header to expose the corresponding
 standard names instead. That switch applies to the whole C2Go/LTO package; do
-not mix both routings in one package. Managed C heap objects use typed
-`gc_malloc(c2go_typeinfo(T), sizeof(T))`, never ordinary `malloc`. Managed
+not mix both routings in one package. Pointer-bearing managed records use typed
+`gc_malloc(c2go_typeinfo(T), sizeof(T))`; pointer-free buffers may use
+`gc_malloc(NULL, size)`, and type-erased object graphs need an explicit owner
+such as the regex arena. They never use ordinary `malloc`. Managed
 `scandir`, `glob`, and managed search containers are GC-owned and must not be
 passed to `free`. The byte-oriented `lsearch`/`lfind` pair remains root-only
 and may be used only with pointer-free elements. See
@@ -80,9 +83,11 @@ and may be used only with pointer-free elements. See
 
 The current handle-table carrier migration is complete, but the managed
 allocation surface is not. Allocation-returning byte-buffer APIs and
-pointer-bearing owned graphs are tracked separately; POSIX regex is currently
-root-only until its TRE graph can be allocated and linked entirely through
-typed `gc_malloc` storage. `iconv` remains an intentional root-only exception:
+pointer-bearing owned graphs are tracked separately. Managed POSIX regex is
+implemented by selectively compiling a second TRE instance: all of its
+allocations use `gc_malloc`, and a per-`regex_t` Go arena directly roots every
+no-scan block instead of relying on pointers hidden inside TRE records.
+`iconv` remains an intentional root-only exception:
 exact POSIX compatibility requires the non-pointer `(iconv_t)-1` failure value,
 which cannot be stored in a precise-GC managed pointer slot. mlib is therefore
 a managed ownership surface, not a mechanical duplicate of every root-libc

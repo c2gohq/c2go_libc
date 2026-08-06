@@ -48,13 +48,14 @@ the state-carrier table and must not be migrated mechanically:
 
 - `mallocRegistry` and `mallocFreeIdx` root raw unmanaged allocations. mlib
   deliberately does not wrap this type-erased allocator: managed callers use
-  typed `gc_malloc` instead. This does not make allocation-owning APIs safe to
-  present as mlib functions. In particular, POSIX `regex_t` owns a TRE TNFA
-  graph containing pointers. Its root implementation remains available, but a
-  future mlib regex instance must allocate the complete persistent graph with
-  correct GC type information and pointer stores; simply replacing `malloc`
-  with untyped `gc_malloc(0, size)` would leave child objects unrooted. Regex is
-  therefore pending managed allocation work, not a shared mlib function.
+  `gc_malloc`, with type information wherever the allocation stores pointers.
+  This does not make allocation-owning APIs safe to
+  present as mlib functions without an ownership design. POSIX regex is the
+  first pointer-graph example: the managed TRE instance routes every allocator
+  call through no-scan `gc_malloc`, while a per-`regex_t` Go arena directly
+  roots every returned block. TRE's internal pointers remain unmanaged
+  navigation edges and are never trusted as GC ownership edges. This avoids
+  both the root malloc registry and a new process-global regex table.
 - `keyRoots` roots real `*pthreadKey` values only for root libc, whose
   `pthread_key_t` lives in unmanaged C memory. The mlib key slot is GC-visible
   and publishes the descriptor directly, so it does not enter `keyRoots`.
@@ -82,6 +83,9 @@ mlib FILE (direct managed pointers) -----+
 
 root search containers (noscan malloc) --+--> musl search algorithms
 mlib search containers (typed GC heap) --+
+
+root regex (malloc-backed TRE) -----------+--> selectively shared TRE source
+mlib regex (per-object GC arena) --------+
 ```
 
 No musl source is dual-compiled for semaphore or pthread state. Their behavior
@@ -90,6 +94,11 @@ unprefixed pthread mode, `<c2go/mlib/pthread.h>` replaces lifecycle, thread-key,
 mutex, condition-variable, and rwlock types/functions. The plain-data
 `pthread_once` carrier and stateless `pthread_atfork` remain shared from the
 root header.
+
+The regex family is intentionally different: its TRE C sources are compiled
+once for root libc and once, under private `__mlib_*` symbols, for mlib. This is
+a selective second instance of one allocation-sensitive family, not a second
+build of the complete musl library.
 
 ## Stateful clusters and selective C instantiation
 
@@ -161,6 +170,24 @@ element type, so no implementation can derive the pointer bitmap needed for a
 pointer-bearing managed element. Both namespace modes retain the root functions
 for pointer-free elements only.
 
+### Regex cluster
+
+Managed `regcomp`, `regexec`, and `regfree` selectively instantiate the pinned
+TRE sources under private mlib symbols. `regex_t` carries two managed roots:
+the compiled TNFA entry and its owning Go arena. Every TRE `malloc`, `calloc`,
+`realloc`, and `free` operation is redirected to that arena and ultimately to
+no-scan `gc_malloc`; `mlib/gen.sh` rejects an artifact that still calls a root
+allocator.
+
+The no-scan choice is deliberate. TRE allocates heterogeneous records and
+slabs through a type-erased allocator, so one correct repeated pointer bitmap
+does not exist. Instead, the arena's Go map directly roots every allocation
+base. Internal record pointers are used only for C navigation. A successful
+compile publishes the arena through a write barrier. Each `regexec` uses an
+independent goroutine-local temporary arena, so concurrent matches share only
+the immutable compiled TNFA. `regfree` clears the carrier roots and lets the Go
+GC reclaim the whole graph; callers must not pass any part of it to `free`.
+
 ### FILE cluster
 
 The first explicit-stream FILE surface is implemented. An `mlib_FILE` is a
@@ -222,7 +249,7 @@ open for APIs that create caller-owned storage or persistent pointer graphs.
 | `strdup`, `strndup`, `wcsdup` | return GC-owned no-pointer byte/rune storage | Pending |
 | `asprintf`, `vasprintf` | format into and publish a GC-owned byte buffer | Pending |
 | `realpath(path, NULL)` | allocate the result with `gc_malloc`; caller-buffer form can share the root algorithm | Pending |
-| `regcomp`, `regexec`, `regfree` | selectively instantiate TRE with a managed `regex_t` and a fully rooted, typed persistent graph; temporary matcher storage may be GC-owned noscan storage while live in the call frame | Pending |
+| `regcomp`, `regexec`, `regfree` | selectively instantiate TRE; every no-scan GC block is directly rooted by a per-object arena, and each match uses a temporary arena | Implemented |
 | generic `malloc`/`calloc`/`realloc`/`free` | no mlib equivalent: their type-erased ABI cannot describe a precise GC bitmap | Intentionally root-only |
 
 No pending family may be added to an mlib public header until its generated
@@ -242,7 +269,9 @@ above. Keep the following gates in place:
    regression.
 4. Run managed search trees, hash tables, and queues under GC-stress and
    generated write-barrier regression; keep `lsearch`/`lfind` pointer-free.
-5. Reject any generated mlib library that calls root `malloc`, `calloc`,
+5. Run managed regex compile/match/free under forced GC in both namespace
+   modes; keep its arena publication/retirement barrier gates enabled.
+6. Reject any generated mlib library that calls root `malloc`, `calloc`,
    `realloc`, or `free`; `mlib/gen.sh` enforces this on every target.
 
 `iconvTab` is not unfinished migration work. An mlib descriptor that stores the

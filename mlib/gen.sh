@@ -181,6 +181,22 @@ verify_managed_write_barriers() {
 		mlib_queue_clear_link 2 "managed queue removed-link retirement"
 	verify_function_write_barrier "$asm_path" mlib_remque \
 		"managed queue unlink"
+	verify_function_write_barrier "$asm_path" mlib_regex_store_root \
+		"managed regex root publication"
+	verify_function_write_barrier "$asm_path" mlib_regex_clear_root \
+		"managed regex root retirement"
+	verify_function_write_barrier "$asm_path" __mlib_regcomp_impl \
+		"managed regex TNFA publication"
+	verify_function_call_count "$asm_path" mlib_regcomp \
+		mlib_regex_store_root 1 "managed regex arena publication"
+	verify_function_call_count "$asm_path" mlib_regcomp \
+		mlib_regex_clear_root 3 "managed regex compile cleanup"
+	verify_function_call_count "$asm_path" mlib_regfree \
+		mlib_regex_clear_root 2 "managed regex arena retirement"
+	verify_function_call_count "$asm_path" mlib_regcomp \
+		regexArenaNew 1 "managed regex persistent arena creation"
+	verify_function_call_count "$asm_path" mlib_regexec \
+		regexArenaNew 1 "managed regex per-call arena creation"
 }
 
 TARGETS=(
@@ -202,6 +218,10 @@ LIB_SOURCES=(
 	"$ROOT/csrc/mlib/stdio.c"
 	"$ROOT/csrc/mlib/thread.c"
 	"$ROOT/csrc/mlib/search.c"
+	"$ROOT/csrc/mlib/regex.c"
+	"$ROOT/musl/src/regex/regcomp.c"
+	"$ROOT/musl/src/regex/regexec.c"
+	"$ROOT/musl/src/regex/tre-mem.c"
 )
 
 # Build the selectively-instantiated C part of package mlib once per target.
@@ -216,9 +236,23 @@ generate_library() {
 		bcs=()
 		for src in "${LIB_SOURCES[@]}"; do
 			b="$(printf '%s' "$src" | sed 's#[/.]#_#g')"
-			"$CLANG" --target="$triple" -fc2go -fc2go-package="$MOD/mlib" -Xclang -fc2go-lto-prelink \
-				"${opt_flags[@]}" -fno-math-errno -emit-llvm -I "$RES" -I "$INC" \
+			compile=(
+				"$CLANG" --target="$triple" -fc2go
+				-fc2go-package="$MOD/mlib" -Xclang -fc2go-lto-prelink
+				"${opt_flags[@]}"
+			)
+			case "$src" in
+				"$ROOT/musl/src/regex/regcomp.c"|\
+				"$ROOT/musl/src/regex/regexec.c"|\
+				"$ROOT/musl/src/regex/tre-mem.c")
+					compile+=( -DC2GO_MLIB_REGEX_BUILD=1 )
+					;;
+			esac
+			compile+=(
+				-fno-math-errno -emit-llvm -I "$RES" -I "$INC"
 				-c -o "$tmp/${b}.${goos}_${arch}.bc" "$src"
+			)
+			"${compile[@]}"
 			bcs+=("$tmp/${b}.${goos}_${arch}.bc")
 		done
 		asm="$tmp/libc_${goos}_${arch}.s"

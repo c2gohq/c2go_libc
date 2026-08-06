@@ -5,12 +5,13 @@
 // Unlike the root libc compatibility package, an mlib carrier stores its
 // Go-state pointer directly in GC-visible C memory. It therefore needs no
 // process-wide ID-to-pointer handle table. C callers use the headers below
-// c2go/mlib; managed C allocation must use gc_malloc with c2go_typeinfo, never
-// ordinary malloc. The current surface covers unnamed semaphores; pthread
+// c2go/mlib; managed C allocation must use gc_malloc, with c2go_typeinfo for
+// pointer-bearing records, never ordinary malloc. The current surface covers
+// unnamed semaphores; pthread
 // lifecycle, thread-specific keys, mutex, condition-variable, and rwlock
 // synchronization; managed directory graphs; managed search trees, hash
 // tables, and linked queues; and managed explicit/standard FILE streams with
 // formatted and allocation-returning line I/O, managed memory/custom streams,
 // and wide character, string, and formatted input/output I/O, including
-// managed popen/pclose process streams.
+// managed popen/pclose process streams; and managed POSIX regular expressions.
 package mlib

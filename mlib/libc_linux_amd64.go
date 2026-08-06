@@ -32,6 +32,11 @@ type _c2go_mlib_FILE struct {
 	_active              int32
 	_listed              int32
 }
+type c2go_mlib_regex_internal struct {
+	re_nsub      uint64
+	__opaque     unsafe.Pointer
+	__c2go_arena unsafe.Pointer
+}
 type history struct {
 	chain *history
 	dev   uint64
@@ -98,6 +103,11 @@ type mlib_queue_node struct {
 	next     *mlib_queue_node
 	previous *mlib_queue_node
 }
+type mlib_regex struct {
+	re_nsub      uint64
+	__opaque     unsafe.Pointer
+	__c2go_arena unsafe.Pointer
+}
 type mlib_tnode struct {
 	key    unsafe.Pointer
 	child  [2]*mlib_tnode
@@ -112,6 +122,8 @@ type mlib_tnode struct {
 type __va_list_tag struct{}
 type dirent struct{}
 type mlib_pthread_attr_t struct{}
+type regmatch_t struct{}
+type tre_mem_struct struct{}
 
 // ─── Type-descriptor indirection (#218) ──────
 // clang's Plan 9 .s loads each type descriptor from the per-type
@@ -147,6 +159,18 @@ func init() {
 // ─── Function declarations ──────────────────────────────────
 // Bodies provided by clang-emitted Plan 9 .s with TEXT ·<name>(SB)
 // at ABI0. Go compiler auto-generates the ABIInternal wrapper.
+
+//go:linkname MlibRegcompImpl github.com/c2gohq/c2go_libc/mlib.__mlib_regcomp_impl
+func MlibRegcompImpl(preg *c2go_mlib_regex_internal, regex *byte, cflags int32) int32
+
+//go:linkname MlibRegexecImpl github.com/c2gohq/c2go_libc/mlib.__mlib_regexec_impl
+func MlibRegexecImpl(preg *c2go_mlib_regex_internal, string *byte, nmatch uint64, pmatch *regmatch_t, eflags int32) int32
+
+//go:linkname MlibRegfreeImpl github.com/c2gohq/c2go_libc/mlib.__mlib_regfree_impl
+func MlibRegfreeImpl(preg *c2go_mlib_regex_internal)
+func __mlib_tre_mem_alloc_impl(mem *tre_mem_struct, provided int32, provided_block unsafe.Pointer, zero int32, size uint64) unsafe.Pointer
+func __mlib_tre_mem_destroy(mem *tre_mem_struct)
+func __mlib_tre_mem_new_impl(provided int32, provided_block unsafe.Pointer) *tre_mem_struct
 
 //go:linkname MlibClearerr github.com/c2gohq/c2go_libc/mlib.mlib_clearerr
 func MlibClearerr(stream *_c2go_mlib_FILE)
@@ -390,6 +414,15 @@ func MlibReaddir(dir *mlib_DIR) *dirent
 
 //go:linkname MlibReaddirR github.com/c2gohq/c2go_libc/mlib.mlib_readdir_r
 func MlibReaddirR(dir *mlib_DIR, entry *dirent, result **dirent) int32
+
+//go:linkname MlibRegcomp github.com/c2gohq/c2go_libc/mlib.mlib_regcomp
+func MlibRegcomp(expression *mlib_regex, pattern *byte, flags int32) int32
+
+//go:linkname MlibRegexec github.com/c2gohq/c2go_libc/mlib.mlib_regexec
+func MlibRegexec(expression *mlib_regex, string *byte, match_count uint64, matches *regmatch_t, flags int32) int32
+
+//go:linkname MlibRegfree github.com/c2gohq/c2go_libc/mlib.mlib_regfree
+func MlibRegfree(expression *mlib_regex)
 
 //go:linkname MlibRemque github.com/c2gohq/c2go_libc/mlib.mlib_remque
 func MlibRemque(element unsafe.Pointer)

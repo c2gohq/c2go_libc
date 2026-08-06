@@ -58,22 +58,27 @@ github.com/c2gohq/c2go_libc
 需要全局 ID 到指针的注册表。目前已实现无名信号量；pthread 生命周期、key 与
 同步对象；完整的 managed 目录传播簇（`DIR`、`scandir`、`nftw`/`ftw`、
 `glob`）；标准、显式、内存、自定义、宽字符和进程流；以及 managed
-`search.h` 树、哈希表和队列容器。
+`search.h` 树、哈希表和队列容器；以及由每对象 GC arena 持有的 POSIX
+正则表达式。
 
 默认名称显式带 `mlib_` 前缀，例如 `mlib_sem_t`、`mlib_sem_init`、
 `mlib_pthread_mutex_t`、`mlib_pthread_mutex_lock`、`mlib_DIR`、
 `mlib_opendir`。如果在第一次包含 mlib
 头文件前定义 `C2GO_MLIB_UNPREFIXED`，则会改为对应的标准名称。这个开关作用于
-整个 C2Go/LTO 包，不能在同一包里混用两套路由。managed C 堆对象必须使用带类型信息的
-`gc_malloc(c2go_typeinfo(T), sizeof(T))`，不能使用普通 `malloc`。managed
+整个 C2Go/LTO 包，不能在同一包里混用两套路由。含指针的 managed record 必须使用
+带类型信息的 `gc_malloc(c2go_typeinfo(T), sizeof(T))`；无指针 buffer 可以使用
+`gc_malloc(NULL, size)`，type-erased 对象图还必须有 regex arena 这类显式 owner。
+它们都不能使用普通 `malloc`。managed
 `scandir`、`glob` 和 managed search 容器均由 GC 持有，不能传给 `free`。
 按字节处理元素的 `lsearch`/`lfind` 仍只提供 root 版本，并且只能用于不含指针
 的元素。示例和约束见
 [mlib/README.md](mlib/README.md)。
 
 当前基于 handle table 的 carrier 迁移已经闭环，但 managed 分配接口仍未完成。
-返回新字节缓冲区的函数与内部持有指针的对象图需要单独迁移；POSIX regex 当前仍是
-root-only，直到 TRE 对象图能够全部通过带正确类型信息的 `gc_malloc` 分配和连接。
+返回新字节缓冲区的函数与内部持有指针的对象图需要单独迁移。managed POSIX regex
+已经通过选择性编译第二份 TRE 实例实现：所有分配都经过 `gc_malloc`，并由每个
+`regex_t` 对应的 Go arena 直接持有每个 no-scan block，不依赖 TRE record 内隐藏的
+指针维持存活。
 `iconv` 是有意保留的 root-only 例外：精确兼容 POSIX 必须支持非指针值
 `(iconv_t)-1`，它不能存入 precise-GC managed pointer slot。因此 mlib 是 managed
 ownership 接口层，而不是把 root libc 的每个函数机械复制一份。使用时应明确包含所需

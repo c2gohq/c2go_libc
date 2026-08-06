@@ -86,6 +86,11 @@ type mlib_qelem struct {
 	q_back *mlib_qelem
 	q_data [1]int8
 }
+type mlib_regex struct {
+	re_nsub      uint64
+	__opaque     unsafe.Pointer
+	__c2go_arena unsafe.Pointer
+}
 type mlib_sem_t struct {
 	_state unsafe.Pointer
 }
@@ -141,6 +146,9 @@ func MlibPopenPrefixedSelftest() int32
 
 //go:linkname MlibPthreadPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_pthread_prefixed_selftest
 func MlibPthreadPrefixedSelftest() int32
+
+//go:linkname MlibRegexPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_regex_prefixed_selftest
+func MlibRegexPrefixedSelftest() int32
 
 //go:linkname MlibSearchPrefixedSelftest github.com/c2gohq/c2go_libc/mlib/selftest/namespaced.mlib_search_prefixed_selftest
 func MlibSearchPrefixedSelftest() int32

@@ -10,12 +10,33 @@
 
 #include <bits/alltypes.h>
 
+#if defined(C2GO_MLIB_REGEX_BUILD)
+/* Internal type used while selectively compiling TRE into package mlib.  The
+ * public managed header emits the same layout under mlib_regex_t (or regex_t
+ * in replacement mode).  __c2go_arena directly roots the Go arena that owns
+ * every persistent TRE allocation; __opaque points at the TNFA inside it. */
+#pragma c2go managed(C2GO_PTR | C2GO_RECORD) push
+typedef struct c2go_mlib_regex_internal {
+	size_t re_nsub;
+	void *managed __opaque;
+	void *managed __c2go_arena;
+} regex_t;
+#pragma c2go pop
+
+/* Keep the vendored TRE sources unchanged: their public definitions are
+ * renamed to package-private implementation symbols for the mlib instance. */
+#define regcomp __mlib_regcomp_impl
+#define regexec __mlib_regexec_impl
+#define regfree __mlib_regfree_impl
+#define regerror __mlib_regerror_impl
+#elif !defined(C2GO_REGEX_OMIT_TYPE)
 typedef struct re_pattern_buffer {
 	size_t re_nsub;
 	void *__opaque, *__padding[4];
 	size_t __nsub2;
 	char __padding2;
 } regex_t;
+#endif
 
 typedef struct {
 	regoff_t rm_so;
@@ -47,6 +68,16 @@ typedef struct {
 
 #define REG_ENOSYS      -1
 
+#if defined(C2GO_MLIB_REGEX_BUILD)
+int regcomp(regex_t *__restrict, const char *__restrict, int)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.__mlib_regcomp_impl", C2GO_GOABI0);
+int regexec(const regex_t *__restrict, const char *__restrict, size_t, regmatch_t *__restrict, int)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.__mlib_regexec_impl", C2GO_GOABI0);
+void regfree(regex_t *)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.__mlib_regfree_impl", C2GO_GOABI0);
+size_t regerror(int, const regex_t *__restrict, char *__restrict, size_t)
+    c2go_linkname("github.com/c2gohq/c2go_libc/mlib.__mlib_regerror_impl", C2GO_GOABI0);
+#elif !defined(C2GO_REGEX_OMIT_FUNCTIONS)
 int regcomp(regex_t *__restrict, const char *__restrict, int)
     c2go_linkname("github.com/c2gohq/c2go_libc.regcomp", C2GO_GOABI0);
 int regexec(const regex_t *__restrict, const char *__restrict, size_t, regmatch_t *__restrict, int)
@@ -56,5 +87,6 @@ void regfree(regex_t *)
 
 size_t regerror(int, const regex_t *__restrict, char *__restrict, size_t)
     c2go_linkname("github.com/c2gohq/c2go_libc.regerror", C2GO_GOABI0);
+#endif
 
 #endif /* _REGEX_H */
