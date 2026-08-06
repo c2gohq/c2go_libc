@@ -41,13 +41,18 @@ RWMutex` implementation in `handle.go`.
 | `dirTab` | `DIR.handle` | opendir/fdopendir/readdir/readdir_r/rewinddir/closedir/dirfd | `scandir`; directory traversal in `glob`; `nftw`/`ftw` | Complete: lifecycle plus managed `scandir`, `glob`, and Unix `nftw`/`ftw` |
 | `fileLockTab` | `FILE.lockid` | internal file lock/trylock/unlock/drop | effectively every stdio operation using `FILE *` | Implemented: direct lock pointer in the managed FILE carrier |
 | `popenTab` | `FILE.pipe_id` | popen/pclose bridge | FILE close/pipe ownership and process wait | Implemented: direct process pointer in the managed FILE carrier |
-| `iconvTab` | roots the real `*iconvState` returned as `iconv_t`; the state also records its table ID for close | iconv_open/iconv/iconv_close | none | Not implemented; a managed descriptor can remove the extra root, but `(iconv_t)-1` must remain only in the C wrapper |
+| `iconvTab` | roots the real `*iconvState` returned as `iconv_t`; the state also records its table ID for close | iconv_open/iconv/iconv_close | none | Intentional root-only exception: an exact POSIX `iconv_t` must represent `(iconv_t)-1`, which cannot inhabit a precise-GC pointer slot |
 
 The following roots have a similar motivation but are not interchangeable with
 the state-carrier table and must not be migrated mechanically:
 
 - `mallocRegistry` and `mallocFreeIdx` root raw unmanaged allocations. mlib
-  deliberately does not wrap this allocator.
+  deliberately does not wrap this allocator. An internally owned unmanaged
+  object graph does not become an mlib candidate merely because it uses this
+  allocator. For example, `regcomp` consumes its input while building a private
+  TRE TNFA graph; `regex_t` retains no caller-owned managed pointer after
+  `regcomp` returns, so `regcomp`/`regexec`/`regfree` remain shared root
+  functions.
 - `keyRoots` roots real `*pthreadKey` values only for root libc, whose
   `pthread_key_t` lives in unmanaged C memory. The mlib key slot is GC-visible
   and publishes the descriptor directly, so it does not enter `keyRoots`.
@@ -204,18 +209,28 @@ local keeps the process alive. A process stream must be retired with `pclose`,
 not plain `fclose`, so the child is reaped. No mlib FILE may be routed to a root
 public FILE declaration.
 
-## Next safe migration order
+## Closure and maintenance gates
 
-1. Keep semaphore and the complete pthread state family under C, race, and
+The handle-table migration set is closed for the currently implemented libc
+surface. Every root table with a managed-equivalent ABI has a direct-pointer
+mlib carrier. Keep the following gates in place:
+
+1. Run semaphore and the complete pthread state family under C, race, and
    GC-stress regression on all release targets.
-2. Keep the completed DIR propagation cluster under GC-stress regression.
-3. Keep the completed managed FILE process-stream phase under native and
-   GC-stress regression.
-4. Keep managed search trees, hash tables, and queues under GC-stress and
+2. Run the DIR propagation cluster under GC-stress regression.
+3. Run the managed FILE process-stream phase under native and GC-stress
+   regression.
+4. Run managed search trees, hash tables, and queues under GC-stress and
    generated write-barrier regression; keep `lsearch`/`lfind` pointer-free.
-5. Treat iconv as a separate design: its POSIX `(iconv_t)-1` failure sentinel
-   cannot be stored in a precise-GC managed pointer slot, so it must not be
-   migrated mechanically.
+5. Reject any generated mlib library that calls root `malloc`, `calloc`,
+   `realloc`, or `free`; `mlib/gen.sh` enforces this on every target.
 
-At every step the default API remains `mlib_`-prefixed, the unprefixed form is a
+`iconvTab` is not unfinished migration work. An mlib descriptor that stores the
+Go state directly would need either a nullable, non-POSIX failure convention or
+a different public carrier/signature. It therefore could not participate in
+`C2GO_MLIB_UNPREFIXED` as an exact replacement. Unless a separate nonstandard
+API is deliberately designed, strict POSIX iconv stays in root libc and keeps
+its explicit lifetime root.
+
+At all times the default API remains `mlib_`-prefixed, the unprefixed form is a
 whole-LTO-package choice, and root libc must never import or depend on `mlib`.

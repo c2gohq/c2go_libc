@@ -194,9 +194,12 @@ c2go internal-ABI callbacks. `lsearch`/`lfind` keep using the root implementatio
 because their size-based API erases the element type; use them only with
 pointer-free elements.
 
-The directory propagation, managed search-container, and managed FILE clusters
-are complete for the documented surface. Remaining state families retain the
-boundaries documented in DESIGN.md.
+The direct-carrier migration set is complete for the currently implemented
+libc surface. `iconv` intentionally remains root-only because its required
+`(iconv_t)-1` value cannot live in a precise-GC pointer slot. mlib is not a
+mechanical mirror of every root function: APIs that neither retain managed
+caller pointers nor expose a managed object graph continue to share the root
+implementation. The exact boundary is recorded in DESIGN.md.
 
 ## 简体中文
 
@@ -369,5 +372,7 @@ managed `tsearch`/`tfind`/`tdelete`/`twalk`/`tdestroy`、`hsearch` family 和
 接口擦除了元素类型，无法生成 pointer bitmap，因此仍复用 root 版本且只允许
 不含指针的元素。
 
-目录传播簇、managed search 容器和文档所列的 managed FILE 簇现已完整；其余状态簇仍遵循
-DESIGN.md 中记录的边界。
+当前已实现 libc 接口中的 direct-carrier 迁移范围已经闭环。`iconv` 是有意保留的
+root-only 例外：它要求的 `(iconv_t)-1` 不能放进 precise-GC pointer slot。mlib
+也不是把 root 的每个函数机械复制一份；既不长期保存调用方 managed pointer、也不
+返回 managed 对象图的 API 继续共用 root 实现。准确边界见 DESIGN.md。

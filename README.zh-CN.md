@@ -71,6 +71,11 @@ github.com/c2gohq/c2go_libc
 的元素。示例和约束见
 [mlib/README.md](mlib/README.md)。
 
+当前 direct-carrier 迁移范围已经闭环。`iconv` 是有意保留的 root-only 例外：
+精确兼容 POSIX 必须支持非指针值 `(iconv_t)-1`，它不能存入 precise-GC managed
+pointer slot。因此 mlib 是 managed ownership 接口层，而不是把 root libc 的每个
+函数机械复制一份。
+
 ## 当前目标清单
 
 生成器目前包含以下目标：

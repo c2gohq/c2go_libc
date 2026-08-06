@@ -45,6 +45,16 @@ verify_arm64_link_register() {
 	fi
 }
 
+verify_no_unmanaged_allocator_calls() {
+	local asm_path="$1"
+	local unsafe_pattern='CALL[[:space:]]+[^[:space:]]*·(Malloc|Calloc|Realloc|Reallocarray|AlignedAlloc|PosixMemalign|Free|malloc|calloc|realloc|reallocarray|aligned_alloc|posix_memalign|free)\(SB\)'
+	if grep -Eq "$unsafe_pattern" "$asm_path"; then
+		echo "mlib/gen.sh: unmanaged allocator call in $asm_path" >&2
+		grep -nE "$unsafe_pattern" "$asm_path" >&2
+		exit 1
+	fi
+}
+
 verify_function_write_barrier() {
 	local asm_path="$1"
 	local symbol="$2"
@@ -220,6 +230,7 @@ generate_library() {
 			amd64) verify_amd64_stack_moves "$asm" ;;
 			arm64) verify_arm64_link_register "$asm" ;;
 		esac
+		verify_no_unmanaged_allocator_calls "$asm"
 		verify_managed_write_barriers "$asm"
 		out="$tmp/out_lib_${goos}_${arch}"
 		mkdir -p "$out"
