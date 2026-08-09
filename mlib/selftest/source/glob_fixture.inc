@@ -35,6 +35,15 @@ static int c2go_mlib_glob_path(char *out, size_t capacity,
         return -1;
     }
     memcpy(out, base, base_length);
+#if defined(_WIN32)
+    /* getenv("TEMP") uses native backslashes. The managed glob API retains
+     * POSIX pattern semantics, where a backslash escapes the next character,
+     * while the Windows filesystem bridges accept forward slashes. Normalize
+     * only the fixture's host-derived base path so this GC/ownership test does
+     * not accidentally turn directory separators into glob escapes. */
+    for (size_t i = 0; i < base_length; ++i)
+        if (out[i] == '\\') out[i] = '/';
+#endif
     out[base_length] = '/';
     memcpy(out + base_length + 1, relative, relative_length + 1);
     return 0;
