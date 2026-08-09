@@ -45,6 +45,16 @@ verify_arm64_link_register() {
 	fi
 }
 
+verify_arm64_write_barrier_loads() {
+	local asm_path="$1"
+	local unsafe_pattern='^[[:space:]]*MOVD[[:space:]]+runtime·writeBarrier\(SB\)'
+	if grep -Eq "$unsafe_pattern" "$asm_path"; then
+		echo "mlib/gen.sh: invalid arm64 runtime.writeBarrier value load in $asm_path" >&2
+		grep -nE "$unsafe_pattern" "$asm_path" >&2
+		exit 1
+	fi
+}
+
 verify_no_unmanaged_allocator_calls() {
 	local asm_path="$1"
 	local unsafe_pattern='CALL[[:space:]]+[^[:space:]]*·(Malloc|Calloc|Realloc|Reallocarray|AlignedAlloc|PosixMemalign|Free|malloc|calloc|realloc|reallocarray|aligned_alloc|posix_memalign|free)\(SB\)'
@@ -308,7 +318,10 @@ generate_library() {
 		normalize_asm_eof "$asm"
 		case "$arch" in
 			amd64) verify_amd64_stack_moves "$asm" ;;
-			arm64) verify_arm64_link_register "$asm" ;;
+			arm64)
+				verify_arm64_link_register "$asm"
+				verify_arm64_write_barrier_loads "$asm"
+				;;
 		esac
 		verify_no_unmanaged_allocator_calls "$asm"
 		verify_managed_write_barriers "$asm"
@@ -382,7 +395,10 @@ generate_mode() {
 		normalize_asm_eof "$test_dir/selftest_${goos}_${arch}.s"
 		case "$arch" in
 			amd64) verify_amd64_stack_moves "$test_dir/selftest_${goos}_${arch}.s" ;;
-			arm64) verify_arm64_link_register "$test_dir/selftest_${goos}_${arch}.s" ;;
+			arm64)
+				verify_arm64_link_register "$test_dir/selftest_${goos}_${arch}.s"
+				verify_arm64_write_barrier_loads "$test_dir/selftest_${goos}_${arch}.s"
+				;;
 		esac
 		verify_function_write_barrier "$test_dir/selftest_${goos}_${arch}.s" \
 			c2go_mlib_cookie_write "managed cookie callback publication"

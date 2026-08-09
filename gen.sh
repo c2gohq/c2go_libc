@@ -63,6 +63,19 @@ verify_arm64_link_register() {
 	fi
 }
 
+# runtime.writeBarrier is a 32-bit flag. A bare 64-bit symbol load here means
+# a split ELF GOT ADRP/LDR was mistranslated as a value load; the following
+# real-width load would dereference the flag bytes as a pointer.
+verify_arm64_write_barrier_loads() {
+	local asm_path="$1"
+	local unsafe_pattern='^[[:space:]]*MOVD[[:space:]]+runtime·writeBarrier\(SB\)'
+	if grep -Eq "$unsafe_pattern" "$asm_path"; then
+		echo "gen.sh: invalid arm64 runtime.writeBarrier value load in $asm_path" >&2
+		grep -nE "$unsafe_pattern" "$asm_path" >&2
+		exit 1
+	fi
+}
+
 verify_function_write_barrier() {
 	local asm_path="$1"
 	local symbol="$2"
@@ -166,7 +179,10 @@ for t in "${LIBC_TARGETS[@]}"; do
 	normalize_asm_eof "$ROOT/libc_${goos}_${arch}.s"
 	case "$arch" in
 		amd64) verify_amd64_stack_moves "$ROOT/libc_${goos}_${arch}.s" ;;
-		arm64) verify_arm64_link_register "$ROOT/libc_${goos}_${arch}.s" ;;
+		arm64)
+			verify_arm64_link_register "$ROOT/libc_${goos}_${arch}.s"
+			verify_arm64_write_barrier_loads "$ROOT/libc_${goos}_${arch}.s"
+			;;
 	esac
 	verify_function_write_barrier "$ROOT/libc_${goos}_${arch}.s" \
 		c2go_stdio_managed_store "managed stdio result publication"
@@ -227,7 +243,10 @@ for t in "${SELFTEST_TARGETS[@]}"; do
 	normalize_asm_eof "$ROOT/selftest/selftest_${goos}_${arch}.s"
 	case "$arch" in
 		amd64) verify_amd64_stack_moves "$ROOT/selftest/selftest_${goos}_${arch}.s" ;;
-		arm64) verify_arm64_link_register "$ROOT/selftest/selftest_${goos}_${arch}.s" ;;
+		arm64)
+			verify_arm64_link_register "$ROOT/selftest/selftest_${goos}_${arch}.s"
+			verify_arm64_write_barrier_loads "$ROOT/selftest/selftest_${goos}_${arch}.s"
+			;;
 	esac
 	out="$tmp/out_selftest_${goos}_${arch}"; mkdir -p "$out"
 	"$C2GOBIND" -goname="selftest_${goos}_${arch}" \

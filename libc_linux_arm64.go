@@ -11,13 +11,6 @@ import (
 )
 
 // ─── Types ──────────────────────────────────────────────────
-type __va_list struct {
-	__stack   unsafe.Pointer
-	__gr_top  unsafe.Pointer
-	__vr_top  unsafe.Pointer
-	__gr_offs int32
-	__vr_offs int32
-}
 type cookie_io_functions_t struct {
 	read  uintptr
 	write uintptr
@@ -122,13 +115,13 @@ func C2goFileRawStdinit(f *FILE, which int32, storage *byte, storage_size uint64
 func C2goFileRawUngetwc(c uint32, f *FILE) uint32
 
 //go:linkname C2goFileRawVfscanfManaged github.com/c2gohq/c2go_libc.__c2go_file_raw_vfscanf_managed
-func C2goFileRawVfscanfManaged(f *FILE, fmt *byte, ap __va_list) int32
+func C2goFileRawVfscanfManaged(f *FILE, fmt *byte, ap unsafe.Pointer) int32
 
 //go:linkname C2goFileRawVfwprintf github.com/c2gohq/c2go_libc.__c2go_file_raw_vfwprintf
-func C2goFileRawVfwprintf(f *FILE, fmt *uint32, ap __va_list) int32
+func C2goFileRawVfwprintf(f *FILE, fmt *uint32, ap unsafe.Pointer) int32
 
 //go:linkname C2goFileRawVfwscanfManaged github.com/c2gohq/c2go_libc.__c2go_file_raw_vfwscanf_managed
-func C2goFileRawVfwscanfManaged(f *FILE, fmt *uint32, ap __va_list) int32
+func C2goFileRawVfwscanfManaged(f *FILE, fmt *uint32, ap unsafe.Pointer) int32
 
 //go:linkname C2goFinalize github.com/c2gohq/c2go_libc.__c2go_finalize
 func C2goFinalize()
@@ -150,10 +143,10 @@ func C2goSignalRun(sig int32, h uint64)
 func C2goStdfile(which int32) *FILE
 
 //go:linkname C2goVsscanfManaged github.com/c2gohq/c2go_libc.__c2go_vsscanf_managed
-func C2goVsscanfManaged(s *byte, fmt *byte, ap __va_list) int32
+func C2goVsscanfManaged(s *byte, fmt *byte, ap unsafe.Pointer) int32
 
 //go:linkname C2goVswscanfManaged github.com/c2gohq/c2go_libc.__c2go_vswscanf_managed
-func C2goVswscanfManaged(s *uint32, fmt *uint32, ap __va_list) int32
+func C2goVswscanfManaged(s *uint32, fmt *uint32, ap unsafe.Pointer) int32
 func __cos(x float64, y float64) float64
 func __cosdf(x float64) float32
 
@@ -1889,64 +1882,64 @@ func Utimensat(dirfd int32, path *byte, times *timespec, flags int32) int32
 func Utimes(path *byte, times *timeval) int32
 
 //go:linkname Vasprintf github.com/c2gohq/c2go_libc.vasprintf
-func Vasprintf(s **byte, fmt *byte, ap __va_list) int32
+func Vasprintf(s **byte, fmt *byte, ap unsafe.Pointer) int32
 
 //go:linkname Vdprintf github.com/c2gohq/c2go_libc.vdprintf
-func Vdprintf(fd int32, fmt *byte, ap __va_list) int32
+func Vdprintf(fd int32, fmt *byte, ap unsafe.Pointer) int32
 
 //go:linkname Verr github.com/c2gohq/c2go_libc.verr
-func Verr(status int32, fmt *byte, ap __va_list)
+func Verr(status int32, fmt *byte, ap unsafe.Pointer)
 
 //go:linkname Verrx github.com/c2gohq/c2go_libc.verrx
-func Verrx(status int32, fmt *byte, ap __va_list)
+func Verrx(status int32, fmt *byte, ap unsafe.Pointer)
 
 //go:linkname Versionsort github.com/c2gohq/c2go_libc.versionsort
 func Versionsort(a **dirent, b **dirent) int32
 
 //go:linkname Vfprintf github.com/c2gohq/c2go_libc.vfprintf
-func Vfprintf(f *FILE, fmt *byte, ap __va_list) int32
+func Vfprintf(f *FILE, fmt *byte, ap unsafe.Pointer) int32
 
 //go:linkname Vfscanf github.com/c2gohq/c2go_libc.vfscanf
-func Vfscanf(f *FILE, fmt *byte, ap __va_list) int32
+func Vfscanf(f *FILE, fmt *byte, ap unsafe.Pointer) int32
 
 //go:linkname Vfwprintf github.com/c2gohq/c2go_libc.vfwprintf
-func Vfwprintf(f *FILE, fmt *uint32, ap __va_list) int32
+func Vfwprintf(f *FILE, fmt *uint32, ap unsafe.Pointer) int32
 
 //go:linkname Vfwscanf github.com/c2gohq/c2go_libc.vfwscanf
-func Vfwscanf(f *FILE, fmt *uint32, ap __va_list) int32
+func Vfwscanf(f *FILE, fmt *uint32, ap unsafe.Pointer) int32
 
 //go:linkname Vprintf github.com/c2gohq/c2go_libc.vprintf
-func Vprintf(fmt *byte, ap __va_list) int32
+func Vprintf(fmt *byte, ap unsafe.Pointer) int32
 
 //go:linkname Vscanf github.com/c2gohq/c2go_libc.vscanf
-func Vscanf(fmt *byte, ap __va_list) int32
+func Vscanf(fmt *byte, ap unsafe.Pointer) int32
 
 //go:linkname Vsnprintf github.com/c2gohq/c2go_libc.vsnprintf
-func Vsnprintf(s *byte, n uint64, fmt *byte, ap __va_list) int32
+func Vsnprintf(s *byte, n uint64, fmt *byte, ap unsafe.Pointer) int32
 
 //go:linkname Vsprintf github.com/c2gohq/c2go_libc.vsprintf
-func Vsprintf(s *byte, fmt *byte, ap __va_list) int32
+func Vsprintf(s *byte, fmt *byte, ap unsafe.Pointer) int32
 
 //go:linkname Vsscanf github.com/c2gohq/c2go_libc.vsscanf
-func Vsscanf(s *byte, fmt *byte, ap __va_list) int32
+func Vsscanf(s *byte, fmt *byte, ap unsafe.Pointer) int32
 
 //go:linkname Vswprintf github.com/c2gohq/c2go_libc.vswprintf
-func Vswprintf(s *uint32, n uint64, fmt *uint32, ap __va_list) int32
+func Vswprintf(s *uint32, n uint64, fmt *uint32, ap unsafe.Pointer) int32
 
 //go:linkname Vswscanf github.com/c2gohq/c2go_libc.vswscanf
-func Vswscanf(s *uint32, fmt *uint32, ap __va_list) int32
+func Vswscanf(s *uint32, fmt *uint32, ap unsafe.Pointer) int32
 
 //go:linkname Vwarn github.com/c2gohq/c2go_libc.vwarn
-func Vwarn(fmt *byte, ap __va_list)
+func Vwarn(fmt *byte, ap unsafe.Pointer)
 
 //go:linkname Vwarnx github.com/c2gohq/c2go_libc.vwarnx
-func Vwarnx(fmt *byte, ap __va_list)
+func Vwarnx(fmt *byte, ap unsafe.Pointer)
 
 //go:linkname Vwprintf github.com/c2gohq/c2go_libc.vwprintf
-func Vwprintf(fmt *uint32, ap __va_list) int32
+func Vwprintf(fmt *uint32, ap unsafe.Pointer) int32
 
 //go:linkname Vwscanf github.com/c2gohq/c2go_libc.vwscanf
-func Vwscanf(fmt *uint32, ap __va_list) int32
+func Vwscanf(fmt *uint32, ap unsafe.Pointer) int32
 
 //go:linkname Warn github.com/c2gohq/c2go_libc.warn
 func Warn(fmt *byte, argptrs unsafe.Pointer)

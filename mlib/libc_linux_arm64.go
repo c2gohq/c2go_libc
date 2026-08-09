@@ -15,13 +15,6 @@ import (
 )
 
 // ─── Types ──────────────────────────────────────────────────
-type __va_list struct {
-	__stack   unsafe.Pointer
-	__gr_top  unsafe.Pointer
-	__vr_top  unsafe.Pointer
-	__gr_offs int32
-	__vr_offs int32
-}
 type _c2go_mlib_FILE struct {
 	_raw                 [32]uint64
 	_cookie_raw          [8]uint64
@@ -491,37 +484,37 @@ func MlibUngetc(character int32, stream *_c2go_mlib_FILE) int32
 func MlibUngetwc(character uint32, stream *_c2go_mlib_FILE) uint32
 
 //go:linkname MlibVasprintf github.com/c2gohq/c2go_libc/mlib.mlib_vasprintf
-func MlibVasprintf(output **byte, format *byte, arguments __va_list) int32
+func MlibVasprintf(output **byte, format *byte, arguments unsafe.Pointer) int32
 
 //go:linkname MlibVfprintf github.com/c2gohq/c2go_libc/mlib.mlib_vfprintf
-func MlibVfprintf(stream *_c2go_mlib_FILE, format *byte, arguments __va_list) int32
+func MlibVfprintf(stream *_c2go_mlib_FILE, format *byte, arguments unsafe.Pointer) int32
 
 //go:linkname MlibVfscanf github.com/c2gohq/c2go_libc/mlib.mlib_vfscanf
-func MlibVfscanf(stream *_c2go_mlib_FILE, format *byte, arguments __va_list) int32
+func MlibVfscanf(stream *_c2go_mlib_FILE, format *byte, arguments unsafe.Pointer) int32
 
 //go:linkname MlibVfwprintf github.com/c2gohq/c2go_libc/mlib.mlib_vfwprintf
-func MlibVfwprintf(stream *_c2go_mlib_FILE, format *uint32, arguments __va_list) int32
+func MlibVfwprintf(stream *_c2go_mlib_FILE, format *uint32, arguments unsafe.Pointer) int32
 
 //go:linkname MlibVfwscanf github.com/c2gohq/c2go_libc/mlib.mlib_vfwscanf
-func MlibVfwscanf(stream *_c2go_mlib_FILE, format *uint32, arguments __va_list) int32
+func MlibVfwscanf(stream *_c2go_mlib_FILE, format *uint32, arguments unsafe.Pointer) int32
 
 //go:linkname MlibVprintf github.com/c2gohq/c2go_libc/mlib.mlib_vprintf
-func MlibVprintf(format *byte, arguments __va_list) int32
+func MlibVprintf(format *byte, arguments unsafe.Pointer) int32
 
 //go:linkname MlibVscanf github.com/c2gohq/c2go_libc/mlib.mlib_vscanf
-func MlibVscanf(format *byte, arguments __va_list) int32
+func MlibVscanf(format *byte, arguments unsafe.Pointer) int32
 
 //go:linkname MlibVsscanf github.com/c2gohq/c2go_libc/mlib.mlib_vsscanf
-func MlibVsscanf(input *byte, format *byte, arguments __va_list) int32
+func MlibVsscanf(input *byte, format *byte, arguments unsafe.Pointer) int32
 
 //go:linkname MlibVswscanf github.com/c2gohq/c2go_libc/mlib.mlib_vswscanf
-func MlibVswscanf(input *uint32, format *uint32, arguments __va_list) int32
+func MlibVswscanf(input *uint32, format *uint32, arguments unsafe.Pointer) int32
 
 //go:linkname MlibVwprintf github.com/c2gohq/c2go_libc/mlib.mlib_vwprintf
-func MlibVwprintf(format *uint32, arguments __va_list) int32
+func MlibVwprintf(format *uint32, arguments unsafe.Pointer) int32
 
 //go:linkname MlibVwscanf github.com/c2gohq/c2go_libc/mlib.mlib_vwscanf
-func MlibVwscanf(format *uint32, arguments __va_list) int32
+func MlibVwscanf(format *uint32, arguments unsafe.Pointer) int32
 
 //go:linkname MlibWcsdup github.com/c2gohq/c2go_libc/mlib.mlib_wcsdup
 func MlibWcsdup(source *uint32) *uint32
