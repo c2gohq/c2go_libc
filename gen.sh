@@ -132,6 +132,11 @@ tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT
 echo "== libc ($MOD) : ${#SOURCES[@]} sources =="
 for t in "${LIBC_TARGETS[@]}"; do
 	IFS=: read -r goos arch triple lib <<<"$t"
+	target_flags=(-ffile-prefix-map="$ROOT"=.)
+	# An unversioned Darwin triple inherits the host macOS version when clang
+	# itself runs on Darwin, but uses a different default on a Linux cross host.
+	# Pin the deployment target so committed assembly is host-independent.
+	[ "$goos" = darwin ] && target_flags+=(-mmacosx-version-min=11.0)
 	case "$arch" in
 		arm64) musl_arch=aarch64 ;;
 		amd64) musl_arch=x86_64 ;;
@@ -165,7 +170,7 @@ for t in "${LIBC_TARGETS[@]}"; do
 		# These bitcodes are linked manually below, so request the same pre-link
 		# phase boundary that the clang driver's automatic c2go-lto route uses.
 		"$CLANG" --target="$triple" -fc2go -fc2go-package="$MOD" -Xclang -fc2go-lto-prelink \
-			"${opt_flags[@]}" -fno-math-errno \
+			"${target_flags[@]}" "${opt_flags[@]}" -fno-math-errno \
 			-emit-llvm -I "$RES" -I "$INC" \
 			-c -o "$tmp/${b}.${goos}_${arch}.bc" "$src"
 		bcs+=("$tmp/${b}.${goos}_${arch}.bc")
@@ -222,6 +227,8 @@ SELFTEST_TARGETS=(
 echo "== selftest ($MOD/selftest) : $(ls "$ROOT"/selftest/source/*.c | wc -l | tr -d ' ') sources =="
 for t in "${SELFTEST_TARGETS[@]}"; do
 	IFS=: read -r goos arch triple lib <<<"$t"
+	target_flags=(-ffile-prefix-map="$ROOT"=.)
+	[ "$goos" = darwin ] && target_flags+=(-mmacosx-version-min=11.0)
 	opt_flags=(-O2)
 	# The selftest qsort fixture has a large local array; the loop vectorizer
 	# raises that slot to 16-byte alignment on amd64. It is test-only code, so
@@ -231,7 +238,7 @@ for t in "${SELFTEST_TARGETS[@]}"; do
 	for src in "$ROOT"/selftest/source/*.c; do
 		b="$(printf '%s' "$src" | sed 's#[/.]#_#g')"
 		"$CLANG" --target="$triple" -fc2go -fc2go-package="$MOD/selftest" -Xclang -fc2go-lto-prelink \
-			"${opt_flags[@]}" -fno-math-errno \
+			"${target_flags[@]}" "${opt_flags[@]}" -fno-math-errno \
 			-emit-llvm -I "$RES" -I "$INC" \
 			-c -o "$tmp/${b}.${goos}_${arch}.bc" "$src"
 		bcs+=("$tmp/${b}.${goos}_${arch}.bc")

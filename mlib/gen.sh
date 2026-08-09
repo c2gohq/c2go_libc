@@ -287,6 +287,10 @@ generate_library() {
 	echo "== mlib library ($MOD/mlib) =="
 	for t in "${TARGETS[@]}"; do
 		IFS=: read -r goos arch triple lib <<<"$t"
+		target_flags=(-ffile-prefix-map="$ROOT"=.)
+		# Keep Darwin code generation identical when this script runs on a
+		# macOS host or on a Linux cross-generation runner.
+		[ "$goos" = darwin ] && target_flags+=(-mmacosx-version-min=11.0)
 		opt_flags=(-O2)
 		[ "$arch" = amd64 ] && opt_flags+=(-fno-slp-vectorize)
 		bcs=()
@@ -295,7 +299,7 @@ generate_library() {
 			compile=(
 				"$CLANG" --target="$triple" -fc2go
 				-fc2go-package="$MOD/mlib" -Xclang -fc2go-lto-prelink
-				"${opt_flags[@]}"
+				"${target_flags[@]}" "${opt_flags[@]}"
 			)
 			case "$src" in
 				"$ROOT/musl/src/regex/regcomp.c"|\
@@ -377,13 +381,15 @@ generate_mode() {
 	echo "== mlib/selftest/$mode ($test_mod) =="
 	for t in "${TARGETS[@]}"; do
 		IFS=: read -r goos arch triple lib <<<"$t"
+		target_flags=(-ffile-prefix-map="$ROOT"=.)
+		[ "$goos" = darwin ] && target_flags+=(-mmacosx-version-min=11.0)
 		opt_flags=(-O2)
 		[ "$arch" = amd64 ] && opt_flags+=(-fno-slp-vectorize)
 		bcs=()
 		for src in "$test_dir"/source/*.c; do
 			b="$(printf '%s' "$src" | sed 's#[/.]#_#g')"
 			"$CLANG" --target="$triple" -fc2go -fc2go-package="$test_mod" -Xclang -fc2go-lto-prelink \
-				"${opt_flags[@]}" -fno-math-errno -emit-llvm -I "$RES" -I "$INC" \
+				"${target_flags[@]}" "${opt_flags[@]}" -fno-math-errno -emit-llvm -I "$RES" -I "$INC" \
 				-c -o "$tmp/${b}.${goos}_${arch}.bc" "$src"
 			bcs+=("$tmp/${b}.${goos}_${arch}.bc")
 		done
